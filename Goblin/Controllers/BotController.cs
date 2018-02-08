@@ -1,38 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Goblin.Models;
-using Newtonsoft.Json;
 
 namespace Goblin.Controllers
 {
-    public class HomeController : Controller
+    public class BotController : Controller
     {
-        public IActionResult Index()
+        public string Handler([FromBody] dynamic body)
         {
-            return View();
-        }
-
-        [HttpPost]
-        public string Test([FromBody] dynamic body)
-        {
-            var EventType = body["type"].ToString();
-            switch (EventType)
+            var eventType = body["type"].ToString();
+            var a = body["object"];
+            var userID = int.Parse(a["user_id"].ToString());
+            switch (eventType)
             {
                 case "confirmation":
-                    return "***REMOVED***";
+                    return Utils.ConfirmationToken;
 
                 case "message_new":
+                    Utils.SendMessage(userID, "privet");
                     break;
 
                 case "group_join":
                     //send message
                     break;
+
                 case "group_leave":
                 case "message_deny":
                     //delete from db, send message
