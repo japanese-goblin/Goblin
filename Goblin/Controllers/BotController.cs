@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Goblin.Bot;
 
 namespace Goblin.Controllers
 {
@@ -19,7 +20,8 @@ namespace Goblin.Controllers
 
                 case "message_new":
                     var userID = int.Parse(body["object"]["user_id"].ToString());
-                    Utils.SendMessage(userID, "privet");
+                    var msg = body["object"]["body"].ToString();
+                    Utils.SendMessage(userID, CommandsList.ExecuteCommand(msg));
                     break;
 
                 case "group_join":
