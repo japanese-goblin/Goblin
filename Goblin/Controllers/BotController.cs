@@ -12,14 +12,13 @@ namespace Goblin.Controllers
         public string Handler([FromBody] dynamic body)
         {
             var eventType = body["type"].ToString();
-            var a = body["object"];
-            var userID = int.Parse(a["user_id"].ToString());
             switch (eventType)
             {
                 case "confirmation":
                     return Utils.ConfirmationToken;
 
                 case "message_new":
+                    var userID = int.Parse(body["object"]["user_id"].ToString());
                     Utils.SendMessage(userID, "privet");
                     break;
 
