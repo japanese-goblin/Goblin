@@ -17,29 +17,5 @@ namespace Goblin.Controllers
         {
             return View();
         }
-
-        [HttpPost]
-        public string Test([FromBody] dynamic body)
-        {
-            var EventType = body["type"].ToString();
-            switch (EventType)
-            {
-                case "confirmation":
-                    return "***REMOVED***";
-
-                case "message_new":
-                    break;
-
-                case "group_join":
-                    //send message
-                    break;
-                case "group_leave":
-                case "message_deny":
-                    //delete from db, send message
-                    break;
-            }
-            //var aa = JsonConvert.DeserializeObject<dynamic>(Json as string);
-            return "ok";
-        }
     }
 }

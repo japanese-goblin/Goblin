@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Goblin.Bot.Commands
 {
@@ -16,13 +17,13 @@ namespace Goblin.Bot.Commands
         {
             //TODO: дополнить чем-нибудь интересным
             Result =
-                $"Текущее время на сервере: {System.DateTime.Now.ToLongDateString()} {System.DateTime.Now.ToLongTimeString()}\n" +
+                $"Текущее время на сервере: {DateTime.Now.ToLongDateString()} {DateTime.Now.ToLongTimeString()}\n" +
                 $"Аптайм: {GetSysUptime()}\n";
         }
 
         private string GetSysUptime()
         {
-            var upTime = System.Environment.TickCount / 1000;
+            var upTime = Environment.TickCount / 1000;
             return $"{upTime / 86400} дней {upTime / 3600 % 24} часов {upTime / 60 % 60} минут {upTime % 60} секунд";
         }
     }
