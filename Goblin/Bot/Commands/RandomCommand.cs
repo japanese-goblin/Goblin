@@ -5,7 +5,7 @@ namespace Goblin.Bot.Commands
     public class RandomCommand : ICommand
     {
         public string Name { get; } = "Рандом";
-        public string Decription { get; } = "Рандом";
+        public string Decription { get; } = "Выбирает один из данных вариантов";
         public string Usage { get; } = "Рандом 1 или 2";
         public List<string> Allias { get; } = new List<string>() { "random", "рандом" };
         public Category Category { get; } = Category.Common;

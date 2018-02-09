@@ -16,7 +16,7 @@ namespace Goblin.Bot
         {
             Commands.Add(new HelpCommand(Commands));
             var split = message.Split(' ', 2);
-            var comm = split[0];
+            var comm = split[0].ToLower();
             var param = split.Length > 1 ? split[1] : "";
             var result = "неизвестность";
             foreach (var command in Commands)

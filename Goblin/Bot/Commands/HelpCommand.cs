@@ -7,6 +7,7 @@ namespace Goblin.Bot.Commands
     {
         public string Name { get; } = "Команды";
         public string Decription { get; } = "описание команд";
+        public string Usage { get; } = "команды";
         public List<string> Allias { get; } = new List<string>() {"help", "команды"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
@@ -16,14 +17,16 @@ namespace Goblin.Bot.Commands
         {
             //TODO: edit it (GrouBy?)
             var common = "Общие команды:\n";
+            byte com = 1;
             var safu = "Команды для САФУ:\n";
+            byte saf = 1;
             foreach (var cmd in cmds.Where(x => x.Category == Category.Common && !x.IsAdmin))
             {
-                common += $"{cmd.Name} - {cmd.Decription}\n";
+                common += $"{com++}) {cmd.Name} - {cmd.Decription}\nПример использования команды: {cmd.Usage}\n";
             }
             foreach (var cmd in cmds.Where(x => x.Category == Category.SAFU && !x.IsAdmin))
             {
-                safu += $"{cmd.Name} - {cmd.Decription}\n";
+                safu += $"{saf++}) {cmd.Name} - {cmd.Decription}\nПример использования команды: {cmd.Usage}\n";
             }
 
             Result = $"Общее число команд на данный момент: {cmds.Count + 1}\n\n{common}\n\n{safu}";

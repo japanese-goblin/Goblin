@@ -6,6 +6,7 @@ namespace Goblin.Bot
     {
         string Name { get; }
         string Decription { get; }
+        string Usage { get; }
         List<string> Allias { get; }
         Category Category { get; }
         bool IsAdmin { get; }

@@ -5,7 +5,8 @@ namespace Goblin.Bot.Commands
     public class ChanceCommand : ICommand
     {
         public string Name { get; } = "Вероятность";
-        public string Decription { get; } = "";
+        public string Decription { get; } = "Возвращает вероятность события";
+        public string Usage { get; } = "Вероятность сегодня будет дождь";
         public List<string> Allias { get; } = new List<string>() {"вероятность", "шанс"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
