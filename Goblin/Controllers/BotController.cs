@@ -25,7 +25,7 @@ namespace Goblin.Controllers
                 case "message_new":
                     userID = int.Parse(body["object"]["user_id"].ToString());
                     var msg = body["object"]["body"].ToString();
-                    Utils.SendMessage(userID, CommandsList.ExecuteCommand(msg));
+                    Utils.SendMessage(userID, CommandsList.ExecuteCommand(msg, userID));
                     break;
 
                 case "group_join":

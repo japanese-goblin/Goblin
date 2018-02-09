@@ -17,11 +17,11 @@ namespace Goblin.Bot.Commands
             //TODO: edit it (GrouBy?)
             var common = "Общие команды:\n";
             var safu = "Команды для САФУ:\n";
-            foreach (var cmd in cmds.Where(x => x.Category == Category.Common))
+            foreach (var cmd in cmds.Where(x => x.Category == Category.Common && !x.IsAdmin))
             {
                 common += $"{cmd.Name} - {cmd.Decription}\n";
             }
-            foreach (var cmd in cmds.Where(x => x.Category == Category.SAFU))
+            foreach (var cmd in cmds.Where(x => x.Category == Category.SAFU && !x.IsAdmin))
             {
                 safu += $"{cmd.Name} - {cmd.Decription}\n";
             }
