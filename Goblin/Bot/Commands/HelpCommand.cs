@@ -14,6 +14,7 @@ namespace Goblin.Bot.Commands
 
         public HelpCommand(List<ICommand> cmds)
         {
+            //TODO: edit it
             var common = "Общие команды:\n";
             var safu = "Команды для САФУ:\n";
             foreach (var cmd in cmds.Where(x => x.Category == Category.Common))

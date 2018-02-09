@@ -32,5 +32,43 @@ namespace Goblin
                 return int.TryParse(responseString["response"].ToString(), out int result); // TODO: ???
             }
         }
+
+        public static bool SendMessage(List<int> ids, string text, string attach = "")
+        {
+            using (var client = new WebClient())
+            {
+                var values = new NameValueCollection
+                {
+                    ["message"] = text,
+                    ["user_id"] = string.Join(",", ids),
+                    ["access_token"] = VkToken,
+                    ["v"] = "5.0",
+                    ["attachment"] = attach
+                };
+
+                var response = client.UploadValues("https://api.vk.com/method/messages.send", values);
+
+                var responseString = JsonConvert.DeserializeObject<dynamic>(Encoding.Default.GetString(response));
+                return int.TryParse(responseString["response"].ToString(), out int result); // TODO: ???
+            }
+        }
+
+        public static string GetUserName(int id)
+        {
+            //https://api.vk.com/method/users.get?user_ids={$user_id}&v=5.0&lang=ru
+            using (var client = new WebClient())
+            {
+                var values = new NameValueCollection
+                {
+                    ["user_ids"] = id.ToString(),
+                    ["v"] = "5.0",
+                    ["lang"] = "ru"
+                };
+                var response = client.UploadValues("https://api.vk.com/method/users.get", values);
+                var responseString = JsonConvert.DeserializeObject<dynamic>(Encoding.Default.GetString(response));
+                var Name = $"{responseString["response"][0]["first_name"]} {responseString["response"][0]["last_name"]}";
+                return Name;
+            }
+        }
     }
 }
