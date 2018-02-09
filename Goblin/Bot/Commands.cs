@@ -24,7 +24,6 @@ namespace Goblin.Bot
                 if (command.Allias.Contains(comm))
                 {
                     if (command.IsAdmin && !Utils.DevelopersID.Contains(id)) break;
-                    command.Execute(param);
                     result = command.Result;
                     break;
                 }

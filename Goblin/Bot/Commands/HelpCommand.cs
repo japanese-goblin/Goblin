@@ -29,7 +29,7 @@ namespace Goblin.Bot.Commands
                 safu += $"{saf++}) {cmd.Name} - {cmd.Decription}\nПример использования команды: {cmd.Usage}\n";
             }
 
-            Result = $"Общее число команд на данный момент: {cmds.Count + 1}\n\n{common}\n\n{safu}";
+            Result = $"Общее число команд на данный момент: {cmds.Count(x => !x.IsAdmin) + 1}\n\n{common}\n\n{safu}";
         }
 
         public void Execute(string param)
