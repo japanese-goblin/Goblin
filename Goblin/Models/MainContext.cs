@@ -5,7 +5,7 @@ namespace Goblin.Models
 {
     public class MainContext : DbContext
     {
-        public DbSet<Person> Persones { get; set; }
+        public DbSet<Person> Persons { get; set; }
 
         public MainContext(DbContextOptions<MainContext> options) : base(options)
         {

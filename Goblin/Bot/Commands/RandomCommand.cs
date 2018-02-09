@@ -33,7 +33,7 @@ namespace Goblin.Bot.Commands
 
         public static int GetRandom(int start, int end)
         {
-            return new System.Random().Next(start, end);
+            return new System.Random(System.DateTime.Now.Millisecond * 7).Next(start, end);
         }
     }
 }

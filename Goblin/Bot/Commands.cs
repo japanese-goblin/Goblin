@@ -8,6 +8,7 @@ namespace Goblin.Bot
         private static List<ICommand> Commands = new List<ICommand>()
         {
             new RandomCommand(),
+            new ChanceCommand(),
         };
 
         public static string ExecuteCommand(string message)
