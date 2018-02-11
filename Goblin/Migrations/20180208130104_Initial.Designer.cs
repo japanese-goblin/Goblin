@@ -7,10 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
+using Goblin.Models;
 
 namespace Goblin.Migrations
 {
-    [DbContext(typeof(d9o30apvvh50ejContext))]
+    [DbContext(typeof(MainContext))]
     [Migration("20180208130104_Initial")]
     partial class Initial
     {

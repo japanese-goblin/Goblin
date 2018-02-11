@@ -31,9 +31,10 @@ namespace Goblin.Controllers
             SendScheduleToUsers();
         }
 
+        [NonAction]
         private void SendScheduleToUsers()
         {
-            var grouped = db.Users.Where(x => x.CityNumber == 0).GroupBy(x => x.Group);
+            var grouped = db.Users.Where(x => x.Group != 0).GroupBy(x => x.Group);
             foreach (var group in grouped)
             {
                 var ids = group.Select(x => x.Vk).ToList();
@@ -41,9 +42,10 @@ namespace Goblin.Controllers
             }
         }
 
+        [NonAction]
         private void SendWeatherToUsers()
         {
-            var grouped = db.Users.Where(x => x.Group == 0).GroupBy(x => x.City);
+            var grouped = db.Users.Where(x => x.CityNumber != 0).GroupBy(x => x.City);
             foreach (var group in grouped)
             {
                 var ids = group.Select(x => x.Vk).ToList();
