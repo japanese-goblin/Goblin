@@ -11,9 +11,10 @@ using System;
 namespace Goblin.Migrations.Main
 {
     [DbContext(typeof(MainContext))]
-    partial class MainContextModelSnapshot : ModelSnapshot
+    [Migration("20180211181810_RemindTime")]
+    partial class RemindTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,7 +28,7 @@ namespace Goblin.Migrations.Main
 
                     b.Property<string>("Text");
 
-                    b.Property<long>("Timestamp");
+                    b.Property<int>("Timestamp");
 
                     b.Property<int>("VkID");
 

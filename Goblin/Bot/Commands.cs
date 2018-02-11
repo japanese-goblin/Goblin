@@ -13,6 +13,8 @@ namespace Goblin.Bot
             new SetGroupCommand(),
             new SetCityCommand(),
             new WeatherCommand(),
+            new GetRemindsCommand(),
+            new AddRemindCommand(),
         };
 
         public static string ExecuteCommand(string message, int id)

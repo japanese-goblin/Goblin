@@ -33,8 +33,6 @@ namespace Goblin.Models
                 .Property(b => b.Schedule).HasDefaultValue(false);
             modelBuilder.Entity<User>()
                 .Property(b => b.Weather).HasDefaultValue(false);
-            modelBuilder.Entity<User>()
-                .Property(b => b.ID);
         }
     }
 }
