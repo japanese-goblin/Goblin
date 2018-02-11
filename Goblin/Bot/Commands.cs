@@ -12,6 +12,7 @@ namespace Goblin.Bot
             new DebugCommand(),
             new SetGroupCommand(),
             new SetCityCommand(),
+            new WeatherCommand(),
         };
 
         public static string ExecuteCommand(string message, int id)
