@@ -12,7 +12,7 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
         public string Result { get; set; }
 
-        public void Execute(string param)
+        public void Execute(string param, int id = 0)
         {
             if (string.IsNullOrEmpty(param))
             {

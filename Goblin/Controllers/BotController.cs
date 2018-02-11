@@ -12,6 +12,8 @@ namespace Goblin.Controllers
         public BotController(MainContext context)
         {
             db = context;
+            //TODO: так плохо делать
+            Utils.DB = db;
         }
 
         public string Handler([FromBody] dynamic body)

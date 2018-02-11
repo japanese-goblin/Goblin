@@ -8,12 +8,12 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Debug";
         public string Decription { get; } = "Инфа для дебага";
         public string Usage { get; } = "инфа";
-        public List<string> Allias { get; } = new List<string>() {"дебаг", "инфа", "debug"};
+        public List<string> Allias { get; } = new List<string>() {"дебаг", "инфа", "debug", "дебуг"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = true;
         public string Result { get; set; }
 
-        public void Execute(string param)
+        public void Execute(string param, int id = 0)
         {
             //TODO: дополнить чем-нибудь интересным
             Result =

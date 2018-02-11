@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Goblin.Bot.Commands
 {
@@ -15,9 +13,15 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin => false;
         public string Result { get; set; }
 
-        public void Execute(string param)
+        public void Execute(string param, int id = 0)
         {
-            throw new NotImplementedException();
+            if(!short.TryParse(param, out var group))
+            {
+                Result = "Ошибочка";
+                return;
+            }
+            Utils.DB.Users.First(x => x.Vk == id).Group = group;
+            Result = $"Группа успешно установлена на {group}!";
         }
     }
 }

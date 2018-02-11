@@ -10,6 +10,7 @@ namespace Goblin.Bot
             new RandomCommand(),
             new ChanceCommand(),
             new DebugCommand(),
+            new SetGroupCommand(),
         };
 
         public static string ExecuteCommand(string message, int id)
@@ -24,7 +25,7 @@ namespace Goblin.Bot
                 if (command.Allias.Contains(comm))
                 {
                     if (command.IsAdmin && !Utils.DevelopersID.Contains(id)) break;
-                    command.Execute(param);
+                    command.Execute(param, id);
                     result = command.Result;
                     break;
                 }

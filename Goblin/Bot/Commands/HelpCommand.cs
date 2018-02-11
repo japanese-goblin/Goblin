@@ -8,7 +8,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Команды";
         public string Decription { get; } = "описание команд";
         public string Usage { get; } = "команды";
-        public List<string> Allias { get; } = new List<string>() {"help", "команды"};
+        public List<string> Allias { get; } = new List<string>() {"help", "команды", "помощь", "помоги"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
         public string Result { get; set; }
@@ -32,7 +32,7 @@ namespace Goblin.Bot.Commands
             Result = $"Общее число команд на данный момент: {cmds.Count(x => !x.IsAdmin) + 1}\n\n{common}\n\n{safu}";
         }
 
-        public void Execute(string param)
+        public void Execute(string param, int id = 0)
         {
             
         }

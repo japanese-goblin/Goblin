@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Net;
 using System.Text;
+using Goblin.Models;
 using Newtonsoft.Json;
 
 namespace Goblin
@@ -10,6 +11,7 @@ namespace Goblin
     {
         public const string ConfirmationToken = "***REMOVED***";
         private const string VkToken = "***REMOVED***";
+        public static MainContext DB { get; set; }
 
         public static List<int> DevelopersID = new List<int>() { ***REMOVED*** };
 

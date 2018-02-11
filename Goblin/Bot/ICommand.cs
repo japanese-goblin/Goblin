@@ -12,6 +12,6 @@ namespace Goblin.Bot
         bool IsAdmin { get; }
         string Result { get; set; }
 
-        void Execute(string param);
+        void Execute(string param, int id = 0);
     }
 }
