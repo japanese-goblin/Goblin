@@ -11,6 +11,7 @@ namespace Goblin.Bot
             new ChanceCommand(),
             new DebugCommand(),
             new SetGroupCommand(),
+            new SetCityCommand(),
         };
 
         public static string ExecuteCommand(string message, int id)

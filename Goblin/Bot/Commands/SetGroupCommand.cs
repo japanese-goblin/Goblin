@@ -21,6 +21,7 @@ namespace Goblin.Bot.Commands
                 return;
             }
             Utils.DB.Users.First(x => x.Vk == id).Group = group;
+            Utils.DB.SaveChanges();
             Result = $"Группа успешно установлена на {group}!";
         }
     }
