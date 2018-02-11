@@ -42,7 +42,7 @@ namespace Goblin
                 var values = new NameValueCollection
                 {
                     ["message"] = text,
-                    ["user_id"] = string.Join(",", ids),
+                    ["user_ids"] = string.Join(",", ids),
                     ["access_token"] = VkToken,
                     ["v"] = "5.0",
                     ["attachment"] = attach
