@@ -15,6 +15,8 @@ namespace Goblin.Bot
             new WeatherCommand(),
             new GetRemindsCommand(),
             new AddRemindCommand(),
+            new ScheduleCommand(),
+
         };
 
         public static string ExecuteCommand(string message, int id)
