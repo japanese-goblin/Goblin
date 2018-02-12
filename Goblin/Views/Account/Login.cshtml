@@ -1,0 +1,11 @@
+﻿@model Goblin.Models.LoginModel
+ <head>
+     <script src="~/lib/bootstrap/scss/"
+ </head>
+<h2>Вход на сайт</h2>
+
+<form asp-controller="Account" asp-action="Login" method="post">
+    <input type="text" name="Nick" id="Nick" />
+    <input type="password" name="Password" id="Password" />
+    <input type="submit" value="Login" />
+</form>

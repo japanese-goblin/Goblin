@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Goblin.Models;
+﻿using Goblin.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,9 +25,10 @@ namespace Goblin
             services.AddDbContext<MainContext>(options => options.UseNpgsql(connection));
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options => //CookieAuthenticationOptions
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                 {
-                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Admin/Login");
+                    options.AccessDeniedPath = new PathString("/Admin/");
+                    options.LoginPath = new PathString("/Admin/Login");
                 });
 
             services.AddMvc();
