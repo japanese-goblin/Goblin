@@ -51,7 +51,7 @@ namespace Goblin
                 var response = client.UploadValues("https://api.vk.com/method/messages.send", values);
 
                 var responseString = JsonConvert.DeserializeObject<dynamic>(Encoding.Default.GetString(response));
-                return int.TryParse(responseString["response"].ToString(), out int result); // TODO: ???
+                return int.TryParse(responseString["response"][0].ToString(), out int result); // TODO: ???
             }
         }
 
