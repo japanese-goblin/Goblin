@@ -1,4 +1,4 @@
-﻿$(".send_message").click(function() 
+$(".send_message").click(function() 
 {
 	var message = $(".message").val().replace(/\n/g, "<br>");
 	$.ajax({
