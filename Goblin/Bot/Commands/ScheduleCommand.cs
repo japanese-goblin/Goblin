@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using Ical.Net;
 
 namespace Goblin.Bot.Commands
@@ -19,13 +20,19 @@ namespace Goblin.Bot.Commands
 
         public void Execute(string param, int id = 0)
         {
+            var user = Utils.DB.Users.First(x => x.Vk == id);
+            if (user.Group == 0)
+            {
+                Result = "Для начала установи группу командой 'устгр'";
+                return;
+            }
             var test = param.Split('.');
             if (!DateTime.TryParse($"{test[1]}.{test[0]}", out var time))
             {
                 Result = "Неправильная дата";
                 return;
             }
-            var group = Utils.DB.Users.First(x => x.Vk == id).Group;
+            var group = user.Group;
             Result = GetSchedule(time, group);
         }
 

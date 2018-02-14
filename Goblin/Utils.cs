@@ -17,6 +17,7 @@ namespace Goblin
 
         public static bool SendMessage(int id, string text, string attach = "")
         {
+            if (string.IsNullOrEmpty(text)) return false;
             using (var client = new WebClient())
             {
                 var values = new NameValueCollection
@@ -37,6 +38,7 @@ namespace Goblin
 
         public static bool SendMessage(List<int> ids, string text, string attach = "")
         {
+            if (string.IsNullOrEmpty(text)) return false;
             using (var client = new WebClient())
             {
                 var values = new NameValueCollection
