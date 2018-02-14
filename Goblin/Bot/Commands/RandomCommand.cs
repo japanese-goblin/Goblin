@@ -4,10 +4,10 @@ namespace Goblin.Bot.Commands
 {
     public class RandomCommand : ICommand
     {
-        public string Name { get; } = "Рандом";
+        public string Name { get; } = "Рандом *smth* или *smth*";
         public string Decription { get; } = "Выбирает один из данных вариантов";
         public string Usage { get; } = "Рандом 1 или 2";
-        public List<string> Allias { get; } = new List<string>() { "random", "рандом" };
+        public List<string> Allias { get; } = new List<string>() { "рандом" };
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 

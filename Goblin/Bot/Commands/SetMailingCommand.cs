@@ -5,7 +5,7 @@ namespace Goblin.Bot.Commands
 {
     public class SetMailingCommand : ICommand
     {
-        public string Name { get; } = "подписка";
+        public string Name { get; } = "Подписка";
         public string Decription { get; } = "Подписка на рассылку расписания/погоды";
         public string Usage { get; } = "Подписка расписание";
         public List<string> Allias { get; } = new List<string>() {"подписка"};

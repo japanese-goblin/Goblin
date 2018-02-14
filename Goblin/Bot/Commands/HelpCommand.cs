@@ -6,16 +6,17 @@ namespace Goblin.Bot.Commands
     public class HelpCommand : ICommand
     {
         public string Name { get; } = "Команды";
-        public string Decription { get; } = "описание команд";
-        public string Usage { get; } = "команды";
-        public List<string> Allias { get; } = new List<string>() {"help", "команды", "помощь", "помоги"};
+        public string Decription { get; } = "Описание команд";
+        public string Usage { get; } = "Команды";
+        public List<string> Allias { get; } = new List<string>() {"help", "команды", "помощь", "помоги", "хелп"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
         public string Result { get; set; }
 
         public HelpCommand(List<ICommand> cmds)
         {
-            //TODO: edit it (GrouBy?)
+            cmds = cmds.OrderBy(x => x.Name).ToList();
+            //TODO: edit it (GroupBy?)
             var common = "Общие команды:\n";
             byte com = 1;
             var safu = "Команды для САФУ:\n";

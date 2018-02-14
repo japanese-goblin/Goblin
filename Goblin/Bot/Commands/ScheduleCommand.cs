@@ -11,7 +11,7 @@ namespace Goblin.Bot.Commands
     public class ScheduleCommand : ICommand
     {
         public string Name { get; } = "Раписание *день*.*месяц*";
-        public string Decription { get; } = "Возвращает расписание на указанную дату";
+        public string Decription { get; } = "Возвращает расписание на указанную дату. День и месяц обязательно должны содержать 2 цифры.";
         public string Usage { get; } = "Расписание 01.02";
         public List<string> Allias { get; } = new List<string>() {"расписание"};
         public Category Category { get; } = Category.SAFU;

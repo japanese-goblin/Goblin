@@ -21,7 +21,7 @@ namespace Goblin.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            ViewBag.Users = db.Users.ToList();
+            ViewBag.Users = db.Users.OrderBy(x => x.ID).ToList();
             return View();
         }
 

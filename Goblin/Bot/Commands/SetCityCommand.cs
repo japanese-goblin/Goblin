@@ -11,9 +11,9 @@ namespace Goblin.Bot.Commands
 {
     public class SetCityCommand : ICommand
     {
-        public string Name => "город";
-        public string Decription => "Установка города для получения рассылки";
-        public string Usage => "город Москва";
+        public string Name => "Город";
+        public string Decription => "Установка города для получения рассылки погоди";
+        public string Usage => "Город Москва";
         public List<string> Allias => new List<string>() { "город" };
         public Category Category => Category.Common;
         public bool IsAdmin => false;
@@ -21,7 +21,7 @@ namespace Goblin.Bot.Commands
 
         public void Execute(string param, int id = 0)
         {
-            int cityid = 0;
+            var cityid = 0;
             param = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(param);
             if (CheckCity(param, ref cityid))
             {

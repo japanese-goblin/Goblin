@@ -7,9 +7,9 @@ namespace Goblin.Bot.Commands
 {
     public class AddRemindCommand : ICommand
     {
-        public string Name { get; } = "Напомни";
-        public string Decription { get; } = "напоминалка";
-        public string Usage { get; } = "Напомни 01.02.2018 15:15 зачет";
+        public string Name { get; } = "Напомни *день*.*месяц*.*год* *час* *текст*";
+        public string Decription { get; } = "Напоминает в указанное время о каком-то очень ВАЖНОМ тексте. День и месяц обязательно должны содержать 2 цифры, а год - 4. В указанное время бот напишет в личку сообщение с заданным текстом.";
+        public string Usage { get; } = "Напомни 01.02.2018 15 зачет";
         public List<string> Allias { get; } = new List<string>() {"напомни"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
@@ -26,17 +26,17 @@ namespace Goblin.Bot.Commands
 
             if (!Utils.DevelopersID.Contains(id) && Utils.DB.Reminds.Count(x => x.VkID == id) > 7)
             {
-                Result = "Превышен лимит напоминалок";
+                Result = "Превышен лимит (8) напоминалок";
                 return;
             }
-            var time = DateTime.Parse($"{all[0]} {all[1]}");
+            var time = DateTime.Parse($"{all[0]} {all[1]}:00");
             var addedTime = time.AddHours(3);
             Utils.DB.Reminds.Add(new Remind
             {
                 Text = all[2], Timestamp = new DateTimeOffset(addedTime).ToUnixTimeSeconds(), VkID = id
             });
             Utils.DB.SaveChanges();
-            Result = $"Хорошо, {all[1]} в {all[2]} напомню следующее:\n{all[3]}!";
+            Result = $"Хорошо, {all[1]}:00 в {all[2]} напомню следующее:\n{all[3]}!";
         }
     }
 }
