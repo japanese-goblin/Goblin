@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Goblin.Models;
 
@@ -29,7 +30,7 @@ namespace Goblin.Bot.Commands
                 Result = "Превышен лимит (8) напоминалок";
                 return;
             }
-            var time = DateTime.Parse($"{all[0]} {all[1]}:00");
+            var time = DateTime.ParseExact($"{all[0]} {all[1]}", "dd.MM.yyyy HH", CultureInfo.InvariantCulture);
             var addedTime = time.AddHours(-3);
             Utils.DB.Reminds.Add(new Remind
             {
