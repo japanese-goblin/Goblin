@@ -27,17 +27,17 @@ namespace Goblin.Bot
             var comm = split[0].ToLower();
             var param = split.Length > 1 ? split[1] : "";
             var result = "";
-            foreach (var command in Commands)
+            lock (Commands)
             {
-                if (command.Allias.Contains(comm))
+                foreach (var command in Commands)
                 {
-                    if (command.IsAdmin && !Utils.DevelopersID.Contains(id)) break;
+                    if (!command.Allias.Contains(comm)) continue;
+                    if (command.IsAdmin && !Utils.DevelopersID.Contains(id)) continue;
                     command.Execute(param, id);
                     result = command.Result;
                     break;
                 }
             }
-
             return result;
         }
     }
