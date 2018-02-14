@@ -32,6 +32,11 @@ namespace Goblin.Bot.Commands
             }
             var time = DateTime.ParseExact($"{all[0]} {all[1]}", "dd.MM.yyyy HH", CultureInfo.InvariantCulture);
             var addedTime = time.AddHours(-3);
+            if (addedTime < DateTime.Now)
+            {
+                Result = "Дата меньше текущей.";
+                return;
+            }
             Utils.DB.Reminds.Add(new Remind
             {
                 Text = all[2], Date = addedTime, VkID = id
