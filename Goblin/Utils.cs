@@ -70,8 +70,8 @@ namespace Goblin
                 };
                 var response = client.UploadValues("https://api.vk.com/method/users.get", values);
                 var responseString = JsonConvert.DeserializeObject<dynamic>(Encoding.Default.GetString(response));
-                var Name = $"{responseString["response"][0]["first_name"]} {responseString["response"][0]["last_name"]}";
-                return Name;
+                var name = $"{responseString["response"][0]["first_name"]} {responseString["response"][0]["last_name"]}";
+                return name;
             }
         }
 
@@ -80,14 +80,14 @@ namespace Goblin
             // Use input string to calculate MD5 hash
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
             {
-                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
+                var inputBytes = Encoding.ASCII.GetBytes(input);
+                var hashBytes = md5.ComputeHash(inputBytes);
 
                 // Convert the byte array to hexadecimal string
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                for (int i = 0; i < hashBytes.Length; i++)
+                var sb = new StringBuilder();
+                foreach (var t in hashBytes)
                 {
-                    sb.Append(hashBytes[i].ToString("X2"));
+                    sb.Append(t.ToString("X2"));
                 }
                 return sb.ToString().ToLower();
             }

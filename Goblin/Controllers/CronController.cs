@@ -23,7 +23,7 @@ namespace Goblin.Controllers
 
         public void SendRemind()
         {
-
+            SendRemindsToUsers();
         }
 
         public void SendSchedule()
@@ -52,5 +52,30 @@ namespace Goblin.Controllers
                 Utils.SendMessage(ids, "погода"); //TODO: дополнить
             }
         }
+
+        [NonAction]
+        private void SendRemindsToUsers()
+        {
+            var reminds = db.Reminds.Where(x => $"{x.Date.AddHours(3):dd.MM.yyyy HH}" == $"{DateTime.Now:dd.MM.yyyy HH}");
+            foreach (var remind in reminds)
+            {
+                if (Utils.SendMessage(remind.VkID, remind.Text))
+                {
+                    db.Reminds.Remove(remind);
+                }
+                //TODO: else????
+            }
+
+            db.SaveChanges();
+        }
+
+        //[NonAction]
+        //private DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+        //{
+        //    // Unix timestamp is seconds past epoch
+        //    System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+        //    dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+        //    return dtDateTime;
+        //}
     }
 }

@@ -30,13 +30,13 @@ namespace Goblin.Bot.Commands
                 return;
             }
             var time = DateTime.Parse($"{all[0]} {all[1]}:00");
-            var addedTime = time.AddHours(3);
+            var addedTime = time.AddHours(-3);
             Utils.DB.Reminds.Add(new Remind
             {
-                Text = all[2], Timestamp = new DateTimeOffset(addedTime).ToUnixTimeSeconds(), VkID = id
+                Text = all[2], Date = addedTime, VkID = id
             });
             Utils.DB.SaveChanges();
-            Result = $"Хорошо, {all[1]}:00 в {all[2]} напомню следующее:\n{all[3]}!";
+            Result = $"Хорошо, {all[0]} в {all[1]}:00 напомню следующее:\n{all[2]}!";
         }
     }
 }

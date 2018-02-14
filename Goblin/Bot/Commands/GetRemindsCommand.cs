@@ -26,7 +26,8 @@ namespace Goblin.Bot.Commands
 
             foreach (var rem in ureminds)
             {
-                reminds += $"{UnixTimeStampToDateTime(rem.Timestamp)} - {rem.Text}\n";
+                var d = rem.Date.AddHours(3);
+                reminds += $"{d:dd.MM.yyyy HH:mm} - {rem.Text}\n";
             }
             Result = reminds;
         }
