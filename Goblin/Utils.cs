@@ -9,7 +9,9 @@ namespace Goblin
 {
     public static class Utils
     {
+        //***REMOVED***
         public const string ConfirmationToken = "***REMOVED***";
+        //***REMOVED***
         private const string VkToken = "***REMOVED***";
         public static MainContext DB { get; set; }
 
