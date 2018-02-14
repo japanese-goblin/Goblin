@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using Goblin.Models;
+using Ical.Net;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Goblin.Controllers
@@ -38,7 +41,7 @@ namespace Goblin.Controllers
             foreach (var group in grouped)
             {
                 var ids = group.Select(x => x.Vk).ToList();
-                Utils.SendMessage(ids, "расписание"); //TODO: дополнить
+                Utils.SendMessage(ids, GetSchedule(DateTime.Today, group.Key)); //TODO: дополнить
             }
         }
 
@@ -49,14 +52,16 @@ namespace Goblin.Controllers
             foreach (var group in grouped)
             {
                 var ids = group.Select(x => x.Vk).ToList();
-                Utils.SendMessage(ids, "погода"); //TODO: дополнить
+                Utils.SendMessage(ids, $"В городе {group.Key} очень хорошая погода!"); //TODO: дополнить
             }
         }
 
         [NonAction]
         private void SendRemindsToUsers()
         {
-            var reminds = db.Reminds.Where(x => $"{x.Date.AddHours(3):dd.MM.yyyy HH}" == $"{DateTime.Now:dd.MM.yyyy HH}");
+            //TODO: ?????
+            var reminds =
+                db.Reminds.Where(x => $"{x.Date.AddHours(3):dd.MM.yyyy HH}" == $"{DateTime.Now:dd.MM.yyyy HH}");
             foreach (var remind in reminds)
             {
                 if (Utils.SendMessage(remind.VkID, remind.Text))
@@ -69,13 +74,37 @@ namespace Goblin.Controllers
             db.SaveChanges();
         }
 
-        //[NonAction]
-        //private DateTime UnixTimeStampToDateTime(double unixTimeStamp)
-        //{
-        //    // Unix timestamp is seconds past epoch
-        //    System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-        //    dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-        //    return dtDateTime;
-        //}
+        [NonAction]
+        private string GetSchedule(DateTime date, short usergroup)
+        {
+            var result = $"Расписание на {date:dd.MM}:\n";
+            string calen;
+            using (var client = new WebClient())
+            {
+                try
+                {
+                    client.Encoding = Encoding.UTF8;
+                    calen = client.DownloadString(
+                        $"http://ruz.narfu.ru/?icalendar&oid={usergroup}&from={DateTime.Now:dd.MM.yyyy}");
+                }
+                catch (WebException e)
+                {
+                    return $"Какая-то ошибочка ({e.Message}). Напиши @id***REMOVED*** (сюда) для решения проблемы!!";
+                }
+            }
+
+            var calendar = Calendar.Load(calen);
+            var events = calendar.Events.Where(x => x.Start.Date == date).ToList();
+            if (!events.Any()) return $"На {date:dd.MM} расписание отсутствует!";
+            foreach (var ev in events)
+            {
+                var a = ev.Description.Split('\n');
+                var time = a[0].Replace('п', ')');
+                var group = a[1].Substring(3);
+                result += $"{time} - {a[2]} ({a[3]})\nУ группы {group}\n В аудитории {a[5]}\n\n";
+            }
+            
+            return result;
+        }
     }
 }

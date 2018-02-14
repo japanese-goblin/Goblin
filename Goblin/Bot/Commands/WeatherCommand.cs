@@ -8,7 +8,7 @@ namespace Goblin.Bot.Commands
 {
     public class WeatherCommand : ICommand
     {
-        public string Name { get; } = "Погода";
+        public string Name { get; } = "Погода *название города*";
         public string Decription { get; } = "Возвращает погоду на текущее время";
         public string Usage { get; } = "Погода Москва";
         public List<string> Allias { get; } = new List<string>() { "погода" };

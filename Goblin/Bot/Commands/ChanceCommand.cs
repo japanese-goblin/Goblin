@@ -4,7 +4,7 @@ namespace Goblin.Bot.Commands
 {
     public class ChanceCommand : ICommand
     {
-        public string Name { get; } = "Вероятность";
+        public string Name { get; } = "Вероятность *событие*";
         public string Decription { get; } = "Возвращает случайную вероятность события";
         public string Usage { get; } = "Вероятность сегодня будет дождь";
         public List<string> Allias { get; } = new List<string>() {"вероятность"};

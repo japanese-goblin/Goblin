@@ -5,7 +5,7 @@ namespace Goblin.Bot.Commands
 {
     public class SetGroupCommand : ICommand
     {
-        public string Name => "Устгр";
+        public string Name => "Устгр *циферки*";
         public string Decription => "Установить группу для получения расписания";
         public string Usage => "Устгр 3124";
         public List<string> Allias => new List<string>() { "устгр" };

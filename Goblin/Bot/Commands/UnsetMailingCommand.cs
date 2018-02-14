@@ -5,8 +5,8 @@ namespace Goblin.Bot.Commands
 {
     public class UnsetMailingCommand : ICommand
     {
-        public string Name { get; } = "Отписка";
-        public string Decription { get; } = "Отписка от рассылки расписания/погоды";
+        public string Name { get; } = "Отписка *расписание/погода*";
+        public string Decription { get; } = "Отписка от рассылки расписания/погоды (ЧТО-ТО ОДНО ЗА РАЗ)";
         public string Usage { get; } = "Отписка погода";
         public List<string> Allias { get; } = new List<string>() { "отписка" };
         public Category Category { get; } = Category.Common;
