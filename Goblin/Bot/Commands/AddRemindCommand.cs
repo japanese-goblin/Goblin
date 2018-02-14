@@ -19,7 +19,7 @@ namespace Goblin.Bot.Commands
         public void Execute(string param, int id = 0)
         {
             var all = param.Split(' ');
-            if (all.Length != 3)
+            if (all.Length < 3)
             {
                 Result = "Ошибочка";
                 return;
