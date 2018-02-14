@@ -18,8 +18,8 @@ namespace Goblin.Bot.Commands
 
         public void Execute(string param, int id = 0)
         {
-            var all = param.Split(' ');
-            if (all.Length < 3)
+            var all = param.Split(' ', 3);
+            if (all.Length != 3)
             {
                 Result = "Ошибочка";
                 return;
@@ -42,7 +42,7 @@ namespace Goblin.Bot.Commands
                 Text = all[2], Date = addedTime, VkID = id
             });
             Utils.DB.SaveChanges();
-            Result = $"Хорошо, {all[0]} в {all[1]}:00 напомню следующее:\n{all[2]}!";
+            Result = $"Хорошо, {all[0]} в {all[1]}:00 напомню следующее:\n{all[2]}";
         }
     }
 }
