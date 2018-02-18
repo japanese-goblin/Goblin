@@ -60,8 +60,7 @@ namespace Goblin.Controllers
         private void SendRemindsToUsers()
         {
             //TODO: ?????
-            var reminds =
-                db.Reminds.Where(x => $"{x.Date.AddHours(3):dd.MM.yyyy HH}" == $"{DateTime.Now:dd.MM.yyyy HH}");
+            var reminds = db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH}" == $"{DateTime.Now:dd.MM.yyyy HH}");
             foreach (var remind in reminds)
             {
                 if (Utils.SendMessage(remind.VkID, remind.Text))
@@ -94,7 +93,7 @@ namespace Goblin.Controllers
             }
 
             var calendar = Calendar.Load(calen);
-            var events = calendar.Events.Where(x => x.Start.Date == date).ToList();
+            var events = calendar.Events.Where(x => x.Start.Date == date).Distinct().OrderBy(x => x.Start.Value).ToList();
             if (!events.Any()) return $"На {date:dd.MM} расписание отсутствует!";
             foreach (var ev in events)
             {
@@ -103,7 +102,7 @@ namespace Goblin.Controllers
                 var group = a[1].Substring(3);
                 result += $"{time} - {a[2]} ({a[3]})\nУ группы {group}\n В аудитории {a[5]}\n\n";
             }
-            
+
             return result;
         }
     }

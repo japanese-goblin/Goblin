@@ -26,8 +26,13 @@ namespace Goblin.Bot.Commands
                 Result = "Для начала установи группу командой 'устгр'";
                 return;
             }
-            var test = param.Split('.');
-            if (!DateTime.TryParse($"{test[1]}.{test[0]}", out var time))
+            var test = param.Split('.').Select(int.Parse).ToList();
+            DateTime time;
+            try
+            {
+                time = new DateTime(2018, test[1], test[0]);
+            }
+            catch
             {
                 Result = "Неправильная дата";
                 return;
@@ -36,38 +41,35 @@ namespace Goblin.Bot.Commands
             Result = GetSchedule(time, group);
         }
 
-        public string GetSchedule(DateTime date, short usergroup)
+        private string GetSchedule(DateTime date, short usergroup)
         {
             var result = $"Расписание на {date:dd.MM}:\n";
             string calen;
             using (var client = new WebClient())
             {
-                client.Encoding = Encoding.UTF8;
-                calen = client.DownloadString($"http://ruz.narfu.ru/?icalendar&oid={usergroup}&from={DateTime.Now:dd.MM.yyyy}");
+                try
+                {
+                    client.Encoding = Encoding.UTF8;
+                    calen = client.DownloadString(
+                        $"http://ruz.narfu.ru/?icalendar&oid={usergroup}&from={DateTime.Now:dd.MM.yyyy}");
+                }
+                catch (WebException e)
+                {
+                    return $"Какая-то ошибочка ({e.Message}). Напиши @id***REMOVED*** (сюда) для решения проблемы!!";
+                }
             }
 
             var calendar = Calendar.Load(calen);
-            foreach (var ev in calendar.Events.Where(x => x.Start.Date == date))
+            var events = calendar.Events.Where(x => x.Start.Date == date).Distinct().OrderBy(x => x.Start.Value).ToList();
+            if (!events.Any()) return $"На {date:dd.MM} расписание отсутствует!";
+            foreach (var ev in events)
             {
-                /*
-                 * ev.Start.Value - время начала пары
-                 * ev.Location - 
-                 * ev.Description
-                 * ev.Summary - название предмета
-                 */
                 var a = ev.Description.Split('\n');
-                /*
-                 * 0 - 3п (12:00-13.35)
-                 * 1 - Г:(П:) 351617
-                 * 2 - название
-                 * 3 - тип
-                 * 4 - препод
-                 * 5 - локация
-                 */
                 var time = a[0].Replace('п', ')');
                 var group = a[1].Substring(3);
-                result += $"{time} - {a[2]} ({a[3]})\nУ группы {group}\n в аудитории {a[5]}\n\n";
+                result += $"{time} - {a[2]} ({a[3]})\nУ группы {group}\n В аудитории {a[5]}\n\n";
             }
+
             return result;
         }
     }
