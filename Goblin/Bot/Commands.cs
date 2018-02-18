@@ -17,7 +17,8 @@ namespace Goblin.Bot
             new AddRemindCommand(),
             new ScheduleCommand(),
             new SetMailingCommand(),
-            new UnsetMailingCommand()
+            new UnsetMailingCommand(),
+            new ExamsCommand()
         };
 
         public static string ExecuteCommand(string message, int id)
