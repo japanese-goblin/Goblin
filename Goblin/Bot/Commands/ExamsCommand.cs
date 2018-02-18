@@ -44,7 +44,7 @@ namespace Goblin.Bot.Commands
             var calendar = Calendar.Load(calen);
             var events = calendar.Events.Where(x =>
                 x.Description.Contains("Экзамен") || x.Description.Contains("Зачет") ||
-                x.Description.Contains("Интернет")).Distinct();
+                x.Description.Contains("Интернет")).Distinct().OrderBy(x => x.Start.Value);
             foreach (var ev in events)
             {
                 var a = ev.Description.Split('\n');
