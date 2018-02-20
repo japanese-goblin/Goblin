@@ -20,6 +20,12 @@ namespace Goblin.Bot.Commands
         public void Execute(string param, int id = 0)
         {
             int cityid = 0;
+            var user = Utils.DB.Users.First(x => x.Vk == id);
+            if (string.IsNullOrEmpty(param) && user.CityNumber != 0)
+            {
+                Result = GetWeather(user.City, user.CityNumber);
+                return;
+            }
             if (CheckCity(param, ref cityid))
             {
                 Result = GetWeather(param, cityid);
