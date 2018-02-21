@@ -100,7 +100,8 @@ namespace Goblin.Controllers
                 var a = ev.Description.Split('\n');
                 var time = a[0].Replace('п', ')');
                 var group = a[1].Substring(3);
-                result += $"{time} - {a[2]} ({a[3]})\nУ группы {group}\n В аудитории {a[5]}\n\n";
+                var temp = a[5].Split('\\');
+                result += $"{time} - {a[2]} ({a[3]})\nУ группы {group}\n В аудитории {temp[1]}\n\n";
             }
 
             return result;
