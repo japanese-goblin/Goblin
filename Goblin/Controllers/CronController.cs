@@ -21,33 +21,6 @@ namespace Goblin.Controllers
 
         public void SendWeather()
         {
-            SendWeatherToUsers();
-        }
-
-        public void SendRemind()
-        {
-            SendRemindsToUsers();
-        }
-
-        public void SendSchedule()
-        {
-            SendScheduleToUsers();
-        }
-
-        [NonAction]
-        private void SendScheduleToUsers()
-        {
-            var grouped = db.Users.Where(x => x.Group != 0 && x.Schedule).GroupBy(x => x.Group);
-            foreach (var group in grouped)
-            {
-                var ids = group.Select(x => x.Vk).ToList();
-                Utils.SendMessage(ids, GetSchedule(DateTime.Today, group.Key)); //TODO: дополнить
-            }
-        }
-
-        [NonAction]
-        private void SendWeatherToUsers()
-        {
             var grouped = db.Users.Where(x => x.CityNumber != 0 && x.Weather).GroupBy(x => x.City);
             foreach (var group in grouped)
             {
@@ -56,8 +29,7 @@ namespace Goblin.Controllers
             }
         }
 
-        [NonAction]
-        private void SendRemindsToUsers()
+        public void SendRemind()
         {
             //TODO: ?????
             var reminds = db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH}" == $"{DateTime.Now:dd.MM.yyyy HH}");
@@ -71,6 +43,16 @@ namespace Goblin.Controllers
             }
 
             db.SaveChanges();
+        }
+
+        public void SendSchedule()
+        {
+            var grouped = db.Users.Where(x => x.Group != 0 && x.Schedule).GroupBy(x => x.Group);
+            foreach (var group in grouped)
+            {
+                var ids = group.Select(x => x.Vk).ToList();
+                Utils.SendMessage(ids, GetSchedule(DateTime.Today, group.Key)); //TODO: дополнить
+            }
         }
 
         [NonAction]
@@ -88,7 +70,7 @@ namespace Goblin.Controllers
                 }
                 catch (WebException e)
                 {
-                    return $"Какая-то ошибочка ({e.Message}). Напиши @id***REMOVED*** (сюда) для решения проблемы!!";
+                    return $"Какая-то ошибочка ({e.Message} - {e.Status}). Напиши @id***REMOVED*** (сюда) для решения проблемы!!";
                 }
             }
 
@@ -100,8 +82,8 @@ namespace Goblin.Controllers
                 var a = ev.Description.Split('\n');
                 var time = a[0].Replace('п', ')');
                 var group = a[1].Substring(3);
-                var temp = a[5].Split('\\');
-                result += $"{time} - {a[2]} ({a[3]})\nУ группы {group}\n В аудитории {temp[1]}\n\n";
+                var temp = a[5].Split('/');
+                result += $"{time} - {a[2]} ({a[3]})\nУ группы {group}\n В аудитории {temp[1]} ({temp[0]})\n\n";
             }
 
             return result;
