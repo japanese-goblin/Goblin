@@ -5,14 +5,12 @@ namespace Goblin.Models
 {
     public class Button
     {
-        [JsonProperty("action")]
-        public Dictionary<string, string> Action = new Dictionary<string, string>()
+        [JsonProperty("action")] public Dictionary<string, string> Action = new Dictionary<string, string>
         {
-            ["type"] = "text",
+            ["type"] = "text"
         };
 
-        [JsonProperty("color")]
-        public string Color = "primary";
+        [JsonProperty("color")] public string Color = "primary";
 
         public Button(string label, string payload = "")
         {

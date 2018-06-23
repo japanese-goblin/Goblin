@@ -12,11 +12,12 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Экзамены";
         public string Decription { get; } = "Возвращает список экзаменов/зачетов/интернет-экзаменов";
         public string Usage { get; } = "Экзамены";
-        public List<string> Allias { get; } = new List<string>() {"экзамены"};
+        public List<string> Allias { get; } = new List<string> {"экзамены"};
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
         public string Result { get; set; }
+
         public void Execute(string param, int id = 0)
         {
             var result = "Список экзаменов:\n";
@@ -26,6 +27,7 @@ namespace Goblin.Bot.Commands
                 Result = "Установи группу командой 'устгр'";
                 return;
             }
+
             string calen;
             using (var client = new WebClient())
             {
@@ -41,6 +43,7 @@ namespace Goblin.Bot.Commands
                     return;
                 }
             }
+
             var calendar = Calendar.Load(calen);
             var events = calendar.Events.Where(x =>
                 x.Description.Contains("Экзамен") || x.Description.Contains("Зачет") ||

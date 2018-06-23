@@ -5,7 +5,7 @@ namespace Goblin.Bot
 {
     public static class CommandsList
     {
-        private static readonly List<ICommand> Commands = new List<ICommand>()
+        private static readonly List<ICommand> Commands = new List<ICommand>
         {
             new RandomCommand(),
             new ChanceCommand(),
@@ -40,6 +40,7 @@ namespace Goblin.Bot
                     break;
                 }
             }
+
             return result;
         }
     }

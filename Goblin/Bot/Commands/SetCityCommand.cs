@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Goblin.Bot.Commands
@@ -14,7 +12,7 @@ namespace Goblin.Bot.Commands
         public string Name => "Город *название города*";
         public string Decription => "Установка города для получения рассылки погоди";
         public string Usage => "Город Москва";
-        public List<string> Allias => new List<string>() { "город" };
+        public List<string> Allias => new List<string> {"город"};
         public Category Category => Category.Common;
         public bool IsAdmin => false;
         public string Result { get; set; }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Goblin.Bot.Commands
 {
@@ -7,7 +8,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Рандом *smth* или *smth*";
         public string Decription { get; } = "Выбирает один из данных вариантов";
         public string Usage { get; } = "Рандом 1 или 2";
-        public List<string> Allias { get; } = new List<string>() { "рандом" };
+        public List<string> Allias { get; } = new List<string> {"рандом"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
@@ -34,7 +35,7 @@ namespace Goblin.Bot.Commands
 
         public static int GetRandom(int start, int end)
         {
-            return new System.Random(System.DateTime.Now.Millisecond * 3819).Next(start, end);
+            return new Random(DateTime.Now.Millisecond * 3819).Next(start, end);
         }
     }
 }

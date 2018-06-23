@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
-using Ical.Net;
 
 namespace Goblin.Bot.Commands
 {
@@ -13,7 +9,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Раписание *день*.*месяц*";
         public string Decription { get; } = "Возвращает расписание на указанную дату. День и месяц обязательно должны содержать 2 цифры.";
         public string Usage { get; } = "Расписание 01.02";
-        public List<string> Allias { get; } = new List<string>() {"расписание"};
+        public List<string> Allias { get; } = new List<string> {"расписание"};
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
         public string Result { get; set; }
@@ -26,6 +22,7 @@ namespace Goblin.Bot.Commands
                 Result = "Для начала установи группу командой 'устгр'";
                 return;
             }
+
             var test = param.Split('.').Select(int.Parse).ToList();
             DateTime time;
             try
@@ -37,6 +34,7 @@ namespace Goblin.Bot.Commands
                 Result = "Неправильная дата";
                 return;
             }
+
             var group = user.Group;
             Result = Utils.GetSchedule(time, group);
         }

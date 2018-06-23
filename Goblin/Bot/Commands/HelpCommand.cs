@@ -8,7 +8,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Команды";
         public string Decription { get; } = "Описание команд";
         public string Usage { get; } = "Команды";
-        public List<string> Allias { get; } = new List<string>() {"help", "команды", "помощь", "помоги", "хелп"};
+        public List<string> Allias { get; } = new List<string> {"help", "команды", "помощь", "помоги", "хелп"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
         public string Result { get; set; }
@@ -25,6 +25,7 @@ namespace Goblin.Bot.Commands
             {
                 common += $"{com++}) {cmd.Name} - {cmd.Decription}\nНапример - {cmd.Usage}\n";
             }
+
             foreach (var cmd in cmds.Where(x => x.Category == Category.SAFU && !x.IsAdmin))
             {
                 safu += $"{saf++}) {cmd.Name} - {cmd.Decription}\nНапример - {cmd.Usage}\n";
@@ -38,7 +39,6 @@ namespace Goblin.Bot.Commands
 
         public void Execute(string param, int id = 0)
         {
-            
         }
     }
 }

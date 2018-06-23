@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Goblin.Models;
+using Ical.Net;
 using Microsoft.AspNetCore.Mvc;
-using Calendar = Ical.Net.Calendar;
 
 namespace Goblin.Controllers
 {
@@ -25,7 +25,7 @@ namespace Goblin.Controllers
         [NonAction]
         private List<Lesson> GetSchedule(short usergroup)
         {
-            List<Lesson> Lessons = new List<Lesson>();
+            var Lessons = new List<Lesson>();
             string calen;
             using (var client = new WebClient())
             {
@@ -47,8 +47,8 @@ namespace Goblin.Controllers
             foreach (var ev in events)
             {
                 var a = ev.Description.Split('\n');
-	            
-                var les = new Lesson()
+
+                var les = new Lesson
                 {
                     Address = ev.Location,
                     Groups = a[1].Substring(3),
@@ -58,7 +58,6 @@ namespace Goblin.Controllers
                     Type = a[3]
                 };
                 Lessons.Add(les);
-
             }
 
             return Lessons;

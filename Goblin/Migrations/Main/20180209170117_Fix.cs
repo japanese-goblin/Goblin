@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
 
 namespace Goblin.Migrations.Main
 {
@@ -25,10 +23,7 @@ namespace Goblin.Migrations.Main
                     Vk = table.Column<int>(nullable: false),
                     Weather = table.Column<bool>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.ID);
-                });
+                constraints: table => { table.PrimaryKey("PK_Users", x => x.ID); });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -50,10 +45,7 @@ namespace Goblin.Migrations.Main
                     Schedule = table.Column<bool>(nullable: false),
                     Weather = table.Column<bool>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Persons", x => x.VkID);
-                });
+                constraints: table => { table.PrimaryKey("PK_Persons", x => x.VkID); });
         }
     }
 }

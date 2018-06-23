@@ -8,7 +8,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Подписка *расписание/погода*";
         public string Decription { get; } = "Подписка на рассылку расписания/погоды (ЧТО-ТО ОДНО ЗА РАЗ)";
         public string Usage { get; } = "Подписка расписание";
-        public List<string> Allias { get; } = new List<string>() {"подписка"};
+        public List<string> Allias { get; } = new List<string> {"подписка"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 

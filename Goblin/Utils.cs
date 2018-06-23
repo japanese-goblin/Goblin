@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using Goblin.Models;
 using Ical.Net;
@@ -14,11 +15,13 @@ namespace Goblin
     {
         //***REMOVED***
         public const string ConfirmationToken = "***REMOVED***";
+
         //***REMOVED***
         private const string VkToken = "***REMOVED***";
+
         public static MainContext DB { get; set; }
 
-        public static List<int> DevelopersID = new List<int>() { ***REMOVED*** };
+        public static List<int> DevelopersID = new List<int> {***REMOVED***};
 
         public static bool SendMessage(int id, string text, string attach = "", string kb = "")
         {
@@ -30,7 +33,7 @@ namespace Goblin
                     ["peer_id"] = id.ToString(),
                     ["message"] = text,
                     ["v"] = "5.80",
-                    ["access_token"] = VkToken,
+                    ["access_token"] = VkToken
                 };
                 if (!string.IsNullOrEmpty(attach))
                     values.Add("attachment", attach);
@@ -85,7 +88,7 @@ namespace Goblin
 
         public static string CreateMD5(string input)
         {
-            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            using (var md5 = MD5.Create())
             {
                 var inputBytes = Encoding.ASCII.GetBytes(input);
                 var hashBytes = md5.ComputeHash(inputBytes);
@@ -95,6 +98,7 @@ namespace Goblin
                 {
                     sb.Append(t.ToString("X2"));
                 }
+
                 return sb.ToString().ToLower();
             }
         }

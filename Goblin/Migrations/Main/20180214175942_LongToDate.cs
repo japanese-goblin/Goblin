@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
 
 namespace Goblin.Migrations.Main
 {
@@ -19,10 +18,7 @@ namespace Goblin.Migrations.Main
                     Text = table.Column<string>(nullable: true),
                     VkID = table.Column<int>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reminds", x => x.ID);
-                });
+                constraints: table => { table.PrimaryKey("PK_Reminds", x => x.ID); });
 
             migrationBuilder.CreateTable(
                 name: "Users",
@@ -32,15 +28,12 @@ namespace Goblin.Migrations.Main
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     City = table.Column<string>(nullable: true),
                     CityNumber = table.Column<int>(nullable: false, defaultValue: 0),
-                    Group = table.Column<short>(nullable: false, defaultValue: (short)0),
+                    Group = table.Column<short>(nullable: false, defaultValue: (short) 0),
                     Schedule = table.Column<bool>(nullable: false, defaultValue: false),
                     Vk = table.Column<int>(nullable: false),
                     Weather = table.Column<bool>(nullable: false, defaultValue: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.ID);
-                });
+                constraints: table => { table.PrimaryKey("PK_Users", x => x.ID); });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -63,10 +56,7 @@ namespace Goblin.Migrations.Main
                     VkID = table.Column<int>(nullable: false, defaultValueSql: "0"),
                     Weather = table.Column<bool>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Persons", x => x.ID);
-                });
+                constraints: table => { table.PrimaryKey("PK_Persons", x => x.ID); });
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Напомни *день*.*месяц*.*год* *час*:*минута* *текст*";
         public string Decription { get; } = "Напоминает в указанное время о каком-то очень ВАЖНОМ тексте. День и месяц обязательно должны содержать 2 цифры, а год - 4. В указанное время бот напишет в личку сообщение с заданным текстом.";
         public string Usage { get; } = "Напомни 01.02.2018 15:35 зачет";
-        public List<string> Allias { get; } = new List<string>() {"напомни"};
+        public List<string> Allias { get; } = new List<string> {"напомни"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
         public string Result { get; set; }
@@ -38,9 +38,12 @@ namespace Goblin.Bot.Commands
                 Result = "Дата меньше текущей.";
                 return;
             }
+
             Utils.DB.Reminds.Add(new Remind
             {
-                Text = all[2], Date = time, VkID = id
+                Text = all[2],
+                Date = time,
+                VkID = id
             });
             Utils.DB.SaveChanges();
             Result = $"Хорошо, {all[0]} в {all[1]} напомню следующее:\n{all[2]}";

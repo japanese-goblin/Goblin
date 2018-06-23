@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
 
 namespace Goblin.Migrations
 {
@@ -20,10 +18,7 @@ namespace Goblin.Migrations
                     VkID = table.Column<int>(nullable: false, defaultValueSql: "0"),
                     Weather = table.Column<bool>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Persons", x => x.ID);
-                });
+                constraints: table => { table.PrimaryKey("PK_Persons", x => x.ID); });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -13,7 +13,8 @@ namespace Goblin.Controllers
     [NonController]
     public class AdminController : Controller
     {
-        private MainContext db;
+        private readonly MainContext db;
+
         public AdminController(MainContext context)
         {
             db = context;
@@ -39,16 +40,16 @@ namespace Goblin.Controllers
                 return View();
 
             // create claims
-            List<Claim> claims = new List<Claim>
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, model.Nick)
             };
 
             // create identity
-            ClaimsIdentity identity = new ClaimsIdentity(claims, "cookie");
+            var identity = new ClaimsIdentity(claims, "cookie");
 
             // create principal
-            ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+            var principal = new ClaimsPrincipal(identity);
 
             // sign-in
             await HttpContext.SignInAsync(

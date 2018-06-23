@@ -7,7 +7,8 @@ namespace Goblin.Controllers
 {
     public class ApiController : Controller
     {
-        private MainContext db;
+        private readonly MainContext db;
+
         public ApiController(MainContext context)
         {
             db = context;
@@ -31,11 +32,13 @@ namespace Goblin.Controllers
                     {
                         msg = msg.Split("[club146048760|Японский гоблин] ")[1];
                     }
-                    if(!db.Users.Any(x => x.Vk == userID))
+
+                    if (!db.Users.Any(x => x.Vk == userID))
                     {
-                        db.Users.Add(new User() { Vk = userID });
+                        db.Users.Add(new User {Vk = userID});
                         db.SaveChanges();
                     }
+
                     Utils.SendMessage(convID, CommandsList.ExecuteCommand(msg, userID));
                     break;
 
@@ -57,9 +60,11 @@ namespace Goblin.Controllers
                         db.Users.Remove(db.Users.First(x => x.Vk == userID));
                         db.SaveChanges();
                     }
+
                     Utils.SendMessage(Utils.DevelopersID, $"@id{userID} ({Utils.GetUserName(userID)}) отписался!");
                     break;
             }
+
             return "ok";
         }
 

@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
 
 namespace Goblin.Migrations.Main
 {
@@ -40,7 +38,7 @@ namespace Goblin.Migrations.Main
                 name: "Group",
                 table: "Users",
                 nullable: false,
-                defaultValue: (short)0);
+                defaultValue: (short) 0);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Text",
@@ -83,7 +81,7 @@ namespace Goblin.Migrations.Main
                 name: "GroupID",
                 table: "Users",
                 nullable: false,
-                defaultValue: (short)0);
+                defaultValue: (short) 0);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Text",

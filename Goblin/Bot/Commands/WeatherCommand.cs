@@ -11,7 +11,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Погода *название города*";
         public string Decription { get; } = "Возвращает погоду на текущее время";
         public string Usage { get; } = "Погода Москва";
-        public List<string> Allias { get; } = new List<string>() { "погода" };
+        public List<string> Allias { get; } = new List<string> {"погода"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
@@ -19,13 +19,14 @@ namespace Goblin.Bot.Commands
 
         public void Execute(string param, int id = 0)
         {
-            int cityid = 0;
+            var cityid = 0;
             var user = Utils.DB.Users.First(x => x.Vk == id);
             if (string.IsNullOrEmpty(param) && user.CityNumber != 0)
             {
                 Result = GetWeather(user.City, user.CityNumber);
                 return;
             }
+
             if (CheckCity(param, ref cityid))
             {
                 Result = GetWeather(param, cityid);

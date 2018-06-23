@@ -8,7 +8,8 @@ namespace Goblin
 {
     public class ScheduledTasks : Registry
     {
-        MainContext db;
+        private readonly MainContext db;
+
         public ScheduledTasks()
         {
             Schedule(() => SendSchedule()).ToRunEvery(1).Days().At(8, 0);
@@ -44,6 +45,7 @@ namespace Goblin
                     db.Reminds.Remove(remind);
                 }
             }
+
             db.SaveChanges();
         }
 
