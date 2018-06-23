@@ -11,8 +11,8 @@ namespace Goblin
         MainContext db;
         public ScheduledTasks()
         {
-            Schedule(() => SendSchedule()).ToRunEvery(1).Days().At(3, 0);
-            Schedule(() => SendWeather()).ToRunEvery(1).Days().At(3, 0);
+            Schedule(() => SendSchedule()).ToRunEvery(1).Days().At(8, 0);
+            Schedule(() => SendWeather()).ToRunEvery(1).Days().At(9, 0);
             Schedule(() => SendRemind()).ToRunEvery(1).Minutes();
             //TODO: ЭТО ЧТО ВООБЩЕ ТАКОЕ??7?7??
             var a = new DbContextOptionsBuilder<MainContext>();
@@ -35,7 +35,7 @@ namespace Goblin
         {
             Console.WriteLine("Отправка напоминалок...");
             //TODO: ?????
-            var reminds = db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
+            var reminds = db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now.AddHours(-3):dd.MM.yyyy HH:mm}");
             foreach (var remind in reminds)
             {
                 //TODO: else????

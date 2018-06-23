@@ -32,8 +32,7 @@ namespace Goblin.Bot.Commands
             }
 
             var time = DateTime.ParseExact($"{all[0]} {all[1]}", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture);
-            //TODO: -3 hours?
-            //var addedTime = time.AddHours(-3);
+            time = time.AddHours(-3);
             if (time < DateTime.Now)
             {
                 Result = "Дата меньше текущей.";
