@@ -28,6 +28,10 @@ namespace Goblin.Controllers
                     userID = int.Parse(body["object"]["from_id"].ToString());
                     convID = int.Parse(body["object"]["peer_id"].ToString());
                     var msg = body["object"]["text"].ToString();
+                    if (userID != convID)
+                    {
+                        msg = msg.Split("[club146048760|Японский гоблин] ")[1];
+                    }
                     if(!db.Users.Any(x => x.Vk == userID))
                     {
                         db.Users.Add(new User() { Vk = userID });

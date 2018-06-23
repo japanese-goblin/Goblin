@@ -27,7 +27,7 @@ namespace Goblin
             {
                 var values = new NameValueCollection
                 {
-                    ["user_id"] = id.ToString(),
+                    ["peer_id"] = id.ToString(),
                     ["message"] = text,
                     ["v"] = "5.80",
                     ["access_token"] = VkToken,

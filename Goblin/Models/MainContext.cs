@@ -13,11 +13,13 @@ namespace Goblin.Models
         {
             modelBuilder.Entity<User>()
                 .Property(b => b.Weather)
-                .HasDefaultValue(false);
+                .HasDefaultValue(false)
+                .ValueGeneratedNever();
 
             modelBuilder.Entity<User>()
                 .Property(b => b.Schedule)
-                .HasDefaultValue(false);
+                .HasDefaultValue(false)
+                .ValueGeneratedNever();
 
             modelBuilder.Entity<User>()
                 .Property(b => b.City)
