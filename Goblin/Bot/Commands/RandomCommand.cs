@@ -28,12 +28,13 @@ namespace Goblin.Bot.Commands
                 return;
             }
 
-            Result = forRandom[GetRandom(0, 1)];
+            var a = GetRandom(0, 100);
+            Result = forRandom[a % 2 == 0 ? 0 : 1];
         }
 
         public static int GetRandom(int start, int end)
         {
-            return new System.Random(System.DateTime.Now.Millisecond * 7).Next(start, end);
+            return new System.Random(System.DateTime.Now.Millisecond * 3819).Next(start, end);
         }
     }
 }

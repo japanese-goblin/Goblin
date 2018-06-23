@@ -18,7 +18,6 @@ namespace Goblin.Controllers
         {
             var eventType = body["type"].ToString();
             int userID;
-            int convID;
             switch (eventType)
             {
                 case "confirmation":
@@ -26,7 +25,7 @@ namespace Goblin.Controllers
 
                 case "message_new":
                     userID = int.Parse(body["object"]["from_id"].ToString());
-                    convID = int.Parse(body["object"]["peer_id"].ToString());
+                    int convID = int.Parse(body["object"]["peer_id"].ToString());
                     var msg = body["object"]["text"].ToString();
                     if (userID != convID)
                     {

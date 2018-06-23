@@ -60,13 +60,7 @@ namespace Goblin
             }
 
             //TODO: а это точно тут должно быть?
-            JobManager.Initialize(new MyReg());
-            //TODO: што это за ужос????? как это починить????
-            //using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
-            //    .CreateScope())
-            //{
-            //    Utils.DB = serviceScope.ServiceProvider.GetService<MainContext>();
-            //}
+            JobManager.Initialize(new ScheduledTasks());
 
             app.UseStaticFiles();
             app.UseAuthentication();

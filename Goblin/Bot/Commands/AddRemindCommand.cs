@@ -30,19 +30,21 @@ namespace Goblin.Bot.Commands
                 Result = "Превышен лимит (8) напоминалок";
                 return;
             }
+
             var time = DateTime.ParseExact($"{all[0]} {all[1]}", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture);
-            var addedTime = time.AddHours(-3);
-            if (addedTime < DateTime.Now)
+            //TODO: -3 hours?
+            //var addedTime = time.AddHours(-3);
+            if (time < DateTime.Now)
             {
                 Result = "Дата меньше текущей.";
                 return;
             }
             Utils.DB.Reminds.Add(new Remind
             {
-                Text = all[2], Date = addedTime, VkID = id
+                Text = all[2], Date = time, VkID = id
             });
             Utils.DB.SaveChanges();
-            Result = $"Хорошо, {all[0]} в {all[1]}:00 напомню следующее:\n{all[2]}";
+            Result = $"Хорошо, {all[0]} в {all[1]} напомню следующее:\n{all[2]}";
         }
     }
 }

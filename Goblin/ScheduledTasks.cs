@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Goblin
 {
-    public class MyReg : Registry
+    public class ScheduledTasks : Registry
     {
         MainContext db;
-        public MyReg()
+        public ScheduledTasks()
         {
             Schedule(() => SendSchedule()).ToRunEvery(1).Days().At(3, 0);
             Schedule(() => SendWeather()).ToRunEvery(1).Days().At(3, 0);
