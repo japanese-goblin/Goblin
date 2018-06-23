@@ -11,6 +11,7 @@ namespace Goblin.Controllers
         public ApiController(MainContext context)
         {
             db = context;
+            Utils.DB = db;
         }
 
         public string Handler([FromBody] dynamic body)

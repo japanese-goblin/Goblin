@@ -68,7 +68,7 @@ namespace Goblin.Bot.Commands
                 var time = a[0].Replace('п', ')');
                 var group = a[1].Substring(3);
                 var temp = a[5].Split('/');
-                result += $"{time} - {a[2]} ({a[3]})\nУ группы {group}\n В аудитории {temp[1]} ({temp[0]})\n\n";
+                result += $"{time} - {a[2]} ({a[3]}) В аудитории {temp[1]} ({temp[0]}) у препода {a[4]}\nУ группы {group}\n\n";
             }
 
             return result;
