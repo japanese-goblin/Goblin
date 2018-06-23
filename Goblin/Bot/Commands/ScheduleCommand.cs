@@ -38,40 +38,7 @@ namespace Goblin.Bot.Commands
                 return;
             }
             var group = user.Group;
-            Result = GetSchedule(time, group);
-        }
-
-        private string GetSchedule(DateTime date, short usergroup)
-        {
-            var result = $"Расписание на {date:dd.MM}:\n";
-            string calen;
-            using (var client = new WebClient())
-            {
-                try
-                {
-                    client.Encoding = Encoding.UTF8;
-                    calen = client.DownloadString(
-                        $"http://ruz.narfu.ru/?icalendar&oid={usergroup}&from={DateTime.Now:dd.MM.yyyy}");
-                }
-                catch (WebException e)
-                {
-                    return $"Какая-то ошибочка ({e.Message}). Напиши @id***REMOVED*** (сюда) для решения проблемы!!";
-                }
-            }
-
-            var calendar = Calendar.Load(calen);
-            var events = calendar.Events.Where(x => x.Start.Date == date).Distinct().OrderBy(x => x.Start.Value).ToList();
-            if (!events.Any()) return $"На {date:dd.MM} расписание отсутствует!";
-            foreach (var ev in events)
-            {
-                var a = ev.Description.Split('\n');
-                var time = a[0].Replace('п', ')');
-                var group = a[1].Substring(3);
-                var temp = a[5].Split('/');
-                result += $"{time} - {a[2]} ({a[3]}) В аудитории {temp[1]} ({temp[0]}) у препода {a[4]}\nУ группы {group}\n\n";
-            }
-
-            return result;
+            Result = Utils.GetSchedule(time, group);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StackExchange.Redis;
 
 namespace Goblin.Models
 {
@@ -8,10 +7,7 @@ namespace Goblin.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Remind> Reminds { get; set; }
 
-        public MainContext(DbContextOptions<MainContext> options) : base(options)
-        {
-
-        }
+        public MainContext(DbContextOptions<MainContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,15 +20,20 @@ namespace Goblin.Models
                 .HasDefaultValue(false);
 
             modelBuilder.Entity<User>()
-                .Property(b => b.City).IsRequired(false);
+                .Property(b => b.City)
+                .IsRequired(false);
             modelBuilder.Entity<User>()
-                .Property(b => b.CityNumber).HasDefaultValue(0);
+                .Property(b => b.CityNumber)
+                .HasDefaultValue(0);
             modelBuilder.Entity<User>()
-                .Property(b => b.Group).HasDefaultValue(0);
+                .Property(b => b.Group)
+                .HasDefaultValue(0);
             modelBuilder.Entity<User>()
-                .Property(b => b.Schedule).HasDefaultValue(false);
+                .Property(b => b.Schedule)
+                .HasDefaultValue(false);
             modelBuilder.Entity<User>()
-                .Property(b => b.Weather).HasDefaultValue(false);
+                .Property(b => b.Weather)
+                .HasDefaultValue(false);
         }
     }
 }
