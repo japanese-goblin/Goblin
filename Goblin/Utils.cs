@@ -17,19 +17,22 @@ namespace Goblin
 
         public static List<int> DevelopersID = new List<int>() { ***REMOVED*** };
 
-        public static bool SendMessage(int id, string text, string attach = "")
+        public static bool SendMessage(int id, string text, string attach = "", string kb = "")
         {
             if (string.IsNullOrEmpty(text)) return false;
             using (var client = new WebClient())
             {
                 var values = new NameValueCollection
                 {
-                    ["message"] = text,
                     ["user_id"] = id.ToString(),
+                    ["message"] = text,
+                    ["v"] = "5.80",
                     ["access_token"] = VkToken,
-                    ["v"] = "5.0",
-                    ["attachment"] = attach
                 };
+                if (!string.IsNullOrEmpty(attach))
+                    values.Add("attachment", attach);
+                if (!string.IsNullOrEmpty(kb))
+                    values.Add("keyboard", kb);
 
                 var response = client.UploadValues("https://api.vk.com/method/messages.send", values);
 
@@ -79,13 +82,11 @@ namespace Goblin
 
         public static string CreateMD5(string input)
         {
-            // Use input string to calculate MD5 hash
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
             {
                 var inputBytes = Encoding.ASCII.GetBytes(input);
                 var hashBytes = md5.ComputeHash(inputBytes);
 
-                // Convert the byte array to hexadecimal string
                 var sb = new StringBuilder();
                 foreach (var t in hashBytes)
                 {

@@ -26,7 +26,7 @@ namespace Goblin.Bot
             var split = message.Split(' ', 2);
             var comm = split[0].ToLower();
             var param = split.Length > 1 ? split[1] : "";
-            var result = "";
+            var result = "Ошибочка, проверьте правильность написания команды!";
             lock (Commands) // TODO: ????
             {
                 Commands.Add(new HelpCommand(Commands)); // TODO: ????

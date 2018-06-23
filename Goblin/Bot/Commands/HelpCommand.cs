@@ -23,11 +23,11 @@ namespace Goblin.Bot.Commands
             byte saf = 1;
             foreach (var cmd in cmds.Where(x => x.Category == Category.Common && !x.IsAdmin))
             {
-                common += $"{com++}) {cmd.Name} - {cmd.Decription}\nПример использования команды: {cmd.Usage}\n";
+                common += $"{com++}) {cmd.Name} - {cmd.Decription}\nНапример - {cmd.Usage}\n";
             }
             foreach (var cmd in cmds.Where(x => x.Category == Category.SAFU && !x.IsAdmin))
             {
-                safu += $"{saf++}) {cmd.Name} - {cmd.Decription}\nПример использования команды: {cmd.Usage}\n";
+                safu += $"{saf++}) {cmd.Name} - {cmd.Decription}\nНапример - {cmd.Usage}\n";
             }
 
             Result = $"Общее число команд на данный момент: {cmds.Count(x => !x.IsAdmin) + 1}\n\n{common}\n\n{safu}";
