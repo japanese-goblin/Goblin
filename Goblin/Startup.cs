@@ -50,15 +50,6 @@ namespace Goblin
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            var scopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
-
-            using (var scope = scopeFactory.CreateScope())
-            using (var context = scope.ServiceProvider.GetRequiredService<MainContext>())
-            {
-                Utils.DB = context;
-                // Use context to insert data in database...
-            }
-
             //TODO: а это точно тут должно быть?
             JobManager.Initialize(new ScheduledTasks());
 

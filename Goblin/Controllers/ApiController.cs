@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Goblin.Bot;
 using Goblin.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -73,9 +74,33 @@ namespace Goblin.Controllers
             return Utils.SendMessage(db.Users.Select(x => x.Vk).ToList(), msg);
         }
 
-        //public JsonResult Users()
-        //{
-        //    return Json(db.Users);
-        //}
+        public void Cron()
+        {
+            SendSchedule();
+            SendWeather();
+        }
+
+        [NonAction]
+        public void SendWeather()
+        {
+            Console.WriteLine("Отправка погоды...");
+            var grouped = Utils.DB.Users.Where(x => x.CityNumber != 0 && x.Weather).GroupBy(x => x.City);
+            foreach (var group in grouped)
+            {
+                var ids = group.Select(x => x.Vk).ToList();
+                Utils.SendMessage(ids, $"В городе {group.Key} очень хорошая погода!"); //TODO: дополнить
+            }
+        }
+
+        [NonAction]
+        public void SendSchedule()
+        {
+            var grouped = Utils.DB.Users.Where(x => x.Group != 0 && x.Schedule).GroupBy(x => x.Group);
+            foreach (var group in grouped)
+            {
+                var ids = group.Select(x => x.Vk).ToList();
+                Utils.SendMessage(ids, Utils.GetSchedule(DateTime.Today, group.Key)); //TODO: дополнить
+            }
+        }
     }
 }
