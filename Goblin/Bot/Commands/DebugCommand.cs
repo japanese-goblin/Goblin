@@ -15,10 +15,12 @@ namespace Goblin.Bot.Commands
 
         public void Execute(string param, int id = 0)
         {
+            var dis = DateTime.Now - new DateTime(2017, 4, 29, 19, 42, 0);
             //TODO: дополнить чем-нибудь интересным
             Result =
                 $"Текущее время на сервере: {DateTime.Now.ToLongDateString()} {DateTime.Now.ToLongTimeString()}\n" +
-                $"Аптайм: {GetSysUptime()}\n";
+                $"Аптайм: {GetSysUptime()}\n" +
+                $"Гоблину уже {dis.Days} дней {dis.Hours} часов {dis.Minutes} минут!!";
         }
 
         private string GetSysUptime()

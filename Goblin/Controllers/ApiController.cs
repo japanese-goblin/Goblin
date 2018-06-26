@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Goblin.Bot;
 using Goblin.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,9 @@ namespace Goblin.Controllers
                     var msg = body["object"]["text"].ToString();
                     if (userID != convID)
                     {
-                        msg = msg.Split("[club146048760|Японский гоблин] ")[1];
+                        var b = Regex.Match(msg, @"\[club146048760\|.*\] (.*)").Groups[1].Value;
+                        if (b != "")
+                            msg = b;
                     }
 
                     if (!db.Users.Any(x => x.Vk == userID))

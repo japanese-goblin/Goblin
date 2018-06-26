@@ -18,7 +18,8 @@ namespace Goblin.Bot
             new ScheduleCommand(),
             new SetMailingCommand(),
             new UnsetMailingCommand(),
-            new ExamsCommand()
+            new ExamsCommand(),
+            new SendAdminCommand()
         };
 
         public static string ExecuteCommand(string message, int id)
@@ -26,8 +27,8 @@ namespace Goblin.Bot
             var split = message.Split(' ', 2);
             var comm = split[0].ToLower();
             var param = split.Length > 1 ? split[1] : "";
-            // var result = "Ошибочка, проверьте правильность написания команды!";
-            var result = "";
+            var result = "Ошибочка, проверьте правильность написания команды!";
+            //var result = "";
             lock (Commands) // TODO: ????
             {
                 Commands.Add(new HelpCommand(Commands)); // TODO: ????
