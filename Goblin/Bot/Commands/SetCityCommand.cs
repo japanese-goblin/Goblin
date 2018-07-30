@@ -35,6 +35,18 @@ namespace Goblin.Bot.Commands
             }
         }
 
+        public bool CanExecute(string param, int id = 0)
+        {
+            if (string.IsNullOrEmpty(param))
+            {
+                Result = "Введите название города";
+                return false;
+            }
+
+
+            return true;
+        }
+
         private bool CheckCity(string city, ref int cityid)
         {
             city = city.ToLower();
@@ -60,15 +72,17 @@ namespace Goblin.Bot.Commands
                 var citys = JsonConvert.DeserializeObject<List<City>>(a);
                 var selected = citys.FirstOrDefault(x => x.name.ToLower() == city);
                 if (selected == null) return false;
-                cityid = selected.geoid;
+                cityid = selected.GeoId;
                 return true;
             }
         }
     }
 
+    //TODO: to JsonProperty
     class City
     {
-        public int geoid { get; set; }
+        [JsonProperty("geoid")]
+        public int GeoId { get; set; }
         public string slug { get; set; }
         public string name { get; set; }
     }

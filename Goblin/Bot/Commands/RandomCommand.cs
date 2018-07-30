@@ -16,21 +16,27 @@ namespace Goblin.Bot.Commands
 
         public void Execute(string param, int id = 0)
         {
-            if (string.IsNullOrEmpty(param))
-            {
-                Result = $"Пример использования команды: {Usage}";
-                return;
-            }
-
-            var forRandom = param.Split(" или ");
-            if (forRandom.Length != 2)
-            {
-                Result = "Введи два параметра";
-                return;
-            }
+            var forRandom = param.Split(" или ", 2); //TODO: больше вариантов?
 
             var a = GetRandom(0, 100);
             Result = forRandom[a % 2 == 0 ? 0 : 1];
+        }
+
+        public bool CanExecute(string param, int id = 0)
+        {
+            if (string.IsNullOrEmpty(param))
+            {
+                Result = $"Пример использования команды: {Usage}";
+                return false;
+            }
+
+            var forRandom = param.Split(" или ", 2);
+            if (forRandom.Length < 2)
+            {
+                Result = "Введи два параметра";
+                return false;
+            }
+            return true;
         }
 
         public static int GetRandom(int start, int end)

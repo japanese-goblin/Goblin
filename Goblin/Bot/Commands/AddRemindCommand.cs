@@ -19,26 +19,7 @@ namespace Goblin.Bot.Commands
         public void Execute(string param, int id = 0)
         {
             var all = param.Split(' ', 3);
-            if (all.Length != 3)
-            {
-                Result = "Ошибочка";
-                return;
-            }
-
-            if (!Utils.DevelopersID.Contains(id) && Utils.DB.Reminds.Count(x => x.VkID == id) > 7)
-            {
-                Result = "Превышен лимит (8) напоминалок";
-                return;
-            }
-
             var time = DateTime.ParseExact($"{all[0]} {all[1]}", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture);
-            //time = time.AddHours(-3);
-            if (time < DateTime.Now)
-            {
-                Result = "Дата меньше текущей.";
-                return;
-            }
-
             Utils.DB.Reminds.Add(new Remind
             {
                 Text = all[2],
@@ -47,6 +28,37 @@ namespace Goblin.Bot.Commands
             });
             Utils.DB.SaveChanges();
             Result = $"Хорошо, {all[0]} в {all[1]} напомню следующее:\n{all[2]}";
+        }
+
+        public bool CanExecute(string param, int id = 0)
+        {
+            var all = param.Split(' ', 3);
+            if (all.Length != 3)
+            {
+                Result = "Ошибочка";
+                return false;
+            }
+
+            if (!Utils.DevelopersID.Contains(id) && Utils.DB.Reminds.Count(x => x.VkID == id) > 7)
+            {
+                Result = "Превышен лимит (8) напоминалок";
+                return false;
+            }
+
+            if (!DateTime.TryParseExact($"{all[0]} {all[1]}", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out var time))
+            {
+                Result = "Невозможно преобразовать дату.";
+                return false;
+            }
+            //time = time.AddHours(-3);
+            if (time < DateTime.Now)
+            {
+                Result = "Дата меньше текущей.";
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -20,5 +20,16 @@ namespace Goblin.Bot.Commands
             var msg = $"сообщение от @id{id} (id{id})\n{param}";
             Utils.SendMessage(Utils.DevelopersID, msg);
         }
+
+        public bool CanExecute(string param, int id = 0)
+        {
+            if (string.IsNullOrEmpty(param))
+            {
+                Result = "Введите сообщение для отправки.";
+                return false;
+            }
+
+            return true;
+        }
     }
 }

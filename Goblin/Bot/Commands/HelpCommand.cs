@@ -37,8 +37,11 @@ namespace Goblin.Bot.Commands
                 "Все команды необходимо писать без ковычек и точно также, как написано здесь. Параметры команды также писать без символа *";
         }
 
-        public void Execute(string param, int id = 0)
+        public void Execute(string param, int id = 0) { }
+
+        public bool CanExecute(string param, int id = 0)
         {
+            return true;
         }
     }
 }

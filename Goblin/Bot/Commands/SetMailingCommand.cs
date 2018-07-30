@@ -16,12 +16,6 @@ namespace Goblin.Bot.Commands
 
         public void Execute(string param, int id = 0)
         {
-            if (string.IsNullOrEmpty(param))
-            {
-                Result = "А на что подписаться?";
-                return;
-            }
-
             switch (param)
             {
                 case "погода":
@@ -38,6 +32,17 @@ namespace Goblin.Bot.Commands
             }
 
             Utils.DB.SaveChanges(); // TODO: не сохранять, если не изменилось?
+        }
+
+        public bool CanExecute(string param, int id = 0)
+        {
+            if (string.IsNullOrEmpty(param))
+            {
+                Result = "А на что подписаться? Укажи 'погода' либо 'расписание'";
+                return false;
+            }
+
+            return true;
         }
     }
 }

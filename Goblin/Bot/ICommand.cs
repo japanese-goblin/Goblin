@@ -13,5 +13,6 @@ namespace Goblin.Bot
         string Result { get; set; }
 
         void Execute(string param, int id = 0);
+        bool CanExecute(string param, int id = 0);
     }
 }

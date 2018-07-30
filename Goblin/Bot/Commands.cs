@@ -22,12 +22,14 @@ namespace Goblin.Bot
             new SendAdminCommand()
         };
 
+        public static string ErrorMessage = "Ошибочка, проверьте правильность написания команды!";
+
         public static string ExecuteCommand(string message, int id)
         {
             var split = message.Split(' ', 2);
             var comm = split[0].ToLower();
             var param = split.Length > 1 ? split[1] : "";
-            var result = "Ошибочка, проверьте правильность написания команды!";
+            var result = ErrorMessage;
             //var result = "";
             lock (Commands) // TODO: ????
             {
@@ -36,7 +38,8 @@ namespace Goblin.Bot
                 {
                     if (!command.Allias.Contains(comm)) continue;
                     if (command.IsAdmin && !Utils.DevelopersID.Contains(id)) continue;
-                    command.Execute(param, id);
+                    if (command.CanExecute(param, id))
+                        command.Execute(param, id);
                     result = command.Result;
                     break;
                 }

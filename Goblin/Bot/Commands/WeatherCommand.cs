@@ -37,6 +37,19 @@ namespace Goblin.Bot.Commands
             }
         }
 
+        public bool CanExecute(string param, int id = 0)
+        {
+            var user = Utils.DB.Users.First(x => x.Vk == id);
+            if (string.IsNullOrEmpty(param) && user.CityNumber == 0)
+            {
+                Result = "Либо укажи город в параметре команды, либо установи его командой 'город'";
+                return false;
+            }
+
+            return true;
+        }
+
+        //TODO: вынести в отдельный класс
         private string GetWeather(string city, int cityid)
         {
             var weather = "";
@@ -110,7 +123,7 @@ namespace Goblin.Bot.Commands
                 var citys = JsonConvert.DeserializeObject<List<City>>(a);
                 var selected = citys.FirstOrDefault(x => x.name.ToLower() == city);
                 if (selected == null) return false;
-                cityid = selected.geoid;
+                cityid = selected.GeoId;
                 return true;
             }
         }

@@ -15,15 +15,22 @@ namespace Goblin.Bot.Commands
 
         public void Execute(string param, int id = 0)
         {
-            if (!short.TryParse(param, out var group))
-            {
-                Result = "Ошибочка";
-                return;
-            }
+            var group = short.Parse(param);
 
             Utils.DB.Users.First(x => x.Vk == id).Group = group;
             Utils.DB.SaveChanges();
             Result = $"Группа успешно установлена на {group}!";
+        }
+
+        public bool CanExecute(string param, int id = 0)
+        {
+            if (!short.TryParse(param, out var group))
+            {
+                Result = "Ошибочка. Номер группы - положительно число без знаков (4 цифры из ссылки с расписания!!!)";
+                return false;
+            }
+
+            return true;
         }
     }
 }

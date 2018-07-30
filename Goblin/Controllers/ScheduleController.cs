@@ -23,7 +23,7 @@ namespace Goblin.Controllers
         }
 
         [NonAction]
-        private List<Lesson> GetSchedule(short usergroup)
+        public List<Lesson> GetSchedule(short usergroup)
         {
             var Lessons = new List<Lesson>();
             string calen;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Goblin.Bot.Commands
@@ -33,12 +32,17 @@ namespace Goblin.Bot.Commands
             Result = reminds;
         }
 
-        public string UnixTimeStampToDateTime(double unixTimeStamp)
+        public bool CanExecute(string param, int id = 0)
         {
-            var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-            dtDateTime = dtDateTime.AddHours(-3);
-            return $"{dtDateTime:dd.MM.yyyy HH:mm:ss}";
+            return true;
         }
+
+        //public string UnixTimeStampToDateTime(double unixTimeStamp)
+        //{
+        //    var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+        //    dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+        //    dtDateTime = dtDateTime.AddHours(-3);
+        //    return $"{dtDateTime:dd.MM.yyyy HH:mm:ss}";
+        //}
     }
 }

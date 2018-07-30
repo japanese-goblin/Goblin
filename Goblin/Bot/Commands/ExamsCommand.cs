@@ -22,11 +22,6 @@ namespace Goblin.Bot.Commands
         {
             var result = "Список экзаменов:\n";
             var user = Utils.DB.Users.First(x => x.Vk == id);
-            if (user.Group == 0)
-            {
-                Result = "Установи группу командой 'устгр'";
-                return;
-            }
 
             string calen;
             using (var client = new WebClient())
@@ -51,12 +46,24 @@ namespace Goblin.Bot.Commands
             foreach (var ev in events)
             {
                 var a = ev.Description.Split('\n');
-                var time = a[0].Replace('п', ')');
+                //var time = a[0].Replace('п', ')');
                 var group = a[1].Substring(3);
                 result += $"{ev.DtStart.Value.AddHours(3):dd.MM HH:mm} - {a[2]} ({a[3]})\nУ группы {group}\n В аудитории {a[5]}\n\n";
             }
 
             Result = result;
+        }
+
+        public bool CanExecute(string param, int id = 0)
+        {
+            var user = Utils.DB.Users.First(x => x.Vk == id);
+            if (user.Group == 0)
+            {
+                Result = "Установи группу командой 'устгр'";
+                return false;
+            }
+
+            return true;
         }
     }
 }

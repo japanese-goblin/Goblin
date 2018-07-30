@@ -17,26 +17,36 @@ namespace Goblin.Bot.Commands
         public void Execute(string param, int id = 0)
         {
             var user = Utils.DB.Users.First(x => x.Vk == id);
+
+            var dayAndMonth = param.Split('.').Select(int.Parse).ToList(); // [Day, Month]
+            DateTime time = new DateTime(2018, dayAndMonth[1], dayAndMonth[0]);
+
+            Result = Utils.GetSchedule(time, user.Group);
+        }
+
+        public bool CanExecute(string param, int id = 0)
+        {
+            var user = Utils.DB.Users.First(x => x.Vk == id);
             if (user.Group == 0)
             {
                 Result = "Для начала установи группу командой 'устгр'";
-                return;
+                return false;
             }
 
             var test = param.Split('.').Select(int.Parse).ToList();
             DateTime time;
+            //TODO: DateTime.TryParseExact?
             try
             {
-                time = new DateTime(2018, test[1], test[0]);
+                time = new DateTime(DateTime.Now.Year, test[1], test[0]);
             }
             catch
             {
                 Result = "Неправильная дата";
-                return;
+                return false;
             }
 
-            var group = user.Group;
-            Result = Utils.GetSchedule(time, group);
+            return true;
         }
     }
 }
