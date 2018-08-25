@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Goblin.Models;
 
 namespace Goblin.Bot.Commands
 {
@@ -13,10 +14,12 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
         public string Result { get; set; }
 
+        private MainContext db = new MainContext();
+
         public void Execute(string param, int id = 0)
         {
             var reminds = "Список напоминаний:\n";
-            var ureminds = Utils.DB.Reminds.Where(x => x.VkID == id).OrderBy(x => x.Date).ToList();
+            var ureminds = db.Reminds.Where(x => x.VkID == id).OrderBy(x => x.Date).ToList();
             if (!ureminds.Any())
             {
                 Result = "Напоминаний нет.";

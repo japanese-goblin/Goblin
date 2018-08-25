@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Goblin.Helpers;
+using Goblin.Models;
 
 namespace Goblin.Bot.Commands
 {
@@ -14,19 +16,21 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
         public string Result { get; set; }
 
+        private MainContext db = new MainContext();
+
         public void Execute(string param, int id = 0)
         {
-            var user = Utils.DB.Users.First(x => x.Vk == id);
+            var user = db.Users.First(x => x.Vk == id);
 
             var dayAndMonth = param.Split('.').Select(int.Parse).ToList(); // [Day, Month]
             DateTime time = new DateTime(2018, dayAndMonth[1], dayAndMonth[0]);
 
-            Result = Utils.GetSchedule(time, user.Group);
+            Result = ScheduleHelper.GetSchedule(time, user.Group);
         }
 
         public bool CanExecute(string param, int id = 0)
         {
-            var user = Utils.DB.Users.First(x => x.Vk == id);
+            var user = db.Users.First(x => x.Vk == id);
             if (user.Group == 0)
             {
                 Result = "Для начала установи группу командой 'устгр'";

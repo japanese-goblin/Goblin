@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Goblin.Models;
 
 namespace Goblin.Bot.Commands
 {
@@ -13,12 +14,14 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin => false;
         public string Result { get; set; }
 
+        private MainContext db = new MainContext();
+
         public void Execute(string param, int id = 0)
         {
             var group = short.Parse(param);
 
-            Utils.DB.Users.First(x => x.Vk == id).Group = group;
-            Utils.DB.SaveChanges();
+            db.Users.First(x => x.Vk == id).Group = group;
+            db.SaveChanges();
             Result = $"Группа успешно установлена на {group}!";
         }
 

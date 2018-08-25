@@ -12,6 +12,5 @@ namespace Goblin.Models
         public bool Schedule { get; set; }
         public bool Weather { get; set; }
         public string City { get; set; }
-        public int CityNumber { get; set; }
     }
 }

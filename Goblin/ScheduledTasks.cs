@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using FluentScheduler;
+using Goblin.Helpers;
 using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,10 +16,7 @@ namespace Goblin
             //Schedule(() => SendSchedule()).ToRunEvery(0).Days().At(8, 0);
             //Schedule(() => SendSchedule()).ToRunEvery(0).Days().At(8, 0);
             Schedule(() => SendRemind()).ToRunEvery(1).Minutes();
-            //TODO: ЭТО ЧТО ВООБЩЕ ТАКОЕ??7?7??
-            var a = new DbContextOptionsBuilder<MainContext>();
-            a.UseNpgsql("***REMOVED***");
-            db = new MainContext(a.Options);
+            db = new MainContext();
         }
 
         public void SendRemind()
@@ -28,7 +26,7 @@ namespace Goblin
             foreach (var remind in reminds)
             {
                 //TODO: else????
-                if (Utils.SendMessage(remind.VkID, remind.Text))
+                if (VkHelper.SendMessage(remind.VkID, remind.Text))
                 {
                     db.Reminds.Remove(remind);
                 }

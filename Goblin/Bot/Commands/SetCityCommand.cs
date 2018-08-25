@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using Goblin.Helpers;
+using Goblin.Models;
 using Newtonsoft.Json;
 
 namespace Goblin.Bot.Commands
@@ -17,16 +19,16 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin => false;
         public string Result { get; set; }
 
+        private MainContext db = new MainContext();
+
         public void Execute(string param, int id = 0)
         {
-            var cityid = 0;
             param = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(param);
-            if (CheckCity(param, ref cityid))
+            if (WeatherHelper.CheckCity(param))
             {
-                var user = Utils.DB.Users.First(x => x.Vk == id);
-                user.CityNumber = cityid;
+                var user = db.Users.First(x => x.Vk == id);
                 user.City = param;
-                Utils.DB.SaveChanges();
+                db.SaveChanges();
                 Result = $"Город успешно установлен на {param}";
             }
             else
@@ -45,36 +47,6 @@ namespace Goblin.Bot.Commands
 
 
             return true;
-        }
-
-        private bool CheckCity(string city, ref int cityid)
-        {
-            city = city.ToLower();
-            var uuid = "8211637137c4408898aceb1097921872";
-            var deviceid = "315f0e802b0b49eb8404ea8056abeaaf";
-            var time = DateTimeOffset.Now.ToUnixTimeSeconds();
-            var token = Utils.CreateMD5($"eternalsun{time}");
-            using (var client = new WebClient())
-            {
-                client.Headers.Add("User-Agent", "yandex-weather-android/4.2.1");
-                client.Headers.Add("Accept-Charset", "utf-8");
-                client.Headers.Add("X-Yandex-Weather-Client", "YandexWeatherAndroid/4.2.1");
-                client.Headers.Add("X-Yandex-Weather-Device", $"os=null;os_version=21;manufacturer=chromium;model=App Runtime for Chrome Dev;device_id={deviceid};uuid={uuid};");
-                client.Headers.Add("X-Yandex-Weather-Token", token);
-                client.Headers.Add("X-Yandex-Weather-Timestamp", time.ToString());
-                client.Headers.Add("X-Yandex-Weather-UUID", uuid);
-                client.Headers.Add("X-Yandex-Weather-Device-ID", deviceid);
-                //client.Headers.Add("Accept-Encoding", "gzip, deflate");
-                //client.Headers.Add("Host", "api.weather.yandex.ru");
-                //client.Headers.Add("Connection", "Keep-Alive");
-
-                var a = client.DownloadString("https://api.weather.yandex.ru/v1/locations?lang=ru_RU");
-                var citys = JsonConvert.DeserializeObject<List<City>>(a);
-                var selected = citys.FirstOrDefault(x => x.name.ToLower() == city);
-                if (selected == null) return false;
-                cityid = selected.GeoId;
-                return true;
-            }
         }
     }
 

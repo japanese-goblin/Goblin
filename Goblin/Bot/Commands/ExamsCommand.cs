@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Goblin.Models;
 using Ical.Net;
 
 namespace Goblin.Bot.Commands
@@ -18,10 +19,12 @@ namespace Goblin.Bot.Commands
 
         public string Result { get; set; }
 
+        private MainContext db = new MainContext();
+
         public void Execute(string param, int id = 0)
         {
             var result = "Список экзаменов:\n";
-            var user = Utils.DB.Users.First(x => x.Vk == id);
+            var user = db.Users.First(x => x.Vk == id);
 
             string calen;
             using (var client = new WebClient())
@@ -56,7 +59,7 @@ namespace Goblin.Bot.Commands
 
         public bool CanExecute(string param, int id = 0)
         {
-            var user = Utils.DB.Users.First(x => x.Vk == id);
+            var user = db.Users.First(x => x.Vk == id);
             if (user.Group == 0)
             {
                 Result = "Установи группу командой 'устгр'";

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using Goblin.Bot;
+using Goblin.Helpers;
 using Goblin.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,6 @@ namespace Goblin.Controllers
         public ApiController(MainContext context)
         {
             db = context;
-            Utils.DB = db;
         }
 
         public string Handler([FromBody] dynamic body)
@@ -24,7 +24,7 @@ namespace Goblin.Controllers
             switch (eventType)
             {
                 case "confirmation":
-                    return Utils.ConfirmationToken;
+                    return VkHelper.ConfirmationToken;
 
                 case "message_new":
                     userID = int.Parse(body["object"]["from_id"].ToString());
@@ -43,7 +43,7 @@ namespace Goblin.Controllers
                         db.SaveChanges();
                     }
 
-                    Utils.SendMessage(convID, CommandsList.ExecuteCommand(msg, userID));
+                    VkHelper.SendMessage(convID, CommandsList.ExecuteCommand(msg, userID));
                     break;
 
                 case "group_join":
@@ -51,7 +51,7 @@ namespace Goblin.Controllers
                     //db.Users.Add(new User() { Vk = userID });
                     //db.SaveChanges();
                     //{"type":"group_join","object":{"user_id":***REMOVED***,"join_type":"join"},"group_id":146286422}
-                    Utils.SendMessage(Utils.DevelopersID, $"@id{userID} ({Utils.GetUserName(userID)}) подписался!");
+                    VkHelper.SendMessage(VkHelper.DevelopersID, $"@id{userID} ({VkHelper.GetUserName(userID)}) подписался!");
                     break;
 
                 case "group_leave":
@@ -65,7 +65,7 @@ namespace Goblin.Controllers
                         db.SaveChanges();
                     }
 
-                    Utils.SendMessage(Utils.DevelopersID, $"@id{userID} ({Utils.GetUserName(userID)}) отписался!");
+                    VkHelper.SendMessage(VkHelper.DevelopersID, $"@id{userID} ({VkHelper.GetUserName(userID)}) отписался!");
                     break;
             }
 
@@ -74,35 +74,27 @@ namespace Goblin.Controllers
 
         public bool SendMessage(string msg)
         {
-            return Utils.SendMessage(db.Users.Select(x => x.Vk).ToList(), msg);
+            return VkHelper.SendMessage(db.Users.Select(x => x.Vk).ToList(), msg);
         }
 
-        public void Cron()
-        {
-            SendSchedule();
-            SendWeather();
-        }
-
-        [NonAction]
         public void SendWeather()
         {
             Console.WriteLine("Отправка погоды...");
-            var grouped = Utils.DB.Users.Where(x => x.CityNumber != 0 && x.Weather).GroupBy(x => x.City);
+            var grouped = db.Users.Where(x => x.City != "" && x.Weather).GroupBy(x => x.City);
             foreach (var group in grouped)
             {
                 var ids = group.Select(x => x.Vk).ToList();
-                Utils.SendMessage(ids, $"В городе {group.Key} очень хорошая погода!"); //TODO: дополнить
+                VkHelper.SendMessage(ids, WeatherHelper.GetWeather(group.Key)); //TODO: дополнить
             }
         }
 
-        [NonAction]
         public void SendSchedule()
         {
-            var grouped = Utils.DB.Users.Where(x => x.Group != 0 && x.Schedule).GroupBy(x => x.Group);
+            var grouped = db.Users.Where(x => x.Group != 0 && x.Schedule).GroupBy(x => x.Group);
             foreach (var group in grouped)
             {
                 var ids = group.Select(x => x.Vk).ToList();
-                Utils.SendMessage(ids, Utils.GetSchedule(DateTime.Today, group.Key)); //TODO: дополнить
+                VkHelper.SendMessage(ids, ScheduleHelper.GetSchedule(DateTime.Today, group.Key)); //TODO: дополнить
             }
         }
     }

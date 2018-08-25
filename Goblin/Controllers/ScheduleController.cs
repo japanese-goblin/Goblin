@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Goblin.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
-using Goblin.Models;
-using Ical.Net;
-using Microsoft.AspNetCore.Mvc;
+using Goblin.Helpers;
+using Calendar = Ical.Net.Calendar;
 
 namespace Goblin.Controllers
 {
@@ -18,49 +20,10 @@ namespace Goblin.Controllers
 
         public IActionResult Show(short id)
         {
-            ViewBag.Lessons = GetSchedule(id).GroupBy(x => $"{x.Time:dd-MM}");
-            return View();
-        }
-
-        [NonAction]
-        public List<Lesson> GetSchedule(short usergroup)
-        {
-            var Lessons = new List<Lesson>();
-            string calen;
-            using (var client = new WebClient())
-            {
-                try
-                {
-                    client.Encoding = Encoding.UTF8;
-                    calen = client.DownloadString(
-                        $"http://ruz.narfu.ru/?icalendar&oid={usergroup}&from={DateTime.Now:dd.MM.yyyy}");
-                }
-                catch (WebException e)
-                {
-                    return Lessons;
-                }
-            }
-
-            var calendar = Calendar.Load(calen);
-            var events = calendar.Events.Distinct().OrderBy(x => x.Start.Value).ToList();
-            if (!events.Any()) return Lessons;
-            foreach (var ev in events)
-            {
-                var a = ev.Description.Split('\n');
-
-                var les = new Lesson
-                {
-                    Address = ev.Location,
-                    Groups = a[1].Substring(3),
-                    Name = a[2],
-                    Teacher = a[4],
-                    Time = ev.Start.AsSystemLocal,
-                    Type = a[3]
-                };
-                Lessons.Add(les);
-            }
-
-            return Lessons;
+            ScheduleHelper.GetSchedule(id, out var lessons);
+            var result = lessons.GroupBy(x => ScheduleHelper.GetWeekNumber(x.Time))
+                .ToDictionary(x => $"{x.First().Time:d} - {x.Last().Time:d}", x => x.ToList()); // TODO: fix key
+            return View(result);
         }
     }
 }

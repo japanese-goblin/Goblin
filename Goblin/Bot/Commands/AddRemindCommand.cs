@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Goblin.Helpers;
 using Goblin.Models;
 
 namespace Goblin.Bot.Commands
@@ -16,17 +17,19 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
         public string Result { get; set; }
 
+        private MainContext db = new MainContext();
+
         public void Execute(string param, int id = 0)
         {
             var all = param.Split(' ', 3);
             var time = DateTime.ParseExact($"{all[0]} {all[1]}", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture);
-            Utils.DB.Reminds.Add(new Remind
+            db.Reminds.Add(new Remind
             {
                 Text = all[2],
                 Date = time,
                 VkID = id
             });
-            Utils.DB.SaveChanges();
+            db.SaveChanges();
             Result = $"Хорошо, {all[0]} в {all[1]} напомню следующее:\n{all[2]}";
         }
 
@@ -39,7 +42,7 @@ namespace Goblin.Bot.Commands
                 return false;
             }
 
-            if (!Utils.DevelopersID.Contains(id) && Utils.DB.Reminds.Count(x => x.VkID == id) > 7)
+            if (!VkHelper.DevelopersID.Contains(id) && db.Reminds.Count(x => x.VkID == id) > 7)
             {
                 Result = "Превышен лимит (8) напоминалок";
                 return false;

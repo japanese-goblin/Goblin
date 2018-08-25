@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Goblin.Bot.Commands;
+using Goblin.Helpers;
 
 namespace Goblin.Bot
 {
@@ -37,7 +38,7 @@ namespace Goblin.Bot
                 foreach (var command in Commands)
                 {
                     if (!command.Allias.Contains(comm)) continue;
-                    if (command.IsAdmin && !Utils.DevelopersID.Contains(id)) continue;
+                    if (command.IsAdmin && !VkHelper.DevelopersID.Contains(id)) continue;
                     if (command.CanExecute(param, id))
                         command.Execute(param, id);
                     result = command.Result;

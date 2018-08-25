@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Goblin.Models;
 
 namespace Goblin.Bot.Commands
 {
@@ -14,17 +15,19 @@ namespace Goblin.Bot.Commands
 
         public string Result { get; set; }
 
+        private MainContext db = new MainContext();
+
         public void Execute(string param, int id = 0)
         {
             switch (param)
             {
                 case "погода":
-                    Utils.DB.Users.First(x => x.Vk == id).Weather = false;
+                    db.Users.First(x => x.Vk == id).Weather = false;
                     Result = "Ты отписался от рассылки погоды :с";
                     break;
 
                 case "расписание":
-                    Utils.DB.Users.First(x => x.Vk == id).Schedule = false;
+                    db.Users.First(x => x.Vk == id).Schedule = false;
                     Result = "Ты отписался от рассылки расписания :с";
                     break;
 
@@ -33,7 +36,7 @@ namespace Goblin.Bot.Commands
                     break;
             }
 
-            Utils.DB.SaveChanges(); // TODO: не сохранять, если не изменилось?
+            db.SaveChanges(); // TODO: не сохранять, если не изменилось?
         }
 
         public bool CanExecute(string param, int id = 0)

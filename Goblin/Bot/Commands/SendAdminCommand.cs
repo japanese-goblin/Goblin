@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Goblin.Helpers;
 
 namespace Goblin.Bot.Commands
 {
@@ -18,7 +19,8 @@ namespace Goblin.Bot.Commands
         public void Execute(string param, int id = 0)
         {
             var msg = $"сообщение от @id{id} (id{id})\n{param}";
-            Utils.SendMessage(Utils.DevelopersID, msg);
+            VkHelper.SendMessage(VkHelper.DevelopersID, msg);
+            Result = "Сообщение успешно отправлено!";
         }
 
         public bool CanExecute(string param, int id = 0)

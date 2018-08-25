@@ -1,4 +1,5 @@
-﻿<head>
+﻿@model Dictionary<string, List<Goblin.Models.Lesson>>
+<head>
     <title>Расписание</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="utf-8">
@@ -17,17 +18,17 @@
 <body>
     <div class="container">
         <ul class="nav nav-tabs">
-            @foreach (var g in @ViewBag.Lessons)
+            @foreach (var g in Model)
             {
-                <li><a data-toggle="tab" href="#@g.Key">@g.Key</a></li>
+                <li><a data-toggle="tab" href="#@g.Value.First().Time.ToBinary()">@g.Key</a></li>
             }
         </ul>
 
         <div class="tab-content">
-            @foreach (var g in @ViewBag.Lessons)
+            @foreach (var g in Model)
             {
-                <div id="@g.Key" class="tab-pane fade">
-                @foreach (var v in g)
+                <div id="@g.Value.First().Time.ToBinary()" class="tab-pane fade">
+                @foreach (var v in g.Value)
                 {
                     <div class="col-md-2 box">
                         <p>@v.Time</p>
