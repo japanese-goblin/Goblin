@@ -19,7 +19,7 @@ namespace Goblin.Helpers
                 web.Encoding = Encoding.UTF8;
                 var req = $"weather?q={city}&units=metric&appid={_token}&lang=ru";
                 var w = JsonConvert.DeserializeObject<WeatherInfo>(web.DownloadString($"{_endPoint}/{req}"));
-                result = $"Погода в городе {city} на {UnixToDateTime(w.UnixTime):g}\n" +
+                result = $"Погода в городе {city} на {UnixToDateTime(w.UnixTime).AddHours(3):dd.MMyyyy HH:mm}\n" +
                          $"Температура: {w.Weather.Temperature}\n" +
                          $"Описание погоды: {w.Info[0].State}\n" +
                          $"Влажность: {w.Weather.Humidity}\n" +

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Goblin.Helpers;
 using Goblin.Models;
 using Ical.Net;
 
@@ -23,35 +24,28 @@ namespace Goblin.Bot.Commands
 
         public void Execute(string param, int id = 0)
         {
-            var result = "Список экзаменов:\n";
-            var user = db.Users.First(x => x.Vk == id);
-
-            string calen;
-            using (var client = new WebClient())
+            var user = db.Users.FirstOrDefault(x => x.Vk == id);
+            var res = ScheduleHelper.GetSchedule(user.Group, out var lessons);
+            lessons = lessons.Where(x =>
+                x.Type.Contains("Экзамен") || x.Type.Contains("Зачет") ||
+                x.Type.Contains("Интернет")).Distinct().OrderBy(x => x.Time).ToList();
+            if (!res)
             {
-                try
-                {
-                    client.Encoding = Encoding.UTF8;
-                    calen = client.DownloadString(
-                        $"http://ruz.narfu.ru/?icalendar&oid={user.Group}&from={DateTime.Now:dd.MM.yyyy}");
-                }
-                catch (WebException e)
-                {
-                    Result = $"Какая-то ошибочка ({e.Message}). Напиши @id***REMOVED*** (сюда) для решения проблемы!!";
-                    return;
-                }
+                Result = "Какая-то ошибочка. Возможно сменилась группа на сайте или сайт с расписанием недоступен";
+                return;
             }
 
-            var calendar = Calendar.Load(calen);
-            var events = calendar.Events.Where(x =>
-                x.Description.Contains("Экзамен") || x.Description.Contains("Зачет") ||
-                x.Description.Contains("Интернет")).Distinct().OrderBy(x => x.Start.Value);
-            foreach (var ev in events)
+            if(lessons.Count == 0)
             {
-                var a = ev.Description.Split('\n');
-                //var time = a[0].Replace('п', ')');
-                var group = a[1].Substring(3);
-                result += $"{ev.DtStart.Value.AddHours(3):dd.MM HH:mm} - {a[2]} ({a[3]})\nУ группы {group}\n В аудитории {a[5]}\n\n";
+                Result = "На данный момент список экзаменов отсутствует";
+                return;
+            }
+
+            var result = "Список экзаменов:\n";
+
+            foreach (var l in lessons)
+            {
+                result += $"{l.Time.AddHours(3):dd.MM HH:mm} - {l.Name} ({l.Type})\nУ группы {l.Groups}\n В аудитории {l.Address}\n\n";
             }
 
             Result = result;
