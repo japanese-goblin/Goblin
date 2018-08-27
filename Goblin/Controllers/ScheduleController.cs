@@ -1,13 +1,6 @@
-﻿using Goblin.Models;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using System.Net;
-using System.Text;
 using Goblin.Helpers;
-using Calendar = Ical.Net.Calendar;
 
 namespace Goblin.Controllers
 {
@@ -22,7 +15,7 @@ namespace Goblin.Controllers
         {
             ScheduleHelper.GetSchedule(id, out var lessons);
             var result = lessons.GroupBy(x => ScheduleHelper.GetWeekNumber(x.Time))
-                .ToDictionary(x => $"{x.First().Time:d} - {x.Last().Time:d}", x => x.ToList()); // TODO: fix key
+                .ToDictionary(x => $"{x.First().Time:dd.MM.yyyy} - {x.Last().Time:dd.MM.yyyy}", x => x.ToList()); // TODO: fix key
             return View(result);
         }
     }
