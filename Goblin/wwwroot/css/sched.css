@@ -1,4 +1,8 @@
-﻿.dayofweek {
+﻿.list {
+    padding: 0;
+}
+
+.dayofweek {
     font-size: small;
     margin: 5px 0 5px 2px;
 }
@@ -35,28 +39,21 @@
     top: -5px;
     left: -5px;
     display: inline-block !important;
-    /*background-color: #eee; */
     background-color: rgba(255, 255, 255, 0.5);
-    /*border: solid #ccc;
-border-width: 0 1px 1px 0;*/
-    /*opacity: .8;*/
     width: 20px;
     height: 20px;
     margin: 0 0 2px 0;
     line-height: 20px;
     vertical-align: middle;
     text-align: center;
-    /*border: solid 1px red;*/
 }
 
 .time_para {
     position: relative;
     top: -3px;
     display: inline-block !important;
-    /*background-color: #eee;*/
-    /*width: 100px;*/ height: 20px;
+    height: 20px;
     margin: 0 4px 2px 0;
-    /*padding: 0 5px;*/
     line-height: 20px;
     vertical-align: middle; /*text-align: center;*/
     font-size: x-small;
@@ -66,84 +63,52 @@ border-width: 0 1px 1px 0;*/
     border-bottom: 1px dotted red;
 }
 
-.timetable_sheet .auditorium {
-    /*position: absolute;
-left: 5px;
-right: 5px;
-bottom: 5px;*/
+.timetable_sheet > .auditorium {
     border-top: 1px dotted #252C32;
     padding: 2px 2px 0 2px;
     margin-top: 3px;
-    /*padding: 0 2px 0 2px;*/
-    /*padding: 0 5px;
-background-color: #fff;
-opacity: .8;*/
 }
-/*.timetable_sheet .auditorium hr
-{
-border-top: 1px dotted #252C32;
-margin: 0 0 4px 0;
-}*/
-.timetable_sheet .auditorium_rgh {
+
+.timetable_sheet > .auditorium_rgh {
     position: absolute;
     left: 5px;
     right: 5px;
     bottom: 5px;
-    /*border-top: 1px dotted #252C32;*/
     padding: 5px 2px 0 2px;
     text-align: right;
     font-weight: bold;
 }
 
 .auditorium_about {
-    /*width: 22px; height: 22px;
-margin: 0; padding: 4px;*/
     display: inline-block !important;
     float: right;
     opacity: .6;
 }
-/*.timetable_sheet .auditorium:hover
-{
-background-color:rgba(255, 255, 255, 0.5);
-}*/
-.timetable_sheet .discipline {
-    /*font-size: medium;*/
-    /*font-weight: bold;*/
-    /*white-space: nowrap;*/
-    /*max-height: 75px;
-overflow: hidden;
-text-overflow: ellipsis;*/
-}
 
-.timetable_sheet .kindOfWork {
-    /*color: #aaa;*/
+.timetable_sheet > .kindOfWork {
     opacity: .8;
     font-size: x-small;
 }
 
-.timetable_sheet_xs .kindOfWork {
-    /*color: #aaa;*/
+.timetable_sheet_xs > .kindOfWork {
     opacity: .8;
-    /*font-size: x-small; */
 }
 
-.timetable_sheet_xs .lecturer, .timetable_sheet_xs .discipline {
+.timetable_sheet_xs > .lecturer, .timetable_sheet_xs > .discipline {
     display: inline-block !important;
 }
 
 .group {
     font-size: small;
-    /*color: #000;*/
     display: block !important;
-    background-color: #fff;
-    /*border: solid 1px #ccc;*/
+    background: #fff;
     font-style: italic;
     margin-top: 2px;
     padding: 2px 5px;
-    /*padding: 4px 0 0 0;*/
     opacity: .6;
 }
 
+/* COLORS */
 .transparent {
     background: transparent !important;
 }
@@ -163,28 +128,11 @@ text-overflow: ellipsis;*/
 .blue {
     background: #BDD6EE !important;
 }
-/* #aff */
+
 .red {
     background: #fcc !important;
 }
 
 .orange {
     background: #fc9 !important;
-}
-
-/* my */
-.box {
-    border-color: darkcyan;
-    border-width: 1px;
-    border-style: solid;
-    margin: 3px;
-    min-height: 210px;
-}
-
-.box > * {
-    padding: 2px;
-}
-
-.type {
-    font-size: x-small;
 }

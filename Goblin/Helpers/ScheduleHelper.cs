@@ -60,10 +60,11 @@ namespace Goblin.Helpers
             foreach (var ev in events)
             {
                 var a = ev.Description.Split('\n');
-
+                var adr = ev.Location.Split('/');
                 var les = new Lesson
                 {
-                    Address = ev.Location,
+                    Address = adr[0],
+                    Auditory = adr[1],
                     Groups = a[1].Substring(3),
                     Name = a[2],
                     Teacher = a[4],

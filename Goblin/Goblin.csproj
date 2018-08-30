@@ -19,7 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\lib\" />
+    <Content Update="Groups.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
