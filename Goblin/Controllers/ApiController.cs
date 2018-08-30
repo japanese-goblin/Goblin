@@ -79,7 +79,6 @@ namespace Goblin.Controllers
 
         public void SendWeather()
         {
-            Console.WriteLine("Отправка погоды...");
             var grouped = db.Users.Where(x => x.City != "" && x.Weather).GroupBy(x => x.City);
             foreach (var group in grouped)
             {
@@ -94,7 +93,7 @@ namespace Goblin.Controllers
             foreach (var group in grouped)
             {
                 var ids = group.Select(x => x.Vk).ToList();
-                VkHelper.SendMessage(ids, ScheduleHelper.GetSchedule(DateTime.Today, group.Key)); //TODO: дополнить
+                VkHelper.SendMessage(ids, ScheduleHelper.GetScheduleAtDate(DateTime.Today, group.Key)); //TODO: дополнить
             }
         }
     }

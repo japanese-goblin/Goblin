@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using Goblin.Models;
+using Newtonsoft.Json;
 using Calendar = Ical.Net.Calendar;
 
 namespace Goblin.Helpers
 {
     public static class ScheduleHelper
     {
-        public static string GetSchedule(DateTime date, short usergroup)
+        public static List<Group> Groups = new List<Group>();
+
+        static ScheduleHelper()
+        {
+            Groups = JsonConvert.DeserializeObject<List<Group>>(File.ReadAllText("Groups.json"));
+        }
+
+        public static string GetScheduleAtDate(DateTime date, int usergroup)
         {
             var result = $"Расписание на {date:dd.MM}:\n";
             var res = GetSchedule(usergroup, out var lessons);
@@ -32,8 +41,9 @@ namespace Goblin.Helpers
             return result;
         }
 
-        public static bool GetSchedule(short usergroup, out List<Lesson> lessons)
+        public static bool GetSchedule(int realGroup, out List<Lesson> lessons)
         {
+            var usergroup = GetGroupByRealId(realGroup).SiteId;
             lessons = new List<Lesson>();
             string calen;
             using (var client = new WebClient())
@@ -84,6 +94,21 @@ namespace Goblin.Helpers
             var ciCurr = CultureInfo.CurrentCulture;
             var weekNum = ciCurr.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
             return weekNum;
+        }
+
+        public static bool IsCorrectGroup(int group)
+        {
+            return Groups.Any(x => x.RealId == group);
+        }
+
+        public static Group GetGroupByRealId(int realId)
+        {
+            return Groups.FirstOrDefault(x => x.RealId == realId);
+        }
+
+        public static Group GetGroupBySiteId(short siteId)
+        {
+            return Groups.FirstOrDefault(x => x.SiteId == siteId);
         }
     }
 }

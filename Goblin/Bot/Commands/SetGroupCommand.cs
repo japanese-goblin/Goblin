@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Goblin.Helpers;
 using Goblin.Models;
 
 namespace Goblin.Bot.Commands
@@ -8,7 +9,7 @@ namespace Goblin.Bot.Commands
     {
         public string Name => "Устгр *циферки*";
         public string Decription => "Установить группу для получения расписания";
-        public string Usage => "Устгр 3124";
+        public string Usage => "Устгр 351617";
         public List<string> Allias => new List<string> {"устгр"};
         public Category Category => Category.SAFU;
         public bool IsAdmin => false;
@@ -27,9 +28,9 @@ namespace Goblin.Bot.Commands
 
         public bool CanExecute(string param, int id = 0)
         {
-            if (!short.TryParse(param, out var group))
+            if (int.TryParse(param, out var i) && ScheduleHelper.IsCorrectGroup(i))
             {
-                Result = "Ошибочка. Номер группы - положительно число без знаков (4 цифры из ссылки с расписания!!!)";
+                Result = "Ошибочка. Номер группы - положительно число без знаков (6 цифр)";
                 return false;
             }
 

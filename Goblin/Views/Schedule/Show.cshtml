@@ -1,6 +1,7 @@
 ﻿@model Dictionary<string, List<Goblin.Models.Lesson>>
 @using System.Globalization;
 @addTagHelper "Goblin.TagHelpers.LessonTagHelper, Goblin"
+    
 <head>
     <title>Расписание</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -13,18 +14,11 @@
 <body>
     <div class="container-fluid">
         <div class="navbar navbar-default" role="navigation" name="begin">
-            <div class="container-fluid header_container">
+            <div class="container-fluid">
                 <!-- container -->
-                <div class="col-xs-5 col-sm-6 col-md-8">
-                    <div class="hidden-xs hidden-sm header_title">
-                        <a class="navbar-brand" href="http://ruz.narfu.ru">
-                            <span class="ruz">ruz</span>.narfu.ru /
-                            <span>
-                                351617                Информационные системы и технологии
-                            </span>
-                        </a>
-                    </div>
-                </div>
+                <p style="font-size: large">
+                    @ViewBag.Title
+                </p>
             </div>
         </div>
         <ul class="nav nav-tabs">

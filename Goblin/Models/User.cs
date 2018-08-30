@@ -8,7 +8,7 @@ namespace Goblin.Models
         public int ID { get; set; }
 
         public int Vk { get; set; }
-        public short Group { get; set; } // TODO: short -> int?
+        public int Group { get; set; }
         public bool Schedule { get; set; }
         public bool Weather { get; set; }
         public string City { get; set; }

@@ -21,11 +21,18 @@ namespace Goblin.Bot.Commands
         public void Execute(string param, int id = 0)
         {
             var user = db.Users.First(x => x.Vk == id);
+            DateTime time;
+            if (param == "")
+            {
+                time = DateTime.Now;
+            }
+            else
+            {
+                var dayAndMonth = param.Split('.').Select(int.Parse).ToList(); // [Day, Month]
+                time = new DateTime(2018, dayAndMonth[1], dayAndMonth[0]);
+            }
 
-            var dayAndMonth = param.Split('.').Select(int.Parse).ToList(); // [Day, Month]
-            DateTime time = new DateTime(2018, dayAndMonth[1], dayAndMonth[0]);
-
-            Result = ScheduleHelper.GetSchedule(time, user.Group);
+            Result = ScheduleHelper.GetScheduleAtDate(time, user.Group);
         }
 
         public bool CanExecute(string param, int id = 0)
@@ -35,6 +42,11 @@ namespace Goblin.Bot.Commands
             {
                 Result = "Для начала установи группу командой 'устгр'";
                 return false;
+            }
+
+            if (param == "")
+            {
+                return true;
             }
 
             var test = param.Split('.').Select(int.Parse).ToList();

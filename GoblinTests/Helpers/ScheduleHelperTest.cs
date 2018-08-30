@@ -7,19 +7,19 @@ namespace GoblinTests.Helpers
     [TestClass]
     public class ScheduleHelperTest
     {
-        private const short groupId = 9092;
+        private const int groupId = 9092;
 
         [TestMethod]
         public void GetSchedule_Right_Schedule()
         {
-            var sched = ScheduleHelper.GetSchedule(new DateTime(2018, 9, 12), groupId);
+            var sched = ScheduleHelper.GetScheduleAtDate(new DateTime(2018, 9, 12), groupId);
             Assert.IsTrue(!sched.Contains("отсутствует"));
         }
 
         [TestMethod]
         public void GetSchedule_August_Empty()
         {
-            var sched = ScheduleHelper.GetSchedule(new DateTime(2018, 8, 12), groupId);
+            var sched = ScheduleHelper.GetScheduleAtDate(new DateTime(2018, 8, 12), groupId);
             Assert.IsTrue(sched.Contains("отсутствует"));
         }
 
