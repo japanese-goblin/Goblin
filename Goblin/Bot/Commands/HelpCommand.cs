@@ -32,7 +32,7 @@ namespace Goblin.Bot.Commands
             }
 
             Result = $"Общее число команд на данный момент: {cmds.Count(x => !x.IsAdmin) + 1}\n\n{common}\n\n{safu}\n\n";
-            Result = "По любым вопросам/предложениям/ошибкам и прочему, прошу писать сюда: @id***REMOVED*** (Админ)";
+            Result += "По любым вопросам/предложениям/ошибкам и прочему, прошу писать сюда: @id***REMOVED*** (Админ)";
         }
 
         public void Execute(string param, int id = 0) { }

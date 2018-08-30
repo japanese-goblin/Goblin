@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Goblin.Controllers
 {
-    [NonController]
     public class AdminController : Controller
     {
         private readonly MainContext db;
