@@ -69,7 +69,8 @@ namespace Goblin.Helpers
                     Teacher = a[4],
                     Time = ev.Start.AsSystemLocal,
                     Type = a[3],
-                    StartEndTime = a[0].Replace(")", "").Replace("(", "").Replace("п", ")")
+                    StartEndTime = a[0].Replace(")", "").Replace("(", "").Replace("п", ")"),
+                    Number = (byte)a[0].ElementAt(0)
                 };
                 lessons.Add(les);
             }
