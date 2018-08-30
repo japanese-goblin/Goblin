@@ -19,22 +19,25 @@ namespace Goblin.Bot.Commands
 
         public void Execute(string param, int id = 0)
         {
-            var group = short.Parse(param);
+            var group = int.Parse(param);
+            var gr = ScheduleHelper.GetGroupByRealId(group);
 
             db.Users.First(x => x.Vk == id).Group = group;
             db.SaveChanges();
-            Result = $"Группа успешно установлена на {group}!";
+            Result = $"Группа успешно установлена на {group} ({gr.Name})!";
         }
 
         public bool CanExecute(string param, int id = 0)
         {
             if (int.TryParse(param, out var i) && ScheduleHelper.IsCorrectGroup(i))
             {
+                return true;
+            }
+            else
+            {
                 Result = "Ошибочка. Номер группы - положительно число без знаков (6 цифр)";
                 return false;
             }
-
-            return true;
         }
     }
 }
