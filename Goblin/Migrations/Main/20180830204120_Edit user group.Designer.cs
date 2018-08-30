@@ -8,12 +8,13 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
-namespace Goblin.Migrations
+namespace Goblin.Migrations.Main
 {
     [DbContext(typeof(MainContext))]
-    partial class d9o30apvvh50ejContextModelSnapshot : ModelSnapshot
+    [Migration("20180830204120_Edit user group")]
+    partial class Editusergroup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
