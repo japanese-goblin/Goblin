@@ -22,7 +22,7 @@ namespace Goblin
         public void SendRemind()
         {
             //TODO: ?????
-            var reminds = db.Reminds.Where(x => $"{x.Date.AddHours(-3):dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
+            var reminds = db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
             foreach (var remind in reminds)
             {
                 //TODO: else????
