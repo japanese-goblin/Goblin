@@ -83,17 +83,20 @@ namespace Goblin.Controllers
             foreach (var group in grouped)
             {
                 var ids = group.Select(x => x.Vk).ToList();
-                VkHelper.SendMessage(ids, WeatherHelper.GetWeather(group.Key)); //TODO: дополнить
+                VkHelper.SendMessage(ids, WeatherHelper.GetWeather(group.Key));
             }
         }
 
         public void SendSchedule()
         {
+            var day = DateTime.Now.DayOfWeek;
+            if (day == DayOfWeek.Saturday) return;
             var grouped = db.Users.Where(x => x.Group != 0 && x.Schedule).GroupBy(x => x.Group);
             foreach (var group in grouped)
             {
                 var ids = group.Select(x => x.Vk).ToList();
-                VkHelper.SendMessage(ids, ScheduleHelper.GetScheduleAtDate(DateTime.Today, group.Key)); //TODO: дополнить
+                var schedule = ScheduleHelper.GetScheduleAtDate(DateTime.Today, group.Key);
+                VkHelper.SendMessage(ids, schedule);
             }
         }
     }

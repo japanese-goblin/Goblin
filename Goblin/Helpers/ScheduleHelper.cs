@@ -26,16 +26,21 @@ namespace Goblin.Helpers
             var res = GetSchedule(usergroup, out var lessons);
             if (!res)
             {
-                return $"Какая-то ошибочка :с\n Возможно, сайт с расписанием недоступен, либо изменился номер группы на сайте.";
+                var group = GetGroupByRealId(usergroup).SiteId;
+                return $"Какая-то ошибочка :с\n" +
+                       $"Возможно, сайт с расписанием недоступен, либо изменился номер группы на сайте.\n" +
+                       $"Вы можете проверить расписание здесь: http://ruz.narfu.ru/?icalendar&oid={group}&from={DateTime.Now:dd.MM.yyyy}";
             }
 
             lessons = lessons.Where(x => x.Time.DayOfYear == date.DayOfYear).ToList();
 
             if (lessons.Count == 0) return $"На {date:dd.MM} расписание отсутствует!";
 
-            foreach (var l in lessons.Where(x => x.Time.DayOfYear == date.DayOfYear))
+            foreach (var lesson in lessons.Where(x => x.Time.DayOfYear == date.DayOfYear))
             {
-                result += $"{l.StartEndTime} - {l.Name} ({l.Type})\nУ группы {l.Groups}\n В аудитории {l.Address}\n\n";
+                result += $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}] ({lesson.Teacher})\n" +
+                          $"У группы {lesson.Groups}\n" +
+                          $"В аудитории {lesson.Auditory}\n\n";
             }
 
             return result;
@@ -60,7 +65,15 @@ namespace Goblin.Helpers
                 }
             }
 
-            var calendar = Calendar.Load(calen);
+            Calendar calendar;
+            try
+            {
+                calendar = Calendar.Load(calen);
+            }
+            catch
+            {
+                return false;
+            }
             var events = calendar.Events.Distinct().OrderBy(x => x.Start.Value).ToList();
             if (!events.Any())
             {
