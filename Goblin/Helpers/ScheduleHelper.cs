@@ -41,9 +41,9 @@ namespace Goblin.Helpers
 
             foreach (var lesson in lessons.Where(x => x.Time.DayOfYear == date.DayOfYear))
             {
-                result += $"{lesson.StartEndTime} - {lesson.Name} ({lesson.Type})\n" +
+                result += $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}] ({lesson.Teacher})\n" +
                           $"У группы {lesson.Groups}\n" +
-                          $"В аудитории {lesson.Address}\n\n";
+                          $"В аудитории {lesson.Auditory} ({lesson.Address}\n\n";
             }
 
             return result;
