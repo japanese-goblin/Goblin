@@ -19,7 +19,7 @@ namespace Goblin.Controllers
             var group = ScheduleHelper.GetGroupByRealId(id);
             ViewBag.Title = $"{group.RealId} - {group.Name}";
             var response = await ScheduleHelper.GetSchedule(id);
-            if (response.IsError)
+            if (!response.IsError)
             {
                 var result = response.Lessons.GroupBy(x => ScheduleHelper.GetWeekNumber(x.Time))
                              .ToDictionary(x => $"{x.First().Time:dd.MM.yyyy} - {x.Last().Time:dd.MM.yyyy}",
