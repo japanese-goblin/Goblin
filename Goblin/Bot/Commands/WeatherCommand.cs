@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Models;
 
@@ -18,18 +19,18 @@ namespace Goblin.Bot.Commands
 
         private MainContext db = new MainContext();
 
-        public void Execute(string param, int id = 0)
+        public async Task Execute(string param, int id = 0)
         {
             var user = db.Users.FirstOrDefault(x => x.Vk == id);
             if (string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
             {
-                Result = WeatherHelper.GetWeather(user?.City);
+                Result = await WeatherHelper.GetWeather(user?.City);
                 return;
             }
 
-            if (WeatherHelper.CheckCity(param))
+            if (await WeatherHelper.CheckCity(param))
             {
-                Result = WeatherHelper.GetWeather(param);
+                Result = await WeatherHelper.GetWeather(param);
             }
             else
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Models;
 
@@ -19,17 +20,17 @@ namespace Goblin.Bot.Commands
 
         private MainContext db = new MainContext();
 
-        public void Execute(string param, int id = 0)
+        public async Task Execute(string param, int id = 0)
         {
             var all = param.Split(' ', 3);
             var time = DateTime.ParseExact($"{all[0]} {all[1]}", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture);
-            db.Reminds.Add(new Remind
+            await db.Reminds.AddAsync(new Remind
             {
                 Text = all[2],
                 Date = time,
                 VkID = id
             });
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             Result = $"Хорошо, {all[0]} в {all[1]} напомню следующее:\n{all[2]}";
         }
 

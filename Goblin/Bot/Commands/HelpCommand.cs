@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Goblin.Bot.Commands
 {
@@ -35,7 +36,7 @@ namespace Goblin.Bot.Commands
             Result += "По любым вопросам/предложениям/ошибкам и прочему, прошу писать сюда: @id***REMOVED*** (Админ)";
         }
 
-        public void Execute(string param, int id = 0) { }
+        public async Task Execute(string param, int id = 0) { }
 
         public bool CanExecute(string param, int id = 0)
         {

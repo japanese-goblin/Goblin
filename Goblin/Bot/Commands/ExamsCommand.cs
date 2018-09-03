@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
+using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Models;
-using Ical.Net;
+using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Bot.Commands
 {
@@ -22,20 +20,24 @@ namespace Goblin.Bot.Commands
 
         private MainContext db = new MainContext();
 
-        public void Execute(string param, int id = 0)
+        public async Task Execute(string param, int id = 0)
         {
-            var user = db.Users.FirstOrDefault(x => x.Vk == id);
-            var res = ScheduleHelper.GetSchedule(user.Group, out var lessons);
-            lessons = lessons.Where(x =>
-                x.Type.Contains("Экзамен") || x.Type.Contains("Зачет") ||
-                x.Type.Contains("Интернет")).Distinct().OrderBy(x => x.Time).ToList();
-            if (!res)
+            var user = await db.Users.FirstOrDefaultAsync(x => x.Vk == id);
+            var res = await ScheduleHelper.GetSchedule(user.Group);
+            if (res.IsError)
             {
                 Result = "Какая-то ошибочка. Возможно сменилась группа на сайте или сайт с расписанием недоступен";
                 return;
             }
 
-            if(lessons.Count == 0)
+            var lessons = res.Lessons.Where(x =>
+                              x.Type.Contains("Экзамен") || x.Type.Contains("Зачет") ||
+                              x.Type.Contains("Интернет"))
+                          .Distinct()
+                          .OrderBy(x => x.Time)
+                          .ToList();
+
+            if (lessons.Count == 0)
             {
                 Result = "На данный момент список экзаменов отсутствует";
                 return;
@@ -45,7 +47,7 @@ namespace Goblin.Bot.Commands
 
             foreach (var l in lessons)
             {
-                result += $"{l.Time.AddHours(3):dd.MM HH:mm} - {l.Name} ({l.Type})\nУ группы {l.Groups}\n В аудитории {l.Address}\n\n";
+                result += $"{l.Time:dd.MM HH:mm} - {l.Name} ({l.Type})\nУ группы {l.Groups}\n В аудитории {l.Address}\n\n";
             }
 
             Result = result;

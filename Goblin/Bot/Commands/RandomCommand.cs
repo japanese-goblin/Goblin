@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Goblin.Bot.Commands
 {
@@ -14,7 +15,7 @@ namespace Goblin.Bot.Commands
 
         public string Result { get; set; }
 
-        public void Execute(string param, int id = 0)
+        public async Task Execute(string param, int id = 0)
         {
             var forRandom = param.Split(" или ", 2); //TODO: больше вариантов?
 

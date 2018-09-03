@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentScheduler;
 using Goblin.Helpers;
 using Goblin.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Goblin
 {
@@ -15,18 +15,18 @@ namespace Goblin
         {
             //Schedule(() => SendSchedule()).ToRunEvery(0).Days().At(8, 0);
             //Schedule(() => SendSchedule()).ToRunEvery(0).Days().At(8, 0);
-            Schedule(() => SendRemind()).ToRunEvery(1).Minutes();
+            Schedule(async () => await SendRemind()).ToRunEvery(1).Minutes();
             db = new MainContext();
         }
 
-        public void SendRemind()
+        public async Task SendRemind()
         {
             //TODO: ?????
             var reminds = db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
             foreach (var remind in reminds)
             {
                 //TODO: else????
-                if (VkHelper.SendMessage(remind.VkID, remind.Text))
+                if (await VkHelper.SendMessage(remind.VkID, remind.Text))
                 {
                     db.Reminds.Remove(remind);
                 }

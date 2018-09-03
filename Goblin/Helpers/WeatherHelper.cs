@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Goblin.Helpers
 {
@@ -11,14 +12,15 @@ namespace Goblin.Helpers
         private const string _endPoint = "http://api.openweathermap.org/data/2.5";
         private const string _token = "***REMOVED***";
 
-        public static string GetWeather(string city)
+        public static async Task<string> GetWeather(string city)
         {
             var result = "";
             using (var web = new WebClient())
             {
                 web.Encoding = Encoding.UTF8;
                 var req = $"weather?q={city}&units=metric&appid={_token}&lang=ru";
-                var w = JsonConvert.DeserializeObject<WeatherInfo>(web.DownloadString($"{_endPoint}/{req}"));
+                var response = await web.DownloadStringTaskAsync($"{_endPoint}/{req}");
+                var w = JsonConvert.DeserializeObject<WeatherInfo>(response);
                 result = $"Погода в городе {city} на {UnixToDateTime(w.UnixTime):dd.MM.yyyy HH:mm}\n" +
                          $"Температура: {w.Weather.Temperature}\n" +
                          $"Описание погоды: {w.Info[0].State}\n" +
@@ -31,7 +33,7 @@ namespace Goblin.Helpers
             return result;
         }
 
-        public static bool CheckCity(string city)
+        public static async Task<bool> CheckCity(string city)
         {
             var result = false;
             using (var web = new WebClient())
@@ -39,7 +41,8 @@ namespace Goblin.Helpers
                 var req = $"weather?q={city}&units=metric&appid={_token}";
                 try
                 {
-                    var w = JsonConvert.DeserializeObject<WeatherInfo>(web.DownloadString($"{_endPoint}/{req}"));
+                    var response = await web.DownloadStringTaskAsync($"{_endPoint}/{req}");
+                    var w = JsonConvert.DeserializeObject<WeatherInfo>(response);
                     result = true;
                 }
                 catch { }

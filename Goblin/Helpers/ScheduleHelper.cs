@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using Goblin.Models;
 using Newtonsoft.Json;
 using Calendar = Ical.Net.Calendar;
@@ -20,48 +21,48 @@ namespace Goblin.Helpers
             Groups = JsonConvert.DeserializeObject<List<Group>>(File.ReadAllText("Groups.json"));
         }
 
-        public static string GetScheduleAtDate(DateTime date, int usergroup)
+        public static async Task<string> GetScheduleAtDate(DateTime date, int usergroup)
         {
             var result = $"Расписание на {date:dd.MM}:\n";
-            var res = GetSchedule(usergroup, out var lessons);
-            if (!res)
+            var res = await GetSchedule(usergroup);
+
+            if (res.IsError)
             {
-                var group = GetGroupByRealId(usergroup).SiteId;
-                return $"Какая-то ошибочка :с\n" +
-                       $"Возможно, сайт с расписанием недоступен, либо изменился номер группы на сайте.\n" +
+                var group = ScheduleHelper.GetGroupByRealId(usergroup).SiteId;
+                return "Какая-то ошибочка :с\n" +
+                       "Возможно, сайт с расписанием недоступен, либо изменился номер группы на сайте.\n" +
                        $"Вы можете проверить расписание здесь: http://ruz.narfu.ru/?icalendar&oid={group}&from={DateTime.Now:dd.MM.yyyy}";
+
             }
 
-            lessons = lessons.Where(x => x.Time.DayOfYear == date.DayOfYear).ToList();
+            var lessons = res.Lessons.Where(x => x.Time.DayOfYear == date.DayOfYear).ToList();
 
             if (lessons.Count == 0) return $"На {date:dd.MM} расписание отсутствует!";
 
             foreach (var lesson in lessons.Where(x => x.Time.DayOfYear == date.DayOfYear))
             {
-                result += $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}] ({lesson.Teacher})\n" +
+                result += $"{lesson.StartEndTime} - {lesson.Name} ({lesson.Type})\n" +
                           $"У группы {lesson.Groups}\n" +
-                          $"В аудитории {lesson.Auditory}\n\n";
+                          $"В аудитории {lesson.Address}\n\n";
             }
 
             return result;
         }
 
-        public static bool GetSchedule(int realGroup, out List<Lesson> lessons)
+        public static async Task<(bool IsError, List<Lesson> Lessons)> GetSchedule(int realGroup)
         {
             var usergroup = GetGroupByRealId(realGroup).SiteId;
-            lessons = new List<Lesson>();
             string calen;
             using (var client = new WebClient())
             {
                 try
                 {
                     client.Encoding = Encoding.UTF8;
-                    calen = client.DownloadString(
-                        $"http://ruz.narfu.ru/?icalendar&oid={usergroup}&from={DateTime.Now:dd.MM.yyyy}");
+                    calen = await client.DownloadStringTaskAsync($"http://ruz.narfu.ru/?icalendar&oid={usergroup}&from={DateTime.Now:dd.MM.yyyy}");
                 }
                 catch (WebException)
                 {
-                    return false;
+                    return (true, new List<Lesson>());
                 }
             }
 
@@ -72,12 +73,14 @@ namespace Goblin.Helpers
             }
             catch
             {
-                return false;
+                return (false, new List<Lesson>());
             }
+
+            var lessons = new List<Lesson>();
             var events = calendar.Events.Distinct().OrderBy(x => x.Start.Value).ToList();
             if (!events.Any())
             {
-                return true;
+                return (false, new List<Lesson>());
             }
 
             foreach (var ev in events)
@@ -99,7 +102,7 @@ namespace Goblin.Helpers
                 lessons.Add(les);
             }
 
-            return true;
+            return (false, lessons);
         }
 
         public static int GetWeekNumber(DateTime date)

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Net;
+using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Models;
-using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Bot.Commands
 {
@@ -21,14 +19,14 @@ namespace Goblin.Bot.Commands
 
         private MainContext db = new MainContext();
 
-        public void Execute(string param, int id = 0)
+        public async Task Execute(string param, int id = 0)
         {
             param = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(param);
-            if (WeatherHelper.CheckCity(param))
+            if (await WeatherHelper.CheckCity(param))
             {
-                var user = db.Users.First(x => x.Vk == id);
+                var user = await db.Users.FirstAsync(x => x.Vk == id);
                 user.City = param;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 Result = $"Город успешно установлен на {param}";
             }
             else
@@ -48,14 +46,5 @@ namespace Goblin.Bot.Commands
 
             return true;
         }
-    }
-
-    //TODO: to JsonProperty
-    class City
-    {
-        [JsonProperty("geoid")]
-        public int GeoId { get; set; }
-        public string slug { get; set; }
-        public string name { get; set; }
     }
 }

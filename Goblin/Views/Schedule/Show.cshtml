@@ -1,7 +1,7 @@
 ﻿@model Dictionary<string, List<Goblin.Models.Lesson>>
 @using System.Globalization;
 @addTagHelper "Goblin.TagHelpers.LessonTagHelper, Goblin"
-    
+
 <head>
     <title>Расписание</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -15,10 +15,9 @@
     <div class="container-fluid">
         <div class="navbar navbar-default" role="navigation" name="begin">
             <div class="container-fluid">
-                <!-- container -->
-                <p style="font-size: large">
-                    @ViewBag.Title
-                </p>
+                <div class="navbar-header">
+                    <p class="navbar-text" style="font-size: large">@ViewBag.Title</p>
+                </div>
             </div>
         </div>
         <ul class="nav nav-tabs">

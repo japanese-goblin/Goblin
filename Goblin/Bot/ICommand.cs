@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Goblin.Bot
 {
@@ -12,7 +13,7 @@ namespace Goblin.Bot
         bool IsAdmin { get; }
         string Result { get; set; }
 
-        void Execute(string param, int id = 0);
+        Task Execute(string param, int id = 0);
         bool CanExecute(string param, int id = 0);
     }
 }

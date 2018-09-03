@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Goblin.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Bot.Commands
 {
@@ -16,10 +18,10 @@ namespace Goblin.Bot.Commands
 
         private MainContext db = new MainContext();
 
-        public void Execute(string param, int id = 0)
+        public async Task Execute(string param, int id = 0)
         {
             var reminds = "Список напоминаний:\n";
-            var ureminds = db.Reminds.Where(x => x.VkID == id).OrderBy(x => x.Date).ToList();
+            var ureminds = await db.Reminds.Where(x => x.VkID == id).OrderBy(x => x.Date).ToListAsync();
             if (!ureminds.Any())
             {
                 Result = "Напоминаний нет.";
@@ -39,13 +41,5 @@ namespace Goblin.Bot.Commands
         {
             return true;
         }
-
-        //public string UnixTimeStampToDateTime(double unixTimeStamp)
-        //{
-        //    var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-        //    dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-        //    dtDateTime = dtDateTime.AddHours(-3);
-        //    return $"{dtDateTime:dd.MM.yyyy HH:mm:ss}";
-        //}
     }
 }

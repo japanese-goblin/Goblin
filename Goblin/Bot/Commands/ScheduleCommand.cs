@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Bot.Commands
 {
@@ -18,9 +20,9 @@ namespace Goblin.Bot.Commands
 
         private MainContext db = new MainContext();
 
-        public void Execute(string param, int id = 0)
+        public async Task Execute(string param, int id = 0)
         {
-            var user = db.Users.First(x => x.Vk == id);
+            var user = await db.Users.FirstAsync(x => x.Vk == id);
             DateTime time;
             if (param == "")
             {
@@ -32,7 +34,7 @@ namespace Goblin.Bot.Commands
                 time = new DateTime(2018, dayAndMonth[1], dayAndMonth[0]);
             }
 
-            Result = ScheduleHelper.GetScheduleAtDate(time, user.Group);
+            Result = await ScheduleHelper.GetScheduleAtDate(time, user.Group);
         }
 
         public bool CanExecute(string param, int id = 0)

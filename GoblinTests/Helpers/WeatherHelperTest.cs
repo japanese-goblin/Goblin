@@ -1,4 +1,5 @@
-﻿using Goblin.Helpers;
+﻿using System.Threading.Tasks;
+using Goblin.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GoblinTests.Helpers
@@ -7,23 +8,23 @@ namespace GoblinTests.Helpers
     public class WeatherHelperTest
     {
         [TestMethod]
-        public void CheckCity_Arh_True()
+        public async Task CheckCity_Arh_True()
         {
-            var res = WeatherHelper.CheckCity("Архангельск");
+            var res = await WeatherHelper.CheckCity("Архангельск");
             Assert.AreEqual(true, res);
         }
 
         [TestMethod]
-        public void CheckCity_Unk_False()
+        public async Task CheckCity_Unk_False()
         {
-            var res = WeatherHelper.CheckCity("фдлытв");
+            var res = await WeatherHelper.CheckCity("фдлытв");
             Assert.AreEqual(false, res);
         }
 
         [TestMethod]
-        public void GetWeather_Arh_String()
+        public async Task GetWeather_Arh_String()
         {
-            var res = WeatherHelper.GetWeather("Архангельск");
+            var res = await WeatherHelper.GetWeather("Архангельск");
             Assert.AreNotEqual(string.Empty, res);
         }
     }

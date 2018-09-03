@@ -7,9 +7,9 @@ namespace GoblinTests.Bot
     public class CommandsListTest
     {
         [TestMethod]
-        public void ExecuteWrongCommand()
+        public async void ExecuteWrongCommand()
         {
-            var result = CommandsList.ExecuteCommand("ûאפûא", 1);
+            var result = await CommandsList.ExecuteCommand("ûאפûא", 1);
             Assert.AreEqual(result, CommandsList.ErrorMessage);
         }
 

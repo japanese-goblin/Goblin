@@ -23,17 +23,10 @@ namespace GoblinTests.Controllers
         }
 
         [TestMethod]
-        public void ShowViewResultNotNull()
+        public async void ShowViewResultNotNull()
         {
-            var result = control.Show(-1) as ViewResult;
+            var result = await control.Show(-1) as ViewResult;
             Assert.IsNotNull(result);
         }
-
-        //[TestMethod]
-        //public void GetScheduleLessonsCount()
-        //{
-        //    var result = control.GetSchedule(6929);
-        //    Assert.IsTrue(result.Count > 0, "result.Count > 0");
-        //}
     }
 }

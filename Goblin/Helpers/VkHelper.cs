@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Goblin.Helpers
@@ -17,12 +18,12 @@ namespace Goblin.Helpers
 
         public static List<int> DevelopersID = new List<int> {***REMOVED***};
 
-        public static bool SendMessage(int id, string text, string attach = "")
+        public static async Task<bool> SendMessage(int id, string text, string attach = "")
         {
-            return SendMessage(new List<int> {id}, text, attach);
+            return await SendMessage(new List<int> {id}, text, attach);
         }
 
-        public static bool SendMessage(List<int> ids, string text, string attach = "")
+        public static async Task<bool> SendMessage(List<int> ids, string text, string attach = "")
         {
             if (string.IsNullOrEmpty(text)) return false;
             using (var client = new WebClient())
@@ -44,14 +45,14 @@ namespace Goblin.Helpers
                     values.Add("peer_id", ids[0].ToString());
                 }
 
-                var response = client.UploadValues("https://api.vk.com/method/messages.send", values);
+                var response = await client.UploadValuesTaskAsync(new Uri("https://api.vk.com/method/messages.send"), values);
 
                 var responseString = JsonConvert.DeserializeObject<dynamic>(Encoding.Default.GetString(response));
                 return int.TryParse(responseString["response"]?.ToString(), out int result); // TODO: ???
             }
         }
 
-        public static string GetUserName(int id)
+        public static async Task<string> GetUserName(int id)
         {
             //https://api.vk.com/method/users.get?user_ids={$user_id}&v=5.0&lang=ru
             using (var client = new WebClient())
@@ -63,7 +64,7 @@ namespace Goblin.Helpers
                     ["lang"] = "ru",
                     ["access_token"] = VkToken
                 };
-                var response = client.UploadValues("https://api.vk.com/method/users.get", values);
+                var response = await client.UploadValuesTaskAsync("https://api.vk.com/method/users.get", values);
                 var responseString = JsonConvert.DeserializeObject<dynamic>(Encoding.Default.GetString(response));
                 var result = responseString["response"];
                 if (result.ToString() == "[]")

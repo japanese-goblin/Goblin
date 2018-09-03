@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Goblin.Helpers;
 
 namespace Goblin.Bot.Commands
@@ -16,10 +17,11 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
         public string Result { get; set; }
 
-        public void Execute(string param, int id = 0)
+        public async Task Execute(string param, int id = 0)
         {
-            var msg = $"сообщение от @id{id} (id{id})\n{param}";
-            VkHelper.SendMessage(VkHelper.DevelopersID, msg);
+            var username = await VkHelper.GetUserName(id);
+            var msg = $"сообщение от @id{id} ({username}):\n\n{param}";
+            await VkHelper.SendMessage(VkHelper.DevelopersID, msg);
             Result = "Сообщение успешно отправлено!";
         }
 

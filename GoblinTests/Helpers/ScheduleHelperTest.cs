@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Goblin.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -7,27 +8,27 @@ namespace GoblinTests.Helpers
     [TestClass]
     public class ScheduleHelperTest
     {
-        private const int groupId = 9092;
+        private const int groupId = 351617;
 
         [TestMethod]
-        public void GetSchedule_Right_Schedule()
+        public async Task GetSchedule_Right_Schedule()
         {
-            var sched = ScheduleHelper.GetScheduleAtDate(new DateTime(2018, 9, 12), groupId);
+            var sched = await ScheduleHelper.GetScheduleAtDate(new DateTime(2018, 9, 12), groupId);
             Assert.IsTrue(!sched.Contains("отсутствует"));
         }
 
         [TestMethod]
-        public void GetSchedule_August_Empty()
+        public async Task GetSchedule_August_Empty()
         {
-            var sched = ScheduleHelper.GetScheduleAtDate(new DateTime(2018, 8, 12), groupId);
+            var sched = await ScheduleHelper.GetScheduleAtDate(new DateTime(2018, 8, 12), groupId);
             Assert.IsTrue(sched.Contains("отсутствует"));
         }
 
         [TestMethod]
-        public void GetSchedule_Right_List()
+        public async Task GetSchedule_Right_List()
         {
-            var sched = ScheduleHelper.GetSchedule(groupId, out var lessons);
-            Assert.IsTrue(sched);
+            var sched = await ScheduleHelper.GetSchedule(groupId);
+            Assert.IsFalse(sched.IsError);
         }
     }
 }

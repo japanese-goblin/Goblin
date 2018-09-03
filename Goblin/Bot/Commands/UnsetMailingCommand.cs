@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Goblin.Models;
+﻿using Goblin.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Goblin.Bot.Commands
 {
@@ -9,7 +10,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Отписка *расписание/погода*";
         public string Decription { get; } = "Отписка от рассылки расписания/погоды (ЧТО-ТО ОДНО ЗА РАЗ)";
         public string Usage { get; } = "Отписка погода";
-        public List<string> Allias { get; } = new List<string> {"отписка"};
+        public List<string> Allias { get; } = new List<string> { "отписка" };
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
@@ -17,17 +18,20 @@ namespace Goblin.Bot.Commands
 
         private MainContext db = new MainContext();
 
-        public void Execute(string param, int id = 0)
+        public async Task Execute(string param, int id = 0)
         {
+            User user;
             switch (param)
             {
                 case "погода":
-                    db.Users.First(x => x.Vk == id).Weather = false;
+                    user = await db.Users.FirstAsync(x => x.Vk == id);
+                    user.Weather = false;
                     Result = "Ты отписался от рассылки погоды :с";
                     break;
 
                 case "расписание":
-                    db.Users.First(x => x.Vk == id).Schedule = false;
+                    user = await db.Users.FirstAsync(x => x.Vk == id);
+                    user.Schedule = false;
                     Result = "Ты отписался от рассылки расписания :с";
                     break;
 
@@ -35,8 +39,8 @@ namespace Goblin.Bot.Commands
                     Result = "Нет такого выбора";
                     break;
             }
-
-            db.SaveChanges(); // TODO: не сохранять, если не изменилось?
+            if(db.ChangeTracker.HasChanges())
+                await db.SaveChangesAsync();
         }
 
         public bool CanExecute(string param, int id = 0)

@@ -1,4 +1,5 @@
-﻿using Goblin.Helpers;
+﻿using System.Threading.Tasks;
+using Goblin.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GoblinTests.Helpers
@@ -7,30 +8,30 @@ namespace GoblinTests.Helpers
     public class VkHelperTest
     {
         [TestMethod]
-        public void SendMessage_Admins_True()
+        public async Task SendMessage_Admins_True()
         {
-            var res = VkHelper.SendMessage(VkHelper.DevelopersID, "Hello from tests");
+            var res = await VkHelper.SendMessage(VkHelper.DevelopersID, "Hello from tests");
             Assert.AreEqual(true, res);
         }
 
         [TestMethod]
-        public void SendMessage_Durov_False()
+        public async Task SendMessage_Durov_False()
         {
-            var res = VkHelper.SendMessage(1, "Hello from tests");
+            var res = await VkHelper.SendMessage(1, "Hello from tests");
             Assert.AreEqual(false, res);
         }
 
         [TestMethod]
-        public void GetUserName_Me_MyName()
+        public async Task GetUserName_Me_MyName()
         {
-            var res = VkHelper.GetUserName(***REMOVED***);
+            var res = await VkHelper.GetUserName(***REMOVED***);
             Assert.AreEqual("Кирилл Кузнецов", res);
         }
 
         [TestMethod]
-        public void GetUserName_Unknown_Empty()
+        public async Task GetUserName_Unknown_Empty()
         {
-            var res = VkHelper.GetUserName(0);
+            var res = await VkHelper.GetUserName(0);
             Assert.AreEqual("", res);
         }
     }

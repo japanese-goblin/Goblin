@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Goblin.Bot.Commands
 {
@@ -13,7 +14,7 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
         public string Result { get; set; }
 
-        public void Execute(string param, int id = 0)
+        public async Task Execute(string param, int id = 0)
         {
             Result = $"Вероятность данного события: {GetRandom(0, 100)}%";
         }
