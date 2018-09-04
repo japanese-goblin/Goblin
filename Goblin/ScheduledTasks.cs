@@ -32,7 +32,7 @@ namespace Goblin
                 }
             }
 
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
     }
 }

@@ -97,5 +97,15 @@ namespace Goblin.Controllers
                 await VkHelper.SendMessage(ids, schedule);
             }
         }
+
+        public async Task SendToPesi()
+        {
+            var konfa = 2000000003;
+            var schedule = await ScheduleHelper.GetScheduleAtDate(DateTime.Now, 351617);
+            var weather = await WeatherHelper.GetWeather("Архангельск");
+
+            await VkHelper.SendMessage(konfa, schedule);
+            await VkHelper.SendMessage(konfa, weather);
+        }
     }
 }

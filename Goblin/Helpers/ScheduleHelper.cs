@@ -28,7 +28,7 @@ namespace Goblin.Helpers
 
             if (res.IsError)
             {
-                var group = ScheduleHelper.GetGroupByRealId(usergroup).SiteId;
+                var group = GetGroupByRealId(usergroup).SiteId;
                 return "Какая-то ошибочка :с\n" +
                        "Возможно, сайт с расписанием недоступен, либо изменился номер группы на сайте.\n" +
                        $"Вы можете проверить расписание здесь: http://ruz.narfu.ru/?icalendar&oid={group}&from={DateTime.Now:dd.MM.yyyy}";
@@ -43,7 +43,7 @@ namespace Goblin.Helpers
             {
                 result += $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}] ({lesson.Teacher})\n" +
                           $"У группы {lesson.Groups}\n" +
-                          $"В аудитории {lesson.Auditory} ({lesson.Address}\n\n";
+                          $"В аудитории {lesson.Auditory} ({lesson.Address})\n\n";
             }
 
             return result;
