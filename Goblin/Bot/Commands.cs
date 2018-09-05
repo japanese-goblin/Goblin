@@ -25,7 +25,8 @@ namespace Goblin.Bot
                 new SetMailingCommand(),
                 new UnsetMailingCommand(),
                 new ExamsCommand(),
-                new SendAdminCommand()
+                new SendAdminCommand(),
+                new MergeCommand()
             };
 
             Commands.Add(new HelpCommand(Commands)); // TODO: ????

@@ -27,7 +27,9 @@ namespace Goblin.Helpers
                          $"Влажность: {w.Weather.Humidity}\n" +
                          $"Ветер: {w.Wind.SpeedInfo}\n" +
                          $"Давление: {w.Weather.Pressure}\n" +
-                         $"Видимость: {w.Visibility}";
+                         $"Видимость: {w.Visibility}\n\n" +
+                         $"Восход в {w.OtherInfo.Sunrise:HH:mm}\n" +
+                         $"Закат в {w.OtherInfo.Sunset:HH:mm}";
             }
 
             return result;
@@ -51,7 +53,7 @@ namespace Goblin.Helpers
             return result;
         }
 
-        private static DateTime UnixToDateTime(double unixTimeStamp)
+        public static DateTime UnixToDateTime(double unixTimeStamp)
         {
             var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
@@ -129,9 +131,12 @@ namespace Goblin.Helpers
         [JsonProperty("country")]
         public string Country { get; set; }
         [JsonProperty("sunrise")]
-        public int Sunrise { get; set; }
+        private int _sunrise { get; set; }
         [JsonProperty("sunset")]
-        public int Sunset { get; set; }
+        private int _sunset { get; set; }
+
+        public DateTime Sunrise => WeatherHelper.UnixToDateTime(_sunrise);
+        public DateTime Sunset => WeatherHelper.UnixToDateTime(_sunset);
     }
 
     class WeatherInfo

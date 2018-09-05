@@ -16,7 +16,7 @@ namespace Goblin.Bot.Commands
 
         public HelpCommand(List<ICommand> cmds)
         {
-            cmds = cmds.OrderBy(x => x.Name).ToList();
+            cmds = cmds.Where(x => !x.IsAdmin).OrderBy(x => x.Name).ToList();
             //TODO: edit it (GroupBy?)
             var common = "Общие команды:\n";
             byte com = 1;
@@ -32,7 +32,7 @@ namespace Goblin.Bot.Commands
                 safu += $"{saf++}) {cmd.Name} - {cmd.Decription}\nНапример - {cmd.Usage}\n";
             }
 
-            Result = $"Общее число команд на данный момент: {cmds.Count(x => !x.IsAdmin) + 1}\n\n{common}\n\n{safu}\n\n";
+            Result = $"Общее число команд на данный момент: {cmds.Count(x => !x.IsAdmin)}\n\n{common}\n\n{safu}\n\n";
             Result += "По любым вопросам/предложениям/ошибкам и прочему, прошу писать сюда: @id***REMOVED*** (Админ)";
         }
 
