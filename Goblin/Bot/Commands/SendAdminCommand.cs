@@ -12,7 +12,7 @@ namespace Goblin.Bot.Commands
             "Отправляет сообщение администратору. Использовать при возникновении ошибок или еще чего-то";
 
         public string Usage { get; } = "адм ПАМАГИТЕ";
-        public List<string> Allias { get; } = new List<string>() {"адм"};
+        public List<string> Allias { get; } = new List<string> {"адм"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
         public string Result { get; set; }

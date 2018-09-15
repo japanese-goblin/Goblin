@@ -1,7 +1,7 @@
-﻿using Goblin.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Goblin.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Bot.Commands
 {
@@ -10,7 +10,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Отписка *расписание/погода*";
         public string Decription { get; } = "Отписка от рассылки расписания/погоды (ЧТО-ТО ОДНО ЗА РАЗ)";
         public string Usage { get; } = "Отписка погода";
-        public List<string> Allias { get; } = new List<string> { "отписка" };
+        public List<string> Allias { get; } = new List<string> {"отписка"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
@@ -39,7 +39,8 @@ namespace Goblin.Bot.Commands
                     Result = "Нет такого выбора";
                     break;
             }
-            if(db.ChangeTracker.HasChanges())
+
+            if (db.ChangeTracker.HasChanges())
                 await db.SaveChangesAsync();
         }
 

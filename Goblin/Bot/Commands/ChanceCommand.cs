@@ -9,7 +9,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Вероятность *событие*";
         public string Decription { get; } = "Возвращает случайную вероятность события";
         public string Usage { get; } = "Вероятность сегодня будет дождь";
-        public List<string> Allias { get; } = new List<string> { "вероятность" };
+        public List<string> Allias { get; } = new List<string> {"вероятность"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
         public string Result { get; set; }

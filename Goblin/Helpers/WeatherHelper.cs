@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Goblin.Helpers
 {
@@ -47,7 +47,9 @@ namespace Goblin.Helpers
                     var w = JsonConvert.DeserializeObject<WeatherInfo>(response);
                     result = true;
                 }
-                catch { }
+                catch
+                {
+                }
             }
 
             return result;
@@ -62,122 +64,92 @@ namespace Goblin.Helpers
     }
 
     #region Weather classes
-    class Coord
+
+    internal class Coord
     {
-        [JsonProperty("lon")]
-        public double Longitude { get; set; }
-        [JsonProperty("lat")]
-        public double Latitude { get; set; }
+        [JsonProperty("lon")] public double Longitude { get; set; }
+        [JsonProperty("lat")] public double Latitude { get; set; }
     }
 
-    class Weather
+    internal class Weather
     {
-        [JsonProperty("id")]
-        public int ID { get; set; }
-        [JsonProperty("main")]
-        private string _main { get; set; }
-        [JsonProperty("description")]
-        public string State { get; set; }
-        [JsonProperty("icon")]
-        public string Icon { get; set; }
+        [JsonProperty("id")] public int ID { get; set; }
+        [JsonProperty("main")] private string _main { get; set; }
+        [JsonProperty("description")] public string State { get; set; }
+        [JsonProperty("icon")] public string Icon { get; set; }
     }
 
-    class Main
+    internal class Main
     {
-        [JsonProperty("temp")]
-        private double _temperature { get; set; }
-        [JsonProperty("pressure")]
-        private int _pressure { get; set; }
-        [JsonProperty("humidity")]
-        private int _humidity { get; set; }
-        [JsonProperty("temp_min")]
-        private double _minTemp { get; set; }
-        [JsonProperty("temp_max")]
-        private double _maxTemp { get; set; }
+        [JsonProperty("temp")] private double _temperature { get; set; }
+        [JsonProperty("pressure")] private int _pressure { get; set; }
+        [JsonProperty("humidity")] private int _humidity { get; set; }
+        [JsonProperty("temp_min")] private double _minTemp { get; set; }
+        [JsonProperty("temp_max")] private double _maxTemp { get; set; }
 
         public string Temperature => $"{_temperature}°С";
-        public string Pressure => $"{(int)(_pressure*0.75006375541921)} мм рт.ст.";
+        public string Pressure => $"{(int) (_pressure * 0.75006375541921)} мм рт.ст.";
         public string Humidity => $"{_humidity}%";
         public string MinTemp => $"{_minTemp}°С";
         public string MaxTemp => $"{_maxTemp}°С";
     }
 
-    class Wind
+    internal class Wind
     {
-        [JsonProperty("speed")]
-        public double Speed { get; set; }
-        [JsonProperty("deg")]
-        public double Degrees { get; set; }
+        [JsonProperty("speed")] public double Speed { get; set; }
+        [JsonProperty("deg")] public double Degrees { get; set; }
 
         [JsonIgnore] public string SpeedInfo => $"{Speed} метров в секунду";
     }
 
-    class Clouds
+    internal class Clouds
     {
-        [JsonProperty("all")]
-        private int _all { get; set; }
+        [JsonProperty("all")] private int _all { get; set; }
 
         public string Cloudiness => $"{_all}%";
     }
 
-    class Sys
+    internal class Sys
     {
-        [JsonProperty("type")]
-        public int Type { get; set; }
-        [JsonProperty("id")]
-        public int ID { get; set; }
-        [JsonProperty("message")]
-        public double Message { get; set; }
-        [JsonProperty("country")]
-        public string Country { get; set; }
-        [JsonProperty("sunrise")]
-        private int _sunrise { get; set; }
-        [JsonProperty("sunset")]
-        private int _sunset { get; set; }
+        [JsonProperty("type")] public int Type { get; set; }
+        [JsonProperty("id")] public int ID { get; set; }
+        [JsonProperty("message")] public double Message { get; set; }
+        [JsonProperty("country")] public string Country { get; set; }
+        [JsonProperty("sunrise")] private int _sunrise { get; set; }
+        [JsonProperty("sunset")] private int _sunset { get; set; }
 
         public DateTime Sunrise => WeatherHelper.UnixToDateTime(_sunrise);
         public DateTime Sunset => WeatherHelper.UnixToDateTime(_sunset);
     }
 
-    class WeatherInfo
+    internal class WeatherInfo
     {
-        [JsonProperty("coord")]
-        private Coord Coord { get; set; }
+        [JsonProperty("coord")] private Coord Coord { get; set; }
 
-        [JsonProperty("weather")]
-        public List<Weather> Info { get; set; }
+        [JsonProperty("weather")] public List<Weather> Info { get; set; }
 
-        [JsonProperty("base")]
-        public string BaseInfo { get; set; }
+        [JsonProperty("base")] public string BaseInfo { get; set; }
 
-        [JsonProperty("main")]
-        public Main Weather { get; set; }
+        [JsonProperty("main")] public Main Weather { get; set; }
 
-        [JsonProperty("visibility")]
-        private int _visibility { get; set; }
+        [JsonProperty("visibility")] private int _visibility { get; set; }
 
-        [JsonProperty("wind")]
-        public Wind Wind { get; set; }
+        [JsonProperty("wind")] public Wind Wind { get; set; }
 
-        [JsonProperty("clouds")]
-        public Clouds Clouds { get; set; }
+        [JsonProperty("clouds")] public Clouds Clouds { get; set; }
 
-        [JsonProperty("dt")]
-        public int UnixTime { get; set; }
+        [JsonProperty("dt")] public int UnixTime { get; set; }
 
-        [JsonProperty("sys")]
-        public Sys OtherInfo { get; set; }
+        [JsonProperty("sys")] public Sys OtherInfo { get; set; }
 
-        [JsonProperty("id")]
-        private int ID { get; set; }
+        [JsonProperty("id")] private int ID { get; set; }
 
-        [JsonProperty("name")]
-        public string CityName { get; set; }
+        [JsonProperty("name")] public string CityName { get; set; }
 
-        [JsonProperty("cod")]
-        public int CityCode { get; set; }
+        [JsonProperty("cod")] public int CityCode { get; set; }
 
         public string Visibility => $"{_visibility} метров";
     }
+
     #endregion
 }

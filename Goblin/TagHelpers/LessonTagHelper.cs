@@ -7,6 +7,7 @@ namespace Goblin.TagHelpers
     {
         public Lesson Lesson { get; set; }
         private string _cssStyle;
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             GetStyleForLessonType();

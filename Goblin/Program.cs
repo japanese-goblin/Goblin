@@ -9,6 +9,7 @@ namespace Goblin
     public class Program
     {
         public static DateTime StartDate;
+
         public static void Main(string[] args)
         {
             StartDate = DateTime.Now;

@@ -1,7 +1,7 @@
-﻿using Goblin.Bot.Commands;
-using Goblin.Helpers;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Goblin.Bot.Commands;
+using Goblin.Helpers;
 
 namespace Goblin.Bot
 {

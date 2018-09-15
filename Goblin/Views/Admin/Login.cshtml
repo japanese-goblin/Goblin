@@ -3,7 +3,7 @@
     <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="utf-8">
-    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap-dark.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap-dark.min.css"/>
     <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
     <style>
         input {
@@ -16,21 +16,21 @@
     </style>
 </head>
 <body>
-    <div class="modal-dialog modal-sm">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title wrapper">Login</h4>
-            </div>
-            <div class="modal-body">
-                <form asp-controller="Account" asp-action="Login" method="post">
-                    <input type="text" id="Nick" class="form-control input-sm" placeholder="Nick" name="Nick" />
-                    <input type="password" id="Password" class="form-control input-sm" placeholder="Password" name="Password" />
-                    <div class="wrapper">
-                        <button type="submit" class="btn btn-info" name="submit" value="login">Login</button>
-                    </div>
-                </form>
-            </div>
+<div class="modal-dialog modal-sm">
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title wrapper">Login</h4>
+        </div>
+        <div class="modal-body">
+            <form asp-controller="Account" asp-action="Login" method="post">
+                <input type="text" id="Nick" class="form-control input-sm" placeholder="Nick" name="Nick"/>
+                <input type="password" id="Password" class="form-control input-sm" placeholder="Password" name="Password"/>
+                <div class="wrapper">
+                    <button type="submit" class="btn btn-info" name="submit" value="login">Login</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 </body>

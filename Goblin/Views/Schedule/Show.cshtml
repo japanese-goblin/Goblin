@@ -1,48 +1,50 @@
-﻿@model Dictionary<string, List<Goblin.Models.Lesson>>
-@using System.Globalization;
+﻿@using System.Globalization
+@model Dictionary<string, List<Goblin.Models.Lesson>>
 @addTagHelper "Goblin.TagHelpers.LessonTagHelper, Goblin"
 
 <head>
     <title>Расписание</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="utf-8">
-    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/sched.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/sched.min.css"/>
     <script src="~/js/jquery.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="navbar navbar-default" role="navigation" name="begin">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <p class="navbar-text" style="font-size: large">@ViewBag.Title</p>
-                </div>
+<div class="container-fluid">
+    <div class="navbar navbar-default" role="navigation" name="begin">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <p class="navbar-text" style="font-size: large">@ViewBag.Title</p>
             </div>
         </div>
-        <ul class="nav nav-tabs">
-            @foreach (var group in Model)
-            {
-                <li><a data-toggle="tab" href="#@group.Value.First().Time.ToBinary()">@group.Key</a></li>
-            }
-        </ul>
-
-        <div class="tab-content">
-            @foreach (var group in Model)
-            {
-                <div id="@group.Value.First().Time.ToBinary()" class="tab-pane fade">
-                    @foreach (var days in group.Value.GroupBy(x => x.Time.DayOfWeek))
-                    {
-                        <div class="list col-md-2">
-                            <div class="dayofweek">@days.First().Time.ToString("dddd, dd.MM.yyyy", CultureInfo.CreateSpecificCulture("ru-RU"))</div>
-                            @foreach (var lesson in days)
-                            {
-                                <lesson lesson="lesson"></lesson>
-                            }
-                        </div>
-                    }
-                </div>
-            }
-        </div>
     </div>
+    <ul class="nav nav-tabs">
+        @foreach (var group in Model)
+        {
+            <li>
+                <a data-toggle="tab" href="#@group.Value.First().Time.ToBinary()">@group.Key</a>
+            </li>
+        }
+    </ul>
+
+    <div class="tab-content">
+        @foreach (var group in Model)
+        {
+            <div id="@group.Value.First().Time.ToBinary()" class="tab-pane fade">
+                @foreach (var days in group.Value.GroupBy(x => x.Time.DayOfWeek))
+                {
+                    <div class="list col-md-2">
+                        <div class="dayofweek">@days.First().Time.ToString("dddd, dd.MM.yyyy", CultureInfo.CreateSpecificCulture("ru-RU"))</div>
+                        @foreach (var lesson in days)
+                        {
+                            <lesson lesson="lesson"></lesson>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
 </body>

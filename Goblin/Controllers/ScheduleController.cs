@@ -1,7 +1,7 @@
-﻿using Goblin.Helpers;
-using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Goblin.Helpers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Goblin.Controllers
 {
@@ -22,14 +22,12 @@ namespace Goblin.Controllers
             if (!response.IsError)
             {
                 var result = response.Lessons.GroupBy(x => ScheduleHelper.GetWeekNumber(x.Time))
-                             .ToDictionary(x => $"{x.First().Time:dd.MM.yyyy} - {x.Last().Time:dd.MM.yyyy}",
-                                           x => x.ToList()); // TODO: fix key
+                    .ToDictionary(x => $"{x.First().Time:dd.MM.yyyy} - {x.Last().Time:dd.MM.yyyy}",
+                        x => x.ToList()); // TODO: fix key
                 return View(result);
             }
-            else
-            {
-                return View("Error");
-            }
+
+            return View("Error");
         }
     }
 }

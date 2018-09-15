@@ -8,9 +8,12 @@ namespace Goblin.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Remind> Reminds { get; set; }
 
-        public MainContext() { }
+        public MainContext()
+        {
+        }
 
         private static string con;
+
         public MainContext(IConfiguration configuration)
         {
             con = configuration.GetConnectionString("DefaultConnection");

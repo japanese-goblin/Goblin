@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
 
 namespace Goblin.Migrations.Main
 {
@@ -14,7 +12,7 @@ namespace Goblin.Migrations.Main
                 nullable: false,
                 defaultValue: 0,
                 oldClrType: typeof(short),
-                oldDefaultValue: (short)0);
+                oldDefaultValue: (short) 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -23,7 +21,7 @@ namespace Goblin.Migrations.Main
                 name: "Group",
                 table: "Users",
                 nullable: false,
-                defaultValue: (short)0,
+                defaultValue: (short) 0,
                 oldClrType: typeof(int),
                 oldDefaultValue: 0);
         }
