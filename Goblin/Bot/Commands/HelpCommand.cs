@@ -32,8 +32,10 @@ namespace Goblin.Bot.Commands
                 safu += $"{saf++}) {cmd.Name} - {cmd.Decription}\nНапример - {cmd.Usage}\n";
             }
 
-            Result = $"Общее число команд на данный момент: {cmds.Count(x => !x.IsAdmin)}\n\n{common}\n\n{safu}\n\n";
-            Result += "По любым вопросам/предложениям/ошибкам и прочему, прошу писать сюда: @id***REMOVED*** (Админ)";
+            Result = $"Общее число команд на данный момент: {cmds.Count(x => !x.IsAdmin)}\n\n" +
+                     $"{common}\n\n" +
+                     $"{safu}\n\n" +
+                     "По любым вопросам/предложениям/ошибкам и прочему, прошу писать сюда: @id***REMOVED*** (тык)";
         }
 
         public async Task Execute(string param, int id = 0) { }

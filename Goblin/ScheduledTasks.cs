@@ -16,6 +16,7 @@ namespace Goblin
             //Schedule(() => SendSchedule()).ToRunEvery(0).Days().At(8, 0);
             //Schedule(() => SendSchedule()).ToRunEvery(0).Days().At(8, 0);
             Schedule(async () => await SendRemind()).ToRunEvery(1).Minutes();
+
             db = new MainContext();
         }
 
@@ -25,7 +26,6 @@ namespace Goblin
             var reminds = db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
             foreach (var remind in reminds)
             {
-                //TODO: else????
                 if (await VkHelper.SendMessage(remind.VkID, remind.Text))
                 {
                     db.Reminds.Remove(remind);

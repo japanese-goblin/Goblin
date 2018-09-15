@@ -13,7 +13,7 @@ namespace Goblin.Bot
         {
             Commands = new List<ICommand>
             {
-                new RandomCommand(),
+                new FlipCommand(),
                 new ChanceCommand(),
                 new DebugCommand(),
                 new SetGroupCommand(),

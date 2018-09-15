@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
 using System.Text;
@@ -45,7 +44,7 @@ namespace Goblin.Helpers
                     values.Add("peer_id", ids[0].ToString());
                 }
 
-                var response = await client.UploadValuesTaskAsync(new Uri("https://api.vk.com/method/messages.send"), values);
+                var response = await client.UploadValuesTaskAsync("https://api.vk.com/method/messages.send", values);
 
                 var responseString = JsonConvert.DeserializeObject<dynamic>(Encoding.Default.GetString(response));
                 return int.TryParse(responseString["response"]?.ToString(), out int result); // TODO: ???
@@ -54,7 +53,6 @@ namespace Goblin.Helpers
 
         public static async Task<string> GetUserName(int id)
         {
-            //https://api.vk.com/method/users.get?user_ids={$user_id}&v=5.0&lang=ru
             using (var client = new WebClient())
             {
                 var values = new NameValueCollection

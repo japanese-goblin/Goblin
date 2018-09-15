@@ -6,12 +6,12 @@ namespace GoblinTests.Bot.Commands
     [TestClass]
     public class RandomTest
     {
-        private RandomCommand _c;
+        private FlipCommand _c;
 
         [TestInitialize]
         public void Init()
         {
-            _c = new RandomCommand();
+            _c = new FlipCommand();
         }
 
         [TestMethod]
