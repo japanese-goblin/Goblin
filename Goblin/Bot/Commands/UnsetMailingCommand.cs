@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -14,7 +15,8 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
-        public string Result { get; set; }
+        public string Message { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
 
         private MainContext db = new MainContext();
 
@@ -26,17 +28,17 @@ namespace Goblin.Bot.Commands
                 case "погода":
                     user = await db.Users.FirstAsync(x => x.Vk == id);
                     user.Weather = false;
-                    Result = "Ты отписался от рассылки погоды :с";
+                    Message = "Ты отписался от рассылки погоды :с";
                     break;
 
                 case "расписание":
                     user = await db.Users.FirstAsync(x => x.Vk == id);
                     user.Schedule = false;
-                    Result = "Ты отписался от рассылки расписания :с";
+                    Message = "Ты отписался от рассылки расписания :с";
                     break;
 
                 default:
-                    Result = "Нет такого выбора";
+                    Message = "Нет такого выбора";
                     break;
             }
 
@@ -48,7 +50,7 @@ namespace Goblin.Bot.Commands
         {
             if (string.IsNullOrEmpty(param))
             {
-                Result = "А на что подписаться? Укажи 'погода' либо 'расписание'";
+                Message = "А на что подписаться? Укажи 'погода' либо 'расписание'";
                 return false;
             }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -12,7 +13,9 @@ namespace Goblin.Bot.Commands
         public List<string> Allias { get; } = new List<string> {"help", "команды", "помощь", "помоги", "хелп"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
-        public string Result { get; set; }
+
+        public string Message { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
 
         public HelpCommand(List<ICommand> cmds)
         {
@@ -32,7 +35,7 @@ namespace Goblin.Bot.Commands
                 safu += $"{saf++}) {cmd.Name} - {cmd.Decription}\nНапример - {cmd.Usage}\n";
             }
 
-            Result = $"Общее число команд на данный момент: {cmds.Count(x => !x.IsAdmin)}\n\n" +
+            Message = $"Общее число команд на данный момент: {cmds.Count(x => !x.IsAdmin)}\n\n" +
                      $"{common}\n\n" +
                      $"{safu}\n\n" +
                      $"Если Вам нужно посмотреть расписание до конца семестра (а не на месяц, как на официальном сайте), то можете зайти сюда (https://equus-cs.herokuapp.com/Schedule), ввести свой номер группы и посмотреть расписание!!\n\n" +

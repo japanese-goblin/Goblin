@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -13,14 +14,15 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
-        public string Result { get; set; }
+        public string Message { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
 
         public async Task Execute(string param, int id = 0)
         {
             var forRandom = new[] {"Орёл", "Решка"};
 
             var a = GetRandom(0, 100);
-            Result = forRandom[a % 2 == 0 ? 0 : 1];
+            Message = forRandom[a % 2 == 0 ? 0 : 1];
         }
 
         public bool CanExecute(string param, int id = 0)

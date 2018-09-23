@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Helpers;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -15,21 +16,23 @@ namespace Goblin.Bot.Commands
         public List<string> Allias { get; } = new List<string> {"адм"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
-        public string Result { get; set; }
+
+        public string Message { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
 
         public async Task Execute(string param, int id = 0)
         {
             var username = await VkHelper.GetUserName(id);
             var msg = $"сообщение от @id{id} ({username}):\n\n{param}";
             await VkHelper.SendMessage(VkHelper.DevelopersID, msg);
-            Result = "Сообщение успешно отправлено!";
+            Message = "Сообщение успешно отправлено!";
         }
 
         public bool CanExecute(string param, int id = 0)
         {
             if (string.IsNullOrEmpty(param))
             {
-                Result = "Введите сообщение для отправки.";
+                Message = "Введите сообщение для отправки.";
                 return false;
             }
 

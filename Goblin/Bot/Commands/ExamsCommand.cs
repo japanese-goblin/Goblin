@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -16,7 +17,8 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
-        public string Result { get; set; }
+        public string Message { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
 
         private MainContext db = new MainContext();
 
@@ -26,7 +28,7 @@ namespace Goblin.Bot.Commands
             var res = await ScheduleHelper.GetSchedule(user.Group);
             if (res.IsError)
             {
-                Result = "Какая-то ошибочка. Возможно сменилась группа на сайте или сайт с расписанием недоступен";
+                Message = "Какая-то ошибочка. Возможно сменилась группа на сайте или сайт с расписанием недоступен";
                 return;
             }
 
@@ -39,7 +41,7 @@ namespace Goblin.Bot.Commands
 
             if (lessons.Count == 0)
             {
-                Result = "На данный момент список экзаменов отсутствует";
+                Message = "На данный момент список экзаменов отсутствует";
                 return;
             }
 
@@ -50,7 +52,7 @@ namespace Goblin.Bot.Commands
                 result += $"{l.Time:dd.MM HH:mm} - {l.Name} ({l.Type})\nУ группы {l.Groups}\n В аудитории {l.Address}\n\n";
             }
 
-            Result = result;
+            Message = result;
         }
 
         public bool CanExecute(string param, int id = 0)
@@ -58,7 +60,7 @@ namespace Goblin.Bot.Commands
             var user = db.Users.First(x => x.Vk == id);
             if (user.Group == 0)
             {
-                Result = "Установи группу командой 'устгр'";
+                Message = "Чтобы воспользоваться командой, установи группу командой 'устгр *номер группы*'";
                 return false;
             }
 

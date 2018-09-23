@@ -14,7 +14,7 @@ namespace Goblin.Helpers
 {
     public static class ScheduleHelper
     {
-        public static List<Group> Groups = new List<Group>();
+        public static List<Group> Groups;
 
         static ScheduleHelper()
         {

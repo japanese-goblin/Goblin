@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -16,7 +17,9 @@ namespace Goblin.Bot.Commands
         public List<string> Allias { get; } = new List<string> {"расписание"};
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
-        public string Result { get; set; }
+
+        public string Message { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
 
         private MainContext db = new MainContext();
 
@@ -34,7 +37,7 @@ namespace Goblin.Bot.Commands
                 time = new DateTime(2018, dayAndMonth[1], dayAndMonth[0]);
             }
 
-            Result = await ScheduleHelper.GetScheduleAtDate(time, user.Group);
+            Message = await ScheduleHelper.GetScheduleAtDate(time, user.Group);
         }
 
         public bool CanExecute(string param, int id = 0)
@@ -42,7 +45,7 @@ namespace Goblin.Bot.Commands
             var user = db.Users.First(x => x.Vk == id);
             if (user.Group == 0)
             {
-                Result = "Для начала установи группу командой 'устгр'";
+                Message = "Для начала установи группу командой 'устгр'";
                 return false;
             }
 
@@ -60,7 +63,7 @@ namespace Goblin.Bot.Commands
             }
             catch
             {
-                Result = "Неправильная дата";
+                Message = "Неправильная дата";
                 return false;
             }
 

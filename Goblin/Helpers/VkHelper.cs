@@ -1,75 +1,67 @@
-﻿using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Net;
-using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using VkNet;
+using VkNet.Enums.Filters;
+using VkNet.Model;
+using VkNet.Model.Keyboard;
+using VkNet.Model.RequestParams;
 
 namespace Goblin.Helpers
 {
     public static class VkHelper
     {
-        //***REMOVED***
-        public const string ConfirmationToken = "***REMOVED***";
-
-        //***REMOVED***
-        private const string VkToken = "***REMOVED***";
-
         public static List<int> DevelopersID = new List<int> {***REMOVED***};
 
-        public static async Task<bool> SendMessage(int id, string text, string attach = "")
+        #region vk params
+        //***REMOVED***
+        public const string ConfirmationToken = "***REMOVED***";
+        //***REMOVED***
+        private const string VkToken = "***REMOVED***";
+        private static VkApi api;
+        static VkHelper()
         {
-            return await SendMessage(new List<int> {id}, text, attach);
+            api = new VkApi();
+            api.Authorize(new ApiAuthParams
+            {
+                AccessToken = VkToken
+            });
+        }
+        #endregion
+
+        public static async Task SendMessage(int id, string text, MessageKeyboard kb = null)
+        {
+            await SendMessage(new List<int> {id}, text, kb);
         }
 
-        public static async Task<bool> SendMessage(List<int> ids, string text, string attach = "")
+        public static async Task SendMessage(List<int> ids, string text, MessageKeyboard kb = null)
         {
-            if (string.IsNullOrEmpty(text)) return false;
-            using (var client = new WebClient())
+            if (string.IsNullOrEmpty(text)) return;
+            var param = new MessagesSendParams();
+            if (ids.Count > 1)
             {
-                var values = new NameValueCollection
-                {
-                    ["message"] = text,
-                    ["access_token"] = VkToken,
-                    ["v"] = "5.80",
-                    ["attachment"] = attach
-                };
-
-                if (ids.Count > 1)
-                {
-                    values.Add("user_ids", string.Join(",", ids));
-                }
-                else
-                {
-                    values.Add("peer_id", ids[0].ToString());
-                }
-
-                var response = await client.UploadValuesTaskAsync("https://api.vk.com/method/messages.send", values);
-
-                var responseString = JsonConvert.DeserializeObject<dynamic>(Encoding.Default.GetString(response));
-                return int.TryParse(responseString["response"]?.ToString(), out int result); // TODO: ???
+                param.UserIds = ids.Select(Convert.ToInt64);
             }
+            else
+            {
+                param.PeerId = ids[0];
+            }
+
+            param.Message = text;
+            var iskb = kb is null;
+            if (!iskb)
+            {
+                param.Keyboard = kb;
+            }
+
+            await api.Messages.SendAsync(param);
         }
 
         public static async Task<string> GetUserName(int id)
         {
-            using (var client = new WebClient())
-            {
-                var values = new NameValueCollection
-                {
-                    ["user_ids"] = id.ToString(),
-                    ["v"] = "5.80",
-                    ["lang"] = "ru",
-                    ["access_token"] = VkToken
-                };
-                var response = await client.UploadValuesTaskAsync("https://api.vk.com/method/users.get", values);
-                var responseString = JsonConvert.DeserializeObject<dynamic>(Encoding.Default.GetString(response));
-                var result = responseString["response"];
-                if (result.ToString() == "[]")
-                    return string.Empty;
-                var name = $"{result[0]["first_name"]} {result[0]["last_name"]}";
-                return name;
-            }
+            var res = (await api.Users.GetAsync(new List<long>() {id}, ProfileFields.About)).First();
+            return $"{res.FirstName} {res.LastName}";
         }
     }
 }

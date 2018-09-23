@@ -11,7 +11,7 @@ namespace GoblinTests.Bot.Commands
         {
             var c = new DebugCommand();
             c.Execute("");
-            Assert.IsTrue(c.Result.Contains("Текущее время на сервере"));
+            Assert.IsTrue(c.Message.Contains("Текущее время на сервере"));
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Models;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -15,7 +16,8 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
-        public string Result { get; set; }
+        public string Message { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
 
         private MainContext db = new MainContext();
 
@@ -24,17 +26,17 @@ namespace Goblin.Bot.Commands
             var user = db.Users.FirstOrDefault(x => x.Vk == id);
             if (string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
             {
-                Result = await WeatherHelper.GetWeather(user?.City);
+                Message = await WeatherHelper.GetWeather(user?.City);
                 return;
             }
 
             if (await WeatherHelper.CheckCity(param))
             {
-                Result = await WeatherHelper.GetWeather(param);
+                Message = await WeatherHelper.GetWeather(param);
             }
             else
             {
-                Result = "Город не найден (или ошибочка со стороны бота?)";
+                Message = "Город не найден (или ошибочка со стороны бота?)";
             }
         }
 
@@ -43,7 +45,7 @@ namespace Goblin.Bot.Commands
             var user = db.Users.FirstOrDefault(x => x.Vk == id);
             if (string.IsNullOrEmpty(param) && string.IsNullOrEmpty(user?.City))
             {
-                Result = "Либо укажи город в параметре команды, либо установи его командой 'город'";
+                Message = "Либо укажи город в параметре команды, либо установи его командой 'город'";
                 return false;
             }
 

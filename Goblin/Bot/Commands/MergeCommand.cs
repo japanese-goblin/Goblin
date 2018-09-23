@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -13,7 +14,8 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
-        public string Result { get; set; }
+        public string Message { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
 
         public async Task Execute(string param, int id = 0)
         {
@@ -21,20 +23,20 @@ namespace Goblin.Bot.Commands
             var get = (Convert.ToInt32(str[0].Length / 2), Convert.ToInt32(str[1].Length / 2));
             var first = str[0].Substring(0, get.Item1);
             var second = str[1].Substring(get.Item2);
-            Result = $"{first}{second}";
+            Message = $"{first}{second}";
         }
 
         public bool CanExecute(string param, int id = 0)
         {
             if (string.IsNullOrEmpty(param))
             {
-                Result = "почому тут пусто??? Введи два параметра";
+                Message = "Введи два слова через пробел";
                 return false;
             }
 
             if (param.Split(' ').Length != 2)
             {
-                Result = "можно только 2 параметра!!";
+                Message = "можно только 2 слова!!";
                 return false;
             }
 

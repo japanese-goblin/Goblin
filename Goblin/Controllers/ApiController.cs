@@ -7,6 +7,7 @@ using Goblin.Helpers;
 using Goblin.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Controllers
 {
@@ -46,8 +47,8 @@ namespace Goblin.Controllers
                         await db.SaveChangesAsync();
                     }
 
-                    var forSend = await CommandsList.ExecuteCommand(msg, userID);
-                    await VkHelper.SendMessage(convID, forSend);
+                    (string Message, MessageKeyboard Keyboard) forSend = await CommandsList.ExecuteCommand(msg, userID);
+                    await VkHelper.SendMessage(convID, forSend.Message, forSend.Keyboard);
                     break;
 
                 case "group_join":
@@ -73,9 +74,9 @@ namespace Goblin.Controllers
             return "ok";
         }
 
-        public async Task<bool> SendMessage(string msg)
+        public async Task SendMessage(string msg)
         {
-            return await VkHelper.SendMessage(db.Users.Select(x => x.Vk).ToList(), msg);
+            await VkHelper.SendMessage(db.Users.Select(x => x.Vk).ToList(), msg);
         }
 
         public async void SendWeather()

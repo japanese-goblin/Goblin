@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -15,7 +16,8 @@ namespace Goblin.Bot.Commands
         public List<string> Allias => new List<string> {"город"};
         public Category Category => Category.Common;
         public bool IsAdmin => false;
-        public string Result { get; set; }
+        public string Message { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
 
         private MainContext db = new MainContext();
 
@@ -27,11 +29,11 @@ namespace Goblin.Bot.Commands
                 var user = await db.Users.FirstAsync(x => x.Vk == id);
                 user.City = param;
                 await db.SaveChangesAsync();
-                Result = $"Город успешно установлен на {param}";
+                Message = $"Город успешно установлен на {param}";
             }
             else
             {
-                Result = "Город не найден";
+                Message = "Город не найден";
             }
         }
 
@@ -39,7 +41,7 @@ namespace Goblin.Bot.Commands
         {
             if (string.IsNullOrEmpty(param))
             {
-                Result = "Введите название города";
+                Message = "Введите название города";
                 return false;
             }
 

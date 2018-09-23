@@ -26,10 +26,8 @@ namespace Goblin
             var reminds = db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
             foreach (var remind in reminds)
             {
-                if (await VkHelper.SendMessage(remind.VkID, remind.Text))
-                {
-                    db.Reminds.Remove(remind);
-                }
+                await VkHelper.SendMessage(remind.VkID, remind.Text);
+                db.Reminds.Remove(remind);
             }
 
             await db.SaveChangesAsync();

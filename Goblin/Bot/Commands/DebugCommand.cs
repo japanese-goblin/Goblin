@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -12,16 +13,18 @@ namespace Goblin.Bot.Commands
         public List<string> Allias { get; } = new List<string> {"дебаг", "инфа", "debug", "дебуг"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = true;
-        public string Result { get; set; }
+
+        public string Message { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
 
         public async Task Execute(string param, int id = 0)
         {
             var dis = DateTime.Now - new DateTime(2017, 4, 29, 19, 42, 0);
             var uptime = DateTime.Now - Program.StartDate;
-            Result =
+            Message =
                 $"Время старта: {Program.StartDate:F}\n" +
                 $"Гоблин работает уже {uptime.Hours} часов {uptime.Minutes} минут\n" +
-                $"Гоблину уже {dis.Days} дней {dis.Hours} часов {dis.Minutes} минут!!";
+                $"Гоблину уже {dis.Days} дней {dis.Hours} часов {dis.Minutes} минут";
 
             //TODO: дополнить чем-нибудь интересным
         }

@@ -32,7 +32,7 @@ namespace GoblinTests.Bot.Commands
         public void Execute()
         {
             _c.Execute("1 или 2");
-            Assert.IsTrue(_c.Result == "1" || _c.Result == "2");
+            Assert.IsTrue(_c.Message == "1" || _c.Message == "2");
         }
     }
 }

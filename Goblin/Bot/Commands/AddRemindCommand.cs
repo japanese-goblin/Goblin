@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Models;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -16,7 +17,8 @@ namespace Goblin.Bot.Commands
         public List<string> Allias { get; } = new List<string> {"напомни"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
-        public string Result { get; set; }
+        public string Message { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
 
         private MainContext db = new MainContext();
 
@@ -31,7 +33,7 @@ namespace Goblin.Bot.Commands
                 VkID = id
             });
             await db.SaveChangesAsync();
-            Result = $"Хорошо, {all[0]} в {all[1]} напомню следующее:\n{all[2]}";
+            Message = $"Хорошо, {all[0]} в {all[1]} напомню следующее:\n{all[2]}";
         }
 
         public bool CanExecute(string param, int id = 0)
@@ -39,26 +41,26 @@ namespace Goblin.Bot.Commands
             var all = param.Split(' ', 3);
             if (all.Length != 3)
             {
-                Result = "Ошибочка";
+                Message = "Ошибочка";
                 return false;
             }
 
             if (!VkHelper.DevelopersID.Contains(id) && db.Reminds.Count(x => x.VkID == id) > 7)
             {
-                Result = "Превышен лимит (8) напоминалок";
+                Message = "Превышен лимит (8) напоминалок";
                 return false;
             }
 
             if (!DateTime.TryParseExact($"{all[0]} {all[1]}", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture,
                 DateTimeStyles.None, out var time))
             {
-                Result = "Невозможно преобразовать дату.";
+                Message = "Невозможно преобразовать дату.";
                 return false;
             }
 
             if (time < DateTime.Now)
             {
-                Result = "Дата меньше текущей.";
+                Message = "Дата меньше текущей.";
                 return false;
             }
 

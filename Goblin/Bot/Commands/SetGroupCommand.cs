@@ -3,6 +3,7 @@ using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -14,7 +15,9 @@ namespace Goblin.Bot.Commands
         public List<string> Allias => new List<string> { "устгр" };
         public Category Category => Category.SAFU;
         public bool IsAdmin => false;
-        public string Result { get; set; }
+
+        public string Message { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
 
         private MainContext db = new MainContext();
 
@@ -26,7 +29,7 @@ namespace Goblin.Bot.Commands
             var user = await db.Users.FirstAsync(x => x.Vk == id);
             user.Group = group;
             await db.SaveChangesAsync();
-            Result = $"Группа успешно установлена на {group} ({gr.Name})!";
+            Message = $"Группа успешно установлена на {group} ({gr.Name})!";
         }
 
         public bool CanExecute(string param, int id = 0)
@@ -37,7 +40,7 @@ namespace Goblin.Bot.Commands
             }
             else
             {
-                Result = "Ошибочка. Номер группы - положительно число без знаков (6 цифр)";
+                Message = "Ошибочка. Номер группы - положительно число без знаков (6 цифр)";
                 return false;
             }
         }

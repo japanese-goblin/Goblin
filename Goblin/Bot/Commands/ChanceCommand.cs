@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -12,18 +13,20 @@ namespace Goblin.Bot.Commands
         public List<string> Allias { get; } = new List<string> {"вероятность"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
-        public string Result { get; set; }
+
+        public string Message { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
 
         public async Task Execute(string param, int id = 0)
         {
-            Result = $"Вероятность данного события: {GetRandom(0, 100)}%";
+            Message = $"Вероятность данного события: {GetRandom(0, 100)}%";
         }
 
         public bool CanExecute(string param, int id = 0)
         {
             if (string.IsNullOrEmpty(param))
             {
-                Result = "А где вопрос?";
+                Message = "А где вопрос?";
                 return false;
             }
 

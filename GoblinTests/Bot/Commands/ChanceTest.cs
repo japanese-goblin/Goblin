@@ -22,7 +22,7 @@ namespace GoblinTests.Bot.Commands
         public void ExecuteWithParams()
         {
             c.Execute("ы");
-            Assert.IsTrue(c.Result.Contains("Вероятность"));
+            Assert.IsTrue(c.Message.Contains("Вероятность"));
         }
     }
 }

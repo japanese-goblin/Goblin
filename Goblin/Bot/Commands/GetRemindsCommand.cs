@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -14,7 +15,9 @@ namespace Goblin.Bot.Commands
         public List<string> Allias { get; } = new List<string> {"напоминания"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
-        public string Result { get; set; }
+
+        public string Message { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
 
         private MainContext db = new MainContext();
 
@@ -24,7 +27,7 @@ namespace Goblin.Bot.Commands
             var ureminds = await db.Reminds.Where(x => x.VkID == id).OrderBy(x => x.Date).ToListAsync();
             if (!ureminds.Any())
             {
-                Result = "Напоминаний нет.";
+                Message = "Напоминаний нет.";
                 return;
             }
 
@@ -34,7 +37,7 @@ namespace Goblin.Bot.Commands
                 reminds += $"{d:dd.MM.yyyy HH:mm} - {rem.Text}\n";
             }
 
-            Result = reminds;
+            Message = reminds;
         }
 
         public bool CanExecute(string param, int id = 0)
