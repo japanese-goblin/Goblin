@@ -55,7 +55,7 @@ namespace Goblin.Bot.Commands
                 Result = "Невозможно преобразовать дату.";
                 return false;
             }
-            //time = time.AddHours(-3);
+
             if (time < DateTime.Now)
             {
                 Result = "Дата меньше текущей.";

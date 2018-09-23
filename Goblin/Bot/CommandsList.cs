@@ -8,6 +8,7 @@ namespace Goblin.Bot
     public static class CommandsList
     {
         private static readonly List<ICommand> Commands;
+        public static string ErrorMessage = "Ошибочка, проверьте правильность написания команды!";
 
         static CommandsList()
         {
@@ -31,8 +32,6 @@ namespace Goblin.Bot
 
             Commands.Add(new HelpCommand(Commands)); // TODO: ????
         }
-
-        public static string ErrorMessage = "Ошибочка, проверьте правильность написания команды!";
 
         public static async Task<string> ExecuteCommand(string message, int id)
         {

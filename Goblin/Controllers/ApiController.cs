@@ -46,7 +46,8 @@ namespace Goblin.Controllers
                         await db.SaveChangesAsync();
                     }
 
-                    await VkHelper.SendMessage(convID, await CommandsList.ExecuteCommand(msg, userID));
+                    var forSend = await CommandsList.ExecuteCommand(msg, userID);
+                    await VkHelper.SendMessage(convID, forSend);
                     break;
 
                 case "group_join":
@@ -104,8 +105,8 @@ namespace Goblin.Controllers
             var schedule = await ScheduleHelper.GetScheduleAtDate(DateTime.Now, 351617);
             var weather = await WeatherHelper.GetWeather("Архангельск");
 
-            await VkHelper.SendMessage(konfa, schedule);
             await VkHelper.SendMessage(konfa, weather);
+            await VkHelper.SendMessage(konfa, schedule);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Goblin.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            ViewBag.Users = db.Users.OrderBy(x => x.ID).ToListAsync();
+            ViewBag.Users = await db.Users.OrderBy(x => x.ID).ToListAsync();
             return View();
         }
 

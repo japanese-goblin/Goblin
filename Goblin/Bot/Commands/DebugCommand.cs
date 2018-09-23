@@ -20,7 +20,7 @@ namespace Goblin.Bot.Commands
             var uptime = DateTime.Now - Program.StartDate;
             Result =
                 $"Время старта: {Program.StartDate:F}\n" +
-                $"Гоблин работает уже {uptime.Hours} часов {uptime.Hours} часов {uptime.Minutes} минут\n" +
+                $"Гоблин работает уже {uptime.Hours} часов {uptime.Minutes} минут\n" +
                 $"Гоблину уже {dis.Days} дней {dis.Hours} часов {dis.Minutes} минут!!";
 
             //TODO: дополнить чем-нибудь интересным
