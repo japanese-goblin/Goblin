@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Goblin.Models;
 using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
@@ -19,11 +18,9 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public MessageKeyboard Keyboard { get; set; }
 
-        private MainContext db = new MainContext();
-
         public async Task Execute(string param, int id = 0)
         {
-            var user = db.Users.FirstOrDefault(x => x.Vk == id);
+            var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == id);
             if (string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
             {
                 Message = await WeatherHelper.GetWeather(user?.City);
@@ -42,7 +39,7 @@ namespace Goblin.Bot.Commands
 
         public bool CanExecute(string param, int id = 0)
         {
-            var user = db.Users.FirstOrDefault(x => x.Vk == id);
+            var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == id);
             if (string.IsNullOrEmpty(param) && string.IsNullOrEmpty(user?.City))
             {
                 Message = "Либо укажи город в параметре команды, либо установи его командой 'город'";

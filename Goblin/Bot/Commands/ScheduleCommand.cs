@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 using VkNet.Model.Keyboard;
 
@@ -21,11 +20,9 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public MessageKeyboard Keyboard { get; set; }
 
-        private MainContext db = new MainContext();
-
         public async Task Execute(string param, int id = 0)
         {
-            var user = await db.Users.FirstAsync(x => x.Vk == id);
+            var user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == id);
             DateTime time;
             if (param == "")
             {
@@ -42,7 +39,7 @@ namespace Goblin.Bot.Commands
 
         public bool CanExecute(string param, int id = 0)
         {
-            var user = db.Users.First(x => x.Vk == id);
+            var user = DbHelper.Db.Users.First(x => x.Vk == id);
             if (user.Group == 0)
             {
                 Message = "Для начала установи группу командой 'устгр'";

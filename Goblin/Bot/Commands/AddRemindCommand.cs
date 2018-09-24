@@ -20,19 +20,17 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public MessageKeyboard Keyboard { get; set; }
 
-        private MainContext db = new MainContext();
-
         public async Task Execute(string param, int id = 0)
         {
             var all = param.Split(' ', 3);
             var time = DateTime.ParseExact($"{all[0]} {all[1]}", "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture);
-            await db.Reminds.AddAsync(new Remind
+            await DbHelper.Db.Reminds.AddAsync(new Remind
             {
                 Text = all[2],
                 Date = time,
                 VkID = id
             });
-            await db.SaveChangesAsync();
+            await DbHelper.Db.SaveChangesAsync();
             Message = $"Хорошо, {all[0]} в {all[1]} напомню следующее:\n{all[2]}";
         }
 
@@ -45,7 +43,7 @@ namespace Goblin.Bot.Commands
                 return false;
             }
 
-            if (!VkHelper.DevelopersID.Contains(id) && db.Reminds.Count(x => x.VkID == id) > 7)
+            if (!VkHelper.DevelopersID.Contains(id) && DbHelper.Db.Reminds.Count(x => x.VkID == id) > 7)
             {
                 Message = "Превышен лимит (8) напоминалок";
                 return false;

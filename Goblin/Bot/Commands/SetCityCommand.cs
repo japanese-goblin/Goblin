@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 using VkNet.Model.Keyboard;
 
@@ -19,16 +18,14 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public MessageKeyboard Keyboard { get; set; }
 
-        private MainContext db = new MainContext();
-
         public async Task Execute(string param, int id = 0)
         {
             param = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(param);
             if (await WeatherHelper.CheckCity(param))
             {
-                var user = await db.Users.FirstAsync(x => x.Vk == id);
+                var user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == id);
                 user.City = param;
-                await db.SaveChangesAsync();
+                await DbHelper.Db.SaveChangesAsync();
                 Message = $"Город успешно установлен на {param}";
             }
             else

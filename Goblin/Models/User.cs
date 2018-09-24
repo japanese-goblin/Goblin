@@ -7,7 +7,7 @@ namespace Goblin.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
-        public int Vk { get; set; }
+        public long Vk { get; set; }
         public int Group { get; set; }
         public bool Schedule { get; set; }
         public bool Weather { get; set; }

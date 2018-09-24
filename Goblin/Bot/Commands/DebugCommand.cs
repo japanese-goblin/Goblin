@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Goblin.Helpers;
 using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
@@ -21,10 +22,16 @@ namespace Goblin.Bot.Commands
         {
             var dis = DateTime.Now - new DateTime(2017, 4, 29, 19, 42, 0);
             var uptime = DateTime.Now - Program.StartDate;
+
+            var users = DbHelper.GetUsers();
+            var scheduleUsers = DbHelper.GetScheduleUsers();
+            var weatherUsers = DbHelper.GetWeatherUsers();
+
             Message =
                 $"Время старта: {Program.StartDate:F}\n" +
                 $"Гоблин работает уже {uptime.Hours} часов {uptime.Minutes} минут\n" +
-                $"Гоблину уже {dis.Days} дней {dis.Hours} часов {dis.Minutes} минут";
+                $"Гоблину уже {dis.Days} дней {dis.Hours} часов {dis.Minutes} минут\n\n" +
+                $"Всего пользователей {users.Count}, из которых {scheduleUsers.Count} подписаны на расписание и {weatherUsers.Count} подписаны на рассылку погоды";
 
             //TODO: дополнить чем-нибудь интересным
         }

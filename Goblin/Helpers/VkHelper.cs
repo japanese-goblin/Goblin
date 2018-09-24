@@ -12,7 +12,7 @@ namespace Goblin.Helpers
 {
     public static class VkHelper
     {
-        public static List<int> DevelopersID = new List<int> {***REMOVED***};
+        public static List<long> DevelopersID = new List<long> {***REMOVED***};
 
         #region vk params
         //***REMOVED***
@@ -30,12 +30,12 @@ namespace Goblin.Helpers
         }
         #endregion
 
-        public static async Task SendMessage(int id, string text, MessageKeyboard kb = null)
+        public static async Task SendMessage(long id, string text, MessageKeyboard kb = null)
         {
-            await SendMessage(new List<int> {id}, text, kb);
+            await SendMessage(new List<long> {id}, text, kb);
         }
 
-        public static async Task SendMessage(List<int> ids, string text, MessageKeyboard kb = null)
+        public static async Task SendMessage(List<long> ids, string text, MessageKeyboard kb = null)
         {
             if (string.IsNullOrEmpty(text)) return;
             var param = new MessagesSendParams();

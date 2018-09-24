@@ -20,11 +20,9 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public MessageKeyboard Keyboard { get; set; }
 
-        private MainContext db = new MainContext();
-
         public async Task Execute(string param, int id = 0)
         {
-            var user = await db.Users.FirstOrDefaultAsync(x => x.Vk == id);
+            var user = await DbHelper.Db.Users.FirstOrDefaultAsync(x => x.Vk == id);
             var res = await ScheduleHelper.GetSchedule(user.Group);
             if (res.IsError)
             {
@@ -57,7 +55,7 @@ namespace Goblin.Bot.Commands
 
         public bool CanExecute(string param, int id = 0)
         {
-            var user = db.Users.First(x => x.Vk == id);
+            var user = DbHelper.Db.Users.First(x => x.Vk == id);
             if (user.Group == 0)
             {
                 Message = "Чтобы воспользоваться командой, установи группу командой 'устгр *номер группы*'";

@@ -1,29 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using Goblin.Helpers;
 using Goblin.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Goblin.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly MainContext db;
-
-        public AdminController()
-        {
-            db = new MainContext();
-        }
-
         [Authorize]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            ViewBag.Users = await db.Users.OrderBy(x => x.ID).ToListAsync();
+            ViewBag.Users = DbHelper.GetUsers().OrderBy(x => x.ID);
             return View();
         }
 

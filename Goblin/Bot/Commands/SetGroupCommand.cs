@@ -1,5 +1,4 @@
 ﻿using Goblin.Helpers;
-using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,16 +18,14 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public MessageKeyboard Keyboard { get; set; }
 
-        private MainContext db = new MainContext();
-
         public async Task Execute(string param, int id = 0)
         {
             var group = int.Parse(param);
             var gr = ScheduleHelper.GetGroupByRealId(group);
 
-            var user = await db.Users.FirstAsync(x => x.Vk == id);
+            var user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == id);
             user.Group = group;
-            await db.SaveChangesAsync();
+            await DbHelper.Db.SaveChangesAsync();
             Message = $"Группа успешно установлена на {group} ({gr.Name})!";
         }
 
