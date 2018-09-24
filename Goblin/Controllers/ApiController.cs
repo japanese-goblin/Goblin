@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Goblin.Bot;
 using Goblin.Helpers;
@@ -74,23 +75,31 @@ namespace Goblin.Controllers
 
         public async void SendWeather()
         {
-            var grouped = DbHelper.GetWeatherUsers().GroupBy(x => x.City);
-            foreach (var group in grouped)
+            await Task.Factory.StartNew(async () =>
             {
-                var ids = group.Select(x => x.Vk).ToList();
-                await VkHelper.SendMessage(ids, await WeatherHelper.GetWeather(group.Key));
-            }
+                var grouped = DbHelper.GetWeatherUsers().GroupBy(x => x.City);
+                foreach (var group in grouped)
+                {
+                    var ids = group.Select(x => x.Vk).ToList();
+                    await VkHelper.SendMessage(ids, await WeatherHelper.GetWeather(group.Key));
+                    Thread.Sleep(1000);
+                }
+            });
         }
 
         public async void SendSchedule()
         {
-            var grouped = DbHelper.GetScheduleUsers().GroupBy(x => x.Group);
-            foreach (var group in grouped)
+            await Task.Factory.StartNew(async () =>
             {
-                var ids = group.Select(x => x.Vk).ToList();
-                var schedule = await ScheduleHelper.GetScheduleAtDate(DateTime.Today, group.Key);
-                await VkHelper.SendMessage(ids, schedule);
-            }
+                var grouped = DbHelper.GetScheduleUsers().GroupBy(x => x.Group);
+                foreach (var group in grouped)
+                {
+                    var ids = group.Select(x => x.Vk).ToList();
+                    var schedule = await ScheduleHelper.GetScheduleAtDate(DateTime.Today, group.Key);
+                    await VkHelper.SendMessage(ids, schedule);
+                    Thread.Sleep(1000);
+                }
+            });
         }
 
         public async Task SendToPesi()

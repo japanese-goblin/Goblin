@@ -1,4 +1,5 @@
 ﻿@using Goblin.Helpers
+@model List<Goblin.Models.User>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="utf-8">
@@ -28,7 +29,7 @@
         <div id="home" class="tab-pane fade in active">
             <h3>Главная</h3>
             <div class="panel panel-default">
-                <div class="panel-heading">Cписок пользователей <span class="badge">@ViewBag.Users.Count</span></div>
+                <div class="panel-heading">Cписок пользователей <span class="badge">@Model.Count</span></div>
 
                 <table class="table table-striped table-hover ">
                     <thead>
@@ -42,7 +43,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach (var user in ViewBag.Users)
+                    @foreach (var user in Model)
                     {
                         var url = $"https://vk.com/id{user.Vk}";
                         var gr = ScheduleHelper.GetGroupByRealId(user.Group);
@@ -71,8 +72,8 @@
                         <button class="btn btn-info send_message" type="button">Отправить</button>
                     </span>
                     <textarea class="form-control message" placeholder="Сообщение" rows="1"></textarea>
-                </div><!-- /input-group -->
-            </div><!-- /.col-lg-6 -->
+                </div>
+            </div>
         </div>
     </div>
 </div>
