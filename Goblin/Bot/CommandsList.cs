@@ -29,7 +29,8 @@ namespace Goblin.Bot
                 new ExamsCommand(),
                 new SendAdminCommand(),
                 new MergeCommand(),
-                new KeyboardCommand()
+                new KeyboardCommand(),
+                new RandomCommand()
             };
 
             Commands.Add(new HelpCommand(Commands)); // TODO: ????

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -70,10 +72,11 @@ namespace Goblin.Controllers
 
         public async Task SendMessage(string msg)
         {
+            if (!ModelState.IsValid) return;
             await VkHelper.SendMessage(DbHelper.GetUsers().Select(x => x.Vk).ToList(), msg);
         }
 
-        public async void SendWeather()
+        public async Task SendWeather()
         {
             await Task.Factory.StartNew(async () =>
             {
@@ -82,23 +85,27 @@ namespace Goblin.Controllers
                 {
                     var ids = group.Select(x => x.Vk).ToList();
                     await VkHelper.SendMessage(ids, await WeatherHelper.GetWeather(group.Key));
-                    Thread.Sleep(1000);
+                    await Task.Delay(1500);
                 }
             });
         }
 
-        public async void SendSchedule()
+        public async Task SendSchedule()
         {
             await Task.Factory.StartNew(async () =>
             {
                 var grouped = DbHelper.GetScheduleUsers().GroupBy(x => x.Group);
+                var i = 0; //TODO: remove
                 foreach (var group in grouped)
                 {
                     var ids = group.Select(x => x.Vk).ToList();
                     var schedule = await ScheduleHelper.GetScheduleAtDate(DateTime.Today, group.Key);
                     await VkHelper.SendMessage(ids, schedule);
-                    Thread.Sleep(1000);
+                    await Task.Delay(1500);
+                    i++;
                 }
+
+                await VkHelper.SendMessage(VkHelper.DevelopersID, $"result: {i}, expected 8");
             });
         }
 
