@@ -2,8 +2,8 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using Goblin.Helpers;
+using Goblin.Models.Keyboard;
 using Microsoft.EntityFrameworkCore;
-using VkNet.Model.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -16,7 +16,7 @@ namespace Goblin.Bot.Commands
         public Category Category => Category.Common;
         public bool IsAdmin => false;
         public string Message { get; set; }
-        public MessageKeyboard Keyboard { get; set; }
+        public Keyboard Keyboard { get; set; }
 
         public async Task Execute(string param, int id = 0)
         {

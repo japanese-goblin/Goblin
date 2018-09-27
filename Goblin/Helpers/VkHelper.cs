@@ -1,67 +1,84 @@
-﻿using System;
+﻿using Goblin.Models.Keyboard;
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Specialized;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
-using VkNet;
-using VkNet.Enums.Filters;
-using VkNet.Model;
-using VkNet.Model.Keyboard;
-using VkNet.Model.RequestParams;
 
 namespace Goblin.Helpers
 {
     public static class VkHelper
     {
-        public static List<long> DevelopersID = new List<long> {***REMOVED***};
+        public static List<long> DevelopersID = new List<long> { ***REMOVED*** };
 
         #region vk params
         //***REMOVED***
         public const string ConfirmationToken = "***REMOVED***";
         //***REMOVED***
         private const string VkToken = "***REMOVED***";
-        private static VkApi api;
-        static VkHelper()
-        {
-            api = new VkApi();
-            api.Authorize(new ApiAuthParams
-            {
-                AccessToken = VkToken
-            });
-        }
         #endregion
 
-        public static async Task SendMessage(long id, string text, MessageKeyboard kb = null)
+        public static async Task SendMessage(long id, string text, string attach = "", Keyboard kb = null)
         {
-            await SendMessage(new List<long> {id}, text, kb);
+            await SendMessage(new List<long> { id }, text, attach, kb);
         }
 
-        public static async Task SendMessage(List<long> ids, string text, MessageKeyboard kb = null)
+        public static async Task SendMessage(List<long> ids, string text, string attach = "", Keyboard kb = null)
         {
             if (string.IsNullOrEmpty(text)) return;
-            var param = new MessagesSendParams();
-            if (ids.Count > 1)
+            using (var client = new WebClient())
             {
-                param.UserIds = ids.Select(Convert.ToInt64);
-            }
-            else
-            {
-                param.PeerId = ids[0];
-            }
+                var values = new NameValueCollection
+                {
+                    ["message"] = text,
+                    ["access_token"] = VkToken,
+                    ["v"] = "5.80",
+                    ["attachment"] = attach
+                };
 
-            param.Message = text;
-            var iskb = kb is null;
-            if (!iskb)
-            {
-                param.Keyboard = kb;
-            }
+                if (ids.Count > 1)
+                {
+                    values.Add("user_ids", string.Join(",", ids));
+                }
+                else
+                {
+                    values.Add("peer_id", ids[0].ToString());
+                }
 
-            await api.Messages.SendAsync(param);
+                var isKb = kb is null;
+                if (!isKb)
+                {
+                    values.Add("keyboard", kb.ToString());
+                }
+
+                var response = await client.UploadValuesTaskAsync("https://api.vk.com/method/messages.send", values);
+
+                //var responseString = JsonConvert.DeserializeObject<dynamic>(Encoding.Default.GetString(response));
+                //return int.TryParse(responseString["response"]?.ToString(), out int result); // TODO: ???
+            }
         }
 
-        public static async Task<string> GetUserName(int id)
+        public static async Task<string> GetUserName(long id)
         {
-            var res = (await api.Users.GetAsync(new List<long>() {id}, ProfileFields.About)).First();
-            return $"{res.FirstName} {res.LastName}";
+            using (var client = new WebClient())
+            {
+                var values = new NameValueCollection
+                {
+                    ["user_ids"] = id.ToString(),
+                    ["v"] = "5.80",
+                    ["lang"] = "ru",
+                    ["access_token"] = VkToken
+                };
+                var response = await client.UploadValuesTaskAsync("https://api.vk.com/method/users.get", values);
+                var responseString = JsonConvert.DeserializeObject<dynamic>(Encoding.Default.GetString(response));
+                var result = responseString["response"];
+                if (result.ToString() == "[]")
+                    return string.Empty;
+                var name = $"{result[0]["first_name"]} {result[0]["last_name"]}";
+                return name;
+            }
         }
     }
+
 }

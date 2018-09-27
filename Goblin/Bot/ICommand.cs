@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using VkNet.Model.Keyboard;
+using Goblin.Models.Keyboard;
 
 namespace Goblin.Bot
 {
@@ -13,7 +13,7 @@ namespace Goblin.Bot
         Category Category { get; }
         bool IsAdmin { get; }
         string Message { get; set; }
-        MessageKeyboard Keyboard { get; set; }
+        Keyboard Keyboard { get; set; }
 
         Task Execute(string param, int id = 0);
         bool CanExecute(string param, int id = 0);

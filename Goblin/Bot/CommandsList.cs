@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Goblin.Bot.Commands;
 using Goblin.Helpers;
-using VkNet.Model.Keyboard;
+using Goblin.Models.Keyboard;
 
 namespace Goblin.Bot
 {
@@ -36,13 +36,13 @@ namespace Goblin.Bot
             Commands.Add(new HelpCommand(Commands)); // TODO: ????
         }
 
-        public static async Task<(string Message, MessageKeyboard Keyboard)> ExecuteCommand(string message, int id)
+        public static async Task<(string Message, Keyboard Keyboard)> ExecuteCommand(string message, int id)
         {
             var split = message.Split(' ', 2);
             var comm = split[0].ToLower();
             var param = split.Length > 1 ? split[1] : "";
             var result = ErrorMessage;
-            MessageKeyboard kb = null;
+            Keyboard kb = null;
             foreach (var command in Commands)
             {
                 if (!command.Allias.Contains(comm)) continue;

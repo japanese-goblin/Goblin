@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using VkNet.Enums.SafetyEnums;
-using VkNet.Model.Keyboard;
+using Goblin.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -16,7 +15,7 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         public string Message { get; set; }
-        public MessageKeyboard Keyboard { get; set; }
+        public Keyboard Keyboard { get; set; }
 
         public async Task Execute(string param, int id = 0)
         {
@@ -29,19 +28,19 @@ namespace Goblin.Bot.Commands
             return true;
         }
 
-        private MessageKeyboard GenerateKeyboard()
+        private Keyboard GenerateKeyboard()
         {
-            var kb = new KeyboardBuilder(false);
+            var kb = new Keyboard(false);
 
-            kb.AddButton("Расписание", "", KeyboardButtonColor.Primary);
-            kb.AddButton("Экзамены", "", KeyboardButtonColor.Primary);
+            kb.AddButton("Расписание", ButtonColor.Primary, "cmd", "schedule");
+            kb.AddButton("Экзамены", ButtonColor.Primary, "cmd", "exams");
             kb.AddLine();
-            kb.AddButton("Погода", "", KeyboardButtonColor.Primary);
-            kb.AddButton("Монета", "", KeyboardButtonColor.Primary);
+            kb.AddButton("Погода", ButtonColor.Primary, "cmd", "weather");
+            kb.AddButton("Монета", ButtonColor.Primary, "cmd", "money");
             kb.AddLine();
-            kb.AddButton("Напоминания", "", KeyboardButtonColor.Primary);
-            kb.AddButton("Команды", "", KeyboardButtonColor.Primary);
-            return kb.Build();
+            kb.AddButton("Напоминания", ButtonColor.Primary, "cmd", "reminds");
+            kb.AddButton("Команды", ButtonColor.Primary, "cmd", "commands");
+            return kb;
         }
     }
 }

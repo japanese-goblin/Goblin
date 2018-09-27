@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using Goblin.Bot;
+﻿using Goblin.Bot;
 using Goblin.Helpers;
 using Goblin.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using VkNet.Model.Keyboard;
+using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Goblin.Models.Keyboard;
 
 namespace Goblin.Controllers
 {
@@ -39,12 +36,12 @@ namespace Goblin.Controllers
 
                     if (!DbHelper.Db.Users.Any(x => x.Vk == userID))
                     {
-                        await DbHelper.Db.Users.AddAsync(new User {Vk = userID});
+                        await DbHelper.Db.Users.AddAsync(new User { Vk = userID });
                         await DbHelper.Db.SaveChangesAsync();
                     }
 
-                    (string Message, MessageKeyboard Keyboard) forSend = await CommandsList.ExecuteCommand(msg, userID);
-                    await VkHelper.SendMessage(convID, forSend.Message, forSend.Keyboard);
+                    (string Message, Keyboard Keyboard) forSend = await CommandsList.ExecuteCommand(msg, userID);
+                    await VkHelper.SendMessage(convID, forSend.Message, kb: forSend.Keyboard);
                     break;
 
                 case "group_join":
@@ -90,23 +87,21 @@ namespace Goblin.Controllers
             });
         }
 
-        public async Task SendSchedule()
+        public async Task<string> SendSchedule()
         {
             await Task.Factory.StartNew(async () =>
             {
-                var grouped = DbHelper.GetScheduleUsers().GroupBy(x => x.Group);
-                var i = 0; //TODO: remove
+                var grouped = DbHelper.Db.Users.Where(x => x.Group != 0 && x.Schedule).GroupBy(x => x.Group);
                 foreach (var group in grouped)
                 {
                     var ids = group.Select(x => x.Vk).ToList();
                     var schedule = await ScheduleHelper.GetScheduleAtDate(DateTime.Today, group.Key);
                     await VkHelper.SendMessage(ids, schedule);
                     await Task.Delay(1500);
-                    i++;
                 }
-
-                await VkHelper.SendMessage(VkHelper.DevelopersID, $"result: {i}, expected 8");
             });
+
+            return "ok";
         }
 
         public async Task SendToPesi()
