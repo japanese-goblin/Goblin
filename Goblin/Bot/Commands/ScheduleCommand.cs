@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Goblin.Helpers;
+﻿using Goblin.Helpers;
 using Goblin.Models.Keyboard;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Goblin.Bot.Commands
 {
     public class ScheduleCommand : ICommand
     {
         public string Name { get; } = "Раписание *день*.*месяц*";
-        public string Decription { get; } = "Возвращает расписание на указанную дату. День и месяц обязательно должны содержать 2 цифры.";
-        public string Usage { get; } = "Расписание 01.02";
-        public List<string> Allias { get; } = new List<string> {"расписание"};
+        public string Decription { get; } = "Возвращает расписание на указанную дату. Если дата не указана, расписание берется на текущую дату";
+        public string Usage { get; } = "Расписание 21.12";
+        public List<string> Allias { get; } = new List<string> { "расписание" };
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
@@ -51,16 +52,13 @@ namespace Goblin.Bot.Commands
                 return true;
             }
 
-            var test = param.Split('.').Select(int.Parse).ToList();
-            DateTime time;
-            //TODO: DateTime.TryParseExact?
-            try
+            var date = param.Split('.');
+            var isGoodDate = DateTime.TryParseExact($"{date[0]}.{date[1]}",
+                new[] { "d.M", "d.MM", "dd.M", "dd.MM" },
+                null, DateTimeStyles.None, out var res);
+            if (date.Length != 2 || !isGoodDate)
             {
-                time = new DateTime(DateTime.Now.Year, test[1], test[0]);
-            }
-            catch
-            {
-                Message = "Неправильная дата";
+                Message = $"Ошибочка. Пример использования команды: {Usage}";
                 return false;
             }
 

@@ -7,9 +7,9 @@ namespace Goblin.Bot.Commands
 {
     public class RandomCommand : ICommand
     {
-        public string Name { get; } = "Рандом *smth* или *smth*";
-        public string Decription { get; } = "Выбирает один из данных вариантов";
-        public string Usage { get; } = "Рандом 1 или 2";
+        public string Name { get; } = "Рандом *smth*, *smth*, *smth*....";
+        public string Decription { get; } = "Выбирает один из нескольких вариантов.";
+        public string Usage { get; } = "Рандом 1, 2, 3,4 или 5";
         public List<string> Allias { get; } = new List<string> { "рандом" };
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
@@ -19,10 +19,10 @@ namespace Goblin.Bot.Commands
 
         public async Task Execute(string param, int id = 0)
         {
-            var forRandom = param.Split(" или ", 2); //TODO: больше вариантов?
+            var forRandom = Split(param);
 
-            var a = GetRandom(0, 100);
-            Message = forRandom[a % 2 == 0 ? 0 : 1];
+            var index = GetRandom(0, forRandom.Length);
+            Message = $"Я выбираю {forRandom[index]}";
         }
 
         public bool CanExecute(string param, int id = 0)
@@ -33,18 +33,21 @@ namespace Goblin.Bot.Commands
                 return false;
             }
 
-            var forRandom = param.Split(" или ", 2);
+            var forRandom = Split(param);
             if (forRandom.Length < 2)
             {
-                Message = "Введи два параметра";
+                Message = "Введи два или более параметроы";
                 return false;
             }
             return true;
         }
 
-        public static int GetRandom(int start, int end)
+        private int GetRandom(int start, int end)
         {
+            //todo: шо за магическое число
             return new Random(DateTime.Now.Millisecond * 3819).Next(start, end);
         }
+
+        private string[] Split(string str) => str.Split(new[] { ",", ", ", " или " }, StringSplitOptions.None);
     }
 }

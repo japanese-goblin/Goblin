@@ -33,7 +33,7 @@ namespace Goblin.Bot
                 new RandomCommand()
             };
 
-            Commands.Add(new HelpCommand(Commands)); // TODO: ????
+            Commands.Add(new HelpCommand(Commands));
         }
 
         public static async Task<(string Message, Keyboard Keyboard)> ExecuteCommand(string message, int id)

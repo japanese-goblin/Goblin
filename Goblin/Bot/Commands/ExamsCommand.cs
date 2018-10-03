@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Goblin.Helpers;
+﻿using Goblin.Helpers;
 using Goblin.Models.Keyboard;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Goblin.Bot.Commands
 {
@@ -12,7 +12,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Экзамены";
         public string Decription { get; } = "Возвращает список экзаменов/зачетов/интернет-экзаменов";
         public string Usage { get; } = "Экзамены";
-        public List<string> Allias { get; } = new List<string> {"экзамены"};
+        public List<string> Allias { get; } = new List<string> { "экзамены" };
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
@@ -25,14 +25,13 @@ namespace Goblin.Bot.Commands
             var res = await ScheduleHelper.GetSchedule(user.Group);
             if (res.IsError)
             {
-                Message = "Какая-то ошибочка. Возможно сменилась группа на сайте или сайт с расписанием недоступен";
+                Message = "Какая-то ошибочка. Возможно, сайт с расписанием недоступен";
                 return;
             }
 
-            var lessons = res.Lessons.Where(x =>
+            var lessons = res.Lessons.Distinct().Where(x =>
                               x.Type.Contains("Экзамен") || x.Type.Contains("Зачет") ||
                               x.Type.Contains("Интернет"))
-                          .Distinct()
                           .OrderBy(x => x.Time)
                           .ToList();
 
@@ -46,7 +45,7 @@ namespace Goblin.Bot.Commands
 
             foreach (var l in lessons)
             {
-                result += $"{l.Time:dd.MM HH:mm} - {l.Name} ({l.Type})\nУ группы {l.Groups}\n В аудитории {l.Address}\n\n";
+                result += $"{l.Time:dd.MM HH:mm} - {l.Name} ({l.Type})\nУ группы {l.Groups}\n В аудитории {l.Auditory}\n\n";
             }
 
             Message = result;

@@ -91,7 +91,7 @@ namespace Goblin.Controllers
         {
             await Task.Factory.StartNew(async () =>
             {
-                var grouped = DbHelper.Db.Users.Where(x => x.Group != 0 && x.Schedule).GroupBy(x => x.Group);
+                var grouped = DbHelper.GetScheduleUsers().GroupBy(x => x.Group);
                 foreach (var group in grouped)
                 {
                     var ids = group.Select(x => x.Vk).ToList();
