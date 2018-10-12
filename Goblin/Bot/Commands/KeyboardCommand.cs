@@ -33,11 +33,10 @@ namespace Goblin.Bot.Commands
             var kb = new Keyboard(false);
 
             kb.AddButton("Расписание", ButtonColor.Primary, "cmd", "schedule");
-            kb.AddButton("Экзамены", ButtonColor.Primary, "cmd", "exams");
+            kb.AddButton("Расписание завтра", ButtonColor.Primary, "cmd", "schedule_tomorrow");
+            kb.AddButton("Экзамены", ButtonColor.Negative, "cmd", "exams");
             kb.AddLine();
             kb.AddButton("Погода", ButtonColor.Primary, "cmd", "weather");
-            kb.AddButton("Монета", ButtonColor.Primary, "cmd", "money");
-            kb.AddLine();
             kb.AddButton("Напоминания", ButtonColor.Primary, "cmd", "reminds");
             kb.AddButton("Команды", ButtonColor.Primary, "cmd", "commands");
             return kb;
