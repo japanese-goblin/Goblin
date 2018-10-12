@@ -22,6 +22,11 @@ namespace Goblin.Bot.Commands
         public async Task Execute(string param, int id = 0)
         {
             var all = param.Split(' ', 3);
+            if (all[0].ToLower() == "завтра") //TODO: поменять
+            {
+                var d = DateTime.Now.AddDays(1);
+                all[0] = $"{d.Day}.{d.Month}.{d.Year}";
+            }
             var time = ParseTime(all[0], all[1]);
             await DbHelper.Db.Reminds.AddAsync(new Remind
             {
@@ -40,6 +45,12 @@ namespace Goblin.Bot.Commands
             {
                 Message = "Ошибочка";
                 return false;
+            }
+
+            if (all[0].ToLower() == "завтра")
+            {
+                var d = DateTime.Now.AddDays(1);
+                all[0] = $"{d.Day}.{d.Month}.{d.Year}";
             }
 
             //TODO: все равно никто не пользуется ех

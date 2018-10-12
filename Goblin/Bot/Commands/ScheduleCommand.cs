@@ -29,6 +29,10 @@ namespace Goblin.Bot.Commands
             {
                 time = DateTime.Now;
             }
+            else if (param.Trim().ToLower() == "завтра")
+            {
+                time = DateTime.Now.AddDays(1);
+            }
             else
             {
                 var dayAndMonth = param.Split('.').Select(int.Parse).ToList(); // [Day, Month]
@@ -43,11 +47,11 @@ namespace Goblin.Bot.Commands
             var user = DbHelper.Db.Users.First(x => x.Vk == id);
             if (user.Group == 0)
             {
-                Message = "Для начала установи группу командой 'устгр'";
+                Message = "Чтобы воспользоваться расписание установи группу командой 'устгр *номер группы*' (без кавычек и звездочек)";
                 return false;
             }
 
-            if (param == "")
+            if (param == "" || param.ToLower() == "завтра")
             {
                 return true;
             }
@@ -56,6 +60,7 @@ namespace Goblin.Bot.Commands
             var isGoodDate = DateTime.TryParseExact($"{date[0]}.{date[1]}",
                 new[] { "d.M", "d.MM", "dd.M", "dd.MM" },
                 null, DateTimeStyles.None, out var res);
+
             if (date.Length != 2 || !isGoodDate)
             {
                 Message = $"Ошибочка. Пример использования команды: {Usage}";
