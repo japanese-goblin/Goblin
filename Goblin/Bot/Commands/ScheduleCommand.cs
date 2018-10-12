@@ -57,11 +57,17 @@ namespace Goblin.Bot.Commands
             }
 
             var date = param.Split('.');
+            if (date.Length != 2)
+            {
+                Message = $"Ошибочка. Пример использования команды: {Usage}";
+                return false;
+            }
+
             var isGoodDate = DateTime.TryParseExact($"{date[0]}.{date[1]}",
                 new[] { "d.M", "d.MM", "dd.M", "dd.MM" },
                 null, DateTimeStyles.None, out var res);
 
-            if (date.Length != 2 || !isGoodDate)
+            if (!isGoodDate)
             {
                 Message = $"Ошибочка. Пример использования команды: {Usage}";
                 return false;
