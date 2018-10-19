@@ -1,22 +1,25 @@
-﻿using Goblin.Models.Keyboard;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Goblin.Models.Keyboard;
+using Newtonsoft.Json;
 
 namespace Goblin.Helpers
 {
     public static class VkHelper
     {
-        public static List<long> DevelopersID = new List<long> { ***REMOVED*** };
+        public static List<long> DevelopersID = new List<long> {***REMOVED***};
 
         #region vk params
+
         //***REMOVED***
         public const string ConfirmationToken = "***REMOVED***";
+
         //***REMOVED***
         private const string VkToken = "***REMOVED***";
+
         #endregion
 
         /// <summary>
@@ -29,7 +32,7 @@ namespace Goblin.Helpers
         /// <returns></returns>
         public static async Task SendMessage(long id, string text, string attach = "", Keyboard kb = null)
         {
-            await SendMessage(new List<long> { id }, text, attach, kb);
+            await SendMessage(new List<long> {id}, text, attach, kb);
         }
 
         /// <summary>
@@ -91,5 +94,4 @@ namespace Goblin.Helpers
             }
         }
     }
-
 }

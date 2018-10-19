@@ -36,13 +36,15 @@ namespace Goblin.Bot.Commands
             }
 
             Message = $"Общее число команд на данный момент: {cmds.Count(x => !x.IsAdmin)}\n\n" +
-                     $"{common}\n\n" +
-                     $"{safu}\n\n" +
-                     $"Если Вам нужно посмотреть расписание до конца семестра (а не на месяц, как на официальном сайте), то можете зайти сюда (https://equus-cs.herokuapp.com/Schedule), ввести свой номер группы и посмотреть расписание!!\n\n" +
-                     "По любым вопросам/предложениям/ошибкам и прочему, прошу писать сюда: @id***REMOVED*** (тык)";
+                      $"{common}\n\n" +
+                      $"{safu}\n\n" +
+                      "Если Вам нужно посмотреть расписание до конца семестра (а не на месяц, как на официальном сайте), то можете зайти сюда (https://equus-cs.herokuapp.com/Schedule), ввести свой номер группы и посмотреть расписание!!\n\n" +
+                      "По любым вопросам/предложениям/ошибкам и прочему, прошу писать сюда: @id***REMOVED*** (тык)";
         }
 
-        public async Task Execute(string param, int id = 0) { }
+        public async Task Execute(string param, int id = 0)
+        {
+        }
 
         public bool CanExecute(string param, int id = 0)
         {

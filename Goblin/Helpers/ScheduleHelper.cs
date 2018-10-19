@@ -74,7 +74,7 @@ namespace Goblin.Helpers
                     Time = ev.Start.AsSystemLocal,
                     Type = a[3],
                     StartEndTime = a[0].Replace(")", "").Replace("(", "").Replace("п", ")"),
-                    Number = (byte)a[0].ElementAt(0)
+                    Number = (byte) a[0].ElementAt(0)
                 };
                 lessons.Add(les);
             }
@@ -144,10 +144,10 @@ namespace Goblin.Helpers
             }
 
             var result = "Список экзаменов:\n" +
-                      string.Join("\n\n",
-                          lessons.Select(l => $"{l.Time:dd.MM HH:mm} - {l.Name} ({l.Type})\n" +
-                                              $"У группы {l.Groups}\n" +
-                                              $"В аудитории {l.Auditory}"));
+                         string.Join("\n\n",
+                             lessons.Select(l => $"{l.Time:dd.MM HH:mm} - {l.Name} ({l.Type})\n" +
+                                                 $"У группы {l.Groups}\n" +
+                                                 $"В аудитории {l.Auditory}"));
 
             return result;
         }

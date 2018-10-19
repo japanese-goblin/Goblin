@@ -10,7 +10,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Рандом *smth*, *smth*, *smth*....";
         public string Decription { get; } = "Выбирает один из нескольких вариантов.";
         public string Usage { get; } = "Рандом 1, 2, 3,4 или 5";
-        public List<string> Allias { get; } = new List<string> { "рандом" };
+        public List<string> Allias { get; } = new List<string> {"рандом"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
@@ -39,6 +39,7 @@ namespace Goblin.Bot.Commands
                 Message = "Введи два или более параметроы";
                 return false;
             }
+
             return true;
         }
 
@@ -48,6 +49,9 @@ namespace Goblin.Bot.Commands
             return new Random(DateTime.Now.Millisecond * 3819).Next(start, end);
         }
 
-        private string[] Split(string str) => str.Split(new[] { ",", ", ", " или " }, StringSplitOptions.None);
+        private string[] Split(string str)
+        {
+            return str.Split(new[] {",", ", ", " или "}, StringSplitOptions.None);
+        }
     }
 }

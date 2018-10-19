@@ -26,6 +26,6 @@ namespace Goblin.Helpers
         public static List<User> GetScheduleUsers()
         {
             return Db.Users.Where(x => x.Group != 0 && x.Schedule).ToList();
-        } 
+        }
     }
 }

@@ -36,5 +36,4 @@ namespace Goblin.Models.Keyboard
             return JsonConvert.SerializeObject(this);
         }
     }
-
 }

@@ -10,7 +10,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "клавиатура";
         public string Decription { get; } = "показывает клавиатуру";
         public string Usage { get; } = "клавиатура";
-        public List<string> Allias { get; } = new List<string>() {"клавиатура", "клава", "кб"};
+        public List<string> Allias { get; } = new List<string> {"клавиатура", "клава", "кб"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 

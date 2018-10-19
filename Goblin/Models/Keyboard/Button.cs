@@ -1,12 +1,11 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Goblin.Models.Keyboard
 {
     public class Button
     {
-        [JsonProperty("action")]
-        public Dictionary<string, string> Action = new Dictionary<string, string>
+        [JsonProperty("action")] public Dictionary<string, string> Action = new Dictionary<string, string>
         {
             ["type"] = "text"
         };

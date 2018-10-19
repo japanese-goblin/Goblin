@@ -1,11 +1,11 @@
-﻿using Goblin.Helpers;
-using Goblin.Models.Keyboard;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Goblin.Helpers;
+using Goblin.Models.Keyboard;
+using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Bot.Commands
 {
@@ -14,7 +14,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Раписание *день*.*месяц*";
         public string Decription { get; } = "Возвращает расписание на указанную дату. Если дата не указана, расписание берется на текущую дату";
         public string Usage { get; } = "Расписание 21.12";
-        public List<string> Allias { get; } = new List<string> { "расписание" };
+        public List<string> Allias { get; } = new List<string> {"расписание"};
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
@@ -64,7 +64,7 @@ namespace Goblin.Bot.Commands
             }
 
             var isGoodDate = DateTime.TryParseExact($"{date[0]}.{date[1]}",
-                new[] { "d.M", "d.MM", "dd.M", "dd.MM" },
+                new[] {"d.M", "d.MM", "dd.M", "dd.MM"},
                 null, DateTimeStyles.None, out var res);
 
             if (!isGoodDate)

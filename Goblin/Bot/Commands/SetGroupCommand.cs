@@ -1,8 +1,8 @@
-﻿using Goblin.Helpers;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Goblin.Helpers;
 using Goblin.Models.Keyboard;
+using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Bot.Commands
 {
@@ -11,7 +11,7 @@ namespace Goblin.Bot.Commands
         public string Name => "Устгр *циферки*";
         public string Decription => "Установить группу для получения расписания";
         public string Usage => "Устгр 351617";
-        public List<string> Allias => new List<string> { "устгр" };
+        public List<string> Allias => new List<string> {"устгр"};
         public Category Category => Category.SAFU;
         public bool IsAdmin => false;
 

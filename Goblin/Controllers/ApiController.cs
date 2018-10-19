@@ -1,13 +1,13 @@
-﻿using Goblin.Bot;
-using Goblin.Helpers;
-using Goblin.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Goblin.Bot;
+using Goblin.Helpers;
+using Goblin.Models;
 using Goblin.Models.Keyboard;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Controllers
 {
@@ -36,7 +36,7 @@ namespace Goblin.Controllers
 
                     if (!DbHelper.Db.Users.Any(x => x.Vk == userID))
                     {
-                        await DbHelper.Db.Users.AddAsync(new User { Vk = userID });
+                        await DbHelper.Db.Users.AddAsync(new User {Vk = userID});
                         await DbHelper.Db.SaveChangesAsync();
                     }
 
