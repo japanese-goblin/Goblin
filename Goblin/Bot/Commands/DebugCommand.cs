@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Goblin.Helpers;
+using Goblin.Models.Keyboard;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Goblin.Helpers;
-using Goblin.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -11,7 +11,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Debug";
         public string Decription { get; } = "Инфа для дебага";
         public string Usage { get; } = "инфа";
-        public List<string> Allias { get; } = new List<string> {"дебаг", "инфа", "debug", "дебуг"};
+        public List<string> Allias { get; } = new List<string> { "дебаг", "инфа", "debug", "дебуг" };
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = true;
 

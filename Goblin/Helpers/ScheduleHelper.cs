@@ -21,34 +21,11 @@ namespace Goblin.Helpers
             Groups = JsonConvert.DeserializeObject<List<Group>>(File.ReadAllText("Groups.json"));
         }
 
-        public static async Task<string> GetScheduleAtDate(DateTime date, int usergroup)
-        {
-            var result = $"Расписание на {date:dd.MM}:\n";
-            var res = await GetSchedule(usergroup);
-
-            if (res.IsError)
-            {
-                var group = GetGroupByRealId(usergroup).SiteId;
-                return "Какая-то ошибочка :с\n" +
-                       "Возможно, сайт с расписанием недоступен, либо изменился номер группы на сайте.\n" +
-                       $"Вы можете проверить расписание здесь: http://ruz.narfu.ru/?icalendar&oid={group}&from={DateTime.Now:dd.MM.yyyy}";
-
-            }
-
-            var lessons = res.Lessons.Where(x => x.Time.DayOfYear == date.DayOfYear).ToList();
-
-            if (lessons.Count == 0) return $"На {date:dd.MM} расписание отсутствует!";
-
-            foreach (var lesson in lessons.Where(x => x.Time.DayOfYear == date.DayOfYear))
-            {
-                result += $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}] ({lesson.Teacher})\n" +
-                          $"У группы {lesson.Groups}\n" +
-                          $"В аудитории {lesson.Auditory} ({lesson.Address})\n\n";
-            }
-
-            return result;
-        }
-
+        /// <summary>
+        /// Получение всего доступного расписания для группы
+        /// </summary>
+        /// <param name="realGroup">Реальный номер группы</param>
+        /// <returns>(произошла ли ошибка, массив с парамаи)</returns>
         public static async Task<(bool IsError, List<Lesson> Lessons)> GetSchedule(int realGroup)
         {
             var usergroup = GetGroupByRealId(realGroup).SiteId;
@@ -73,7 +50,7 @@ namespace Goblin.Helpers
             }
             catch
             {
-                return (false, new List<Lesson>());
+                return (true, new List<Lesson>()); //TODO: true -> false?
             }
 
             var lessons = new List<Lesson>();
@@ -103,6 +80,76 @@ namespace Goblin.Helpers
             }
 
             return (false, lessons);
+        }
+
+        /// <summary>
+        /// Получение расписания в строком виде
+        /// </summary>
+        /// <param name="date">Дата, на которую нужно расписание</param>
+        /// <param name="realGroup">Реальный номер группы сафу</param>
+        /// <returns></returns>
+        public static async Task<string> GetScheduleAtDate(DateTime date, int realGroup)
+        {
+            var res = await GetSchedule(realGroup);
+
+            if (res.IsError)
+            {
+                var group = GetGroupByRealId(realGroup).SiteId;
+                return "Какая-то ошибочка :с\n" +
+                       "Возможно, сайт с расписанием недоступен (либо ошибка на стороне бота, но это вряд ли)\n" +
+                       $"Вы можете проверить расписание здесь: http://ruz.narfu.ru/?timetable&group={group}";
+            }
+
+            var lessons = res.Lessons.Where(x => x.Time.DayOfYear == date.DayOfYear).ToList();
+
+            if (lessons.Count == 0) return $"На {date:dd.MM} расписание отсутствует!";
+
+            var result = $"Расписание на {date:dd.MM}:\n";
+            foreach (var lesson in lessons.Where(x => x.Time.DayOfYear == date.DayOfYear))
+            {
+                result += $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}] ({lesson.Teacher})\n" +
+                          $"У группы {lesson.Groups}\n" +
+                          $"В аудитории {lesson.Auditory} ({lesson.Address})\n\n";
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Получение экзаменов в строковом виде
+        /// </summary>
+        /// <param name="realGroup">Реальный номер группы</param>
+        /// <returns>Список экзаменов</returns>
+        public static async Task<string> GetExams(int realGroup)
+        {
+            var res = await GetSchedule(realGroup);
+
+            if (res.IsError)
+            {
+                var group = GetGroupByRealId(realGroup).SiteId;
+                return "Какая-то ошибочка :с\n" +
+                       "Возможно, сайт с расписанием недоступен (либо ошибка на стороне бота, но это вряд ли)\n" +
+                       $"Вы можете проверить расписание здесь: http://ruz.narfu.ru/?timetable&group={group}";
+            }
+
+            var lessons = res.Lessons.Where(x =>
+                    x.Type.Contains("Экзамен") || x.Type.Contains("Зачет") ||
+                    x.Type.Contains("Интернет"))
+                .OrderBy(x => x.Time)
+                .ToList();
+
+            if (lessons.Count == 0)
+            {
+                return "На данный момент список экзаменов отсутствует";
+            }
+
+            var result = "Список экзаменов:\n" +
+                      string.Join("\n\n",
+                          lessons.Select(l => $"{l.Time:dd.MM HH:mm} - {l.Name} ({l.Type})\n" +
+                                              $"У группы {l.Groups}\n" +
+                                              $"В аудитории {l.Auditory}"));
+
+            return result;
         }
 
         public static int GetWeekNumber(DateTime date)

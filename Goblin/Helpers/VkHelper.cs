@@ -19,11 +19,27 @@ namespace Goblin.Helpers
         private const string VkToken = "***REMOVED***";
         #endregion
 
+        /// <summary>
+        /// Сообщение для одного пользователя
+        /// </summary>
+        /// <param name="id">ID пользователя в вк</param>
+        /// <param name="text">сообщение</param>
+        /// <param name="attach">прикрепления</param>
+        /// <param name="kb">клавиатура</param>
+        /// <returns></returns>
         public static async Task SendMessage(long id, string text, string attach = "", Keyboard kb = null)
         {
             await SendMessage(new List<long> { id }, text, attach, kb);
         }
 
+        /// <summary>
+        /// Сообщение для нескольких пользователей
+        /// </summary>
+        /// <param name="ids">ID пользователя в вк</param>
+        /// <param name="text">сообщение</param>
+        /// <param name="attach">прикрепления</param>
+        /// <param name="kb">клавиатура</param>
+        /// <returns></returns>
         public static async Task SendMessage(List<long> ids, string text, string attach = "", Keyboard kb = null)
         {
             if (string.IsNullOrEmpty(text)) return;
@@ -37,14 +53,7 @@ namespace Goblin.Helpers
                     ["attachment"] = attach
                 };
 
-                if (ids.Count > 1)
-                {
-                    values.Add("user_ids", string.Join(",", ids));
-                }
-                else
-                {
-                    values.Add("peer_id", ids[0].ToString());
-                }
+                values.Add("user_ids", string.Join(",", ids));
 
                 var isKb = kb is null;
                 if (!isKb)
@@ -52,13 +61,15 @@ namespace Goblin.Helpers
                     values.Add("keyboard", kb.ToString());
                 }
 
-                var response = await client.UploadValuesTaskAsync("https://api.vk.com/method/messages.send", values);
-
-                //var responseString = JsonConvert.DeserializeObject<dynamic>(Encoding.Default.GetString(response));
-                //return int.TryParse(responseString["response"]?.ToString(), out int result); // TODO: ???
+                await client.UploadValuesTaskAsync("https://api.vk.com/method/messages.send", values);
             }
         }
 
+        /// <summary>
+        /// Получение фамилии и имени пользователя по ID
+        /// </summary>
+        /// <param name="id">ID пользователя в вк</param>
+        /// <returns>строка с фамилией и именем</returns>
         public static async Task<string> GetUserName(long id)
         {
             using (var client = new WebClient())

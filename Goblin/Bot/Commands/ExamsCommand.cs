@@ -22,33 +22,8 @@ namespace Goblin.Bot.Commands
         public async Task Execute(string param, int id = 0)
         {
             var user = await DbHelper.Db.Users.FirstOrDefaultAsync(x => x.Vk == id);
-            var res = await ScheduleHelper.GetSchedule(user.Group);
-            if (res.IsError)
-            {
-                Message = "Какая-то ошибочка. Возможно, сайт с расписанием недоступен";
-                return;
-            }
 
-            var lessons = res.Lessons.Distinct().Where(x =>
-                              x.Type.Contains("Экзамен") || x.Type.Contains("Зачет") ||
-                              x.Type.Contains("Интернет"))
-                          .OrderBy(x => x.Time)
-                          .ToList();
-
-            if (lessons.Count == 0)
-            {
-                Message = "На данный момент список экзаменов отсутствует";
-                return;
-            }
-
-            var result = "Список экзаменов:\n";
-
-            foreach (var l in lessons)
-            {
-                result += $"{l.Time:dd.MM HH:mm} - {l.Name} ({l.Type})\nУ группы {l.Groups}\n В аудитории {l.Auditory}\n\n";
-            }
-
-            Message = result;
+            Message = await ScheduleHelper.GetExams(user.Group);
         }
 
         public bool CanExecute(string param, int id = 0)
