@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,7 +46,9 @@ namespace Goblin.Helpers
         /// <returns></returns>
         public static async Task SendMessage(List<long> ids, string text, string attach = "", Keyboard kb = null)
         {
+            const int confId = 2000000000;
             if (string.IsNullOrEmpty(text)) return;
+
             using (var client = new WebClient())
             {
                 var values = new NameValueCollection
@@ -56,7 +59,15 @@ namespace Goblin.Helpers
                     ["attachment"] = attach
                 };
 
-                values.Add("user_ids", string.Join(",", ids));
+                if (ids.Count > 1)
+                {
+                    values.Add("user_ids", string.Join(",", ids));
+                }
+                else
+                {
+                    values.Add("peer_id", ids[0].ToString());
+                }
+
 
                 var isKb = kb is null;
                 if (!isKb)
