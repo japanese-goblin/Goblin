@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Goblin.Models;
@@ -149,7 +148,8 @@ namespace Goblin.Helpers
             {
                 var f = exam.First();
                 var l = exam.Last();
-                result += $"{l.Time:dd.MM} с {f.Time:HH:mm} до {f.StartEndTime.Split("-")[1]} - {l.Name} ({l.Type})\n" +
+                result += $"{l.Time:dd.MM.yyyy} ({f.Time:HH:mm} - {f.StartEndTime.Split("-")[1]})" +
+                          $" - {l.Name} [{l.Type}] ({l.Teacher})\n" +
                           $"У группы {l.Groups}\n" +
                           $"В аудитории {l.Auditory}\n\n";
             }
