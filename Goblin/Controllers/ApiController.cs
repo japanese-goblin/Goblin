@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Goblin.Bot;
+﻿using Goblin.Bot;
 using Goblin.Helpers;
 using Goblin.Models;
 using Goblin.Models.Keyboard;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Goblin.Controllers
 {
@@ -36,7 +36,7 @@ namespace Goblin.Controllers
 
                     if (!DbHelper.Db.Users.Any(x => x.Vk == userID))
                     {
-                        await DbHelper.Db.Users.AddAsync(new User {Vk = userID});
+                        await DbHelper.Db.Users.AddAsync(new User { Vk = userID });
                         await DbHelper.Db.SaveChangesAsync();
                     }
 
@@ -87,7 +87,7 @@ namespace Goblin.Controllers
             });
         }
 
-        public async Task<string> SendSchedule()
+        public async Task SendSchedule()
         {
             await Task.Factory.StartNew(async () =>
             {
@@ -100,18 +100,18 @@ namespace Goblin.Controllers
                     await Task.Delay(1500);
                 }
             });
-
-            return "ok";
         }
 
         public async Task SendToPesi()
         {
             var konfa = 2000000003;
-            var schedule = await ScheduleHelper.GetScheduleAtDate(DateTime.Now, 351617);
-            var weather = await WeatherHelper.GetWeather("Архангельск");
+            await VkHelper.SendToConversation(konfa, 351617, "Архангельск");
+        }
 
-            await VkHelper.SendMessage(konfa, weather);
-            await VkHelper.SendMessage(konfa, schedule);
+        public async Task SendToIgor()
+        {
+            var konfa = 2000000005;
+            await VkHelper.SendToConversation(konfa, 351616);
         }
     }
 }

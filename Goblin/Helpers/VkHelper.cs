@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
@@ -102,6 +103,18 @@ namespace Goblin.Helpers
                     return string.Empty;
                 var name = $"{result[0]["first_name"]} {result[0]["last_name"]}";
                 return name;
+            }
+        }
+
+        public static async Task SendToConversation(long id, int group, string city = "")
+        {
+            var schedule = await ScheduleHelper.GetScheduleAtDate(DateTime.Now, group);
+            await SendMessage(id, schedule);
+
+            if (!string.IsNullOrEmpty(city))
+            {
+                var weather = await WeatherHelper.GetWeather(city);
+                await SendMessage(id, weather);
             }
         }
     }

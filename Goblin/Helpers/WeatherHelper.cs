@@ -21,13 +21,14 @@ namespace Goblin.Helpers
                 var req = $"weather?q={city}&units=metric&appid={_token}&lang=ru";
                 var response = await web.DownloadStringTaskAsync($"{_endPoint}/{req}");
                 var w = JsonConvert.DeserializeObject<WeatherInfo>(response);
-                result = $"Погода в городе {city} на {UnixToDateTime(w.UnixTime):dd.MM.yyyy HH:mm}\n" +
+                // на {UnixToDateTime(w.UnixTime):dd.MM.yyyy HH:mm}
+                result = $"Погода в городе {city} на данный момент:\n" +
                          $"Температура: {w.Weather.Temperature}\n" +
                          $"Описание погоды: {w.Info[0].State}\n" +
                          $"Влажность: {w.Weather.Humidity}\n" +
                          $"Ветер: {w.Wind.SpeedInfo}\n" +
-                         $"Давление: {w.Weather.Pressure}\n" +
-                         $"Видимость: {w.Visibility}\n\n" +
+                         $"Давление: {w.Weather.Pressure}\n\n" +
+                         // $"Видимость: {w.Visibility}\n\n" + //TODO: КУДА ДЕЛАСЬ ВИДИМОСТЬ
                          $"Восход в {w.OtherInfo.Sunrise:HH:mm}\n" +
                          $"Закат в {w.OtherInfo.Sunset:HH:mm}";
             }
@@ -82,12 +83,12 @@ namespace Goblin.Helpers
     internal class Main
     {
         [JsonProperty("temp")] private double _temperature { get; set; }
-        [JsonProperty("pressure")] private int _pressure { get; set; }
-        [JsonProperty("humidity")] private int _humidity { get; set; }
+        [JsonProperty("pressure")] private double _pressure { get; set; }
+        [JsonProperty("humidity")] private double _humidity { get; set; }
         [JsonProperty("temp_min")] private double _minTemp { get; set; }
         [JsonProperty("temp_max")] private double _maxTemp { get; set; }
 
-        public string Temperature => $"{_temperature}°С";
+        public string Temperature => $"{Math.Round(_temperature)}°С";
         public string Pressure => $"{(int) (_pressure * 0.75006375541921)} мм рт.ст.";
         public string Humidity => $"{_humidity}%";
         public string MinTemp => $"{_minTemp}°С";
@@ -99,7 +100,7 @@ namespace Goblin.Helpers
         [JsonProperty("speed")] public double Speed { get; set; }
         [JsonProperty("deg")] public double Degrees { get; set; }
 
-        [JsonIgnore] public string SpeedInfo => $"{Speed} метров в секунду";
+        [JsonIgnore] public string SpeedInfo => $"{Math.Round(Speed)} метров в секунду";
     }
 
     internal class Clouds
@@ -125,27 +126,16 @@ namespace Goblin.Helpers
     internal class WeatherInfo
     {
         [JsonProperty("coord")] private Coord Coord { get; set; }
-
         [JsonProperty("weather")] public List<Weather> Info { get; set; }
-
         [JsonProperty("base")] public string BaseInfo { get; set; }
-
         [JsonProperty("main")] public Main Weather { get; set; }
-
-        [JsonProperty("visibility")] private int _visibility { get; set; }
-
+        [JsonProperty("visibility")] private double _visibility { get; set; }
         [JsonProperty("wind")] public Wind Wind { get; set; }
-
         [JsonProperty("clouds")] public Clouds Clouds { get; set; }
-
         [JsonProperty("dt")] public int UnixTime { get; set; }
-
         [JsonProperty("sys")] public Sys OtherInfo { get; set; }
-
         [JsonProperty("id")] private int ID { get; set; }
-
         [JsonProperty("name")] public string CityName { get; set; }
-
         [JsonProperty("cod")] public int CityCode { get; set; }
 
         public string Visibility => $"{_visibility} метров";
