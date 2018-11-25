@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Goblin.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -6,8 +8,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Goblin.Models;
-using Newtonsoft.Json;
 using Calendar = Ical.Net.Calendar;
 
 namespace Goblin.Helpers
@@ -74,7 +74,7 @@ namespace Goblin.Helpers
                     Time = ev.Start.AsSystemLocal,
                     Type = a[3],
                     StartEndTime = a[0].Replace(")", "").Replace("(", "").Replace("п", ")"),
-                    Number = (byte) a[0].ElementAt(0)
+                    Number = (byte)a[0].ElementAt(0)
                 };
                 lessons.Add(les);
             }
@@ -102,7 +102,10 @@ namespace Goblin.Helpers
 
             var lessons = res.Lessons.Where(x => x.Time.DayOfYear == date.DayOfYear).ToList();
 
-            if (lessons.Count == 0) return $"На {date:dd.MM} расписание отсутствует!";
+            if (lessons.Count == 0)
+            {
+                return $"На {date:dd.MM} расписание отсутствует!";
+            }
 
             var result = $"Расписание на {date:dd.MM}:\n";
             foreach (var lesson in lessons.Where(x => x.Time.DayOfYear == date.DayOfYear))
@@ -133,8 +136,7 @@ namespace Goblin.Helpers
             }
 
             var lessons = res.Lessons.Where(x =>
-                    x.Type.Contains("Экзамен") || x.Type.Contains("Зачет") ||
-                    x.Type.Contains("Интернет"))
+                    x.Type.ToLower().Contains("экзамен") || x.Type.ToLower().Contains("зачет"))
                 .OrderBy(x => x.Time)
                 .ToList();
 

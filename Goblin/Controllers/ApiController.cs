@@ -89,6 +89,7 @@ namespace Goblin.Controllers
 
         public async Task SendSchedule()
         {
+            if (DateTime.Now.DayOfWeek == DayOfWeek.Sunday) return;
             await Task.Factory.StartNew(async () =>
             {
                 var grouped = DbHelper.GetScheduleUsers().GroupBy(x => x.Group);
@@ -102,7 +103,7 @@ namespace Goblin.Controllers
             });
         }
 
-        public async Task SendToPesi()
+        public async Task SendToPesi() //TODO: сделать параметры и удалить дублирующуюся штуку внизу
         {
             var konfa = 2000000003;
             await VkHelper.SendToConversation(konfa, 351617, "Архангельск");
