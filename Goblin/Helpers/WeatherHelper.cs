@@ -27,8 +27,9 @@ namespace Goblin.Helpers
                          $"Описание погоды: {w.Info[0].State}\n" +
                          $"Влажность: {w.Weather.Humidity}\n" +
                          $"Ветер: {w.Wind.SpeedInfo}\n" +
-                         $"Давление: {w.Weather.Pressure}\n\n" +
-                         // $"Видимость: {w.Visibility}\n\n" + //TODO: КУДА ДЕЛАСЬ ВИДИМОСТЬ
+                         $"Давление: {w.Weather.Pressure}\n" +
+                         $"Облачность: {w.Clouds.Cloudiness}\n" +
+                         $"Видимость: {w.Visibility}\n\n" + 
                          $"Восход в {w.OtherInfo.Sunrise:HH:mm}\n" +
                          $"Закат в {w.OtherInfo.Sunset:HH:mm}";
             }
@@ -89,7 +90,7 @@ namespace Goblin.Helpers
         [JsonProperty("temp_max")] private double _maxTemp { get; set; }
 
         public string Temperature => $"{Math.Round(_temperature)}°С";
-        public string Pressure => $"{(int) (_pressure * 0.75006375541921)} мм рт.ст.";
+        public string Pressure => $"{(int) (_pressure * 0.75006375541921)} мм.рт.ст.";
         public string Humidity => $"{_humidity}%";
         public string MinTemp => $"{_minTemp}°С";
         public string MaxTemp => $"{_maxTemp}°С";
@@ -100,7 +101,7 @@ namespace Goblin.Helpers
         [JsonProperty("speed")] public double Speed { get; set; }
         [JsonProperty("deg")] public double Degrees { get; set; }
 
-        [JsonIgnore] public string SpeedInfo => $"{Math.Round(Speed)} метров в секунду";
+        [JsonIgnore] public string SpeedInfo => $"{Math.Round(Speed)} м/с";
     }
 
     internal class Clouds
