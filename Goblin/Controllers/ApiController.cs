@@ -103,16 +103,31 @@ namespace Goblin.Controllers
             });
         }
 
-        public async Task SendToPesi() //TODO: сделать параметры и удалить дублирующуюся штуку внизу
+        public async Task SendToConv(int id, int group = 0, string city = "")
         {
-            var konfa = 2000000003;
-            await VkHelper.SendToConversation(konfa, 351617, "Архангельск");
+            if (!ModelState.IsValid && ScheduleHelper.IsCorrectGroup(group)) return;
+
+            id = 2000000000 + id;
+
+            if (!string.IsNullOrEmpty(city) && await WeatherHelper.CheckCity(city))
+            {
+                await VkHelper.SendToConversation(id, group, city);
+            }
+            else
+            {
+                await VkHelper.SendToConversation(id, group);
+            }
         }
 
-        public async Task SendToIgor()
+        public async Task Test()
         {
-            var konfa = 2000000005;
-            await VkHelper.SendToConversation(konfa, 351616);
+            //await VkHelper.SendMessage(2000000005, 
+            //    "Здравствуйте! C Наступающим Новым годом (и сессией...)!\n" +
+            //    "Пожалуйста, проголосуйте в прикреплённом опросе или здесь: https://vk.com/wall-146048760_58" +
+            //    "\n\nТакже, если у Вас есть предложение по боту, " +
+            //    "Вы можете написать мне в личку  - https://vk.com/id***REMOVED***",
+            //    new[] { "poll-146048760_315187897" });
+            //await VkHelper.SendMessage(2000000003, "здарова", new[] {"poll-146048760_315187897"});
         }
     }
 }

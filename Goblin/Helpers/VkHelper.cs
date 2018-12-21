@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +31,7 @@ namespace Goblin.Helpers
         /// <param name="attach">прикрепления</param>
         /// <param name="kb">клавиатура</param>
         /// <returns></returns>
-        public static async Task SendMessage(long id, string text, string attach = "", Keyboard kb = null)
+        public static async Task SendMessage(long id, string text, string[] attach = null, Keyboard kb = null)
         {
             await SendMessage(new List<long> {id}, text, attach, kb);
         }
@@ -45,9 +44,8 @@ namespace Goblin.Helpers
         /// <param name="attach">прикрепления</param>
         /// <param name="kb">клавиатура</param>
         /// <returns></returns>
-        public static async Task SendMessage(List<long> ids, string text, string attach = "", Keyboard kb = null)
+        public static async Task SendMessage(List<long> ids, string text, string[] attach = null, Keyboard kb = null)
         {
-            const int confId = 2000000000;
             if (string.IsNullOrEmpty(text)) return;
 
             using (var client = new WebClient())
@@ -56,9 +54,15 @@ namespace Goblin.Helpers
                 {
                     ["message"] = text,
                     ["access_token"] = VkToken,
-                    ["v"] = "5.80",
-                    ["attachment"] = attach
+                    ["v"] = "5.92",
+                    ["random_id"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString()
                 };
+
+                var isAttach = attach is null;
+                if (!isAttach)
+                {
+                    values.Add("attachment", string.Join(",", attach));
+                }
 
                 if (ids.Count > 1)
                 {
