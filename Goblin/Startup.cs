@@ -50,6 +50,11 @@ namespace Goblin
 
             app.UseStaticFiles();
             app.UseAuthentication();
+
+            //TODO ??? почему без этого перестало работать на локалке?
+            app.UseCors(builder =>
+                builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

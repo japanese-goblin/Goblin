@@ -82,7 +82,7 @@ namespace Goblin.Controllers
                 {
                     var ids = group.Select(x => x.Vk).ToList();
                     await VkHelper.SendMessage(ids, await WeatherHelper.GetWeather(group.Key));
-                    await Task.Delay(1500);
+                    await Task.Delay(700); //TODO - 3 запроса в секунду
                 }
             });
         }
@@ -98,7 +98,7 @@ namespace Goblin.Controllers
                     var ids = group.Select(x => x.Vk).ToList();
                     var schedule = await ScheduleHelper.GetScheduleAtDate(DateTime.Today, group.Key);
                     await VkHelper.SendMessage(ids, schedule);
-                    await Task.Delay(1500);
+                    await Task.Delay(700); //TODO - 3 запроса в секунду
                 }
             });
         }
@@ -117,17 +117,6 @@ namespace Goblin.Controllers
             {
                 await VkHelper.SendToConversation(id, group);
             }
-        }
-
-        public async Task Test()
-        {
-            //await VkHelper.SendMessage(2000000005, 
-            //    "Здравствуйте! C Наступающим Новым годом (и сессией...)!\n" +
-            //    "Пожалуйста, проголосуйте в прикреплённом опросе или здесь: https://vk.com/wall-146048760_58" +
-            //    "\n\nТакже, если у Вас есть предложение по боту, " +
-            //    "Вы можете написать мне в личку  - https://vk.com/id***REMOVED***",
-            //    new[] { "poll-146048760_315187897" });
-            //await VkHelper.SendMessage(2000000003, "здарова", new[] {"poll-146048760_315187897"});
         }
     }
 }

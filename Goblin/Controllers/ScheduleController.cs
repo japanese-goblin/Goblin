@@ -14,7 +14,7 @@ namespace Goblin.Controllers
 
         public async Task<IActionResult> Show(int id)
         {
-            if (!ModelState.IsValid) return View("Error");
+            if (!ModelState.IsValid || !ScheduleHelper.IsCorrectGroup(id)) return View("Error");
 
             var group = ScheduleHelper.GetGroupByRealId(id);
             ViewBag.Title = $"{group.RealId} - {group.Name}";

@@ -1,36 +1,23 @@
 ﻿@model Goblin.Models.LoginModel
-<head>
-    <title>Login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap-dark.min.css"/>
-    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
-    <style>
-        input {
-            margin: 0px 6px 6px 0px;
-        }
+<!DOCTYPE html>
+<html lang="en">
 
-        .wrapper {
-            text-align: center;
-        }
-    </style>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login</title>
+    <link href="~/styles/bootstrap.min.css" rel="stylesheet">
+    <link href="~/styles/login.css" rel="stylesheet">
 </head>
-<body>
-<div class="modal-dialog modal-sm">
-    <!-- Modal content-->
-    <div class="modal-content">
-        <div class="modal-header">
-            <h4 class="modal-title wrapper">Login</h4>
-        </div>
-        <div class="modal-body">
-            <form asp-controller="Account" asp-action="Login" method="post">
-                <input type="text" id="Nick" class="form-control input-sm" placeholder="Nick" name="Nick"/>
-                <input type="password" id="Password" class="form-control input-sm" placeholder="Password" name="Password"/>
-                <div class="wrapper">
-                    <button type="submit" class="btn btn-info" name="submit" value="login">Login</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+<body class="text-center">
+    <form class="form-signin" asp-controller="Account" asp-action="Login" method="post">
+        <input type="text" id="Nick" class="form-control" placeholder="Nick" name="Nick" required="" autofocus="">
+        <input type="password" id="Password" class="form-control" placeholder="Password" name="Password" required="">
+        <button class="btn btn-lg btn-info btn-block" type="submit" name="submit" value="login">Login</button>
+        <p class="mt-5 mb-3 text-muted">© JG 2017-2018</p>
+    </form>
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 </body>
+</html>

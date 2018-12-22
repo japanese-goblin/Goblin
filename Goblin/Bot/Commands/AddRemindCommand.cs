@@ -27,6 +27,11 @@ namespace Goblin.Bot.Commands
                 var d = DateTime.Now.AddDays(1);
                 all[0] = $"{d.Day}.{d.Month}.{d.Year}";
             }
+            if (all[0].ToLower() == "сегодня") //TODO: поменять
+            {
+                var d = DateTime.Now;
+                all[0] = $"{d.Day}.{d.Month}.{d.Year}";
+            }
 
             var time = ParseTime(all[0], all[1]);
             await DbHelper.Db.Reminds.AddAsync(new Remind
