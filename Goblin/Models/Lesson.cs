@@ -2,7 +2,7 @@
 
 namespace Goblin.Models
 {
-    public class Lesson
+    public class Lesson : IEquatable<Lesson>
     {
         public string Type { get; set; }
         public string Name { get; set; }
@@ -13,5 +13,18 @@ namespace Goblin.Models
         public string Auditory { get; set; }
         public string Teacher { get; set; }
         public string Groups { get; set; }
+
+        public bool Equals(Lesson other)
+        {
+            if (Time.Date == other.Time.Date && StartEndTime == other.StartEndTime)
+                return true;
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Time.GetHashCode() ^ StartEndTime.GetHashCode();
+        }
     }
 }

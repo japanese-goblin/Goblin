@@ -14,11 +14,11 @@ namespace Goblin.Helpers
 {
     public static class ScheduleHelper
     {
-        public static List<Group> Groups;
+        public static Group[] Groups;
 
         static ScheduleHelper()
         {
-            Groups = JsonConvert.DeserializeObject<List<Group>>(File.ReadAllText("Groups.json"));
+            Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText("Data/Groups.json"));
         }
 
         /// <summary>
@@ -159,6 +159,7 @@ namespace Goblin.Helpers
             return result;
         }
 
+        #region utils
         public static int GetWeekNumber(DateTime date)
         {
             var ciCurr = CultureInfo.CurrentCulture;
@@ -166,19 +167,11 @@ namespace Goblin.Helpers
             return weekNum;
         }
 
-        public static bool IsCorrectGroup(int group)
-        {
-            return Groups.Any(x => x.RealId == group);
-        }
+        public static bool IsCorrectGroup(int group) => Groups.Any(x => x.RealId == group);
 
-        public static Group GetGroupByRealId(int realId)
-        {
-            return Groups.FirstOrDefault(x => x.RealId == realId);
-        }
+        public static Group GetGroupByRealId(int realId) => Groups.FirstOrDefault(x => x.RealId == realId);
 
-        public static Group GetGroupBySiteId(short siteId)
-        {
-            return Groups.FirstOrDefault(x => x.SiteId == siteId);
-        }
+        public static Group GetGroupBySiteId(short siteId) => Groups.FirstOrDefault(x => x.SiteId == siteId);
+        #endregion
     }
 }

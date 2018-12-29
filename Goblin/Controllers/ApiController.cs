@@ -98,7 +98,7 @@ namespace Goblin.Controllers
                     var ids = group.Select(x => x.Vk).ToList();
                     var schedule = await ScheduleHelper.GetScheduleAtDate(DateTime.Today, group.Key);
                     await VkHelper.SendMessage(ids, schedule);
-                    await Task.Delay(700); //TODO - 3 запроса в секунду
+                    await Task.Delay(500); //TODO - 3 запроса в секунду
                 }
             });
         }

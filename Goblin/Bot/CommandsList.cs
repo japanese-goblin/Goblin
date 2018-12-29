@@ -30,7 +30,9 @@ namespace Goblin.Bot
                 new SendAdminCommand(),
                 new MergeCommand(),
                 new KeyboardCommand(),
-                new RandomCommand()
+                new RandomCommand(),
+                new FindTeacherCommand(),
+                new TeacherScheduleCommand()
             };
 
             Commands.Add(new HelpCommand(Commands));

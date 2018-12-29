@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin", "Goblin\Goblin.csproj", "{C4E21B58-F5A7-4BF6-B3A7-FA33D5290CD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoblinTests", "GoblinTests\GoblinTests.csproj", "{2780FACE-6065-4C02-8F6F-DC9F29F334CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoblinTests", "GoblinTests\GoblinTests.csproj", "{2780FACE-6065-4C02-8F6F-DC9F29F334CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

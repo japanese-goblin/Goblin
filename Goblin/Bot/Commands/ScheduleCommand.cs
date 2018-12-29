@@ -65,7 +65,7 @@ namespace Goblin.Bot.Commands
 
             var isGoodDate = DateTime.TryParseExact($"{date[0]}.{date[1]}",
                 new[] {"d.M", "d.MM", "dd.M", "dd.MM"},
-                null, DateTimeStyles.None, out var res);
+                null, DateTimeStyles.None, out _);
 
             if (!isGoodDate)
             {
