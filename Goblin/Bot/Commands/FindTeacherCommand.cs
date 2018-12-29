@@ -24,7 +24,7 @@ namespace Goblin.Bot.Commands
 
         public bool CanExecute(string param, int id = 0)
         {
-            var x = TeacherScheduleHelper.FindByName(param);
+            var x = TeacherScheduleHelper.FindByName(param.ToLower());
             var find = string.IsNullOrEmpty(x);
             if (find)
                 Message = "Ошибка!\n" +

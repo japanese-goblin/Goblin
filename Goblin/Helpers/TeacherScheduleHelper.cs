@@ -123,7 +123,7 @@ namespace Goblin.Helpers
         public static string FindByName(string name)
         {
             return string.Join("\n",
-                Teachers.Where(x => x.Name.ToLower().Contains(name)).Select(x => $"{x.Name} ({x.Depart}) - {x.Id}"));
+                Teachers.Where(x => x.Name.ToLower().Contains(name.ToLower())).Select(x => $"{x.Name} ({x.Depart}) - {x.Id}"));
         }
 
         public static bool FindById(int id) => Teachers.Any(x => x.Id == id);
