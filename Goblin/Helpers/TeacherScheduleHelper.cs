@@ -111,7 +111,7 @@ namespace Goblin.Helpers
                 {
                     result += $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}]\n" +
                               // $"{lesson.Groups}\n" + // TODO
-                              $"В {lesson.Auditory} ({lesson.Address})\n\n";
+                              $"В {lesson.Auditory} ({lesson.Address})\n";
                 }
 
                 result += "\n\n";
