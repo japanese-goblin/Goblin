@@ -1,72 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 
-namespace Goblin.Helpers
+namespace Goblin.Weather.Models
 {
-    public static class WeatherHelper
-    {
-        private const string _endPoint = "http://api.openweathermap.org/data/2.5";
-        private const string _token = "***REMOVED***";
-
-        public static async Task<string> GetWeather(string city)
-        {
-            var result = "";
-            using (var web = new WebClient())
-            {
-                web.Encoding = Encoding.UTF8;
-                var req = $"weather?q={city}&units=metric&appid={_token}&lang=ru";
-                var response = await web.DownloadStringTaskAsync($"{_endPoint}/{req}");
-                var w = JsonConvert.DeserializeObject<WeatherInfo>(response);
-                // на {UnixToDateTime(w.UnixTime):dd.MM.yyyy HH:mm}
-                result = $"Погода в городе {city} на данный момент:\n" +
-                         $"Температура: {w.Weather.Temperature}\n" +
-                         $"Описание погоды: {w.Info[0].State}\n" +
-                         $"Влажность: {w.Weather.Humidity}\n" +
-                         $"Ветер: {w.Wind.SpeedInfo}\n" +
-                         $"Давление: {w.Weather.Pressure}\n" +
-                         $"Облачность: {w.Clouds.Cloudiness}\n" +
-                         $"Видимость: {w.Visibility}\n\n" + 
-                         $"Восход в {w.OtherInfo.Sunrise:HH:mm}\n" +
-                         $"Закат в {w.OtherInfo.Sunset:HH:mm}";
-            }
-
-            return result;
-        }
-
-        public static async Task<bool> CheckCity(string city)
-        {
-            var result = false;
-            using (var web = new WebClient())
-            {
-                var req = $"weather?q={city}&units=metric&appid={_token}";
-                try
-                {
-                    var response = await web.DownloadStringTaskAsync($"{_endPoint}/{req}");
-                    var w = JsonConvert.DeserializeObject<WeatherInfo>(response);
-                    result = true;
-                }
-                catch
-                {
-                }
-            }
-
-            return result;
-        }
-
-        public static DateTime UnixToDateTime(double unixTimeStamp)
-        {
-            var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-            return dtDateTime;
-        }
-    }
-
-    #region Weather classes
-
     internal class Coord
     {
         [JsonProperty("lon")] public double Longitude { get; set; }
@@ -90,7 +27,7 @@ namespace Goblin.Helpers
         [JsonProperty("temp_max")] private double _maxTemp { get; set; }
 
         public string Temperature => $"{Math.Round(_temperature)}°С";
-        public string Pressure => $"{(int) (_pressure * 0.75006375541921)} мм.рт.ст.";
+        public string Pressure => $"{(int)(_pressure * 0.75006375541921)} мм.рт.ст.";
         public string Humidity => $"{_humidity}%";
         public string MinTemp => $"{_minTemp}°С";
         public string MaxTemp => $"{_maxTemp}°С";
@@ -120,8 +57,8 @@ namespace Goblin.Helpers
         [JsonProperty("sunrise")] private int _sunrise { get; set; }
         [JsonProperty("sunset")] private int _sunset { get; set; }
 
-        public DateTime Sunrise => WeatherHelper.UnixToDateTime(_sunrise);
-        public DateTime Sunset => WeatherHelper.UnixToDateTime(_sunset);
+        public DateTime Sunrise => Goblin.Weather.WeatherInfo.UnixToDateTime(_sunrise);
+        public DateTime Sunset => Goblin.Weather.WeatherInfo.UnixToDateTime(_sunset);
     }
 
     internal class WeatherInfo
@@ -141,6 +78,4 @@ namespace Goblin.Helpers
 
         public string Visibility => $"{_visibility} метров";
     }
-
-    #endregion
 }

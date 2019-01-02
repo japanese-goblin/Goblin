@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Goblin.Schedule;
 using Goblin.Vk;
 using Goblin.Vk.Models;
+using Goblin.Weather;
 using User = Goblin.Models.User;
 
 namespace Goblin.Controllers
@@ -83,7 +84,7 @@ namespace Goblin.Controllers
                 foreach (var group in grouped)
                 {
                     var ids = group.Select(x => x.Vk).ToArray();
-                    await VkMethods.SendMessage(ids, await WeatherHelper.GetWeather(group.Key));
+                    await VkMethods.SendMessage(ids, await WeatherInfo.GetWeather(group.Key));
                     await Task.Delay(700); //TODO - 3 запроса в секунду
                 }
             });

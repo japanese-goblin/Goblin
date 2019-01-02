@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Goblin.Schedule\Goblin.Schedule.csproj" />
     <ProjectReference Include="..\Goblin.Vk\Goblin.Vk.csproj" />
+    <ProjectReference Include="..\Goblin.Weather\Goblin.Weather.csproj" />
   </ItemGroup>
 
   <ItemGroup>

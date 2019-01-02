@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Vk.Models;
+using Goblin.Weather;
 
 namespace Goblin.Bot.Commands
 {
@@ -23,13 +24,13 @@ namespace Goblin.Bot.Commands
             var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == id);
             if (string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
             {
-                Message = await WeatherHelper.GetWeather(user?.City);
+                Message = await WeatherInfo.GetWeather(user?.City);
                 return;
             }
 
-            if (await WeatherHelper.CheckCity(param))
+            if (await WeatherInfo.CheckCity(param))
             {
-                Message = await WeatherHelper.GetWeather(param);
+                Message = await WeatherInfo.GetWeather(param);
             }
             else
             {

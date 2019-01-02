@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Vk.Models;
+using Goblin.Weather;
 using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Bot.Commands
@@ -21,7 +22,7 @@ namespace Goblin.Bot.Commands
         public async Task Execute(string param, int id = 0)
         {
             param = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(param);
-            if (await WeatherHelper.CheckCity(param))
+            if (await WeatherInfo.CheckCity(param))
             {
                 var user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == id);
                 user.City = param;
