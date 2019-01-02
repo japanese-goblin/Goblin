@@ -9,7 +9,7 @@
     <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
     <PackageReference Include="FluentScheduler" Version="5.3.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.8.11" />
-    <PackageReference Include="Ical.Net" Version="4.1.8" />
+    <PackageReference Include="Ical.Net" Version="4.1.9" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.4" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.4" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.1.2" />
@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Goblin.Schedule\Goblin.Schedule.csproj" />
     <ProjectReference Include="..\Goblin.Vk\Goblin.Vk.csproj" />
   </ItemGroup>
 

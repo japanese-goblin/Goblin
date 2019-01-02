@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Helpers;
+using Goblin.Schedule;
 using Goblin.Vk.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +22,7 @@ namespace Goblin.Bot.Commands
         public async Task Execute(string param, int id = 0)
         {
             var group = int.Parse(param);
-            var gr = ScheduleHelper.GetGroupByRealId(group);
+            var gr = StudentsSchedule.GetGroupByRealId(group);
 
             var user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == id);
             user.Group = group;
@@ -31,7 +32,7 @@ namespace Goblin.Bot.Commands
 
         public bool CanExecute(string param, int id = 0)
         {
-            if (int.TryParse(param, out var i) && ScheduleHelper.IsCorrectGroup(i))
+            if (int.TryParse(param, out var i) && StudentsSchedule.IsCorrectGroup(i))
             {
                 return true;
             }

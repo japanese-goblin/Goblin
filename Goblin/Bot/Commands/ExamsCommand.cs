@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
+using Goblin.Schedule;
 using Goblin.Vk.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +24,7 @@ namespace Goblin.Bot.Commands
         {
             var user = await DbHelper.Db.Users.FirstOrDefaultAsync(x => x.Vk == id);
 
-            Message = await ScheduleHelper.GetExams(user.Group);
+            Message = await StudentsSchedule.GetExams(user.Group);
         }
 
         public bool CanExecute(string param, int id = 0)

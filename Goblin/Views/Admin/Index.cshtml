@@ -1,4 +1,4 @@
-﻿@using Goblin.Helpers
+﻿@using Goblin.Schedule
 @model List<Goblin.Models.User>
 <!DOCTYPE html>
 <html>
@@ -42,7 +42,7 @@
                         @foreach (var user in Model)
                         {
                             var url = $"https://vk.com/id{user.Vk}";
-                            var gr = ScheduleHelper.GetGroupByRealId(user.Group);
+                            var gr = StudentsSchedule.GetGroupByRealId(user.Group);
                             var group = gr?.SiteId ?? 0;
                             var grName = gr is null ? "" : gr.Name;
                             <tr>

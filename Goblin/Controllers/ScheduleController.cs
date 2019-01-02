@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
+using Goblin.Schedule;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Goblin.Controllers
@@ -14,14 +15,14 @@ namespace Goblin.Controllers
 
         public async Task<IActionResult> Show(int id)
         {
-            if (!ModelState.IsValid || !ScheduleHelper.IsCorrectGroup(id)) return View("Error");
+            if (!ModelState.IsValid || !StudentsSchedule.IsCorrectGroup(id)) return View("Error");
 
-            var group = ScheduleHelper.GetGroupByRealId(id);
+            var group = StudentsSchedule.GetGroupByRealId(id);
             ViewBag.Title = $"{group.RealId} - {group.Name}";
-            var response = await ScheduleHelper.GetSchedule(id);
+            var response = await StudentsSchedule.GetSchedule(id);
             if (!response.IsError)
             {
-                var result = response.Lessons.GroupBy(x => ScheduleHelper.GetWeekNumber(x.Time))
+                var result = response.Lessons.GroupBy(x => StudentsSchedule.GetWeekNumber(x.Time))
                     .ToDictionary(x => $"{x.First().Time:dd.MM.yyyy} - {x.Last().Time:dd.MM.yyyy}",
                         x => x.ToList()); // TODO: fix key
                 return View(result);

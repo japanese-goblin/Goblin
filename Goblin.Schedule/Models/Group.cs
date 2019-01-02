@@ -1,4 +1,4 @@
-﻿namespace Goblin.Models
+﻿namespace Goblin.Schedule.Models
 {
     public class Group
     {

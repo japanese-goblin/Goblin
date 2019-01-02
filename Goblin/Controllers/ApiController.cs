@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Goblin.Schedule;
 using Goblin.Vk;
 using Goblin.Vk.Models;
 using User = Goblin.Models.User;
@@ -97,7 +98,7 @@ namespace Goblin.Controllers
                 foreach (var group in grouped)
                 {
                     var ids = group.Select(x => x.Vk).ToArray();
-                    var schedule = await ScheduleHelper.GetScheduleAtDate(DateTime.Today, group.Key);
+                    var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Today, group.Key);
                     await VkMethods.SendMessage(ids, schedule);
                     await Task.Delay(500); //TODO - 3 запроса в секунду
                 }

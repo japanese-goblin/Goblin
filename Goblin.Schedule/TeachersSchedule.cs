@@ -4,17 +4,17 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Models;
+using Goblin.Schedule.Models;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
 
-namespace Goblin.Helpers
+namespace Goblin.Schedule
 {
-    public static class TeacherScheduleHelper
+    public static class TeachersSchedule
     {
         public static Teacher[] Teachers;
 
-        static TeacherScheduleHelper()
+        static TeachersSchedule()
         {
             Teachers = JsonConvert.DeserializeObject<Teacher[]>(File.ReadAllText("Data/Teachers.json"));
         }

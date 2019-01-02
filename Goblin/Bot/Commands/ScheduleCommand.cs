@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
+using Goblin.Schedule;
 using Goblin.Vk.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,7 +40,7 @@ namespace Goblin.Bot.Commands
                 time = new DateTime(2018, dayAndMonth[1], dayAndMonth[0]);
             }
 
-            Message = await ScheduleHelper.GetScheduleAtDate(time, user.Group);
+            Message = await StudentsSchedule.GetScheduleAtDate(time, user.Group);
         }
 
         public bool CanExecute(string param, int id = 0)

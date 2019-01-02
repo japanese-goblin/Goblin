@@ -1,6 +1,4 @@
-﻿using Goblin.Models;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -8,15 +6,17 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Goblin.Schedule.Models;
 using Calendar = Ical.Net.Calendar;
+using Newtonsoft.Json;
 
-namespace Goblin.Helpers
+namespace Goblin.Schedule
 {
-    public static class ScheduleHelper
+    public static class StudentsSchedule
     {
         public static Group[] Groups;
 
-        static ScheduleHelper()
+        static StudentsSchedule()
         {
             Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText("Data/Groups.json"));
         }
@@ -26,7 +26,7 @@ namespace Goblin.Helpers
         /// </summary>
         /// <param name="realGroup">Реальный номер группы</param>
         /// <returns>(произошла ли ошибка, массив с парамаи)</returns>
-        public static async Task<(bool IsError, List<Lesson> Lessons)> GetSchedule(int realGroup)
+        public static async Task<(bool IsError, Lesson[] Lessons)> GetSchedule(int realGroup)
         {
             var usergroup = GetGroupByRealId(realGroup).SiteId;
             string calen;
@@ -39,7 +39,7 @@ namespace Goblin.Helpers
                 }
                 catch (WebException)
                 {
-                    return (true, new List<Lesson>());
+                    return (true, new Lesson[] {});
                 }
             }
 
@@ -50,14 +50,14 @@ namespace Goblin.Helpers
             }
             catch
             {
-                return (true, new List<Lesson>()); //TODO: true -> false?
+                return (true, new Lesson[] {}); //TODO: true -> false?
             }
 
             var lessons = new List<Lesson>();
             var events = calendar.Events.Distinct().OrderBy(x => x.Start.Value).ToList();
             if (!events.Any())
             {
-                return (false, new List<Lesson>());
+                return (false, new Lesson[] {});
             }
 
             foreach (var ev in events)
@@ -79,7 +79,7 @@ namespace Goblin.Helpers
                 lessons.Add(les);
             }
 
-            return (false, lessons);
+            return (false, lessons.ToArray());
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Helpers;
+using Goblin.Schedule;
 using Goblin.Vk.Models;
 
 namespace Goblin.Bot.Commands
@@ -19,12 +20,12 @@ namespace Goblin.Bot.Commands
 
         public async Task Execute(string param, int id = 0)
         {
-            Message = TeacherScheduleHelper.FindByName(param);
+            Message = TeachersSchedule.FindByName(param);
         }
 
         public bool CanExecute(string param, int id = 0)
         {
-            var x = TeacherScheduleHelper.FindByName(param.ToLower());
+            var x = TeachersSchedule.FindByName(param.ToLower());
             var find = string.IsNullOrEmpty(x);
             if (find)
                 Message = "Ошибка!\n" +

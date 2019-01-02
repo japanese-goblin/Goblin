@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Goblin.Models
+namespace Goblin.Schedule.Models
 {
     public class Lesson : IEquatable<Lesson>
     {
@@ -16,10 +16,7 @@ namespace Goblin.Models
 
         public bool Equals(Lesson other)
         {
-            if (Time.Date == other.Time.Date && StartEndTime == other.StartEndTime)
-                return true;
-
-            return false;
+            return Time.Date == other.Time.Date && StartEndTime == other.StartEndTime;
         }
 
         public override int GetHashCode()
