@@ -1,8 +1,9 @@
-﻿using System;
+﻿using FluentScheduler;
+using Goblin.Helpers;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentScheduler;
-using Goblin.Helpers;
+using Goblin.Vk;
 
 namespace Goblin
 {
@@ -21,7 +22,7 @@ namespace Goblin
             var reminds = DbHelper.Db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
             foreach (var remind in reminds)
             {
-                await VkHelper.SendMessage(remind.VkID, $"Напоминаю:\n {remind.Text}");
+                await VkMethods.SendMessage(remind.VkID, $"Напоминаю:\n {remind.Text}");
                 DbHelper.Db.Reminds.Remove(remind);
             }
 

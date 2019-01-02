@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Goblin.Models;
-using Goblin.Models.Keyboard;
+using Goblin.Vk.Models;
 using Microsoft.EntityFrameworkCore;
+using User = Goblin.Models.User;
 
 namespace Goblin.Bot.Commands
 {

@@ -1,13 +1,14 @@
 ﻿using Goblin.Bot;
 using Goblin.Helpers;
-using Goblin.Models;
-using Goblin.Models.Keyboard;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Goblin.Vk;
+using Goblin.Vk.Models;
+using User = Goblin.Models.User;
 
 namespace Goblin.Controllers
 {
@@ -21,7 +22,7 @@ namespace Goblin.Controllers
             switch (eventType)
             {
                 case "confirmation":
-                    return VkHelper.ConfirmationToken;
+                    return VkMethods.ConfirmationToken;
 
                 case "message_new":
                     userID = int.Parse(body["object"]["from_id"].ToString());
@@ -41,13 +42,13 @@ namespace Goblin.Controllers
                     }
 
                     (string Message, Keyboard Keyboard) forSend = await CommandsList.ExecuteCommand(msg, userID);
-                    await VkHelper.SendMessage(convID, forSend.Message, kb: forSend.Keyboard);
+                    await VkMethods.SendMessage(convID, forSend.Message, kb: forSend.Keyboard);
                     break;
 
                 case "group_join":
                     userID = int.Parse(body["object"]["user_id"].ToString());
-                    userName = await VkHelper.GetUserName(userID);
-                    await VkHelper.SendMessage(VkHelper.DevelopersID, $"@id{userID} ({userName}) подписался!");
+                    userName = await VkMethods.GetUserName(userID);
+                    await VkMethods.SendMessage(VkMethods.DevelopersID, $"@id{userID} ({userName}) подписался!");
                     break;
 
                 case "group_leave":
@@ -59,8 +60,8 @@ namespace Goblin.Controllers
                         await DbHelper.Db.SaveChangesAsync();
                     }
 
-                    userName = await VkHelper.GetUserName(userID);
-                    await VkHelper.SendMessage(VkHelper.DevelopersID, $"@id{userID} ({userName}) отписался!");
+                    userName = await VkMethods.GetUserName(userID);
+                    await VkMethods.SendMessage(VkMethods.DevelopersID, $"@id{userID} ({userName}) отписался!");
                     break;
             }
 
@@ -70,7 +71,7 @@ namespace Goblin.Controllers
         public async Task SendMessage(string msg)
         {
             if (!ModelState.IsValid) return;
-            await VkHelper.SendMessage(DbHelper.GetUsers().Select(x => x.Vk).ToList(), msg);
+            await VkMethods.SendMessage(DbHelper.GetUsers().Select(x => x.Vk).ToArray(), msg);
         }
 
         public async Task SendWeather()
@@ -80,8 +81,8 @@ namespace Goblin.Controllers
                 var grouped = DbHelper.GetWeatherUsers().GroupBy(x => x.City);
                 foreach (var group in grouped)
                 {
-                    var ids = group.Select(x => x.Vk).ToList();
-                    await VkHelper.SendMessage(ids, await WeatherHelper.GetWeather(group.Key));
+                    var ids = group.Select(x => x.Vk).ToArray();
+                    await VkMethods.SendMessage(ids, await WeatherHelper.GetWeather(group.Key));
                     await Task.Delay(700); //TODO - 3 запроса в секунду
                 }
             });
@@ -95,28 +96,29 @@ namespace Goblin.Controllers
                 var grouped = DbHelper.GetScheduleUsers().GroupBy(x => x.Group);
                 foreach (var group in grouped)
                 {
-                    var ids = group.Select(x => x.Vk).ToList();
+                    var ids = group.Select(x => x.Vk).ToArray();
                     var schedule = await ScheduleHelper.GetScheduleAtDate(DateTime.Today, group.Key);
-                    await VkHelper.SendMessage(ids, schedule);
+                    await VkMethods.SendMessage(ids, schedule);
                     await Task.Delay(500); //TODO - 3 запроса в секунду
                 }
             });
         }
 
-        public async Task SendToConv(int id, int group = 0, string city = "")
-        {
-            if (!ModelState.IsValid && ScheduleHelper.IsCorrectGroup(group)) return;
+        //TODO 
+        //public async Task SendToConv(int id, int group = 0, string city = "")
+        //{
+        //    if (!ModelState.IsValid && ScheduleHelper.IsCorrectGroup(group)) return;
 
-            id = 2000000000 + id;
+        //    id = 2000000000 + id;
 
-            if (!string.IsNullOrEmpty(city) && await WeatherHelper.CheckCity(city))
-            {
-                await VkHelper.SendToConversation(id, group, city);
-            }
-            else
-            {
-                await VkHelper.SendToConversation(id, group);
-            }
-        }
+        //    if (!string.IsNullOrEmpty(city) && await WeatherHelper.CheckCity(city))
+        //    {
+        //        await VkMethods.SendToConversation(id, group, city);
+        //    }
+        //    else
+        //    {
+        //        await VkMethods.SendToConversation(id, group);
+        //    }
+        //}
     }
 }

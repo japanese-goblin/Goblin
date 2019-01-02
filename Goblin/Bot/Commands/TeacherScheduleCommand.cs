@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Goblin.Models.Keyboard;
+using Goblin.Vk.Models;
 
 namespace Goblin.Bot.Commands
 {

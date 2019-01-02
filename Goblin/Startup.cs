@@ -1,5 +1,4 @@
-﻿using FluentScheduler;
-using Goblin.Models;
+﻿using Goblin.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -45,15 +44,11 @@ namespace Goblin
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            //TODO: а это точно тут должно быть?
-            JobManager.Initialize(new ScheduledTasks());
-
             app.UseStaticFiles();
             app.UseAuthentication();
 
             //TODO ??? почему без этого перестало работать на локалке?
-            app.UseCors(builder =>
-                builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
+            app.UseCors(builder => builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 
             app.UseMvc(routes =>
             {

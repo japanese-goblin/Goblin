@@ -2,7 +2,7 @@
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace Goblin.Models.Keyboard
+namespace Goblin.Vk.Models
 {
     public class Keyboard
     {

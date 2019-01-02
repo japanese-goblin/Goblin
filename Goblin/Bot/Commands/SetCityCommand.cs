@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Goblin.Models.Keyboard;
+using Goblin.Vk.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Bot.Commands

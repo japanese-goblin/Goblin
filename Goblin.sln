@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin", "Goblin\Goblin.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoblinTests", "GoblinTests\GoblinTests.csproj", "{2780FACE-6065-4C02-8F6F-DC9F29F334CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Vk", "Goblin.Vk\Goblin.Vk.csproj", "{A1437770-3BD6-42F7-9A79-0861F66D6824}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{E348B5FA-630F-430D-ABA9-8DCEB031DD8B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{2780FACE-6065-4C02-8F6F-DC9F29F334CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2780FACE-6065-4C02-8F6F-DC9F29F334CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2780FACE-6065-4C02-8F6F-DC9F29F334CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1437770-3BD6-42F7-9A79-0861F66D6824}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1437770-3BD6-42F7-9A79-0861F66D6824}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1437770-3BD6-42F7-9A79-0861F66D6824}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1437770-3BD6-42F7-9A79-0861F66D6824}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E348B5FA-630F-430D-ABA9-8DCEB031DD8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E348B5FA-630F-430D-ABA9-8DCEB031DD8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E348B5FA-630F-430D-ABA9-8DCEB031DD8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E348B5FA-630F-430D-ABA9-8DCEB031DD8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

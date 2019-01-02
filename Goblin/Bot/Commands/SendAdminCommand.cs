@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Goblin.Models.Keyboard;
+using Goblin.Vk;
+using Goblin.Vk.Models;
 
 namespace Goblin.Bot.Commands
 {
@@ -22,9 +23,9 @@ namespace Goblin.Bot.Commands
 
         public async Task Execute(string param, int id = 0)
         {
-            var username = await VkHelper.GetUserName(id);
+            var username = await VkMethods.GetUserName(id);
             var msg = $"сообщение от @id{id} ({username}):\n\n{param}";
-            await VkHelper.SendMessage(VkHelper.DevelopersID, msg);
+            await VkMethods.SendMessage(VkMethods.DevelopersID, msg);
             Message = "Сообщение успешно отправлено!";
         }
 

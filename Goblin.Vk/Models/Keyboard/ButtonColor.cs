@@ -1,4 +1,4 @@
-﻿namespace Goblin.Models.Keyboard
+﻿namespace Goblin.Vk.Models
 {
     public sealed class ButtonColor
     {
@@ -9,9 +9,9 @@
         public static readonly ButtonColor Negative = new ButtonColor("negative");
         public static readonly ButtonColor Positive = new ButtonColor("positive");
 
-        public ButtonColor(string Name)
+        public ButtonColor(string name)
         {
-            name = Name;
+            this.name = name;
         }
 
         public override string ToString()

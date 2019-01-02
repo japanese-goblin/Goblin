@@ -148,3 +148,5 @@ UpgradeLog*.htm
 /Goblin/wwwroot/js/main.min.js
 /Goblin/wwwroot/styles/sched.min.css
 /Goblin/wwwroot/styles/login.min.css
+/TestApp
+/GoblinTests

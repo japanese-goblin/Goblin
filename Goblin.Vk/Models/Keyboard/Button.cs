@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Goblin.Models.Keyboard
+namespace Goblin.Vk.Models
 {
     public class Button
     {
@@ -11,7 +11,7 @@ namespace Goblin.Models.Keyboard
         };
 
         [JsonProperty("color")] public string Color => _color.ToString();
-        private ButtonColor _color;
+        private readonly ButtonColor _color;
 
         public Button(string label, ButtonColor color, string cmd, string param)
         {
