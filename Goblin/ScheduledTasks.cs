@@ -11,9 +11,17 @@ namespace Goblin
     {
         public ScheduledTasks()
         {
-            //Schedule(() => SendSchedule()).ToRunEvery(0).Days().At(8, 0);
-            //Schedule(() => SendSchedule()).ToRunEvery(0).Days().At(8, 0);
+            for (var i = 0; i < 24; i++)
+            {
+                Schedule(async () => await Test($"Это в {i} часов")).ToRunEvery(0)
+                    .Days().At(i, 0);   
+            }
             Schedule(async () => await SendRemind()).ToRunEvery(1).Minutes();
+        }
+
+        public async Task Test(string text)
+        {
+            await VkMethods.SendMessage(VkMethods.DevelopersID, text);
         }
 
         public async Task SendRemind()
