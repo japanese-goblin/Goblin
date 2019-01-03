@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Helpers;
 using Goblin.Schedule;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +14,11 @@ namespace Goblin.Controllers
 
         public async Task<IActionResult> Show(int id)
         {
-            if (!ModelState.IsValid || !StudentsSchedule.IsCorrectGroup(id)) return View("Error");
+            if (!ModelState.IsValid || !StudentsSchedule.IsCorrectGroup(id))
+            {
+                HttpContext.Response.StatusCode = 404;
+                return View("Error");
+            }
 
             var group = StudentsSchedule.GetGroupByRealId(id);
             ViewBag.Title = $"{group.RealId} - {group.Name}";

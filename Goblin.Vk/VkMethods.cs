@@ -99,7 +99,10 @@ namespace Goblin.Vk
             };
             var response = await SendRequest("users.get", values);
             var usersInfo = JsonConvert.DeserializeObject<UsersGetReponse>(response);
-
+            if (usersInfo.Response.Count == 0)
+            {
+                return "";
+            }
             return usersInfo.Response[0].ToString();
         }
 

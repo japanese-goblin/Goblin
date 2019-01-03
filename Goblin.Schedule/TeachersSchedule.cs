@@ -38,7 +38,7 @@ namespace Goblin.Schedule
             }
 
             var v = doc.DocumentNode.SelectNodes("//div[contains(@class, 'timetable_sheet')]");
-            if (v is null) return (true, lessons); //TODO некорректный ид
+            if (v is null) return (true, lessons); //TODO некорректный ид (выкинуло на главную страницу)
 
             foreach (var les in v)
             {
@@ -83,7 +83,7 @@ namespace Goblin.Schedule
             var teacher = Teachers.FirstOrDefault(x => x.Id == id);
             if (teacher is null)
             {
-                return "Ошибка!\n" +
+                return "Ошибка :с\n" +
                        "Данного преподавателя нет в списке\n" +
                        "Если Вы уверены, что всё правильно, напишите мне для добавления препода в список (https://vk.com/id***REMOVED***)";
             }
@@ -92,7 +92,7 @@ namespace Goblin.Schedule
 
             if (error)
             {
-                return "Какая-то ошибочка :с\n" +
+                return "Ошибка :с\n" +
                        "Возможно, сайт с расписанием недоступен (либо введен неправильный номер преподавателя)\n" +
                        $"Вы можете проверить расписание здесь: https://ruz.narfu.ru/?timetable&lecturer={id}";
             }
@@ -102,7 +102,7 @@ namespace Goblin.Schedule
                 return "На данные момент у этого преподавателя нет пар";
             }
 
-            var result = $"Расписание пар у препода '{teacher.Name}':\n";
+            var result = $"Расписание пар у преподавателя '{teacher.Name}':\n";
             foreach (var group in lessons.Where(x => x.Time.Date >= DateTime.Now.Date)
                                   .GroupBy(x => x.Time.DayOfYear).Take(10))
             {
@@ -122,8 +122,9 @@ namespace Goblin.Schedule
 
         public static string FindByName(string name)
         {
-            return string.Join("\n",
-                Teachers.Where(x => x.Name.ToLower().Contains(name.ToLower())).Select(x => $"{x.Name} ({x.Depart}) - {x.Id}"));
+            return string.Join("\n", Teachers
+                .Where(x => x.Name.ToLower().Contains(name.ToLower()))
+                .Select(x => $"{x.Name} ({x.Depart}) - {x.Id}"));
         }
 
         public static bool FindById(int id) => Teachers.Any(x => x.Id == id);

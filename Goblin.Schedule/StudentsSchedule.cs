@@ -37,7 +37,7 @@ namespace Goblin.Schedule
                     client.Encoding = Encoding.UTF8;
                     calen = await client.DownloadStringTaskAsync($"http://ruz.narfu.ru/?icalendar&oid={usergroup}&from={DateTime.Now:dd.MM.yyyy}");
                 }
-                catch (WebException)
+                catch (WebException) // сайт сломался
                 {
                     return (true, new Lesson[] {});
                 }
@@ -48,7 +48,7 @@ namespace Goblin.Schedule
             {
                 calendar = Calendar.Load(calen);
             }
-            catch
+            catch // редирект на главную
             {
                 return (true, new Lesson[] {}); //TODO: true -> false?
             }
@@ -62,19 +62,19 @@ namespace Goblin.Schedule
 
             foreach (var ev in events)
             {
-                var a = ev.Description.Split('\n');
+                var descr = ev.Description.Split('\n');
                 var adr = ev.Location.Split('/');
                 var les = new Lesson
                 {
                     Address = adr[0],
                     Auditory = adr[1],
-                    Groups = a[1].Substring(3),
-                    Name = a[2],
-                    Teacher = a[4],
+                    Groups = descr[1].Substring(3),
+                    Name = descr[2],
+                    Teacher = descr[4],
                     Time = ev.Start.AsSystemLocal,
-                    Type = a[3],
-                    StartEndTime = a[0].Replace(")", "").Replace("(", "").Replace("п", ")"),
-                    Number = (byte)a[0].ElementAt(0)
+                    Type = descr[3],
+                    StartEndTime = descr[0].Replace(")", "").Replace("(", "").Replace("п", ")"),
+                    Number = (byte)descr[0].ElementAt(0)
                 };
                 lessons.Add(les);
             }
@@ -95,8 +95,8 @@ namespace Goblin.Schedule
             if (res.IsError)
             {
                 var group = GetGroupByRealId(realGroup).SiteId;
-                return "Какая-то ошибочка :с\n" +
-                       "Возможно, сайт с расписанием недоступен (либо ошибка на стороне бота, но это вряд ли)\n" +
+                return "Ошибка :с\n" +
+                       "Возможно, сайт с расписанием недоступен (либо ошибка на стороне бота)\n" +
                        $"Вы можете проверить расписание здесь: http://ruz.narfu.ru/?timetable&group={group}";
             }
 
