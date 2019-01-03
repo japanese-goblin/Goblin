@@ -6,9 +6,9 @@ namespace Goblin.Vk.Models
     public class UsersGetReponse
     {
         [JsonProperty("response")]
-        public List<User> Response { get; set; }
+        public List<VkUser> Response { get; set; }
     }
-    public class User
+    public class VkUser
     {
         [JsonProperty("id")]
         public int Id { get; set; }

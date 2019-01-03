@@ -20,14 +20,14 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, int id = 0)
+        public async Task Execute(string param, long id = 0)
         {
             var user = await DbHelper.Db.Users.FirstOrDefaultAsync(x => x.Vk == id);
 
             Message = await StudentsSchedule.GetExams(user.Group);
         }
 
-        public bool CanExecute(string param, int id = 0)
+        public bool CanExecute(string param, long id = 0)
         {
             var user = DbHelper.Db.Users.First(x => x.Vk == id);
             if (user.Group == 0)

@@ -21,7 +21,7 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, int id = 0)
+        public async Task Execute(string param, long id = 0)
         {
             var username = await VkMethods.GetUserName(id);
             var msg = $"сообщение от @id{id} ({username}):\n\n{param}";
@@ -29,7 +29,7 @@ namespace Goblin.Bot.Commands
             Message = "Сообщение успешно отправлено!";
         }
 
-        public bool CanExecute(string param, int id = 0)
+        public bool CanExecute(string param, long id = 0)
         {
             if (string.IsNullOrEmpty(param))
             {

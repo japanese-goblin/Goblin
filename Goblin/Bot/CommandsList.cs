@@ -39,7 +39,7 @@ namespace Goblin.Bot
             Commands.Add(new HelpCommand(Commands));
         }
 
-        public static async Task<(string Message, Keyboard Keyboard)> ExecuteCommand(string message, int id)
+        public static async Task<(string Message, Keyboard Keyboard)> ExecuteCommand(string message, long userId)
         {
             var split = message.Split(' ', 2);
             var comm = split[0].ToLower();
@@ -49,9 +49,9 @@ namespace Goblin.Bot
             foreach (var command in Commands)
             {
                 if (!command.Allias.Contains(comm)) continue;
-                if (command.IsAdmin && !VkMethods.DevelopersID.Any(x => x == id)) continue;
-                if (command.CanExecute(param, id))
-                    await command.Execute(param, id);
+                if (command.IsAdmin && !VkMethods.DevelopersID.Any(x => x == userId)) continue;
+                if (command.CanExecute(param, userId))
+                    await command.Execute(param, userId);
                 result = command.Message;
                 kb = command.Keyboard;
                 break;

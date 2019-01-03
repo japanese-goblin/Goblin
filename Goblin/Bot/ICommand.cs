@@ -15,7 +15,7 @@ namespace Goblin.Bot
         string Message { get; set; }
         Keyboard Keyboard { get; set; }
 
-        Task Execute(string param, int id = 0);
-        bool CanExecute(string param, int id = 0);
+        Task Execute(string param, long id = 0);
+        bool CanExecute(string param, long id = 0);
     }
 }

@@ -45,11 +45,11 @@ namespace Goblin.Bot.Commands
                       "По любым вопросам/предложениям/ошибкам и прочему, прошу писать сюда: @id***REMOVED*** (тык)";
         }
 
-        public async Task Execute(string param, int id = 0)
+        public async Task Execute(string param, long id = 0)
         {
         }
 
-        public bool CanExecute(string param, int id = 0)
+        public bool CanExecute(string param, long id = 0)
         {
             return true;
         }

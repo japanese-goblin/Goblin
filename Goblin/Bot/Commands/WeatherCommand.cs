@@ -19,7 +19,7 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, int id = 0)
+        public async Task Execute(string param, long id = 0)
         {
             var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == id);
             if (string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
@@ -38,7 +38,7 @@ namespace Goblin.Bot.Commands
             }
         }
 
-        public bool CanExecute(string param, int id = 0)
+        public bool CanExecute(string param, long id = 0)
         {
             var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == id);
             if (string.IsNullOrEmpty(param) && string.IsNullOrEmpty(user?.City))

@@ -17,7 +17,7 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, int id = 0)
+        public async Task Execute(string param, long id = 0)
         {
             var str = param.Split(' ');
             var get = (Convert.ToInt32(str[0].Length / 2), Convert.ToInt32(str[1].Length / 2));
@@ -26,7 +26,7 @@ namespace Goblin.Bot.Commands
             Message = $"{first}{second}";
         }
 
-        public bool CanExecute(string param, int id = 0)
+        public bool CanExecute(string param, long id = 0)
         {
             if (string.IsNullOrEmpty(param))
             {

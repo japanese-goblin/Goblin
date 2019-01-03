@@ -19,7 +19,7 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, int id = 0)
+        public async Task Execute(string param, long id = 0)
         {
             var reminds = "Список напоминаний:\n";
             var ureminds = await DbHelper.Db.Reminds.Where(x => x.VkID == id).OrderBy(x => x.Date).ToListAsync();
@@ -38,7 +38,7 @@ namespace Goblin.Bot.Commands
             Message = reminds;
         }
 
-        public bool CanExecute(string param, int id = 0)
+        public bool CanExecute(string param, long id = 0)
         {
             return true;
         }

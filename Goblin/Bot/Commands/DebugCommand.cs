@@ -18,7 +18,7 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, int id = 0)
+        public async Task Execute(string param, long id = 0)
         {
             var dis = DateTime.Now - new DateTime(2017, 4, 29, 19, 42, 0);
             var uptime = DateTime.Now - Program.StartDate;
@@ -36,7 +36,7 @@ namespace Goblin.Bot.Commands
             //TODO: дополнить чем-нибудь интересным
         }
 
-        public bool CanExecute(string param, int id = 0)
+        public bool CanExecute(string param, long id = 0)
         {
             return true;
         }

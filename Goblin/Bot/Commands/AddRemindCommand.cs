@@ -19,7 +19,7 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, int id = 0)
+        public async Task Execute(string param, long id = 0)
         {
             var all = param.Split(' ', 3);
             if (all[0].ToLower() == "завтра") //TODO: поменять
@@ -44,7 +44,7 @@ namespace Goblin.Bot.Commands
             Message = $"Хорошо, {time.Result:dd.MM.yyyy} в {time.Result:HH:mm} напомню следующее:\n{all[2]}";
         }
 
-        public bool CanExecute(string param, int id = 0)
+        public bool CanExecute(string param, long id = 0)
         {
             var all = param.Split(' ', 3);
             if (all.Length != 3)
