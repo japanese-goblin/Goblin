@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Narfu.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -6,11 +8,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Goblin.Schedule.Models;
 using Calendar = Ical.Net.Calendar;
-using Newtonsoft.Json;
 
-namespace Goblin.Schedule
+namespace Narfu
 {
     public static class StudentsSchedule
     {
@@ -39,7 +39,7 @@ namespace Goblin.Schedule
                 }
                 catch (WebException) // сайт сломался
                 {
-                    return (true, new Lesson[] {});
+                    return (true, new Lesson[] { });
                 }
             }
 
@@ -50,14 +50,14 @@ namespace Goblin.Schedule
             }
             catch // редирект на главную
             {
-                return (true, new Lesson[] {}); //TODO: true -> false?
+                return (true, new Lesson[] { }); //TODO: true -> false?
             }
 
             var lessons = new List<Lesson>();
             var events = calendar.Events.Distinct().OrderBy(x => x.Start.Value).ToList();
             if (!events.Any())
             {
-                return (false, new Lesson[] {});
+                return (false, new Lesson[] { });
             }
 
             foreach (var ev in events)

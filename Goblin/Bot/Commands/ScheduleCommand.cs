@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Goblin.Schedule;
-using Goblin.Vk.Models;
+using Vk.Models.Keyboard;
 using Microsoft.EntityFrameworkCore;
+using Narfu;
 
 namespace Goblin.Bot.Commands
 {

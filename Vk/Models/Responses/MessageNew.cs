@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Goblin.Vk.Models.Responses
+namespace Vk.Models.Responses
 {
     public class MessageNew
     {
@@ -20,12 +20,14 @@ namespace Goblin.Vk.Models.Responses
         public int ConversationMessageId { get; set; }
         [JsonProperty("fwd_messages")]
         public ForwardMessage[] ForwardMessages { get; set; }
+        [JsonProperty("reply_message")]
+        public ForwardMessage[] ReplyMessages { get; set; }
         [JsonProperty("important")]
         public bool Important { get; set; }
         [JsonProperty("random_id")]
         public long RandomId { get; set; }
         [JsonProperty("attachments")]
-        public object[] Attachments { get; set; }
+        public object[] Attachments { get; set; } //TODO
         [JsonProperty("is_hidden")]
         public bool IsHidden { get; set; }
 

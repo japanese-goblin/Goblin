@@ -10,35 +10,35 @@ namespace Tests.Schedule
         [Fact]
         public async Task GetSchedule_Correct()
         {
-            var (isError, _) = await Goblin.Schedule.StudentsSchedule.GetSchedule(CorrectGroup);
+            var (isError, _) = await Narfu.StudentsSchedule.GetSchedule(CorrectGroup);
             Assert.False(isError, "Сайт сломался?");
         }
 
         [Fact]
         public async Task GetScheduleAtDate_Correct()
         {
-            var result = await Goblin.Schedule.StudentsSchedule.GetScheduleAtDate(DateTime.Now, CorrectGroup);
+            var result = await Narfu.StudentsSchedule.GetScheduleAtDate(DateTime.Now, CorrectGroup);
             Assert.True(result.Contains("расписание"), "Сайт сломался?");
         }
 
         [Fact]
         public async Task GetExams_Correct()
         {
-            var result = await Goblin.Schedule.StudentsSchedule.GetExams(CorrectGroup);
+            var result = await Narfu.StudentsSchedule.GetExams(CorrectGroup);
             Assert.True(result.Contains("экзаменов"), "Сайт сломался?");
         }
 
         [Fact]
         public void IsCorrectGroup_Valid_True()
         {
-            var result = Goblin.Schedule.StudentsSchedule.IsCorrectGroup(CorrectGroup);
+            var result = Narfu.StudentsSchedule.IsCorrectGroup(CorrectGroup);
             Assert.True(result);
         }
 
         [Fact]
         public void IsCorrectGroup_NotValid_False()
         {
-            var result = Goblin.Schedule.StudentsSchedule.IsCorrectGroup(3);
+            var result = Narfu.StudentsSchedule.IsCorrectGroup(3);
             Assert.False(result);
         }
     }

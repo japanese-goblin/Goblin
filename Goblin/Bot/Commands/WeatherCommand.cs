@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Goblin.Vk.Models;
-using Goblin.Weather;
+using OpenWeatherMap;
+using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {

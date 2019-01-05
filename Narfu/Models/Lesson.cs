@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Goblin.Schedule.Models
+namespace Narfu.Models
 {
     public class Lesson : IEquatable<Lesson>
     {

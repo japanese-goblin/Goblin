@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Schedule;
 using Microsoft.AspNetCore.Mvc;
+using Narfu;
 
 namespace Goblin.Controllers
 {

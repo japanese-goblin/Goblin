@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Goblin.Bot.Commands;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Bot.Commands;
-using Goblin.Vk.Models;
-using Goblin.Vk;
+using Vk.Models.Keyboard;
 
 namespace Goblin.Bot
 {
@@ -48,10 +47,21 @@ namespace Goblin.Bot
             Keyboard kb = null;
             foreach (var command in Commands)
             {
-                if (!command.Allias.Contains(comm)) continue;
-                if (command.IsAdmin && !VkMethods.DevelopersID.Any(x => x == userId)) continue;
+                if (!command.Allias.Contains(comm))
+                {
+                    continue;
+                }
+
+                if (command.IsAdmin && !Settings.Developers.Any(x => x == userId))
+                {
+                    continue;
+                }
+
                 if (command.CanExecute(param, userId))
+                {
                     await command.Execute(param, userId);
+                }
+
                 result = command.Message;
                 kb = command.Keyboard;
                 break;

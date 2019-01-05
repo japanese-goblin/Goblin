@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Goblin.Vk.Models.Responses
+namespace Vk.Models.Responses
 {
     // {"type":"group_leave","object":{"user_id":***REMOVED***,"self":1},"group_id":146048760}
     public class GroupLeave

@@ -1,14 +1,14 @@
 ﻿using Goblin.Helpers;
-using Goblin.Models;
-using Goblin.Vk;
-using Goblin.Vk.Models;
-using Goblin.Vk.Models.Responses;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Vk;
+using Vk.Models;
+using Vk.Models.Responses;
+using User = Goblin.Models.User;
 
 namespace Goblin.Bot
 {
@@ -31,7 +31,7 @@ namespace Goblin.Bot
 
         private static async Task<string> Confirmation(Response r)
         {
-            return VkMethods.ConfirmationToken;
+            return Settings.ConfirmationToken;
         }
 
         private static async Task<string> MessageNew(Response obj)
@@ -57,7 +57,7 @@ namespace Goblin.Bot
             }
 
             var forSend = await CommandsList.ExecuteCommand(msg.Text, userID);
-            await VkMethods.SendMessage(convId, forSend.Message, kb: forSend.Keyboard);
+            await Messages.Send(convId, forSend.Message, kb: forSend.Keyboard);
             return "ok";
         }
 
@@ -66,8 +66,8 @@ namespace Goblin.Bot
             var deny = Vk.Models.Responses.MessageDeny.FromJson(obj.Object.ToString()) as MessageDeny;
             var userID = deny.UserId;
 
-            var userName = await VkMethods.GetUserName(userID);
-            await VkMethods.SendMessage(VkMethods.DevelopersID, $"@id{userID} ({userName}) запретил сообщения");
+            var userName = await Users.GetUserName(userID);
+            await Messages.Send(Settings.Developers, $"@id{userID} ({userName}) запретил сообщения");
 
             return "ok";
         }
@@ -76,9 +76,9 @@ namespace Goblin.Bot
         {
             var join = Vk.Models.Responses.GroupJoin.FromJson(obj.Object.ToString()) as GroupJoin;
             var userID = join.UserId;
-            var userName = await VkMethods.GetUserName(userID);
+            var userName = await Users.GetUserName(userID);
 
-            await VkMethods.SendMessage(VkMethods.DevelopersID, $"@id{userID} ({userName}) подписался");
+            await Messages.Send(Settings.Developers, $"@id{userID} ({userName}) подписался");
             return "ok";
         }
 
@@ -92,8 +92,8 @@ namespace Goblin.Bot
                 await DbHelper.Db.SaveChangesAsync();
             }
 
-            var userName = await VkMethods.GetUserName(userID);
-            await VkMethods.SendMessage(VkMethods.DevelopersID, $"@id{userID} ({userName}) отписался");
+            var userName = await Users.GetUserName(userID);
+            await Messages.Send(Settings.Developers, $"@id{userID} ({userName}) отписался");
             return "ok";
         }
     }

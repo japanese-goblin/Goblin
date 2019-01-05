@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Narfu;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Goblin.Vk.Models;
-using Goblin.Schedule;
+using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -11,7 +11,7 @@ namespace Goblin.Bot.Commands
         public string Decription { get; } = "Поиск препода по его номеру ИЛИ получение расписания у препода";
 
         public string Usage { get; } = "Препод 22331";
-        public List<string> Allias { get; } = new List<string>() {"препод"};
+        public List<string> Allias { get; } = new List<string>() { "препод" };
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
@@ -29,7 +29,10 @@ namespace Goblin.Bot.Commands
             {
                 var find = TeachersSchedule.FindById(res);
                 if (!find)
+                {
                     Message = "Преподаватель с данным ID отсутствует";
+                }
+
                 return find;
             }
             else

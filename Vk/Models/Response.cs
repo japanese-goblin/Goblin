@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
-using Goblin.Vk.Models.Responses;
 
-namespace Goblin.Vk.Models
+namespace Vk.Models
 {
     public class Response
     {

@@ -1,4 +1,4 @@
-﻿namespace Goblin.Vk.Models
+﻿namespace Vk.Models.Keyboard
 {
     public sealed class ButtonColor
     {

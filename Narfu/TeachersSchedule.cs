@@ -1,14 +1,14 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using Narfu.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Schedule.Models;
-using HtmlAgilityPack;
-using Newtonsoft.Json;
 
-namespace Goblin.Schedule
+namespace Narfu
 {
     public static class TeachersSchedule
     {
@@ -38,12 +38,18 @@ namespace Goblin.Schedule
             }
 
             var v = doc.DocumentNode.SelectNodes("//div[contains(@class, 'timetable_sheet')]");
-            if (v is null) return (true, lessons); //TODO некорректный ид (выкинуло на главную страницу)
+            if (v is null)
+            {
+                return (true, lessons); //TODO некорректный ид (выкинуло на главную страницу)
+            }
 
             foreach (var les in v)
             {
                 var nodes = les.ChildNodes;
-                if (nodes.Count <= 3) continue; // пустая ячейка
+                if (nodes.Count <= 3)
+                {
+                    continue; // пустая ячейка
+                }
 
                 var date = les.ParentNode.ChildNodes.FirstOrDefault(x => x.HasClass("dayofweek"))?.InnerText
                     .Trim()

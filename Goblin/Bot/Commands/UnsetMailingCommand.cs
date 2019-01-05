@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Goblin.Vk.Models;
+using Vk.Models.Keyboard;
 using Microsoft.EntityFrameworkCore;
 using User = Goblin.Models.User;
 

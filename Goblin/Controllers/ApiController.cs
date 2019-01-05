@@ -1,6 +1,6 @@
-﻿using Goblin.Vk.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Vk.Models;
 
 namespace Goblin.Controllers
 {

@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Models;
-using Goblin.Vk.Models;
+using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {

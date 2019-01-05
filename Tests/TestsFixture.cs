@@ -3,6 +3,8 @@ using System.Net.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Goblin;
+using Goblin.Bot;
+using Vk;
 
 namespace Tests
 {
@@ -12,6 +14,7 @@ namespace Tests
 
         public TestsFixture()
         {
+            Api.SetAccessToken(Settings.AccessToken);
             var server = new TestServer(new WebHostBuilder()
                 .UseEnvironment("Development")
                 .UseStartup<Startup>());

@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Narfu;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Goblin.Helpers;
-using Goblin.Schedule;
-using Goblin.Vk.Models;
+using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -11,7 +10,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Найти *часть ФИО*";
         public string Decription { get; } = "Найти преподавателя по части его ФИО";
         public string Usage { get; } = "Найти деменков";
-        public List<string> Allias { get; } = new List<string>() {"найти"};
+        public List<string> Allias { get; } = new List<string>() { "найти" };
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
@@ -28,9 +27,12 @@ namespace Goblin.Bot.Commands
             var x = TeachersSchedule.FindByName(param.ToLower());
             var find = string.IsNullOrEmpty(x);
             if (find)
+            {
                 Message = "Ошибка!\n" +
                           "Данного преподавателя нет в списке\n" +
                           "Если Вы уверены, что всё правильно, напишите мне для добавления препода в список (https://vk.com/id***REMOVED***)";
+            }
+
             return !find;
         }
     }

@@ -2,9 +2,9 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Goblin.Vk.Models;
-using Goblin.Weather;
+using Vk.Models.Keyboard;
 using Microsoft.EntityFrameworkCore;
+using OpenWeatherMap;
 
 namespace Goblin.Bot.Commands
 {

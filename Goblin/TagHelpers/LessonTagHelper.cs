@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
-using Goblin.Schedule.Models;
+using Narfu.Models;
 
 namespace Goblin.TagHelpers
 {

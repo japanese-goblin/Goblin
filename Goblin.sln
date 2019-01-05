@@ -5,13 +5,13 @@ VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin", "Goblin\Goblin.csproj", "{C4E21B58-F5A7-4BF6-B3A7-FA33D5290CD6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.Vk", "Goblin.Vk\Goblin.Vk.csproj", "{A1437770-3BD6-42F7-9A79-0861F66D6824}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.Schedule", "Goblin.Schedule\Goblin.Schedule.csproj", "{9E808E6B-3DEA-4416-A2FF-2985CA81BB3F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.Weather", "Goblin.Weather\Goblin.Weather.csproj", "{92FB0EA8-84DE-4272-B4F1-A827823BF022}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{08FB69E7-5D3E-408B-8219-8495B81796C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Narfu", "Narfu\Narfu.csproj", "{BFB396DB-8CFC-46C1-9148-1305B4A72066}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vk", "Vk\Vk.csproj", "{2DC7F223-BDAF-4A3B-ADE2-0F378A918B3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenWeatherMap", "OpenWeatherMap\OpenWeatherMap.csproj", "{0CD1DD99-3862-49A8-B716-08B685AA2A93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,22 +23,22 @@ Global
 		{C4E21B58-F5A7-4BF6-B3A7-FA33D5290CD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4E21B58-F5A7-4BF6-B3A7-FA33D5290CD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4E21B58-F5A7-4BF6-B3A7-FA33D5290CD6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1437770-3BD6-42F7-9A79-0861F66D6824}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1437770-3BD6-42F7-9A79-0861F66D6824}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1437770-3BD6-42F7-9A79-0861F66D6824}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1437770-3BD6-42F7-9A79-0861F66D6824}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9E808E6B-3DEA-4416-A2FF-2985CA81BB3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9E808E6B-3DEA-4416-A2FF-2985CA81BB3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9E808E6B-3DEA-4416-A2FF-2985CA81BB3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9E808E6B-3DEA-4416-A2FF-2985CA81BB3F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{92FB0EA8-84DE-4272-B4F1-A827823BF022}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{92FB0EA8-84DE-4272-B4F1-A827823BF022}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{92FB0EA8-84DE-4272-B4F1-A827823BF022}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{92FB0EA8-84DE-4272-B4F1-A827823BF022}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08FB69E7-5D3E-408B-8219-8495B81796C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{08FB69E7-5D3E-408B-8219-8495B81796C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08FB69E7-5D3E-408B-8219-8495B81796C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08FB69E7-5D3E-408B-8219-8495B81796C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFB396DB-8CFC-46C1-9148-1305B4A72066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFB396DB-8CFC-46C1-9148-1305B4A72066}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFB396DB-8CFC-46C1-9148-1305B4A72066}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFB396DB-8CFC-46C1-9148-1305B4A72066}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DC7F223-BDAF-4A3B-ADE2-0F378A918B3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DC7F223-BDAF-4A3B-ADE2-0F378A918B3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DC7F223-BDAF-4A3B-ADE2-0F378A918B3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DC7F223-BDAF-4A3B-ADE2-0F378A918B3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CD1DD99-3862-49A8-B716-08B685AA2A93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CD1DD99-3862-49A8-B716-08B685AA2A93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CD1DD99-3862-49A8-B716-08B685AA2A93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CD1DD99-3862-49A8-B716-08B685AA2A93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

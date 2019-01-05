@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Goblin.Vk.Models
+namespace Vk.Models
 {
     public class UsersGetReponse
     {
         [JsonProperty("response")]
-        public List<VkUser> Response { get; set; }
+        public List<User> Response { get; set; }
     }
-    public class VkUser
+    public class User
     {
         [JsonProperty("id")]
         public int Id { get; set; }
@@ -25,5 +25,4 @@ namespace Goblin.Vk.Models
 
         public override string ToString() => $"{FirstName} {LastName}";
     }
-
 }

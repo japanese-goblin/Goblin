@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using FluentScheduler;
-using Goblin.Helpers;
-using Goblin.Vk;
+﻿using FluentScheduler;
+using Goblin.Bot;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using System;
+using System.Threading.Tasks;
+using Vk;
 
 namespace Goblin
 {
@@ -15,7 +15,7 @@ namespace Goblin
         public static void Main(string[] args)
         {
             StartDate = DateTime.Now;
-            Task.Factory.StartNew(async () => await VkMethods.SendMessage(VkMethods.DevelopersID, "БОТ ЗАПУСКАЕТСЯ..."));
+            Task.Factory.StartNew(async () => await Messages.Send(Settings.Developers, "БОТ ЗАПУСКАЕТСЯ..."));
             //TODO: а это точно тут должно быть?
             JobManager.Initialize(new ScheduledTasks());
             BuildWebHost(args).Run();

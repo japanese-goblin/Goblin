@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace Goblin.Weather.Models
+namespace OpenWeatherMap.Models
 {
     internal class Coord
     {
@@ -57,8 +57,8 @@ namespace Goblin.Weather.Models
         [JsonProperty("sunrise")] private int _sunrise { get; set; }
         [JsonProperty("sunset")] private int _sunset { get; set; }
 
-        public DateTime Sunrise => Goblin.Weather.WeatherInfo.UnixToDateTime(_sunrise);
-        public DateTime Sunset => Goblin.Weather.WeatherInfo.UnixToDateTime(_sunset);
+        public DateTime Sunrise => OpenWeatherMap.WeatherInfo.UnixToDateTime(_sunrise);
+        public DateTime Sunset => OpenWeatherMap.WeatherInfo.UnixToDateTime(_sunset);
     }
 
     internal class WeatherInfo

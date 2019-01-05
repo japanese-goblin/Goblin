@@ -10,35 +10,35 @@ namespace Tests.Schedule
         [Fact]
         public async Task GetScheule_Correct()
         {
-            var (isError, _) = await Goblin.Schedule.TeachersSchedule.GetScheule(CorrectId);
+            var (isError, _) = await Narfu.TeachersSchedule.GetScheule(CorrectId);
             Assert.False(isError);
         }
 
         [Fact]
         public async Task GetScheduleToSend_Correct()
         {
-            var result = await Goblin.Schedule.TeachersSchedule.GetScheduleToSend(CorrectId);
+            var result = await Narfu.TeachersSchedule.GetScheduleToSend(CorrectId);
             Assert.True(result.Contains("преподавателя"));
         }
 
         [Fact]
         public async Task GetScheduleToSend_NotCorrect()
         {
-            var result = await Goblin.Schedule.TeachersSchedule.GetScheduleToSend(6);
+            var result = await Narfu.TeachersSchedule.GetScheduleToSend(6);
             Assert.True(result.Contains("Ошибка"));
         }
 
         [Fact]
         public void FindByName_Correct()
         {
-            var result = Goblin.Schedule.TeachersSchedule.FindByName("деменков");
+            var result = Narfu.TeachersSchedule.FindByName("деменков");
             Assert.False(string.IsNullOrEmpty(result));
         }
 
         [Fact]
         public void FindByName_NotCorrect()
         {
-            var result = Goblin.Schedule.TeachersSchedule.FindByName("апььрл");
+            var result = Narfu.TeachersSchedule.FindByName("апььрл");
             Assert.True(string.IsNullOrEmpty(result));
         }
     }
