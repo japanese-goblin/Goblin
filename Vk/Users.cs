@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Vk.Models;
 
 namespace Vk
 {
-    public static class Users
+    public class Users
     {
-        public static async Task<string[]> GetUserName(long[] ids)
+        public async Task<string[]> GetUserName(long[] ids)
         {
             var values = new Dictionary<string, string>
             {
@@ -24,9 +24,9 @@ namespace Vk
 
             return usersInfo.Response.Select(x => x.ToString()).ToArray();
         }
-        public static async Task<string> GetUserName(long id)
+        public async Task<string> GetUserName(long id)
         {
-            return (await GetUserName(new[] {id})).FirstOrDefault(); //TODO ?
+            return (await GetUserName(new[] { id })).FirstOrDefault(); //TODO ?
         }
     }
 }

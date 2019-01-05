@@ -31,7 +31,7 @@ namespace Goblin
 
             foreach (var remind in reminds)
             {
-                await Messages.Send(remind.VkID, $"Напоминаю:\n {remind.Text}");
+                await Api.Messages.Send(remind.VkID, $"Напоминаю:\n {remind.Text}");
                 DbHelper.Db.Reminds.Remove(remind);
             }
 
@@ -49,7 +49,7 @@ namespace Goblin
                 {
                     var ids = group.Select(x => x.Vk).ToArray();
                     var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Today, group.Key);
-                    await Messages.Send(ids, schedule);
+                    await Api.Messages.Send(ids, schedule);
                     await Task.Delay(500); //TODO - 3 запроса в секунду
                 }
             });
@@ -63,7 +63,7 @@ namespace Goblin
                 foreach (var group in grouped)
                 {
                     var ids = group.Select(x => x.Vk).ToArray();
-                    await Messages.Send(ids, await WeatherInfo.GetWeather(group.Key));
+                    await Api.Messages.Send(ids, await WeatherInfo.GetWeather(group.Key));
                     await Task.Delay(700); //TODO - 3 запроса в секунду
                 }
             });
@@ -79,12 +79,12 @@ namespace Goblin
             id = 2000000000 + id;
 
             var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Now, group);
-            await Messages.Send(id, schedule);
+            await Api.Messages.Send(id, schedule);
 
             if (!string.IsNullOrEmpty(city) && await WeatherInfo.CheckCity(city))
             {
                 var weather = await WeatherInfo.GetWeather(city);
-                await Messages.Send(id, weather);
+                await Api.Messages.Send(id, weather);
             }
         }
     }

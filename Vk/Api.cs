@@ -8,10 +8,17 @@ namespace Vk
 {
     public static class Api
     {
-        private const string EndPoint = "https://api.vk.com/method/";
+        private const string EndPoint = "https://api.vk.com/method";
         private static readonly WebClient Client = new WebClient();
         private const string Version = "5.92";
         internal static string AccessToken { get; set; }
+
+        #region categories
+
+        public static readonly Messages Messages = new Messages();
+        public static readonly Users Users = new Users();
+
+        #endregion
 
         public static void SetAccessToken(string token) => AccessToken = token;
 

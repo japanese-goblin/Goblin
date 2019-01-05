@@ -5,14 +5,14 @@ using Vk.Models.Keyboard;
 
 namespace Vk
 {
-    public static class Messages
+    public class Messages
     {
-        public static async Task Send(long id, string text, string[] attachs = null, Keyboard kb = null)
+        public async Task Send(long id, string text, string[] attachs = null, Keyboard kb = null)
         {
             await Send(new[] { id }, text, attachs, kb);
         }
 
-        public static async Task Send(long[] ids, string text, string[] attachs = null, Keyboard kb = null)
+        public async Task Send(long[] ids, string text, string[] attachs = null, Keyboard kb = null)
         {
             if (string.IsNullOrEmpty(text) || ids.Length == 0)
             {

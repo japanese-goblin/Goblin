@@ -11,12 +11,12 @@ namespace Goblin.Controllers
         public async Task SendToAll(string msg, string[] attach)
         {
             var gr = DbHelper.GetUsers().Select(x => x.Vk).ToArray();
-            await Messages.Send(gr, msg, attach);
+            await Api.Messages.Send(gr, msg, attach);
         }
 
         public async Task SendToId(long id, string msg, string[] attach)
         {
-            await Messages.Send(id, msg, attach);
+            await Api.Messages.Send(id, msg, attach);
         }
     }
 }
