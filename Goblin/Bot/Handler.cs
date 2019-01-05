@@ -67,7 +67,7 @@ namespace Goblin.Bot
             var userID = deny.UserId;
 
             var userName = await Users.GetUserName(userID);
-            await Messages.Send(Settings.Developers, $"@id{userID} ({userName}) запретил сообщения");
+            await Messages.Send(DbHelper.GetAdmins(), $"@id{userID} ({userName}) запретил сообщения");
 
             return "ok";
         }
@@ -78,7 +78,7 @@ namespace Goblin.Bot
             var userID = join.UserId;
             var userName = await Users.GetUserName(userID);
 
-            await Messages.Send(Settings.Developers, $"@id{userID} ({userName}) подписался");
+            await Messages.Send(DbHelper.GetAdmins(), $"@id{userID} ({userName}) подписался");
             return "ok";
         }
 
@@ -93,7 +93,7 @@ namespace Goblin.Bot
             }
 
             var userName = await Users.GetUserName(userID);
-            await Messages.Send(Settings.Developers, $"@id{userID} ({userName}) отписался");
+            await Messages.Send(DbHelper.GetAdmins(), $"@id{userID} ({userName}) отписался");
             return "ok";
         }
     }

@@ -3,15 +3,17 @@ using System;
 using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Goblin.Migrations
+namespace Goblin.Migrations.Main
 {
     [DbContext(typeof(MainContext))]
-    partial class d9o30apvvh50ejContextModelSnapshot : ModelSnapshot
+    [Migration("20190105170745_IsAdminField")]
+    partial class IsAdminField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

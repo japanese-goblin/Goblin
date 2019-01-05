@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Goblin.Helpers;
 using Vk;
 using Vk.Models.Keyboard;
 
@@ -21,7 +22,7 @@ namespace Goblin.Bot.Commands
         {
             var username = await Users.GetUserName(id);
             var msg = $"сообщение от @id{id} ({username}):\n\n{param}";
-            await Messages.Send(Settings.Developers, msg);
+            await Messages.Send(DbHelper.GetAdmins(), msg);
             Message = "Сообщение успешно отправлено!";
         }
 

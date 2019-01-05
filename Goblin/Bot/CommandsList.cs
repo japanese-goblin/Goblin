@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Goblin.Helpers;
 using Vk.Models.Keyboard;
 
 namespace Goblin.Bot
@@ -52,7 +53,7 @@ namespace Goblin.Bot
                     continue;
                 }
 
-                if (command.IsAdmin && !Settings.Developers.Any(x => x == userId))
+                if (command.IsAdmin && !DbHelper.GetAdmins().Any(x => x == userId))
                 {
                     continue;
                 }

@@ -8,6 +8,7 @@ namespace Goblin.Models
         public int ID { get; set; }
 
         public long Vk { get; set; }
+        public bool IsAdmin { get; set; }
         public int Group { get; set; }
         public bool Schedule { get; set; }
         public bool Weather { get; set; }

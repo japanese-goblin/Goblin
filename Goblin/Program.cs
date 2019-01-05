@@ -3,7 +3,6 @@ using Goblin.Bot;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using System;
-using System.Threading.Tasks;
 using Vk;
 
 namespace Goblin
@@ -15,9 +14,9 @@ namespace Goblin
         public static void Main(string[] args)
         {
             StartDate = DateTime.Now;
-            Task.Factory.StartNew(async () => await Messages.Send(Settings.Developers, "БОТ ЗАПУСКАЕТСЯ..."));
-            //TODO: а это точно тут должно быть?
+            // Task.Factory.StartNew(async () => await Messages.Send(DbHelper.GetAdmins(), "БОТ ЗАПУСКАЕТСЯ..."));
             JobManager.Initialize(new ScheduledTasks());
+            Api.SetAccessToken(Settings.AccessToken); // TODO
             BuildWebHost(args).Run();
         }
 
