@@ -1,4 +1,6 @@
 $(".send-message-all").click(function () {
+    var res = confirm("Ты точно хочешь отправить сообщение ВСЕМ???");
+    if(!res) return;
     var msg = $(".message-all").val().replace(/\n/g, "<br>");
     $.ajax({
         type: "POST",
@@ -49,8 +51,7 @@ $("#add-attach-all").click(function () {
                 <span class="input-group-text">${count}</span>
             </div>
             <input type="text" class="form-control attach-all" id="attach">
-        </div>
-    `);
+        </div>`);
     }
 });
 
@@ -63,7 +64,6 @@ $("#add-attach-one").click(function () {
                 <span class="input-group-text">${count}</span>
             </div>
             <input type="text" class="form-control attach-one" id="attach">
-        </div>
-    `);
+        </div>`);
     }
 });

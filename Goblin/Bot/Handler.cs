@@ -44,7 +44,9 @@ namespace Goblin.Bot
                 //TODO: add conv to db
                 var b = Regex.Match(msg.Text, @"\[club146048760\|.*\] (.*)").Groups[1].Value;
                 if (b != "")
+                {
                     msg.Text = b;
+                }
                 //TODO: оповещение о том, что гоблину не нужен доступ ко всей переписке?
             }
 

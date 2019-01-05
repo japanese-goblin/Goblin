@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Goblin.Helpers;
 using Goblin.Vk;
 using Goblin.Vk.Models;
 
@@ -9,11 +8,8 @@ namespace Goblin.Bot.Commands
     public class SendAdminCommand : ICommand
     {
         public string Name { get; } = "адм *сообщение*";
-
-        public string Decription { get; } =
-            "Отправляет сообщение администратору. Использовать при возникновении ошибок или еще чего-то";
-
-        public string Usage { get; } = "адм ПАМАГИТЕ";
+        public string Decription { get; } = "Отправляет сообщение администраторам бота.";
+        public string Usage { get; } = "адм хелп";
         public List<string> Allias { get; } = new List<string> {"адм"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;

@@ -17,7 +17,7 @@ namespace Goblin.Vk
         private static readonly WebClient Client = new WebClient();
         private const string Version = "5.92";
 
-        public static long[] DevelopersID = new[] { (long)***REMOVED*** }; // TODO: вынести в бд?
+        public static long[] DevelopersID = { ***REMOVED*** }; // TODO: вынести в бд?
 
         //***REMOVED***
         public const string ConfirmationToken = "***REMOVED***";
@@ -42,7 +42,7 @@ namespace Goblin.Vk
         /// <summary>
         /// Сообщение для нескольких пользователей
         /// </summary>
-        /// <param name="ids">ID пользователя в вк</param>
+        /// <param name="ids">ID пользователей / ID бесед</param>
         /// <param name="text">сообщение</param>
         /// <param name="attachs">прикрепления</param>
         /// <param name="kb">клавиатура</param>
@@ -66,15 +66,6 @@ namespace Goblin.Vk
             {
                 values.Add("attachment", string.Join(",", attachs));
             }
-
-            //if (ids.Count > 1)
-            //{
-            //    values.Add();
-            //}
-            //else
-            //{
-            //    values.Add("peer_id", ids[0].ToString());
-            //}
 
             if (!(kb is null))
             {
@@ -110,9 +101,9 @@ namespace Goblin.Vk
         {
             //TODO add sleep?
             var reqParams = new NameValueCollection();
-            foreach (var param in @params)
+            foreach (var (param, value) in @params)
             {
-                reqParams.Add(param.Key, param.Value);
+                reqParams.Add(param, value);
             }
             reqParams.Add("v", Version);
 
@@ -126,16 +117,4 @@ namespace Goblin.Vk
             return responseStr;
         }
     }
-
-    //public static async Task SendToConversation(long id, int group, string city = "")
-    //{
-    //    var schedule = await ScheduleHelper.GetScheduleAtDate(DateTime.Now, group);
-    //    await SendMessage(id, schedule);
-
-    //    if (!string.IsNullOrEmpty(city))
-    //    {
-    //        var weather = await WeatherHelper.GetWeather(city);
-    //        await SendMessage(id, weather);
-    //    }
-    //}
 }
