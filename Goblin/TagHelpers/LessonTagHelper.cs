@@ -31,7 +31,8 @@ namespace Goblin.TagHelpers
                 _cssStyle = "yellow";
             else if (Lesson.Type == "Консультация")
                 _cssStyle = "orange";
-            else if (Lesson.Type.ToLower().Contains("экзамен") || Lesson.Type.ToLower().Contains("зачет")) _cssStyle = "red";
+            else if (Lesson.Type.ToLower().Contains("экзамен") || Lesson.Type.ToLower().Contains("зачет"))
+                _cssStyle = "red";
         }
     }
 }

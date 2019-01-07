@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Goblin.Helpers;
+﻿using Goblin.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading.Tasks;
 using Vk;
 
 namespace Goblin.Controllers

@@ -1,8 +1,8 @@
 ﻿using Goblin.Bot.Commands;
+using Goblin.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Helpers;
 using Vk.Models.Keyboard;
 
 namespace Goblin.Bot
@@ -48,15 +48,9 @@ namespace Goblin.Bot
             Keyboard kb = null;
             foreach (var command in Commands)
             {
-                if (!command.Allias.Contains(comm))
-                {
-                    continue;
-                }
+                if (!command.Allias.Contains(comm)) continue;
 
-                if (command.IsAdmin && !DbHelper.GetAdmins().Any(x => x == userId))
-                {
-                    continue;
-                }
+                if (command.IsAdmin && !DbHelper.GetAdmins().Any(x => x == userId)) continue;
 
                 if (command.CanExecute(param, userId))
                 {

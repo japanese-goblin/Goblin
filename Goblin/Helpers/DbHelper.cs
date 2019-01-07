@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Goblin.Models;
+using System.Collections.Generic;
 using System.Linq;
-using Goblin.Models;
 
 namespace Goblin.Helpers
 {

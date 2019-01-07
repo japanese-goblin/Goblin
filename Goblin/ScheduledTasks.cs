@@ -1,10 +1,10 @@
 ﻿using FluentScheduler;
 using Goblin.Helpers;
+using Narfu;
+using OpenWeatherMap;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Narfu;
-using OpenWeatherMap;
 using Vk;
 
 namespace Goblin
@@ -24,10 +24,7 @@ namespace Goblin
         {
             //TODO: ?????
             var reminds = DbHelper.Db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
-            if (!reminds.Any())
-            {
-                return;
-            }
+            if (!reminds.Any()) return;
 
             foreach (var remind in reminds)
             {

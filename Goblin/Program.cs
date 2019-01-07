@@ -3,6 +3,7 @@ using Goblin.Bot;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using System;
+using System.Globalization;
 using Vk;
 
 namespace Goblin
@@ -13,11 +14,21 @@ namespace Goblin
 
         public static void Main(string[] args)
         {
-            StartDate = DateTime.Now;
-            // Task.Factory.StartNew(async () => await Messages.Send(DbHelper.GetAdmins(), "БОТ ЗАПУСКАЕТСЯ..."));
-            JobManager.Initialize(new ScheduledTasks());
-            Api.SetAccessToken(Settings.AccessToken); // TODO
+            Setup();
             BuildWebHost(args).Run();
+        }
+
+        private static void Setup()
+        {
+            StartDate = DateTime.Now;
+
+            JobManager.Initialize(new ScheduledTasks());
+
+            Api.SetAccessToken(Settings.AccessToken); // TODO
+
+            var culture = new CultureInfo("ru-RU");
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
         }
 
         public static IWebHost BuildWebHost(string[] args)

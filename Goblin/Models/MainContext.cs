@@ -14,7 +14,7 @@ namespace Goblin.Models
 
         private static string con;
 
-        public MainContext(IConfiguration configuration)
+        public MainContext(IConfiguration configuration) //TODO ???
         {
             con = configuration.GetConnectionString("DefaultConnection");
         }

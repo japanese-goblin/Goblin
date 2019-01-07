@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Goblin.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Goblin.Helpers;
 using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
@@ -11,7 +11,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Debug";
         public string Decription { get; } = "Инфа для дебага";
         public string Usage { get; } = "инфа";
-        public List<string> Allias { get; } = new List<string> {"дебаг", "инфа", "debug", "дебуг"};
+        public List<string> Allias { get; } = new List<string> { "дебаг", "инфа", "debug", "дебуг" };
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = true;
 
@@ -20,18 +20,19 @@ namespace Goblin.Bot.Commands
 
         public async Task Execute(string param, long id = 0)
         {
-            var dis = DateTime.Now - new DateTime(2017, 4, 29, 19, 42, 0);
+            var bday = new DateTime(2017, 4, 29, 19, 42, 0);
+            var dis = DateTime.Now - bday;
             var uptime = DateTime.Now - Program.StartDate;
 
-            var users = DbHelper.GetUsers();
-            var scheduleUsers = DbHelper.GetScheduleUsers();
-            var weatherUsers = DbHelper.GetWeatherUsers();
+            var users = DbHelper.GetUsers().Count;
+            var scheduleUsers = DbHelper.GetScheduleUsers().Count;
+            var weatherUsers = DbHelper.GetWeatherUsers().Count;
 
             Message =
                 $"Время старта: {Program.StartDate:F}\n" +
                 $"Гоблин работает уже {uptime.Hours} часов {uptime.Minutes} минут\n" +
-                $"Гоблину уже {dis.Days} дней {dis.Hours} часов {dis.Minutes} минут\n\n" +
-                $"Всего пользователей {users.Count}, из которых {scheduleUsers.Count} подписаны на расписание и {weatherUsers.Count} подписаны на рассылку погоды";
+                $"Гоблину уже {dis.Days} дней ({bday:D})\n\n" +
+                $"Всего пользователей {users}, из которых {scheduleUsers} подписаны на рассылку расписание и {weatherUsers} подписаны на рассылку погоды";
 
             //TODO: дополнить чем-нибудь интересным
         }
