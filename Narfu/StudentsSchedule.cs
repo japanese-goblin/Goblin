@@ -104,10 +104,10 @@ namespace Narfu
 
             if (lessons.Count == 0)
             {
-                return $"На {date:dd.MM} расписание отсутствует!";
+                return $"На {date:dd.MM (dddd)} расписание отсутствует!";
             }
 
-            var result = $"Расписание на {date:dd.MM}:\n";
+            var result = $"Расписание на {date:dd.MM (dddd)}:\n";
             foreach (var lesson in lessons.Where(x => x.Time.DayOfYear == date.DayOfYear))
             {
                 result += $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}] ({lesson.Teacher})\n" +
@@ -150,7 +150,7 @@ namespace Narfu
             {
                 var f = exam.First();
                 var l = exam.Last();
-                result += $"{l.Time:dd.MM.yyyy} ({f.Time:HH:mm} - {f.StartEndTime.Split("-")[1]})" +
+                result += $"{l.Time:dd.MM.yyyy (dddd)} ({f.Time:HH:mm} - {f.StartEndTime.Split("-")[1]})" +
                           $" - {l.Name} [{l.Type}] ({l.Teacher})\n" +
                           $"У группы {l.Groups}\n" +
                           $"В аудитории {l.Auditory}\n\n";

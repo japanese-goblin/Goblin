@@ -112,7 +112,7 @@ namespace Narfu
             foreach (var group in lessons.Where(x => x.Time.Date >= DateTime.Now.Date)
                                   .GroupBy(x => x.Time.DayOfYear).Take(10))
             {
-                result += $"{group.FirstOrDefault().Time:dd.MM.yyyy}:\n";
+                result += $"{group.FirstOrDefault().Time:dd.MM (dddd)}:\n";
                 foreach (var lesson in group)
                 {
                     result += $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}]\n" +

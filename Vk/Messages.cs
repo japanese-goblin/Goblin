@@ -36,7 +36,7 @@ namespace Vk
                 values.Add("keyboard", kb.ToString());
             }
 
-            await Api.SendRequest("messages.send", values); //TODO to bool?
+            await VkApi.SendRequest("messages.send", values); //TODO to bool?
         }
     }
 }

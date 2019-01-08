@@ -24,7 +24,7 @@ namespace Goblin
 
             JobManager.Initialize(new ScheduledTasks());
 
-            Api.SetAccessToken(Settings.AccessToken); // TODO
+            VkApi.SetAccessToken(Settings.AccessToken); // TODO
 
             var culture = new CultureInfo("ru-RU");
             CultureInfo.DefaultThreadCurrentCulture = culture;

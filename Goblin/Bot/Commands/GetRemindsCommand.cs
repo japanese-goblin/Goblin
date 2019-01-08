@@ -21,7 +21,6 @@ namespace Goblin.Bot.Commands
 
         public async Task Execute(string param, long id = 0)
         {
-            var reminds = "Список напоминаний:\n";
             var ureminds = await DbHelper.Db.Reminds.Where(x => x.VkID == id).OrderBy(x => x.Date).ToListAsync();
             if (!ureminds.Any())
             {
@@ -29,13 +28,8 @@ namespace Goblin.Bot.Commands
                 return;
             }
 
-            foreach (var rem in ureminds)
-            {
-                var d = rem.Date;
-                reminds += $"{d:dd.MM.yyyy HH:mm} - {rem.Text}\n";
-            }
-
-            Message = reminds;
+            Message = "Список напоминаний: \n" + string.Join("\n",
+                ureminds.Select(rem => $"{rem.Date:dd.MM.yyyy (dddd) HH:mm} - {rem.Text}"));
         }
 
         public bool CanExecute(string param, long id = 0)

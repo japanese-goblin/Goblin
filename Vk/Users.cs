@@ -15,7 +15,7 @@ namespace Vk
                 ["user_ids"] = string.Join(',', ids),
                 ["lang"] = "ru"
             };
-            var response = await Api.SendRequest("users.get", values);
+            var response = await VkApi.SendRequest("users.get", values);
             var usersInfo = JsonConvert.DeserializeObject<UsersGetReponse>(response);
             if (usersInfo.Response.Count == 0)
             {

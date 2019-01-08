@@ -14,7 +14,7 @@ namespace Tests
 
         public TestsFixture()
         {
-            Api.SetAccessToken(Settings.AccessToken);
+            VkApi.SetAccessToken(Settings.AccessToken);
             var server = new TestServer(new WebHostBuilder()
                 .UseEnvironment("Development")
                 .UseStartup<Startup>());

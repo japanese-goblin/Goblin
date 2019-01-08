@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Vk
 {
-    public static class Api
+    public static class VkApi
     {
         private const string EndPoint = "https://api.vk.com/method";
         private static readonly WebClient Client = new WebClient();
