@@ -74,8 +74,8 @@ namespace Narfu
                     Name = nodes.FirstOrDefault(x => x.HasClass("discipline"))?.InnerText.Trim(),
                     Number = byte.Parse(nodes.FirstOrDefault(x => x.HasClass("num_para"))?.InnerText),
                     StartEndTime = time,
-                    Teacher = "", //TODO ?
-                    Time = DateTime.ParseExact(date, "dd.MM.yyyy", null, DateTimeStyles.None), //TODO ?
+                    Teacher = "",
+                    Time = DateTime.ParseExact(date, "dd.MM.yyyy", null, DateTimeStyles.None),
                     Type = nodes.FirstOrDefault(x => x.HasClass("kindOfWork"))?.InnerText
                 });
             }

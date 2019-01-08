@@ -23,7 +23,6 @@ namespace Goblin
 
         private async Task SendRemind()
         {
-            //TODO: ?????
             var reminds = DbHelper.Db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
             if (!reminds.Any()) return;
 
