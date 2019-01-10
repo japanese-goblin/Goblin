@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Narfu;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Narfu;
 
 namespace Goblin.Controllers
 {

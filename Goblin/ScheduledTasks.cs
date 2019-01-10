@@ -1,10 +1,10 @@
-﻿using FluentScheduler;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using FluentScheduler;
 using Goblin.Helpers;
 using Narfu;
 using OpenWeatherMap;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Vk;
 
 namespace Goblin
@@ -18,12 +18,13 @@ namespace Goblin
             Schedule(async () => await SendWeather()).ToRunEvery(0).Days().At(7, 0);
             //TODO вынести в бд
             Schedule(async () => await SendToConv(5, 351616)).ToRunEvery(0).Days().At(6, 05); // IGOR
-            Schedule(async () => await SendToConv(2, 351617)).ToRunEvery(0).Days().At(6, 15); // MY
+            Schedule(async () => await SendToConv(3, 351617)).ToRunEvery(0).Days().At(6, 15); // MY
         }
 
         private async Task SendRemind()
         {
-            var reminds = DbHelper.Db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
+            var reminds =
+                DbHelper.Db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
             if (!reminds.Any()) return;
 
             foreach (var remind in reminds)

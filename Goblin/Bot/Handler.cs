@@ -1,10 +1,10 @@
-﻿using Goblin.Helpers;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Goblin.Helpers;
+using Microsoft.EntityFrameworkCore;
 using Vk;
 using Vk.Models;
 using Vk.Models.Responses;
@@ -47,12 +47,13 @@ namespace Goblin.Bot
                 {
                     msg.Text = b;
                 }
+
                 //TODO: оповещение о том, что гоблину не нужен доступ ко всей переписке?
             }
 
             if (!DbHelper.GetUsers().Any(x => x.Vk == userID))
             {
-                await DbHelper.Db.Users.AddAsync(new User { Vk = userID });
+                await DbHelper.Db.Users.AddAsync(new User {Vk = userID});
                 await DbHelper.Db.SaveChangesAsync();
             }
 

@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Vk.Models.Keyboard;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
+using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {

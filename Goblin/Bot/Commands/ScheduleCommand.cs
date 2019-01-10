@@ -4,16 +4,19 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Vk.Models.Keyboard;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
+using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
     public class ScheduleCommand : ICommand
     {
         public string Name { get; } = "Раписание *день*.*месяц*";
-        public string Decription { get; } = "Возвращает расписание на указанную дату. Если дата не указана, расписание берется на текущую дату";
+
+        public string Decription { get; } =
+            "Возвращает расписание на указанную дату. Если дата не указана, расписание берется на текущую дату";
+
         public string Usage { get; } = "Расписание 21.12";
         public List<string> Allias { get; } = new List<string> {"расписание"};
         public Category Category { get; } = Category.SAFU;
@@ -48,7 +51,8 @@ namespace Goblin.Bot.Commands
             var user = DbHelper.Db.Users.First(x => x.Vk == id);
             if (user.Group == 0)
             {
-                Message = "Чтобы воспользоваться расписание установи группу командой 'устгр *номер группы*' (без кавычек и звездочек)";
+                Message =
+                    "Чтобы воспользоваться расписание установи группу командой 'устгр *номер группы*' (без кавычек и звездочек)";
                 return false;
             }
 

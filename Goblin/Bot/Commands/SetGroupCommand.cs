@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Vk.Models.Keyboard;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
+using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -36,11 +36,9 @@ namespace Goblin.Bot.Commands
             {
                 return true;
             }
-            else
-            {
-                Message = "Ошибочка. Номер группы - положительно число без знаков (6 цифр)";
-                return false;
-            }
+
+            Message = "Ошибочка. Номер группы - положительно число без знаков (6 цифр)";
+            return false;
         }
     }
 }

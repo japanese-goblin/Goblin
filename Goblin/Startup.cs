@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Goblin.Helpers;
+﻿using Goblin.Helpers;
 using Goblin.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -36,7 +34,8 @@ namespace Goblin
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, MainContext ct, IApplicationLifetime applicationLifetime)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, MainContext ct,
+            IApplicationLifetime applicationLifetime)
         {
             if (env.IsDevelopment())
             {

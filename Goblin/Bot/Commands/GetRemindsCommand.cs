@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
-using Vk.Models.Keyboard;
 using Microsoft.EntityFrameworkCore;
+using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
@@ -29,7 +29,7 @@ namespace Goblin.Bot.Commands
             }
 
             Message = "Список напоминаний: \n" + string.Join("\n",
-                ureminds.Select(rem => $"{rem.Date:dd.MM.yyyy (dddd) HH:mm} - {rem.Text}"));
+                          ureminds.Select(rem => $"{rem.Date:dd.MM.yyyy (dddd) HH:mm} - {rem.Text}"));
         }
 
         public bool CanExecute(string param, long id = 0)

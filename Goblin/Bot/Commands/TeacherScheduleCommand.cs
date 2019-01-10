@@ -1,6 +1,6 @@
-﻿using Narfu;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Narfu;
 using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
@@ -11,7 +11,7 @@ namespace Goblin.Bot.Commands
         public string Decription { get; } = "Поиск препода по его номеру ИЛИ получение расписания у препода";
 
         public string Usage { get; } = "Препод 22331";
-        public List<string> Allias { get; } = new List<string>() { "препод" };
+        public List<string> Allias { get; } = new List<string> {"препод"};
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
@@ -35,12 +35,10 @@ namespace Goblin.Bot.Commands
 
                 return find;
             }
-            else
-            {
-                Message = "Введите номер преподавателя!\n" +
-                          "Получить его можно через команду 'Найти'\n";
-                return false;
-            }
+
+            Message = "Введите номер преподавателя!\n" +
+                      "Получить его можно через команду 'Найти'\n";
+            return false;
         }
     }
 }
