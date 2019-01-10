@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
 using System.Text;
@@ -24,6 +25,8 @@ namespace Vk
 
         internal static async Task<string> SendRequest(string method, Dictionary<string, string> @params)
         {
+            if(string.IsNullOrEmpty(AccessToken)) throw new Exception("Токен отсутствует");
+
             //TODO add sleep?
             var reqParams = new NameValueCollection();
             foreach (var (param, value) in @params)

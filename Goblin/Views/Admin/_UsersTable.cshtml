@@ -27,8 +27,15 @@
                 </td>
                 <td>@user.IsAdmin</td>
                 <td>
-                    <a href="https://ruz.narfu.ru/?timetable&group=@group" target="_blank">@user.Group</a>
-                    <p>@grName</p>
+                    @if (group != 0)
+                    {
+                        <a href="https://ruz.narfu.ru/?timetable&group=@group" target="_blank">@user.Group</a>
+                        <p>@grName</p>
+                    }
+                    else
+                    {
+                        <p>Группа не установлена</p>
+                    }
                 </td>
                 <td>@user.Schedule</td>
                 <td>@user.Weather</td>
