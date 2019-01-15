@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Vk.Models.Keyboard;
 
@@ -10,7 +9,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Соедини *слово1* *слово2*";
         public string Decription { get; } = "Соединяет два слова (зачем???)";
         public string Usage { get; } = "Соедини сафу лучший";
-        public List<string> Allias { get; } = new List<string> {"соедини"};
+        public string[] Allias { get; } = {"соедини"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 

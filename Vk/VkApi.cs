@@ -4,6 +4,8 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Vk.Models;
 
 namespace Vk
 {
@@ -39,10 +41,11 @@ namespace Vk
             var response = await Client.UploadValuesTaskAsync($"{EndPoint}/{method}", reqParams);
             var responseStr = Encoding.Default.GetString(response);
 
-            //if (responseStr.Contains("error"))
-            //{
-            //    // TODO: logger?
-            //}
+            if (responseStr.Contains("error"))
+            {
+                var error = JsonConvert.DeserializeObject<Error>(responseStr);
+                throw new Exception($"[{method}]: {error.Info.ErrorMsg}");
+            }
             return responseStr;
         }
     }

@@ -18,7 +18,7 @@ namespace Goblin
             Schedule(async () => await SendWeather()).ToRunEvery(0).Days().At(7, 0);
             //TODO вынести в бд
             Schedule(async () => await SendToConv(5, 351616)).ToRunEvery(0).Days().At(6, 05); // IGOR
-            Schedule(async () => await SendToConv(3, 351617)).ToRunEvery(0).Days().At(6, 15); // MY
+            Schedule(async () => await SendToConv(3, 351617, "Архангельск")).ToRunEvery(0).Days().At(6, 15); // MY
         }
 
         private async Task SendRemind()

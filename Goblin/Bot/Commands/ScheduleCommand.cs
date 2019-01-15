@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Goblin.Helpers;
+using Microsoft.EntityFrameworkCore;
+using Narfu;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Helpers;
-using Microsoft.EntityFrameworkCore;
-using Narfu;
 using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
@@ -18,7 +17,7 @@ namespace Goblin.Bot.Commands
             "Возвращает расписание на указанную дату. Если дата не указана, расписание берется на текущую дату";
 
         public string Usage { get; } = "Расписание 21.12";
-        public List<string> Allias { get; } = new List<string> {"расписание"};
+        public string[] Allias { get; } = { "расписание" };
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
@@ -69,7 +68,7 @@ namespace Goblin.Bot.Commands
             }
 
             var isGoodDate = DateTime.TryParseExact($"{date[0]}.{date[1]}",
-                new[] {"d.M", "d.MM", "dd.M", "dd.MM"},
+                new[] { "d.M", "d.MM", "dd.M", "dd.MM" },
                 null, DateTimeStyles.None, out _);
 
             if (!isGoodDate)

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +12,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Экзамены";
         public string Decription { get; } = "Возвращает список экзаменов/зачетов/интернет-экзаменов";
         public string Usage { get; } = "Экзамены";
-        public List<string> Allias { get; } = new List<string> {"экзамены"};
+        public string[] Allias { get; } = {"экзамены"};
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Подписка *расписание/погода*";
         public string Decription { get; } = "Подписка на рассылку расписания/погоды (ЧТО-ТО ОДНО ЗА РАЗ)";
         public string Usage { get; } = "Подписка расписание";
-        public List<string> Allias { get; } = new List<string> {"подписка"};
+        public string[] Allias { get; } = {"подписка"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 

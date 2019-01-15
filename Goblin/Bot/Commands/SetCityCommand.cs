@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Threading.Tasks;
 using Goblin.Helpers;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +12,7 @@ namespace Goblin.Bot.Commands
         public string Name => "Город *название города*";
         public string Decription => "Установка города для получения рассылки погоди";
         public string Usage => "Город Москва";
-        public List<string> Allias => new List<string> {"город"};
+        public string[] Allias { get; } = {"город"};
         public Category Category => Category.Common;
         public bool IsAdmin => false;
         public string Message { get; set; }

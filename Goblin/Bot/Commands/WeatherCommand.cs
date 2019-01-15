@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
 using OpenWeatherMap;
@@ -12,7 +11,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Погода *название города*";
         public string Decription { get; } = "Возвращает погоду на текущее время";
         public string Usage { get; } = "Погода Москва";
-        public List<string> Allias { get; } = new List<string> {"погода"};
+        public string[] Allias { get; } = {"погода"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 

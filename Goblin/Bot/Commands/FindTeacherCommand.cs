@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Narfu;
 using Vk.Models.Keyboard;
 
@@ -10,7 +9,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Найти *часть ФИО*";
         public string Decription { get; } = "Найти преподавателя по части его ФИО";
         public string Usage { get; } = "Найти деменков";
-        public List<string> Allias { get; } = new List<string> {"найти"};
+        public string[] Allias { get; } = {"найти"};
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 

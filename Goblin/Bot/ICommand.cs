@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Vk.Models.Keyboard;
 
 namespace Goblin.Bot
@@ -9,7 +8,7 @@ namespace Goblin.Bot
         string Name { get; }
         string Decription { get; }
         string Usage { get; }
-        List<string> Allias { get; }
+        string[] Allias { get; }
         Category Category { get; }
         bool IsAdmin { get; }
         string Message { get; set; }

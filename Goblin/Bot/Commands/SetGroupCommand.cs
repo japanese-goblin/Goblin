@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Goblin.Helpers;
+﻿using Goblin.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
+using System.Threading.Tasks;
 using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
@@ -12,7 +11,7 @@ namespace Goblin.Bot.Commands
         public string Name => "Устгр *номер группы*";
         public string Decription => "Установить группу для получения расписания";
         public string Usage => "Устгр 351617";
-        public List<string> Allias => new List<string> {"устгр"};
+        public string[] Allias { get; } = { "устгр" };
         public Category Category => Category.SAFU;
         public bool IsAdmin => false;
 

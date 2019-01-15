@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Vk.Models.Keyboard;
 
@@ -10,7 +9,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Монета";
         public string Decription { get; } = "Подбрасывает монету и выдаёт орёл/решка";
         public string Usage { get; } = "Монета";
-        public List<string> Allias { get; } = new List<string> {"монета"};
+        public string[] Allias { get; } = {"монета"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 

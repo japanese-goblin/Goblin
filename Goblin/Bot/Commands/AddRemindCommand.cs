@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using Goblin.Helpers;
@@ -16,7 +15,7 @@ namespace Goblin.Bot.Commands
             "Напоминает в указанное время о каком-то очень ВАЖНОМ тексте. День и месяц обязательно должны содержать 2 цифры, а год - 4. В указанное время бот напишет в личку сообщение с заданным текстом.";
 
         public string Usage { get; } = "Напомни 21.12.2018 15:35 зачет";
-        public List<string> Allias { get; } = new List<string> {"напомни"};
+        public string[] Allias { get; } = {"напомни"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
         public string Message { get; set; }
