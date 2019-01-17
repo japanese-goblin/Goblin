@@ -2,8 +2,7 @@
 {
     public static class Settings
     {
-        public const string ConfirmationToken = "***REMOVED***";
-
-        public const string AccessToken = "***REMOVED***";
+        public static string ConfirmationToken { get; set; }
+        public static string AccessToken { get; set; }
     }
 }

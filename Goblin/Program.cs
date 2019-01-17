@@ -1,10 +1,8 @@
-﻿using System;
-using System.Globalization;
-using FluentScheduler;
-using Goblin.Bot;
+﻿using FluentScheduler;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Vk;
+using System;
+using System.Globalization;
 
 namespace Goblin
 {
@@ -23,8 +21,6 @@ namespace Goblin
             StartDate = DateTime.Now;
 
             JobManager.Initialize(new ScheduledTasks());
-
-            VkApi.SetAccessToken(Settings.AccessToken); // TODO
 
             var culture = new CultureInfo("ru-RU");
             CultureInfo.DefaultThreadCurrentCulture = culture;

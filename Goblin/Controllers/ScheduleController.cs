@@ -23,11 +23,12 @@ namespace Goblin.Controllers
             var group = StudentsSchedule.GetGroupByRealId(id);
             ViewBag.Title = $"{group.RealId} - {group.Name}";
             var response = await StudentsSchedule.GetSchedule(id);
+
             if (!response.IsError)
             {
                 var result = response.Lessons.GroupBy(x => StudentsSchedule.GetWeekNumber(x.Time))
                     .ToDictionary(x => $"{x.First().Time:dd.MM.yyyy} - {x.Last().Time:dd.MM.yyyy}",
-                        x => x.ToList()); // TODO: fix key
+                        x => x.ToArray()); // TODO: fix key
                 return View(result);
             }
 

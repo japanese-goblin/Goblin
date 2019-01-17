@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Vk.Models
 {
+    //TODO эта модель не ко всему подходит, чудеса просто
     public class Error
     {
         [JsonProperty("error")]
@@ -17,7 +16,7 @@ namespace Vk.Models
         [JsonProperty("error_msg")]
         public string ErrorMsg { get; set; }
         [JsonProperty("request_params")]
-        public IEnumerable RequestParams { get; set; }
+        public RequestParams[] RequestParams { get; set; }
     }
 
     public class RequestParams

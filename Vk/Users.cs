@@ -17,7 +17,7 @@ namespace Vk
             };
             var response = await VkApi.SendRequest("users.get", values);
             var usersInfo = JsonConvert.DeserializeObject<UsersGetReponse>(response);
-            if (usersInfo.Response.Count == 0)
+            if (usersInfo.Response.Length == 0)
             {
                 return new string[] { }; // TODO ?
             }

@@ -1,4 +1,4 @@
-﻿using Goblin.Helpers;
+﻿using Goblin.Bot;
 using Goblin.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -30,28 +30,25 @@ namespace Goblin
                     options.AccessDeniedPath = new PathString("/Admin/");
                     options.LoginPath = new PathString("/Admin/Login");
                 });
+
+            Settings.AccessToken = Configuration["Config:AccessToken"];
+            Settings.ConfirmationToken = Configuration["Config:ConfirmationCode"];
+            VkApi.SetAccessToken(Settings.AccessToken); // TODO
+
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, MainContext ct,
-            IApplicationLifetime applicationLifetime)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, MainContext ct)
         {
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
 
             app.UseStaticFiles();
             app.UseAuthentication();
-
-            //TODO ??? почему без этого перестало работать на локалке?
-            app.UseCors(builder => builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 
             app.UseMvc(routes =>
             {
@@ -59,14 +56,6 @@ namespace Goblin
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            applicationLifetime.ApplicationStopping.Register(OnShutdown);
-        }
-
-        //TODO: check it
-        public async void OnShutdown()
-        {
-            await VkApi.Messages.Send(DbHelper.GetAdmins(), "Бот выключается...");
         }
     }
 }

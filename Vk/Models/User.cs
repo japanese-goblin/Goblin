@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Vk.Models
 {
     public class UsersGetReponse
     {
         [JsonProperty("response")]
-        public List<User> Response { get; set; }
+        public User[] Response { get; set; }
     }
+
     public class User
     {
         [JsonProperty("id")]

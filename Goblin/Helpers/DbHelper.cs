@@ -13,12 +13,12 @@ namespace Goblin.Helpers
             Db = new MainContext();
         }
 
-        public static List<User> GetUsers() => Db.Users.ToList();
+        public static User[] GetUsers() => Db.Users.ToArray();
 
         public static long[] GetAdmins() => Db.Users.Where(x => x.IsAdmin).Select(x => x.Vk).ToArray();
 
-        public static List<User> GetWeatherUsers() => Db.Users.Where(x => x.City != "" && x.Weather).ToList();
+        public static User[] GetWeatherUsers() => Db.Users.Where(x => x.City != "" && x.Weather).ToArray();
 
-        public static List<User> GetScheduleUsers() => Db.Users.Where(x => x.Group != 0 && x.Schedule).ToList();
+        public static User[] GetScheduleUsers() => Db.Users.Where(x => x.Group != 0 && x.Schedule).ToArray();
     }
 }

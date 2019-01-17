@@ -7,7 +7,6 @@ using Goblin.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Vk;
 using Vk.Models;
-using Vk.Models.Responses;
 using User = Goblin.Models.User;
 
 namespace Goblin.Bot
@@ -36,16 +35,16 @@ namespace Goblin.Bot
 
         private static async Task<string> MessageNew(Response obj)
         {
-            var msg = Vk.Models.Responses.MessageNew.FromJson(obj.Object.ToString()) as MessageNew;
-            var userID = msg.FromId;
-            var convId = msg.PeerId;
+            var message = Vk.Models.Responses.MessageNew.FromJson(obj.Object.ToString());
+            var userID = message.FromId;
+            var convId = message.PeerId;
             if (userID != convId)
             {
                 //TODO: add conv to db
-                var b = Regex.Match(msg.Text, @"\[club146048760\|.*\] (.*)").Groups[1].Value;
-                if (b != "")
+                var match = Regex.Match(message.Text, @"\[club146048760\|.*\] (.*)").Groups[1].Value;
+                if (string.IsNullOrEmpty(match))
                 {
-                    msg.Text = b;
+                    message.Text = match;
                 }
 
                 //TODO: оповещение о том, что гоблину не нужен доступ ко всей переписке?
@@ -57,14 +56,14 @@ namespace Goblin.Bot
                 await DbHelper.Db.SaveChangesAsync();
             }
 
-            var forSend = await CommandsList.ExecuteCommand(msg.Text, userID);
-            await VkApi.Messages.Send(convId, forSend.Message, kb: forSend.Keyboard);
+            var (msg, keyboard) = await CommandsList.ExecuteCommand(message.Text, userID);
+            await VkApi.Messages.Send(convId, msg, kb: keyboard);
             return "ok";
         }
 
         private static async Task<string> MessageDeny(Response obj)
         {
-            var deny = Vk.Models.Responses.MessageDeny.FromJson(obj.Object.ToString()) as MessageDeny;
+            var deny = Vk.Models.Responses.MessageDeny.FromJson(obj.Object.ToString());
             var userID = deny.UserId;
 
             var userName = await VkApi.Users.GetUserName(userID);
@@ -75,7 +74,7 @@ namespace Goblin.Bot
 
         private static async Task<string> GroupJoin(Response obj)
         {
-            var join = Vk.Models.Responses.GroupJoin.FromJson(obj.Object.ToString()) as GroupJoin;
+            var join = Vk.Models.Responses.GroupJoin.FromJson(obj.Object.ToString());
             var userID = join.UserId;
             var userName = await VkApi.Users.GetUserName(userID);
 
@@ -85,7 +84,7 @@ namespace Goblin.Bot
 
         private static async Task<string> GroupLeave(Response obj)
         {
-            var leave = Vk.Models.Responses.GroupLeave.FromJson(obj.Object.ToString()) as GroupLeave;
+            var leave = Vk.Models.Responses.GroupLeave.FromJson(obj.Object.ToString());
             var userID = leave.UserId;
             if (await DbHelper.Db.Users.AnyAsync(x => x.Vk == userID))
             {

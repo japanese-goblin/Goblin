@@ -23,9 +23,9 @@ namespace Goblin.Bot.Commands
             var dis = DateTime.Now - bday;
             var uptime = DateTime.Now - Program.StartDate;
 
-            var users = DbHelper.GetUsers().Count;
-            var scheduleUsers = DbHelper.GetScheduleUsers().Count;
-            var weatherUsers = DbHelper.GetWeatherUsers().Count;
+            var users = DbHelper.GetUsers().Length;
+            var scheduleUsers = DbHelper.GetScheduleUsers().Length;
+            var weatherUsers = DbHelper.GetWeatherUsers().Length;
 
             Message =
                 $"Время старта: {Program.StartDate:F}\n" +

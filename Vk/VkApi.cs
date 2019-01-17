@@ -16,13 +16,6 @@ namespace Vk
         private const string Version = "5.92";
         internal static string AccessToken { get; set; }
 
-        #region categories
-
-        public static readonly Messages Messages = new Messages();
-        public static readonly Users Users = new Users();
-
-        #endregion
-
         public static void SetAccessToken(string token) => AccessToken = token;
 
         internal static async Task<string> SendRequest(string method, Dictionary<string, string> @params)
@@ -43,10 +36,19 @@ namespace Vk
 
             if (responseStr.Contains("error"))
             {
+                //TODO
                 var error = JsonConvert.DeserializeObject<Error>(responseStr);
                 throw new Exception($"[{method}]: {error.Info.ErrorMsg}");
             }
+
             return responseStr;
         }
+
+        #region categories
+
+        public static readonly Messages Messages = new Messages();
+        public static readonly Users Users = new Users();
+
+        #endregion
     }
 }
