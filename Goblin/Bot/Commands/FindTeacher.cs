@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Narfu;
 using Vk.Models.Keyboard;
+using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
 {
@@ -14,16 +15,21 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         public string Message { get; set; }
-        public Vk.Models.Keyboard.Keyboard Keyboard { get; set; }
+        public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, long id = 0)
+        public async Task Execute(Message msg)
         {
-            Message = TeachersSchedule.FindByName(param);
+            Message = TeachersSchedule.FindByName(msg.GetParamsAsArray()[0]);
         }
 
-        public bool CanExecute(string param, long id = 0)
+        public bool CanExecute(Message msg)
         {
-            var x = TeachersSchedule.FindByName(param.ToLower());
+            if (msg.Text.Length < 4)
+            {
+                Message = "Введите больше символов в ФИО";
+                return false;
+            }
+            var x = TeachersSchedule.FindByName(msg.GetParamsAsArray()[0]);
             var find = string.IsNullOrEmpty(x);
             if (find)
             {

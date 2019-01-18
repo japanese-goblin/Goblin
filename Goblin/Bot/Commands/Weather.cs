@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Goblin.Helpers;
 using OpenWeatherMap;
 using Vk.Models.Keyboard;
+using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
 {
@@ -18,9 +19,10 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, long id = 0)
+        public async Task Execute(Message msg)
         {
-            var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == id);
+            var param = msg.GetParams();
+            var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
             if (string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
             {
                 Message = await WeatherInfo.GetWeather(user.City);
@@ -37,10 +39,10 @@ namespace Goblin.Bot.Commands
             }
         }
 
-        public bool CanExecute(string param, long id = 0)
+        public bool CanExecute(Message msg)
         {
-            var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == id);
-            if (string.IsNullOrEmpty(param) && string.IsNullOrEmpty(user?.City))
+            var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
+            if (string.IsNullOrEmpty(msg.GetParams()) && string.IsNullOrEmpty(user?.City))
             {
                 Message = "Либо укажи город в параметре команды, либо установи его командой 'город'";
                 return false;

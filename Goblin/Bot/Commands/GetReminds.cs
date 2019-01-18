@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Goblin.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Vk.Models.Keyboard;
+using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
 {
@@ -16,11 +17,11 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         public string Message { get; set; }
-        public Vk.Models.Keyboard.Keyboard Keyboard { get; set; }
+        public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, long id = 0)
+        public async Task Execute(Message msg)
         {
-            var ureminds = await DbHelper.Db.Reminds.Where(x => x.VkID == id).OrderBy(x => x.Date).ToListAsync();
+            var ureminds = await DbHelper.Db.Reminds.Where(x => x.VkID == msg.FromId).OrderBy(x => x.Date).ToListAsync();
             if (!ureminds.Any())
             {
                 Message = "Напоминаний нет.";
@@ -31,7 +32,7 @@ namespace Goblin.Bot.Commands
                           ureminds.Select(rem => $"{rem.Date:dd.MM.yyyy (dddd) HH:mm} - {rem.Text}"));
         }
 
-        public bool CanExecute(string param, long id = 0)
+        public bool CanExecute(Message msg)
         {
             return true;
         }

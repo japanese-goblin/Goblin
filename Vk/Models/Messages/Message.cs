@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Linq;
+using Newtonsoft.Json;
 
 namespace Vk.Models.Messages
 {
@@ -32,5 +33,21 @@ namespace Vk.Models.Messages
         public bool IsHidden { get; set; }
 
         public static Message FromJson(string str) => JsonConvert.DeserializeObject<Message>(str);
+
+        public string GetParams()
+        {
+            var split = Text.Split(' ', 2);
+            var param = split.Length > 1 ? split[1] : "";
+
+            return param;
+        }
+
+        public string[] GetParamsAsArray()
+        {
+            var split = Text.Split(' ', 2);
+            var param = split.Length > 1 ? split.Skip(1).ToArray() : new string[] { };
+
+            return param;
+        }
     }
 }

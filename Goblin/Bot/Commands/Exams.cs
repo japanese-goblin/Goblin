@@ -4,6 +4,7 @@ using Goblin.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
 using Vk.Models.Keyboard;
+using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
 {
@@ -17,18 +18,18 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         public string Message { get; set; }
-        public Vk.Models.Keyboard.Keyboard Keyboard { get; set; }
+        public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, long id = 0)
+        public async Task Execute(Message msg)
         {
-            var user = await DbHelper.Db.Users.FirstOrDefaultAsync(x => x.Vk == id);
+            var user = await DbHelper.Db.Users.FirstOrDefaultAsync(x => x.Vk == msg.FromId);
 
             Message = await StudentsSchedule.GetExams(user.Group);
         }
 
-        public bool CanExecute(string param, long id = 0)
+        public bool CanExecute(Message msg)
         {
-            var user = DbHelper.Db.Users.First(x => x.Vk == id);
+            var user = DbHelper.Db.Users.First(x => x.Vk == msg.FromId);
             if (user.Group == 0)
             {
                 Message = "Чтобы воспользоваться командой, установи группу командой 'устгр *номер группы*'";

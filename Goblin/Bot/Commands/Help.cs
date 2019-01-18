@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Vk.Models.Keyboard;
+using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
 {
@@ -15,7 +16,7 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         public string Message { get; set; }
-        public Vk.Models.Keyboard.Keyboard Keyboard { get; set; }
+        public Keyboard Keyboard { get; set; }
 
         public Help(List<ICommand> cmds)
         {
@@ -45,11 +46,11 @@ namespace Goblin.Bot.Commands
                       "По любым вопросам/предложениям/ошибкам и прочему, прошу писать сюда: @id***REMOVED*** (тык)";
         }
 
-        public async Task Execute(string param, long id = 0)
+        public async Task Execute(Message msg)
         {
         }
 
-        public bool CanExecute(string param, long id = 0)
+        public bool CanExecute(Message msg)
         {
             return true;
         }

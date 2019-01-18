@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Vk.Models.Keyboard;
+using Vk.Models.Messages;
 
 namespace Goblin.Bot
 {
@@ -14,7 +15,7 @@ namespace Goblin.Bot
         string Message { get; set; }
         Keyboard Keyboard { get; set; }
 
-        Task Execute(string param, long id = 0);
-        bool CanExecute(string param, long id = 0);
+        Task Execute(Message msg);
+        bool CanExecute(Message msg);
     }
 }

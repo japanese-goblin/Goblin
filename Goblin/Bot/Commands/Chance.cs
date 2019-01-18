@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Vk.Models.Keyboard;
+using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
 {
@@ -14,16 +15,16 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         public string Message { get; set; }
-        public Vk.Models.Keyboard.Keyboard Keyboard { get; set; }
+        public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, long id = 0)
+        public async Task Execute(Message msg)
         {
             Message = $"Вероятность данного события: {GetRandom(0, 100)}%";
         }
 
-        public bool CanExecute(string param, long id = 0)
+        public bool CanExecute(Message msg)
         {
-            if (string.IsNullOrEmpty(param))
+            if (string.IsNullOrEmpty(msg.GetParams()))
             {
                 Message = "А где вопрос?";
                 return false;

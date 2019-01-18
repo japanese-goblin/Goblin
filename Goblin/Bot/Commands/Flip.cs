@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Vk.Models.Keyboard;
+using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
 {
@@ -14,9 +15,9 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         public string Message { get; set; }
-        public Vk.Models.Keyboard.Keyboard Keyboard { get; set; }
+        public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, long id = 0)
+        public async Task Execute(Message msg)
         {
             var forRandom = new[] {"Орёл", "Решка"};
 
@@ -24,14 +25,14 @@ namespace Goblin.Bot.Commands
             Message = forRandom[a % 2 == 0 ? 0 : 1];
         }
 
-        public bool CanExecute(string param, long id = 0)
+        public bool CanExecute(Message msg)
         {
             return true;
         }
 
         public static int GetRandom(int start, int end)
         {
-            return new System.Random(DateTime.Now.Millisecond * 3819).Next(start, end);
+            return new System.Random(DateTime.Now.Millisecond).Next(start, end);
         }
     }
 }

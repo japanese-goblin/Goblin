@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Models;
 using Vk.Models.Keyboard;
+using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
 {
@@ -19,10 +20,11 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
         public string Message { get; set; }
-        public Vk.Models.Keyboard.Keyboard Keyboard { get; set; }
+        public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, long id = 0)
+        public async Task Execute(Message msg)
         {
+            var param = msg.GetParams();
             var all = param.Split(' ', 3);
             if (all[0].ToLower() == "завтра") //TODO: поменять
             {
@@ -41,14 +43,15 @@ namespace Goblin.Bot.Commands
             {
                 Text = all[2],
                 Date = time.Result,
-                VkID = id
+                VkID = msg.FromId
             });
             await DbHelper.Db.SaveChangesAsync();
             Message = $"Хорошо, {time.Result:dd.MM.yyyy} в {time.Result:HH:mm} напомню следующее:\n{all[2]}";
         }
 
-        public bool CanExecute(string param, long id = 0)
+        public bool CanExecute(Message msg)
         {
+            var param = msg.GetParams();
             var all = param.Split(' ', 3);
             if (all.Length != 3)
             {

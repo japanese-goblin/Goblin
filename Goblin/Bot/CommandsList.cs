@@ -28,7 +28,6 @@ namespace Goblin.Bot
                 new UnsetMailing(),
                 new Exams(),
                 new SendAdmin(),
-                new Merge(),
                 new KeyboardCommand(),
                 new Random(),
                 new FindTeacher(),
@@ -38,9 +37,9 @@ namespace Goblin.Bot
             Commands.Add(new Help(Commands));
         }
 
-        public static async Task<(string Message, Vk.Models.Keyboard.Keyboard Keyboard)> ExecuteCommand(string message, long userId)
+        public static async Task<(string Message, Vk.Models.Keyboard.Keyboard Keyboard)> ExecuteCommand(Vk.Models.Messages.Message msg)
         {
-            var split = message.Split(' ', 2);
+            var split = msg.Text.Split(' ', 2);
             var comm = split[0].ToLower();
             var param = split.Length > 1 ? split[1] : "";
             var result = ErrorMessage;
@@ -49,11 +48,11 @@ namespace Goblin.Bot
             {
                 if (!command.Allias.Contains(comm)) continue;
 
-                if (command.IsAdmin && !DbHelper.GetAdmins().Any(x => x == userId)) continue;
+                if (command.IsAdmin && !DbHelper.GetAdmins().Any(x => x == msg.FromId)) continue;
 
-                if (command.CanExecute(param, userId))
+                if (command.CanExecute(msg)) //TODO:
                 {
-                    await command.Execute(param, userId);
+                    await command.Execute(msg);
                 }
 
                 result = command.Message;

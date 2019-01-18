@@ -3,6 +3,7 @@ using Goblin.Helpers;
 using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 using Vk.Models.Keyboard;
+using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
 {
@@ -18,18 +19,18 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, long id = 0)
+        public async Task Execute(Message msg)
         {
             User user;
-            switch (param)
+            switch (msg.GetParams()) //TODO
             {
                 case "погода":
-                    user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == id);
+                    user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == msg.FromId);
                     user.Weather = true;
                     Message = "Ты успешно подписался на рассылку погоды!";
                     break;
                 case "расписание":
-                    user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == id);
+                    user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == msg.FromId);
                     user.Schedule = true;
                     Message = "Ты успешно подписался на рассылку расписания!";
                     break;
@@ -42,9 +43,9 @@ namespace Goblin.Bot.Commands
                 await DbHelper.Db.SaveChangesAsync();
         }
 
-        public bool CanExecute(string param, long id = 0)
+        public bool CanExecute(Message msg)
         {
-            if (string.IsNullOrEmpty(param))
+            if (string.IsNullOrEmpty(msg.GetParams()))
             {
                 Message = "А на что подписаться? Укажи 'погода' либо 'расписание'";
                 return false;

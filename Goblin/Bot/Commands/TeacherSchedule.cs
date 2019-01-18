@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Narfu;
 using Vk.Models.Keyboard;
+using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
 {
@@ -17,14 +18,14 @@ namespace Goblin.Bot.Commands
         public string Message { get; set; }
         public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(string param, long id = 0)
+        public async Task Execute(Message msg)
         {
-            Message = await TeachersSchedule.GetScheduleToSend(int.Parse(param));
+            Message = await TeachersSchedule.GetScheduleToSend(int.Parse(msg.GetParams()));
         }
 
-        public bool CanExecute(string param, long id = 0)
+        public bool CanExecute(Message msg)
         {
-            if (int.TryParse(param, out var res))
+            if (int.TryParse(msg.GetParams(), out var res))
             {
                 var find = TeachersSchedule.FindById(res);
                 if (!find)

@@ -36,9 +36,7 @@ namespace Goblin.Bot
         private static async Task<string> MessageNew(Response obj)
         {
             var message = Vk.Models.Messages.Message.FromJson(obj.Object.ToString());
-            var userID = message.FromId;
-            var convId = message.PeerId;
-            if (userID != convId)
+            if (message.FromId != message.PeerId)
             {
                 //TODO: add conv to db
                 var match = Regex.Match(message.Text, @"\[club146048760\|.*\] (.*)").Groups[1].Value;
@@ -50,14 +48,14 @@ namespace Goblin.Bot
                 //TODO: оповещение о том, что гоблину не нужен доступ ко всей переписке?
             }
 
-            if (!DbHelper.GetUsers().Any(x => x.Vk == userID))
+            if (!DbHelper.GetUsers().Any(x => x.Vk == message.FromId))
             {
-                await DbHelper.Db.Users.AddAsync(new User {Vk = userID});
+                await DbHelper.Db.Users.AddAsync(new User {Vk = message.FromId });
                 await DbHelper.Db.SaveChangesAsync();
             }
 
-            var (msg, keyboard) = await CommandsList.ExecuteCommand(message.Text, userID);
-            await VkApi.Messages.Send(convId, msg, kb: keyboard);
+            var (msg, keyboard) = await CommandsList.ExecuteCommand(message);
+            await VkApi.Messages.Send(message.PeerId, msg, kb: keyboard);
             return "ok";
         }
 
