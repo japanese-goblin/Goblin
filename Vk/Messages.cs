@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Vk.Models.Keyboard;
+using Vk.Models.Messages;
 
 namespace Vk
 {
@@ -22,7 +24,7 @@ namespace Vk
             var values = new Dictionary<string, string>()
             {
                 ["message"] = text,
-                ["random_id"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(),
+                ["random_id"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(), //TODO
                 ["peer_ids"] = string.Join(',', ids)
             };
 

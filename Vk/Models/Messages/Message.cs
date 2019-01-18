@@ -1,15 +1,15 @@
 ﻿using Newtonsoft.Json;
 
-namespace Vk.Models.Responses
+namespace Vk.Models.Messages
 {
-    public class MessageNew
+    public class Message
     {
         [JsonProperty("date")]
-        public int Date { get; set; }
+        public uint Date { get; set; }
         [JsonProperty("from_id")]
         public long FromId { get; set; }
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public uint Id { get; set; }
         [JsonProperty("out")]
         public bool Out { get; set; }
         [JsonProperty("peer_id")]
@@ -17,7 +17,7 @@ namespace Vk.Models.Responses
         [JsonProperty("text")]
         public string Text { get; set; }
         [JsonProperty("conversation_message_id")]
-        public int ConversationMessageId { get; set; }
+        public uint ConversationMessageId { get; set; }
         [JsonProperty("fwd_messages")]
         public ForwardMessage[] ForwardMessages { get; set; }
         [JsonProperty("reply_message")]
@@ -25,26 +25,12 @@ namespace Vk.Models.Responses
         [JsonProperty("important")]
         public bool Important { get; set; }
         [JsonProperty("random_id")]
-        public long RandomId { get; set; }
+        public ulong RandomId { get; set; }
         [JsonProperty("attachments")]
         public object[] Attachments { get; set; } //TODO
         [JsonProperty("is_hidden")]
         public bool IsHidden { get; set; }
 
-        public static MessageNew FromJson(string str) => JsonConvert.DeserializeObject<MessageNew>(str);
-    }
-
-    public class ForwardMessage
-    {
-        [JsonProperty("date")]
-        public int Date { get; set; }
-        [JsonProperty("from_id")]
-        public int FromId { get; set; }
-        [JsonProperty("text")]
-        public string Text { get; set; }
-        [JsonProperty("attachments")]
-        public object[] Attachments { get; set; }
-        [JsonProperty("update_time")]
-        public int UpdateTime { get; set; }
+        public static Message FromJson(string str) => JsonConvert.DeserializeObject<Message>(str);
     }
 }

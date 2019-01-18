@@ -18,7 +18,7 @@ namespace Tests.Schedule
         public async Task GetScheduleAtDate_Correct()
         {
             var result = await Narfu.StudentsSchedule.GetScheduleAtDate(DateTime.Now, CorrectGroup);
-            Assert.True(result.Contains("расписание"), "Сайт сломался?");
+            Assert.True(result.ToLower().Contains("расписание"), "Сайт сломался?");
         }
 
         [Fact]

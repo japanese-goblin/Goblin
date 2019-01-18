@@ -1,69 +1,66 @@
 $(".send-message-all").click(function () {
     var res = confirm("Ты точно хочешь отправить сообщение ВСЕМ???");
-    if(!res) return;
-    var msg = $(".message-all").val().replace(/\n/g, "<br>");
-    $.ajax({
-        type: "POST",
-        url: "AdminApi/SendToAll",
-        async: true,
-        data: {
-            "msg": msg,
-            "attach": $(".attach-all").map(function() {return this.value;}).get().join(",") // TODO:
-        },
-        success: function() {
-            $(".send-message-all").removeClass("btn-primary").addClass("btn-success")
-        },
-        error: function() {
-            alert('error');
-            $(".send-message-all").removeClass("btn-primary").addClass("btn-danger")
-        }
-    })
+    if (!res) return;
+    sendMessage(true);
 });
 
 $(".send-message-one").click(function () {
-    var msg = $(".message-one").val().replace(/\n/g, "<br>");
+    sendMessage(false);
+});
+
+$("#add-attach-all").click(() => appendAttach(true));
+$("#add-attach-one").click(() => appendAttach(false));
+
+function sendMessage(toAll) {
+    const attachs = getAttachments(toAll);
+    const msg = toAll ? $(".message-all") : $(".message-one");
+    const text = msg.val().replace(/\n/g, "<br>");
+    const url = toAll ? "AdminApi/SendToAll" : "AdminApi/SendToId";
+    const button = toAll ? $(".send-message-all") : $(".send-message-one");
+
+    let data = {
+        "msg": text,
+        "attach": attachs
+    };
+    if (!toAll) {
+        data["id"] = $(".user-id").val();
+    }
+
     $.ajax({
         type: "POST",
-        url: "AdminApi/SendToId",
+        url: url,
         async: true,
-        data: {
-            "msg": msg,
-            "id": $(".user-id").val(),
-            "attach": $(".attach-one").map(function() {return this.value;}).get().join(",") // TODO:
-        },
-        success: function() {
-            $(".send-message-one").removeClass("btn-primary").addClass("btn-success")
-        },
-        error: function() {
+        data: data,
+        success: () => resetButtonClass(button, "btn-warning", "btn-success"),
+        error: () => {
             alert('error');
-            $(".send-message-one").removeClass("btn-primary").addClass("btn-danger")
+            resetButtonClass(button, "btn-warning", "btn-danger");
         }
     })
-});
+}
 
-//TODO вот ето быдлокод конечно да
-$("#add-attach-all").click(function () {
-    var count = $(".attach-all").length + 1;
-    if (count <= 10) {
-        $(".attachments-all").append(`
+function getAttachments(fromAll) {
+    let selector = fromAll ? "attach-all" : "attach-one";
+    return $(selector).map(x => x.value).get().join(",")
+}
+
+function appendAttach(isall) {
+    let selector = isAll ? "attach-all" : "attach-one";
+    let appendTo = isAll ? ".attachments-all" : ".attachments-one";
+
+    let count = $(`.${selector}`).length + 1;
+    if (count > 10) return;
+
+    $(appendTo).append(`
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">${count}</span>
             </div>
-            <input type="text" class="form-control attach-all" id="attach">
+            <input type="text" class="form-control ${selector}" id="attach">
         </div>`);
-    }
-});
+}
 
-$("#add-attach-one").click(function () {
-    var count = $(".attach-one").length + 1;
-    if (count <= 10) {
-        $(".attachments-one").append(`
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <span class="input-group-text">${count}</span>
-            </div>
-            <input type="text" class="form-control attach-one" id="attach">
-        </div>`);
-    }
-});
+function resetButtonClass(button, start, end) {
+    button.removeClass(start).addClass(end);
+    setTimeout(() => button.removeClass(end).addClass(start), 5000);
+}

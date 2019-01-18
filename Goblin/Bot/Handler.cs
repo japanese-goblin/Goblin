@@ -35,7 +35,7 @@ namespace Goblin.Bot
 
         private static async Task<string> MessageNew(Response obj)
         {
-            var message = Vk.Models.Responses.MessageNew.FromJson(obj.Object.ToString());
+            var message = Vk.Models.Messages.Message.FromJson(obj.Object.ToString());
             var userID = message.FromId;
             var convId = message.PeerId;
             if (userID != convId)

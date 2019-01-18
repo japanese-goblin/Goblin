@@ -28,6 +28,7 @@ namespace Vk
             {
                 reqParams.Add(param, value);
             }
+            reqParams.Add("lang", "ru");
             reqParams.Add("v", Version);
             reqParams.Add("access_token", AccessToken);
 
