@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using Calendar = Ical.Net.Calendar;
 
@@ -15,9 +13,11 @@ namespace Narfu
     public static class StudentsSchedule
     {
         public static Group[] Groups;
+        private static readonly string StudentsEndPoint;
 
         static StudentsSchedule()
         {
+            StudentsEndPoint = $"{Utils.EndPoint}/?icalendar";
             Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText("Data/Groups.json"));
         }
 
@@ -28,38 +28,30 @@ namespace Narfu
         /// <returns>(произошла ли ошибка, массив с парамаи)</returns>
         public static async Task<(bool IsError, Lesson[] Lessons)> GetSchedule(int realGroup)
         {
-            var usergroup = GetGroupByRealId(realGroup).SiteId;
-            string calen;
-            using (var client = new WebClient())
+            var userGroup = GetGroupByRealId(realGroup).SiteId;
+            var response = await Utils.Client.GetAsync($"{StudentsEndPoint}&oid={userGroup}&from={DateTime.Now:dd.MM.yyyy}");
+            if (!response.IsSuccessStatusCode)
             {
-                try
-                {
-                    client.Encoding = Encoding.UTF8;
-                    calen = await client.DownloadStringTaskAsync($"http://ruz.narfu.ru/?icalendar&oid={usergroup}&from={DateTime.Now:dd.MM.yyyy}");
-                }
-                catch (WebException) // сайт сломался
-                {
-                    return (true, new Lesson[] { });
-                }
+                return (true, new Lesson[] { });
             }
 
             Calendar calendar;
             try
             {
-                calendar = Calendar.Load(calen);
+                calendar = Calendar.Load(await response.Content.ReadAsStringAsync());
             }
             catch // редирект на главную
             {
                 return (true, new Lesson[] { }); //TODO: true -> false?
             }
 
-            var lessons = new List<Lesson>();
             var events = calendar.Events.Distinct().OrderBy(x => x.Start.Value).ToList();
             if (!events.Any())
             {
                 return (false, new Lesson[] { });
             }
 
+            var lessons = new List<Lesson>();
             foreach (var ev in events)
             {
                 var descr = ev.Description.Split('\n');

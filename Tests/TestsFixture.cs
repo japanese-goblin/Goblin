@@ -1,9 +1,9 @@
-﻿using System;
-using System.Net.Http;
+﻿using Goblin;
+using Goblin.Bot;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Goblin;
-using Goblin.Bot;
+using System;
+using System.Net.Http;
 using Vk;
 
 namespace Tests
