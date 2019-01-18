@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Goblin.Helpers;
 using Microsoft.EntityFrameworkCore;
-using Vk.Models.Keyboard;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
@@ -16,25 +15,30 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
-        public string Message { get; set; }
-        public Keyboard Keyboard { get; set; }
-
-        public async Task Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg)
         {
-            var ureminds = await DbHelper.Db.Reminds.Where(x => x.VkID == msg.FromId).OrderBy(x => x.Date).ToListAsync();
+            var text = "";
+            var ureminds = await DbHelper.Db.Reminds.Where(x => x.VkID == msg.FromId).OrderBy(x => x.Date)
+                .ToListAsync();
             if (!ureminds.Any())
             {
-                Message = "Напоминаний нет.";
-                return;
+                text = "Напоминаний нет.";
+            }
+            else
+            {
+                text = "Список напоминаний: \n" + string.Join("\n",
+                           ureminds.Select(rem => $"{rem.Date:dd.MM.yyyy (dddd) HH:mm} - {rem.Text}"));
             }
 
-            Message = "Список напоминаний: \n" + string.Join("\n",
-                          ureminds.Select(rem => $"{rem.Date:dd.MM.yyyy (dddd) HH:mm} - {rem.Text}"));
+            return new CommandResponse
+            {
+                Text = text
+            };
         }
 
-        public bool CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg)
         {
-            return true;
+            return (true, "");
         }
     }
 }

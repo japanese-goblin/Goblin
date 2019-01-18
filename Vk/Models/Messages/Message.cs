@@ -45,7 +45,7 @@ namespace Vk.Models.Messages
         public string[] GetParamsAsArray()
         {
             var split = Text.Split(' ', 2);
-            var param = split.Length > 1 ? split.Skip(1).ToArray() : new string[] { };
+            var param = split.Length > 1 ? split.Skip(1).ToArray() : new [] { "" };
 
             return param;
         }

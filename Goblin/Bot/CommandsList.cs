@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Bot.Commands;
 using Goblin.Helpers;
+using Vk.Models.Messages;
 
 namespace Goblin.Bot
 {
@@ -37,30 +38,28 @@ namespace Goblin.Bot
             Commands.Add(new Help(Commands));
         }
 
-        public static async Task<(string Message, Vk.Models.Keyboard.Keyboard Keyboard)> ExecuteCommand(Vk.Models.Messages.Message msg)
+        public static async Task<CommandResponse> ExecuteCommand(Message msg)
         {
             var split = msg.Text.Split(' ', 2);
             var comm = split[0].ToLower();
-            var param = split.Length > 1 ? split[1] : "";
-            var result = ErrorMessage;
-            Vk.Models.Keyboard.Keyboard kb = null;
+            var response = new CommandResponse();
+
             foreach (var command in Commands)
             {
                 if (!command.Allias.Contains(comm)) continue;
 
                 if (command.IsAdmin && !DbHelper.GetAdmins().Any(x => x == msg.FromId)) continue;
 
-                if (command.CanExecute(msg)) //TODO:
-                {
-                    await command.Execute(msg);
-                }
-
-                result = command.Message;
-                kb = command.Keyboard;
+                response = await command.Execute(msg);
                 break;
             }
 
-            return (result, kb);
+            if (string.IsNullOrEmpty(response.Text))
+            {
+                response.Text = ErrorMessage;
+            }
+
+            return response;
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Goblin.Helpers;
 using OpenWeatherMap;
-using Vk.Models.Keyboard;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
@@ -16,39 +15,52 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
-        public string Message { get; set; }
-        public Keyboard Keyboard { get; set; }
-
-        public async Task Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg)
         {
+            var canExecute = CanExecute(msg);
+            if (!canExecute.Success)
+            {
+                return new CommandResponse
+                {
+                    Text = canExecute.Text
+                };
+            }
+
             var param = msg.GetParams();
             var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
             if (string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
             {
-                Message = await WeatherInfo.GetWeather(user.City);
-                return;
+                return new CommandResponse
+                {
+                    Text = await WeatherInfo.GetWeather(user.City)
+                };
             }
 
+            var text = "";
             if (await WeatherInfo.CheckCity(param))
             {
-                Message = await WeatherInfo.GetWeather(param);
+                text = await WeatherInfo.GetWeather(param);
             }
             else
             {
-                Message = "Город не найден (или ошибочка со стороны бота?)";
+                text = $"Ошибка. Город '{param}' не найден (или ошибочка со стороны бота?)";
             }
+
+            return new CommandResponse
+            {
+                Text = text
+            };
         }
 
-        public bool CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg)
         {
             var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
             if (string.IsNullOrEmpty(msg.GetParams()) && string.IsNullOrEmpty(user?.City))
             {
-                Message = "Либо укажи город в параметре команды, либо установи его командой 'город'";
-                return false;
+                return (false, "Ошибка. Либо укажи город в команде через пробел, либо установи его командой 'город'");
             }
 
-            return true;
+            return (true, "");
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Vk.Models.Keyboard;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
@@ -14,34 +13,40 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
-        public string Message { get; set; }
-        public Keyboard Keyboard { get; set; }
-
-        public async Task Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg)
         {
-            var forRandom = Split(msg.GetParams());
+            var canExecute = CanExecute(msg);
+            if (!canExecute.Success)
+            {
+                return new CommandResponse
+                {
+                    Text = canExecute.Text
+                };
+            }
 
+            var forRandom = Split(msg.GetParams());
             var index = GetRandom(0, forRandom.Length);
-            Message = $"Я выбираю следующее: {forRandom[index]}";
+            return new CommandResponse
+            {
+                Text = $"Я выбираю следующее: {forRandom[index]}"
+            };
         }
 
-        public bool CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg)
         {
             var param = msg.GetParams();
             if (string.IsNullOrEmpty(param))
             {
-                Message = $"Пример использования команды: {Usage}";
-                return false;
+                return (false, $"Ошибка. Пример использования команды: {Usage}");
             }
 
             var forRandom = Split(param);
             if (forRandom.Length < 2)
             {
-                Message = "Введи два или более параметроы";
-                return false;
+                return (false, $"Введи два или более параметра ({Usage})");
             }
 
-            return true;
+            return (true, "");
         }
 
         private int GetRandom(int start, int end)

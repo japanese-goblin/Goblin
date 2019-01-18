@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Vk.Models.Keyboard;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
@@ -14,23 +13,31 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
-        public string Message { get; set; }
-        public Keyboard Keyboard { get; set; }
-
-        public async Task Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg)
         {
-            Message = $"Вероятность данного события: {GetRandom(0, 100)}%";
+            var canExecute = CanExecute(msg);
+            if (!canExecute.Success)
+            {
+                return new CommandResponse
+                {
+                    Text = canExecute.Text
+                };
+            }
+
+            return new CommandResponse
+            {
+                Text = $"Вероятность данного события: {GetRandom(0, 100)}%"
+            };
         }
 
-        public bool CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg)
         {
             if (string.IsNullOrEmpty(msg.GetParams()))
             {
-                Message = "А где вопрос?";
-                return false;
+                return (false, "Ошибка. Не указано событие, вероятность которого необходимо посчитать");
             }
 
-            return true;
+            return (true, "");
         }
 
         public static int GetRandom(int start, int end)

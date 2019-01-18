@@ -3,14 +3,13 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Goblin.Helpers;
 using Goblin.Models;
-using Vk.Models.Keyboard;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
 {
     public class AddRemind : ICommand
     {
-        public string Name { get; } = "Напомни *день*.*месяц*.*год* *час*:*минута* *текст*";
+        public string Name { get; } = "Напомни *день*.*месяц*.*год* *часы*:*минуты* *текст*";
 
         public string Decription { get; } =
             "Напоминает в указанное время о каком-то очень ВАЖНОМ тексте. День и месяц обязательно должны содержать 2 цифры, а год - 4. В указанное время бот напишет в личку сообщение с заданным текстом.";
@@ -19,11 +18,18 @@ namespace Goblin.Bot.Commands
         public string[] Allias { get; } = {"напомни"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
-        public string Message { get; set; }
-        public Keyboard Keyboard { get; set; }
 
-        public async Task Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg)
         {
+            var canExecute = CanExecute(msg);
+            if (!canExecute.Success)
+            {
+                return new CommandResponse
+                {
+                    Text = canExecute.Text
+                };
+            }
+
             var param = msg.GetParams();
             var all = param.Split(' ', 3);
             if (all[0].ToLower() == "завтра") //TODO: поменять
@@ -46,22 +52,25 @@ namespace Goblin.Bot.Commands
                 VkID = msg.FromId
             });
             await DbHelper.Db.SaveChangesAsync();
-            Message = $"Хорошо, {time.Result:dd.MM.yyyy} в {time.Result:HH:mm} напомню следующее:\n{all[2]}";
+
+            return new CommandResponse
+            {
+                Text = $"Хорошо, {time.Result:dd.MM.yyyy (dddd)} в {time.Result:HH:mm} напомню следующее:\n{all[2]}"
+            };
         }
 
-        public bool CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg)
         {
             var param = msg.GetParams();
             var all = param.Split(' ', 3);
             if (all.Length != 3)
             {
-                Message = "Ошибочка";
-                return false;
+                return (false, $"Ошибка. Укажите дату, время и текст напоминания ({Usage})");
             }
 
             if (all[0].ToLower() == "завтра" || all[0].ToLower() == "сегодня")
             {
-                return true;
+                return (true, "");
             }
 
             //TODO: все равно никто не пользуется ех
@@ -82,17 +91,15 @@ namespace Goblin.Bot.Commands
             var time = ParseTime(all[0], all[1]);
             if (!time.IsGood)
             {
-                Message = $"Введена дата неверного формата. Пример использования команды: {Usage}";
-                return false;
+                return (false, $"Ошибка. Введена дата неверного формата. Пример корректной даты: {Usage}");
             }
 
             if (time.Result < DateTime.Now)
             {
-                Message = "Дата меньше текущей.";
-                return false;
+                return (false, "Ошибка. Дата меньше текущей.");
             }
 
-            return true;
+            return (true, "");
         }
 
         private (bool IsGood, DateTime Result) ParseTime(string date, string time)

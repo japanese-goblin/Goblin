@@ -5,7 +5,6 @@ using Vk.Models.Messages;
 namespace Goblin.Bot.Commands
 {
     public class KeyboardCommand : ICommand
-
     {
         public string Name { get; } = "Клавиатура";
         public string Decription { get; } = "показывает клавиатуру";
@@ -14,18 +13,18 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
-        public string Message { get; set; }
-        public Keyboard Keyboard { get; set; }
-
-        public async Task Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg)
         {
-            Message = "Вот тебе клавиатура";
-            Keyboard = GenerateKeyboard();
+            return new CommandResponse
+            {
+                Text = "Вот тебе клавиатура",
+                Keyboard = GenerateKeyboard()
+            };
         }
 
-        public bool CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg)
         {
-            return true;
+            return (true, "");
         }
 
         private Keyboard GenerateKeyboard()

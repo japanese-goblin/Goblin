@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Narfu;
-using Vk.Models.Keyboard;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
@@ -15,30 +14,38 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
-        public string Message { get; set; }
-        public Keyboard Keyboard { get; set; }
-
-        public async Task Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg)
         {
-            Message = await TeachersSchedule.GetScheduleToSend(int.Parse(msg.GetParams()));
+            var canExecute = CanExecute(msg);
+            if (!canExecute.Success)
+            {
+                return new CommandResponse
+                {
+                    Text = canExecute.Text
+                };
+            }
+
+            return new CommandResponse
+            {
+                Text = await TeachersSchedule.GetScheduleToSend(int.Parse(msg.GetParams()))
+            };
         }
 
-        public bool CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg)
         {
             if (int.TryParse(msg.GetParams(), out var res))
             {
-                var find = TeachersSchedule.FindById(res);
-                if (!find)
+                var isFound = TeachersSchedule.FindById(res);
+                if (!isFound)
                 {
-                    Message = "Преподаватель с данным ID отсутствует";
+                    return (false, "Ошибка. Преподаватель с таким номером нет в базе");
                 }
 
-                return find;
+                return (true, "");
             }
 
-            Message = "Введите номер преподавателя!\n" +
-                      "Получить его можно через команду 'Найти'\n";
-            return false;
+            return (false, "Введите номер преподавателя!\n" +
+                           "Получить его можно через команду 'Найти'\n");
         }
     }
 }

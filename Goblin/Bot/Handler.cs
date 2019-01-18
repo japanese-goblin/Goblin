@@ -7,6 +7,7 @@ using Goblin.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Vk;
 using Vk.Models;
+using Vk.Models.Messages;
 using User = Goblin.Models.User;
 
 namespace Goblin.Bot
@@ -35,7 +36,7 @@ namespace Goblin.Bot
 
         private static async Task<string> MessageNew(Response obj)
         {
-            var message = Vk.Models.Messages.Message.FromJson(obj.Object.ToString());
+            var message = Message.FromJson(obj.Object.ToString());
             if (message.FromId != message.PeerId)
             {
                 //TODO: add conv to db
@@ -50,12 +51,12 @@ namespace Goblin.Bot
 
             if (!DbHelper.GetUsers().Any(x => x.Vk == message.FromId))
             {
-                await DbHelper.Db.Users.AddAsync(new User {Vk = message.FromId });
+                await DbHelper.Db.Users.AddAsync(new User {Vk = message.FromId});
                 await DbHelper.Db.SaveChangesAsync();
             }
 
-            var (msg, keyboard) = await CommandsList.ExecuteCommand(message);
-            await VkApi.Messages.Send(message.PeerId, msg, kb: keyboard);
+            var response = await CommandsList.ExecuteCommand(message);
+            await VkApi.Messages.Send(message.PeerId, response.Text, response.Attachments, response.Keyboard);
             return "ok";
         }
 

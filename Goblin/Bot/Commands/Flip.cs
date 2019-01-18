@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Vk.Models.Keyboard;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
@@ -14,20 +13,20 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
-        public string Message { get; set; }
-        public Keyboard Keyboard { get; set; }
-
-        public async Task Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg)
         {
-            var forRandom = new[] {"Орёл", "Решка"};
+            var choices = new[] {"Орёл", "Решка"};
 
-            var a = GetRandom(0, 100);
-            Message = forRandom[a % 2 == 0 ? 0 : 1];
+            var a = GetRandom(0, 1);
+            return new CommandResponse
+            {
+                Text = choices[a]
+            };
         }
 
-        public bool CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg)
         {
-            return true;
+            return (true, "");
         }
 
         public static int GetRandom(int start, int end)

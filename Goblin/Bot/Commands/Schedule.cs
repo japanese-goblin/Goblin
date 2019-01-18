@@ -1,11 +1,10 @@
-﻿using Goblin.Helpers;
-using Microsoft.EntityFrameworkCore;
-using Narfu;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Vk.Models.Keyboard;
+using Goblin.Helpers;
+using Microsoft.EntityFrameworkCore;
+using Narfu;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
@@ -18,19 +17,25 @@ namespace Goblin.Bot.Commands
             "Возвращает расписание на указанную дату. Если дата не указана, расписание берется на текущую дату";
 
         public string Usage { get; } = "Расписание 21.12";
-        public string[] Allias { get; } = { "расписание" };
+        public string[] Allias { get; } = {"расписание"};
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
-        public string Message { get; set; }
-        public Keyboard Keyboard { get; set; }
-
-        public async Task Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg)
         {
+            var canExecute = CanExecute(msg);
+            if (!canExecute.Success)
+            {
+                return new CommandResponse
+                {
+                    Text = canExecute.Text
+                };
+            }
+
             var param = msg.GetParams();
             var user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == msg.FromId);
             DateTime time;
-            if (param == "")
+            if (string.IsNullOrEmpty(param))
             {
                 time = DateTime.Now;
             }
@@ -40,47 +45,47 @@ namespace Goblin.Bot.Commands
             }
             else
             {
-                var dayAndMonth = param.Split('.').Select(int.Parse).ToList(); // [Day, Month]
+                var dayAndMonth = param.Split('.').Select(int.Parse).ToArray(); // [Day, Month]
                 time = new DateTime(DateTime.Now.Year, dayAndMonth[1], dayAndMonth[0]);
             }
 
-            Message = await StudentsSchedule.GetScheduleAtDate(time, user.Group);
+            return new CommandResponse
+            {
+                Text = await StudentsSchedule.GetScheduleAtDate(time, user.Group)
+            };
         }
 
-        public bool CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg)
         {
             var param = msg.GetParams();
             var user = DbHelper.Db.Users.First(x => x.Vk == msg.FromId);
             if (user.Group == 0)
             {
-                Message =
-                    "Чтобы воспользоваться расписание установи группу командой 'устгр *номер группы*' (без кавычек и звездочек)";
-                return false;
+                return (false,
+                    "Ошибка. Для просмотра расписания необходимо установить группу командой 'устгр *номер группы*' (без кавычек и звездочек - устгр 353535, например)");
             }
 
             if (param == "" || param.ToLower() == "завтра")
             {
-                return true;
+                return (true, "");
             }
 
             var date = param.Split('.');
             if (date.Length != 2)
             {
-                Message = $"Ошибочка. Пример использования команды: {Usage}";
-                return false;
+                return (false, $"Ошибка. Указана неправильная дата. Пример использования команды: {Usage}");
             }
 
             var isGoodDate = DateTime.TryParseExact($"{date[0]}.{date[1]}",
-                new[] { "d.M", "d.MM", "dd.M", "dd.MM" },
+                new[] {"d.M", "d.MM", "dd.M", "dd.MM"},
                 null, DateTimeStyles.None, out _);
 
             if (!isGoodDate)
             {
-                Message = $"Ошибочка. Пример использования команды: {Usage}";
-                return false;
+                return (false, $"Ошибка. Указана неправильная дата Пример использования команды: {Usage}");
             }
 
-            return true;
+            return (true, "");
         }
     }
 }

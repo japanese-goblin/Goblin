@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Goblin.Helpers;
-using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
-using Vk.Models.Keyboard;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
@@ -16,42 +14,53 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
-        public string Message { get; set; }
-        public Keyboard Keyboard { get; set; }
-
-        public async Task Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg)
         {
-            User user;
-            switch (msg.GetParams()) //TODO
+            var canExecute = CanExecute(msg);
+            if (!canExecute.Success)
             {
-                case "погода":
-                    user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == msg.FromId);
-                    user.Weather = true;
-                    Message = "Ты успешно подписался на рассылку погоды!";
-                    break;
-                case "расписание":
-                    user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == msg.FromId);
-                    user.Schedule = true;
-                    Message = "Ты успешно подписался на рассылку расписания!";
-                    break;
-                default:
-                    Message = "Нет такого выбора";
-                    break;
+                return new CommandResponse
+                {
+                    Text = canExecute.Text
+                };
+            }
+
+            var param = msg.GetParamsAsArray()[0].ToLower();
+            var text = "";
+            if (param == "погода")
+            {
+                var user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == msg.FromId);
+                user.Weather = true;
+                text = "Ты успешно подписался на рассылку погоды!";
+            }
+            else if (param == "расписание")
+            {
+                var user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == msg.FromId);
+                user.Schedule = true;
+                text = "Ты успешно подписался на рассылку расписания!";
+            }
+            else
+            {
+                text = $"Ошибка. Можно подписаться на рассылку погоды или расписания (выбрано - {param})";
             }
 
             if (DbHelper.Db.ChangeTracker.HasChanges())
                 await DbHelper.Db.SaveChangesAsync();
+
+            return new CommandResponse
+            {
+                Text = text
+            };
         }
 
-        public bool CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg)
         {
             if (string.IsNullOrEmpty(msg.GetParams()))
             {
-                Message = "А на что подписаться? Укажи 'погода' либо 'расписание'";
-                return false;
+                return (false, "А на что подписаться? Укажи 'погода' либо 'расписание'");
             }
 
-            return true;
+            return (true, "");
         }
     }
 }
