@@ -6,9 +6,9 @@ namespace Goblin.Bot.Commands
     public class KeyboardCommand : ICommand
 
     {
-        public string Name { get; } = "клавиатура";
+        public string Name { get; } = "Клавиатура";
         public string Decription { get; } = "показывает клавиатуру";
-        public string Usage { get; } = "клавиатура";
+        public string Usage { get; } = "Клавиатура";
         public string[] Allias { get; } = {"клавиатура", "клава", "кб"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;

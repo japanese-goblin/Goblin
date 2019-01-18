@@ -39,7 +39,7 @@ namespace Goblin.Bot.Commands
             else
             {
                 var dayAndMonth = param.Split('.').Select(int.Parse).ToList(); // [Day, Month]
-                time = new DateTime(2018, dayAndMonth[1], dayAndMonth[0]);
+                time = new DateTime(DateTime.Now.Year, dayAndMonth[1], dayAndMonth[0]);
             }
 
             Message = await StudentsSchedule.GetScheduleAtDate(time, user.Group);

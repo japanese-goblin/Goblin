@@ -23,7 +23,7 @@ namespace Goblin.Bot.Commands
             var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == id);
             if (string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
             {
-                Message = await WeatherInfo.GetWeather(user?.City);
+                Message = await WeatherInfo.GetWeather(user.City);
                 return;
             }
 

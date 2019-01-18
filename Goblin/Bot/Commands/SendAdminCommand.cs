@@ -7,10 +7,10 @@ namespace Goblin.Bot.Commands
 {
     public class SendAdminCommand : ICommand
     {
-        public string Name { get; } = "адм *сообщение*";
+        public string Name { get; } = "Админ *сообщение*";
         public string Decription { get; } = "Отправляет сообщение администраторам бота.";
-        public string Usage { get; } = "адм хелп";
-        public string[] Allias { get; } = { "адм" };
+        public string Usage { get; } = "Админ хелп";
+        public string[] Allias { get; } = { "админ" };
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
@@ -22,6 +22,7 @@ namespace Goblin.Bot.Commands
             var username = await VkApi.Users.GetUserName(id);
             var msg = $"сообщение от @id{id} ({username}):\n\n{param}";
             await VkApi.Messages.Send(DbHelper.GetAdmins(), msg);
+
             Message = "Сообщение успешно отправлено!";
         }
 

@@ -10,7 +10,7 @@ namespace Goblin.Bot.Commands
     public class SetCityCommand : ICommand
     {
         public string Name => "Город *название города*";
-        public string Decription => "Установка города для получения рассылки погоди";
+        public string Decription => "Установка города для получения рассылки погоды";
         public string Usage => "Город Москва";
         public string[] Allias { get; } = {"город"};
         public Category Category => Category.Common;
@@ -41,7 +41,6 @@ namespace Goblin.Bot.Commands
                 Message = "Введите название города";
                 return false;
             }
-
 
             return true;
         }

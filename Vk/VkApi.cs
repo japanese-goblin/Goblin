@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
+
 namespace Vk
 {
     public static class VkApi
@@ -17,7 +16,7 @@ namespace Vk
 
         internal static async Task<string> SendRequest(string method, Dictionary<string, string> @params)
         {
-            if(string.IsNullOrEmpty(AccessToken)) throw new Exception("Токен отсутствует");
+            if (string.IsNullOrEmpty(AccessToken)) throw new Exception("Токен отсутствует");
 
             var reqParams = new Dictionary<string, string>();
             foreach (var (param, value) in @params)

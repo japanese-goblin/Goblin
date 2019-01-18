@@ -7,7 +7,7 @@ namespace OpenWeatherMap
 {
     public static class WeatherInfo
     {
-        private const string EndPoint = "http://api.openweathermap.org/data/2.5";
+        private const string EndPoint = "https://api.openweathermap.org/data/2.5";
         private const string Token = "***REMOVED***";
         private static readonly HttpClient Client = new HttpClient();
 

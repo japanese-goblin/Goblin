@@ -19,7 +19,7 @@ namespace Narfu
             Teachers = JsonConvert.DeserializeObject<Teacher[]>(File.ReadAllText("Data/Teachers.json"));
         }
 
-        public static async Task<(bool IsError, List<Lesson> Lessons)> GetScheule(int id)
+        public static async Task<(bool IsError, Lesson[] Lessons)> GetScheule(int id)
         {
             HtmlDocument doc;
             var lessons = new List<Lesson>();
@@ -27,20 +27,19 @@ namespace Narfu
             {
                 var web = new HtmlWeb
                 {
-                    UserAgent =
-                        "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
+                    UserAgent = Utils.UserAgent
                 };
                 doc = await web.LoadFromWebAsync($"https://ruz.narfu.ru/?timetable&lecturer={id}");
             }
             catch
             {
-                return (true, lessons);
+                return (true, lessons.ToArray());
             }
 
             var v = doc.DocumentNode.SelectNodes("//div[contains(@class, 'timetable_sheet')]");
             if (v is null)
             {
-                return (true, lessons); //TODO некорректный ид (выкинуло на главную страницу)
+                return (true, lessons.ToArray()); //TODO некорректный ид (выкинуло на главную страницу)
             }
 
             foreach (var les in v)
@@ -80,7 +79,7 @@ namespace Narfu
                 });
             }
 
-            return (false, lessons.Distinct().ToList());
+            return (false, lessons.Distinct().ToArray());
         }
 
         public static async Task<string> GetScheduleToSend(int id)
@@ -103,7 +102,7 @@ namespace Narfu
                        $"Вы можете проверить расписание здесь: https://ruz.narfu.ru/?timetable&lecturer={id}";
             }
 
-            if (lessons.Count == 0)
+            if (lessons.Length == 0)
             {
                 return "На данные момент у этого преподавателя нет пар";
             }
@@ -112,7 +111,7 @@ namespace Narfu
             foreach (var group in lessons.Where(x => x.Time.Date >= DateTime.Now.Date)
                                   .GroupBy(x => x.Time.DayOfYear).Take(10))
             {
-                result += $"{group.FirstOrDefault().Time:dd.MM (dddd)}:\n";
+                result += $"{group.First().Time:dd.MM (dddd)}:\n";
                 foreach (var lesson in group)
                 {
                     result += $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}]\n" +
