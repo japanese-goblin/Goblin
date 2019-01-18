@@ -4,7 +4,7 @@ using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
-    public class TeacherScheduleCommand : ICommand
+    public class TeacherSchedule : ICommand
     {
         public string Name { get; } = "Препод *номер*";
         public string Decription { get; } = "Поиск препода по его номеру ИЛИ получение расписания у препода";

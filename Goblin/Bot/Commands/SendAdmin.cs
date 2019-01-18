@@ -5,7 +5,7 @@ using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
-    public class SendAdminCommand : ICommand
+    public class SendAdmin : ICommand
     {
         public string Name { get; } = "Админ *сообщение*";
         public string Decription { get; } = "Отправляет сообщение администраторам бота.";

@@ -7,7 +7,7 @@ using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
-    public class AddRemindCommand : ICommand
+    public class AddRemind : ICommand
     {
         public string Name { get; } = "Напомни *день*.*месяц*.*год* *час*:*минута* *текст*";
 
@@ -19,7 +19,7 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
         public string Message { get; set; }
-        public Keyboard Keyboard { get; set; }
+        public Vk.Models.Keyboard.Keyboard Keyboard { get; set; }
 
         public async Task Execute(string param, long id = 0)
         {

@@ -6,7 +6,7 @@ using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
-    public class SetGroupCommand : ICommand
+    public class SetGroup : ICommand
     {
         public string Name => "Устгр *номер группы*";
         public string Decription => "Установить группу для получения расписания";

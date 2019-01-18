@@ -9,7 +9,7 @@ using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
-    public class ScheduleCommand : ICommand
+    public class Schedule : ICommand
     {
         public string Name { get; } = "Раписание *день*.*месяц*";
 

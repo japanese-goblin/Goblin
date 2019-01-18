@@ -4,7 +4,7 @@ using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
-    public class FindTeacherCommand : ICommand
+    public class FindTeacher : ICommand
     {
         public string Name { get; } = "Найти *часть ФИО*";
         public string Decription { get; } = "Найти преподавателя по части его ФИО";
@@ -14,7 +14,7 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         public string Message { get; set; }
-        public Keyboard Keyboard { get; set; }
+        public Vk.Models.Keyboard.Keyboard Keyboard { get; set; }
 
         public async Task Execute(string param, long id = 0)
         {

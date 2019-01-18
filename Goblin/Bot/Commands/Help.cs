@@ -5,7 +5,7 @@ using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
-    public class HelpCommand : ICommand
+    public class Help : ICommand
     {
         public string Name { get; } = "Команды";
         public string Decription { get; } = "Описание команд";
@@ -15,9 +15,9 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         public string Message { get; set; }
-        public Keyboard Keyboard { get; set; }
+        public Vk.Models.Keyboard.Keyboard Keyboard { get; set; }
 
-        public HelpCommand(List<ICommand> cmds)
+        public Help(List<ICommand> cmds)
         {
             cmds = cmds.Where(x => !x.IsAdmin).OrderBy(x => x.Name).ToList();
             //TODO: edit it (GroupBy?)

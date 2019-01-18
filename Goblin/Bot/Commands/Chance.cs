@@ -4,7 +4,7 @@ using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
-    public class ChanceCommand : ICommand
+    public class Chance : ICommand
     {
         public string Name { get; } = "Вероятность *событие*";
         public string Decription { get; } = "Возвращает случайную вероятность события";
@@ -14,7 +14,7 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         public string Message { get; set; }
-        public Keyboard Keyboard { get; set; }
+        public Vk.Models.Keyboard.Keyboard Keyboard { get; set; }
 
         public async Task Execute(string param, long id = 0)
         {
@@ -34,7 +34,7 @@ namespace Goblin.Bot.Commands
 
         public static int GetRandom(int start, int end)
         {
-            return new Random(DateTime.Now.Millisecond * 7).Next(start, end);
+            return new System.Random(DateTime.Now.Millisecond * 7).Next(start, end);
         }
     }
 }

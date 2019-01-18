@@ -7,7 +7,7 @@ using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
-    public class SetCityCommand : ICommand
+    public class SetCity : ICommand
     {
         public string Name => "Город *название города*";
         public string Decription => "Установка города для получения рассылки погоды";

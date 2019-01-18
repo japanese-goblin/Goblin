@@ -4,7 +4,7 @@ using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
-    public class MergeCommand : ICommand
+    public class Merge : ICommand
     {
         public string Name { get; } = "Соедини *слово1* *слово2*";
         public string Decription { get; } = "Соединяет два слова (зачем???)";

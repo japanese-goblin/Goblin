@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Bot.Commands;
 using Goblin.Helpers;
-using Vk.Models.Keyboard;
 
 namespace Goblin.Bot
 {
@@ -16,36 +15,36 @@ namespace Goblin.Bot
         {
             Commands = new List<ICommand>
             {
-                new FlipCommand(),
-                new ChanceCommand(),
-                new DebugCommand(),
-                new SetGroupCommand(),
-                new SetCityCommand(),
-                new WeatherCommand(),
-                new GetRemindsCommand(),
-                new AddRemindCommand(),
-                new ScheduleCommand(),
-                new SetMailingCommand(),
-                new UnsetMailingCommand(),
-                new ExamsCommand(),
-                new SendAdminCommand(),
-                new MergeCommand(),
+                new Flip(),
+                new Chance(),
+                new Debug(),
+                new SetGroup(),
+                new SetCity(),
+                new Weather(),
+                new GetReminds(),
+                new AddRemind(),
+                new Schedule(),
+                new SetMailing(),
+                new UnsetMailing(),
+                new Exams(),
+                new SendAdmin(),
+                new Merge(),
                 new KeyboardCommand(),
-                new RandomCommand(),
-                new FindTeacherCommand(),
-                new TeacherScheduleCommand()
+                new Random(),
+                new FindTeacher(),
+                new TeacherSchedule()
             };
 
-            Commands.Add(new HelpCommand(Commands));
+            Commands.Add(new Help(Commands));
         }
 
-        public static async Task<(string Message, Keyboard Keyboard)> ExecuteCommand(string message, long userId)
+        public static async Task<(string Message, Vk.Models.Keyboard.Keyboard Keyboard)> ExecuteCommand(string message, long userId)
         {
             var split = message.Split(' ', 2);
             var comm = split[0].ToLower();
             var param = split.Length > 1 ? split[1] : "";
             var result = ErrorMessage;
-            Keyboard kb = null;
+            Vk.Models.Keyboard.Keyboard kb = null;
             foreach (var command in Commands)
             {
                 if (!command.Allias.Contains(comm)) continue;

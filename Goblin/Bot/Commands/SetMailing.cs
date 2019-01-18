@@ -6,12 +6,12 @@ using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
-    public class UnsetMailingCommand : ICommand
+    public class SetMailing : ICommand
     {
-        public string Name { get; } = "Отписка *расписание/погода*";
-        public string Decription { get; } = "Отписка от рассылки расписания/погоды (ЧТО-ТО ОДНО ЗА РАЗ)";
-        public string Usage { get; } = "Отписка погода";
-        public string[] Allias { get; } = {"отписка"};
+        public string Name { get; } = "Подписка *расписание/погода*";
+        public string Decription { get; } = "Подписка на рассылку расписания/погоды (ЧТО-ТО ОДНО ЗА РАЗ)";
+        public string Usage { get; } = "Подписка расписание";
+        public string[] Allias { get; } = {"подписка"};
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
@@ -25,16 +25,14 @@ namespace Goblin.Bot.Commands
             {
                 case "погода":
                     user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == id);
-                    user.Weather = false;
-                    Message = "Ты отписался от рассылки погоды :с";
+                    user.Weather = true;
+                    Message = "Ты успешно подписался на рассылку погоды!";
                     break;
-
                 case "расписание":
                     user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == id);
-                    user.Schedule = false;
-                    Message = "Ты отписался от рассылки расписания :с";
+                    user.Schedule = true;
+                    Message = "Ты успешно подписался на рассылку расписания!";
                     break;
-
                 default:
                     Message = "Нет такого выбора";
                     break;

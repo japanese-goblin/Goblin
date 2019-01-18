@@ -4,7 +4,7 @@ using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
-    public class RandomCommand : ICommand
+    public class Random : ICommand
     {
         public string Name { get; } = "Рандом *smth*, *smth*, *smth*....";
         public string Decription { get; } = "Выбирает один из нескольких вариантов.";
@@ -45,7 +45,7 @@ namespace Goblin.Bot.Commands
         private int GetRandom(int start, int end)
         {
             //todo: шо за магическое число
-            return new Random(DateTime.Now.Millisecond * 3819).Next(start, end);
+            return new System.Random(DateTime.Now.Millisecond * 3819).Next(start, end);
         }
 
         private string[] Split(string str)

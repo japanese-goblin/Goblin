@@ -6,7 +6,7 @@ using Vk.Models.Keyboard;
 
 namespace Goblin.Bot.Commands
 {
-    public class WeatherCommand : ICommand
+    public class Weather : ICommand
     {
         public string Name { get; } = "Погода *название города*";
         public string Decription { get; } = "Возвращает погоду на текущее время";
