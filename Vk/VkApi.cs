@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using Newtonsoft.Json;
-using Vk.Models;
-
 namespace Vk
 {
     public static class VkApi
@@ -21,7 +19,7 @@ namespace Vk
         {
             if(string.IsNullOrEmpty(AccessToken)) throw new Exception("Токен отсутствует");
 
-            var reqParams = HttpUtility.ParseQueryString(string.Empty);
+            var reqParams = new Dictionary<string, string>();
             foreach (var (param, value) in @params)
             {
                 reqParams.Add(param, value);
@@ -31,7 +29,9 @@ namespace Vk
             reqParams.Add("access_token", AccessToken);
 
             //TODO add sleep?
-            var responseStr = await Client.GetStringAsync($"{EndPoint}/{method}?{reqParams}");
+            var response = await Client.PostAsync($"{EndPoint}/{method}",
+                new FormUrlEncodedContent(reqParams));
+            var responseStr = await response.Content.ReadAsStringAsync();
 
             if (responseStr.Contains("error"))
             {
