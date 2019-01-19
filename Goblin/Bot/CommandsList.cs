@@ -32,7 +32,8 @@ namespace Goblin.Bot
                 new KeyboardCommand(),
                 new Random(),
                 new FindTeacher(),
-                new TeacherSchedule()
+                new TeacherSchedule(),
+                new Qoute()
             };
 
             Commands.Add(new Help(Commands));

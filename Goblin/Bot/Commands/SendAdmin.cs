@@ -16,7 +16,7 @@ namespace Goblin.Bot.Commands
 
         public async Task<CommandResponse> Execute(Message msg)
         {
-            var username = await VkApi.Users.GetUserName(msg.FromId);
+            var username = await VkApi.Users.Get(msg.FromId);
             var text = $"сообщение от @id{msg.FromId} ({username}):\n\n{msg.GetParams()}";
             await VkApi.Messages.Send(DbHelper.GetAdmins(), text);
 

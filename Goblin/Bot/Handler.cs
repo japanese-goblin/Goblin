@@ -65,7 +65,7 @@ namespace Goblin.Bot
             var deny = Vk.Models.Responses.MessageDeny.FromJson(obj.Object.ToString());
             var userID = deny.UserId;
 
-            var userName = await VkApi.Users.GetUserName(userID);
+            var userName = await VkApi.Users.Get(userID);
             await VkApi.Messages.Send(DbHelper.GetAdmins(), $"@id{userID} ({userName}) запретил сообщения");
 
             return "ok";
@@ -75,7 +75,7 @@ namespace Goblin.Bot
         {
             var join = Vk.Models.Responses.GroupJoin.FromJson(obj.Object.ToString());
             var userID = join.UserId;
-            var userName = await VkApi.Users.GetUserName(userID);
+            var userName = await VkApi.Users.Get(userID);
 
             await VkApi.Messages.Send(DbHelper.GetAdmins(), $"@id{userID} ({userName}) подписался");
             return "ok";
@@ -91,7 +91,7 @@ namespace Goblin.Bot
                 await DbHelper.Db.SaveChangesAsync();
             }
 
-            var userName = await VkApi.Users.GetUserName(userID);
+            var userName = await VkApi.Users.Get(userID);
             await VkApi.Messages.Send(DbHelper.GetAdmins(), $"@id{userID} ({userName}) отписался");
             return "ok";
         }

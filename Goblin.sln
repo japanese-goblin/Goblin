@@ -7,11 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin", "Goblin\Goblin.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{08FB69E7-5D3E-408B-8219-8495B81796C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Narfu", "Narfu\Narfu.csproj", "{BFB396DB-8CFC-46C1-9148-1305B4A72066}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Narfu", "Narfu\Narfu.csproj", "{BFB396DB-8CFC-46C1-9148-1305B4A72066}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vk", "Vk\Vk.csproj", "{2DC7F223-BDAF-4A3B-ADE2-0F378A918B3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vk", "Vk\Vk.csproj", "{2DC7F223-BDAF-4A3B-ADE2-0F378A918B3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenWeatherMap", "OpenWeatherMap\OpenWeatherMap.csproj", "{0CD1DD99-3862-49A8-B716-08B685AA2A93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenWeatherMap", "OpenWeatherMap\OpenWeatherMap.csproj", "{0CD1DD99-3862-49A8-B716-08B685AA2A93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuotesGenerator", "QuotesGenerator\QuotesGenerator.csproj", "{33D7EA2C-6A9C-475C-8F03-CE819A848A40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{0CD1DD99-3862-49A8-B716-08B685AA2A93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CD1DD99-3862-49A8-B716-08B685AA2A93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CD1DD99-3862-49A8-B716-08B685AA2A93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33D7EA2C-6A9C-475C-8F03-CE819A848A40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33D7EA2C-6A9C-475C-8F03-CE819A848A40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33D7EA2C-6A9C-475C-8F03-CE819A848A40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33D7EA2C-6A9C-475C-8F03-CE819A848A40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,15 +9,15 @@ namespace Tests.Vk
         [Fact]
         public async Task GetUsername_Valid_String()
         {
-            var result = await VkApi.Users.GetUserName(1);
-            Assert.False(string.IsNullOrEmpty(result));
+            var result = await VkApi.Users.Get(1);
+            Assert.False(string.IsNullOrEmpty(result.ToString()));
         }
 
         [Fact]
         public async Task GetUsername_NotValid_EmptyString()
         {
-            var result = await VkApi.Users.GetUserName(0);
-            Assert.True(string.IsNullOrEmpty(result));
+            var result = await VkApi.Users.Get(0);
+            Assert.True(string.IsNullOrEmpty(result.ToString()));
         }
 
         [Fact]

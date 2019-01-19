@@ -6,10 +6,19 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Vk.Models;
 
-namespace Vk
+namespace Vk.Categories
 {
     public class Photos
     {
+        public async Task<string> FastUploadPhoto(long peerId, byte[] image)
+        {
+            var server = await VkApi.Photos.GetMessagesUploadServer(peerId);
+            var upload = await VkApi.Photos.UploadImage(server.UploadUrl, image);
+            var save = await VkApi.Photos.SaveMessagesPhoto(upload);
+
+            return $"photo{save.OwnerId}_{save.Id}_{save.AccessKey}";
+        }
+
         public async Task<UploadServerInfo> GetMessagesUploadServer(long peerId)
         {
             var values = new Dictionary<string, string>()

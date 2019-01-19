@@ -8,16 +8,17 @@ namespace Vk.Categories
 {
     public class Users
     {
-        public async Task<string> GetUserName(long id)
+        public async Task<User> Get(long id)
         {
-            return (await GetUserName(new[] { id })).FirstOrDefault(); //TODO ?
+            return (await Get(new[] { id })).FirstOrDefault(); //TODO ?
         }
 
-        public async Task<string[]> GetUserName(long[] ids)
+        public async Task<User[]> Get(long[] ids)
         {
             var values = new Dictionary<string, string>
             {
-                ["user_ids"] = string.Join(',', ids)
+                ["user_ids"] = string.Join(',', ids),
+                ["fields"] = "photo_200_orig"
             };
 
             var response = await VkApi.SendRequest("users.get", values);
@@ -25,10 +26,10 @@ namespace Vk.Categories
 
             if (usersInfo.Length == 0)
             {
-                return new string[] { }; // TODO ?
+                return new User[] { }; // TODO ?
             }
 
-            return usersInfo.Select(x => x.ToString()).ToArray();
+            return usersInfo.ToArray();
         }
     }
 }
