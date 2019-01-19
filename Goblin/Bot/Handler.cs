@@ -14,10 +14,10 @@ namespace Goblin.Bot
 {
     public static class Handler
     {
-        public static async Task<string> Handle(Response response)
+        public static async Task<string> Handle(CallbackResponse callbackResponse)
         {
-            var type = response.Type;
-            var dict = new Dictionary<string, Func<Response, Task<string>>>
+            var type = callbackResponse.Type;
+            var dict = new Dictionary<string, Func<CallbackResponse, Task<string>>>
             {
                 ["confirmation"] = Confirmation,
                 ["message_new"] = MessageNew,
@@ -26,22 +26,22 @@ namespace Goblin.Bot
                 ["group_leave"] = GroupLeave
             };
 
-            return await dict[type](response);
+            return await dict[type](callbackResponse);
         }
 
-        private static async Task<string> Confirmation(Response r)
+        private static async Task<string> Confirmation(CallbackResponse r)
         {
             return Settings.ConfirmationToken;
         }
 
-        private static async Task<string> MessageNew(Response obj)
+        private static async Task<string> MessageNew(CallbackResponse obj)
         {
             var message = Message.FromJson(obj.Object.ToString());
             if (message.FromId != message.PeerId)
             {
                 //TODO: add conv to db
                 var match = Regex.Match(message.Text, @"\[club146048760\|.*\] (.*)").Groups[1].Value;
-                if (string.IsNullOrEmpty(match))
+                if (!string.IsNullOrEmpty(match))
                 {
                     message.Text = match;
                 }
@@ -60,7 +60,7 @@ namespace Goblin.Bot
             return "ok";
         }
 
-        private static async Task<string> MessageDeny(Response obj)
+        private static async Task<string> MessageDeny(CallbackResponse obj)
         {
             var deny = Vk.Models.Responses.MessageDeny.FromJson(obj.Object.ToString());
             var userID = deny.UserId;
@@ -71,7 +71,7 @@ namespace Goblin.Bot
             return "ok";
         }
 
-        private static async Task<string> GroupJoin(Response obj)
+        private static async Task<string> GroupJoin(CallbackResponse obj)
         {
             var join = Vk.Models.Responses.GroupJoin.FromJson(obj.Object.ToString());
             var userID = join.UserId;
@@ -81,7 +81,7 @@ namespace Goblin.Bot
             return "ok";
         }
 
-        private static async Task<string> GroupLeave(Response obj)
+        private static async Task<string> GroupLeave(CallbackResponse obj)
         {
             var leave = Vk.Models.Responses.GroupLeave.FromJson(obj.Object.ToString());
             var userID = leave.UserId;

@@ -2,7 +2,7 @@
 
 namespace Vk.Models
 {
-    public class Response
+    public class CallbackResponse
     {
         [JsonProperty("type")]
         public string Type { get; set; }

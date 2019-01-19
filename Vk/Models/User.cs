@@ -2,12 +2,6 @@
 
 namespace Vk.Models
 {
-    public class UsersGetReponse
-    {
-        [JsonProperty("response")]
-        public User[] Response { get; set; }
-    }
-
     public class User
     {
         [JsonProperty("id")]

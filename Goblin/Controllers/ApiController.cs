@@ -6,7 +6,7 @@ namespace Goblin.Controllers
 {
     public class ApiController : Controller
     {
-        public async Task<string> Handler([FromBody] Response resp)
+        public async Task<string> Handler([FromBody] CallbackResponse resp)
         {
             return await Bot.Handler.Handle(resp);
         }

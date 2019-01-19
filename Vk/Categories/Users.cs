@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Vk.Models;
 
-namespace Vk
+namespace Vk.Categories
 {
     public class Users
     {
@@ -21,14 +21,14 @@ namespace Vk
             };
 
             var response = await VkApi.SendRequest("users.get", values);
-            var usersInfo = JsonConvert.DeserializeObject<UsersGetReponse>(response);
+            var usersInfo = JsonConvert.DeserializeObject<User[]>(response);
 
-            if (usersInfo.Response.Length == 0)
+            if (usersInfo.Length == 0)
             {
                 return new string[] { }; // TODO ?
             }
 
-            return usersInfo.Response.Select(x => x.ToString()).ToArray();
+            return usersInfo.Select(x => x.ToString()).ToArray();
         }
     }
 }

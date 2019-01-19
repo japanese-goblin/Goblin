@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Vk.Categories;
 
 namespace Vk
 {
@@ -39,13 +41,15 @@ namespace Vk
                 throw new Exception($"[{method}]: error");
             }
 
-            return responseStr;
+            string items = Convert.ToString(JsonConvert.DeserializeObject<dynamic>(responseStr)["response"]);
+            return items;
         }
 
         #region categories
 
         public static readonly Messages Messages = new Messages();
         public static readonly Users Users = new Users();
+        public static readonly Photos Photos = new Photos();
 
         #endregion
     }

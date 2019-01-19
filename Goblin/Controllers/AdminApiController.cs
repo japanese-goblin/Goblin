@@ -14,9 +14,9 @@ namespace Goblin.Controllers
             await VkApi.Messages.Send(gr, msg, attach);
         }
 
-        public async Task SendToId(long id, string msg, string[] attach)
+        public async Task SendToId(long id, string msg, string[] attachs)
         {
-            await VkApi.Messages.Send(id, msg, attach);
+            await VkApi.Messages.Send(id, msg, attachs);
         }
     }
 }
