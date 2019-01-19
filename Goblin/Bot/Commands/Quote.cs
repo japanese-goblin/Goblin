@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Vk;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
 {
-    public class Qoute : ICommand
+    public class Quote : ICommand
     {
         public string Name { get; } = "Цитата";
         public string Decription { get; } = "Создает картинку из пересланного сообщения";
@@ -28,7 +29,7 @@ namespace Goblin.Bot.Commands
             var user = await VkApi.Users.Get(forwarded.FromId);
 
             var image = await QuotesGenerator.Generator.GenerateQuote(forwarded.Text, forwarded.FromId,
-                user.ToString(), user.Photo200Orig);
+                user.ToString(), UnixToDate(forwarded.Date),user.Photo200Orig);
             var attach = await VkApi.Photos.FastUploadPhoto(msg.FromId, image); //TODO change fromId
 
             return new CommandResponse
@@ -51,6 +52,14 @@ namespace Goblin.Bot.Commands
             }
 
             return (true, "");
+        }
+
+        private DateTime UnixToDate( double unixTimeStamp )
+        {
+            // Unix timestamp is seconds past epoch
+            DateTime dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds( unixTimeStamp ).ToLocalTime();
+            return dtDateTime;
         }
     }
 }

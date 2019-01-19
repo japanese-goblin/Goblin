@@ -1,17 +1,18 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace QuotesGenerator
 {
     public static class Generator
     {
-        public static async Task<byte[]> GenerateQuote(string quote, long id, string name, string imageUrl)
+        public static async Task<byte[]> GenerateQuote(string quote, long id, string name, DateTime date, string imageUrl)
         {
-            var bitmap = new Bitmap(700, 394, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            var dateString = date.ToShortDateString();
+            var bitmap = new Bitmap(700, 394, PixelFormat.Format32bppArgb);
             var graphics = Graphics.FromImage(bitmap);
             graphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(0, 0, bitmap.Width, bitmap.Height));
 
@@ -29,9 +30,16 @@ namespace QuotesGenerator
             var citRect = new RectangleF(220, 100, bitmap.Width - 220, 270);
             graphics.DrawString(quote, new Font("Tahoma", 20), Brushes.White, citRect);
             
-            var nameRect = new RectangleF(500, bitmap.Height - 50, bitmap.Width, 60);
+            var nameRect = new RectangleF(400, bitmap.Height - 50, bitmap.Width - 410, 60);
             graphics.DrawString($"(c) {name}\nid{id}",
-                new Font("Tahoma", 15), Brushes.White, nameRect);
+                new Font("Tahoma", 15), Brushes.White, nameRect, new StringFormat
+                {
+                    Alignment = StringAlignment.Far
+                });
+
+            var dateRect = new RectangleF(10, bitmap.Height - 25, 200, 60);
+            graphics.DrawString(dateString,
+                new Font("Tahoma", 15), Brushes.White, dateRect);
 
             graphics.Flush();
             var bytes = ToByteArray(bitmap);
