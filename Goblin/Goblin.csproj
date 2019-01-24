@@ -6,11 +6,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="NLog.config" />
+    <Content Remove="Zidium.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Zidium.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="2.8.391" />
     <PackageReference Include="FluentScheduler" Version="5.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.4" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.4" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.0" />
+    <PackageReference Include="Zidium.Api.NetCore" Version="1.0.19" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Narfu\Narfu.csproj" />
+    <ProjectReference Include="..\NLogAdapter\NLogAdapter.csproj" />
     <ProjectReference Include="..\OpenWeatherMap\OpenWeatherMap.csproj" />
     <ProjectReference Include="..\QuotesGenerator\QuotesGenerator.csproj" />
     <ProjectReference Include="..\Vk\Vk.csproj" />

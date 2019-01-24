@@ -50,6 +50,8 @@ namespace Goblin
             app.UseStaticFiles();
             app.UseAuthentication();
 
+            app.UseMiddleware<LoggerMiddleware>();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
