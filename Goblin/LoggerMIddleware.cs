@@ -23,8 +23,10 @@ namespace Goblin
             if (!isFile)
             {
                 var logEvent = new LogEventInfo(LogLevel.Info, _logger.Name, $"Page visit: {path}");
-                logEvent.Properties["Path"] = $"[{context.Request.Method}] {context.Request.Path.Value} - {context.Response.StatusCode}";
-                logEvent.Properties["Ip"] = context.Connection.RemoteIpAddress;
+                logEvent.Properties["Path"] = $"[{context.Request.Method}] {context.Request.Path.Value}" +
+                                              $" - {context.Response.StatusCode}";
+                logEvent.Properties["Ip"] = context.Connection.RemoteIpAddress.MapToIPv4();
+
                 _logger.Log(logEvent);
             }
 
