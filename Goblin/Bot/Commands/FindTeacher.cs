@@ -24,9 +24,17 @@ namespace Goblin.Bot.Commands
                 };
             }
 
+            var text = TeachersSchedule.FindByName(msg.GetParamsAsArray()[0]);
+            if(text.Length >= 4095)
+            {
+                text =
+                    "Ошибка. Найдено слишком много преподавателей.\n" +
+                    "Пожалуйста, укажите более точные данные (например, введите фамилию и имя преподавателя).";
+            }
+
             return new CommandResponse
             {
-                Text = TeachersSchedule.FindByName(msg.GetParamsAsArray()[0])
+                Text = text
             };
         }
 

@@ -128,8 +128,8 @@ namespace Narfu
         public static string FindByName(string name)
         {
             name = name.ToLower(); //TODO ?
-            return string.Join("\n", Teachers
-                                    .Where(x => x.Name.ToLower().Contains(name))
+            var teachers = Teachers.Where(x => x.Name.ToLower().Contains(name));
+            return string.Join("\n", teachers
                                     .Select(x => $"{x.Name} ({x.Depart}) - {x.Id}"));
         }
 
