@@ -25,11 +25,11 @@ namespace Goblin
             services.AddDbContext<MainContext>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-                {
-                    options.AccessDeniedPath = new PathString("/Admin/");
-                    options.LoginPath = new PathString("/Admin/Login");
-                });
+                    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+                     {
+                         options.AccessDeniedPath = new PathString("/Admin/");
+                         options.LoginPath = new PathString("/Admin/Login");
+                     });
 
             Settings.AccessToken = Configuration["Config:AccessToken"];
             Settings.ConfirmationToken = Configuration["Config:ConfirmationCode"];
@@ -41,7 +41,7 @@ namespace Goblin
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, MainContext ct)
         {
-            if (env.IsDevelopment())
+            if(env.IsDevelopment())
             {
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
@@ -54,9 +54,8 @@ namespace Goblin
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                routes.MapRoute(name: "default",
+                                template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

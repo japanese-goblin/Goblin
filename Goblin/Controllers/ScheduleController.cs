@@ -14,7 +14,7 @@ namespace Goblin.Controllers
 
         public async Task<IActionResult> Show(int id)
         {
-            if (!ModelState.IsValid || !StudentsSchedule.IsCorrectGroup(id))
+            if(!ModelState.IsValid || !StudentsSchedule.IsCorrectGroup(id))
             {
                 HttpContext.Response.StatusCode = 404;
                 return View("Error");
@@ -24,11 +24,11 @@ namespace Goblin.Controllers
             ViewBag.Title = $"{group.RealId} - {group.Name}";
             var response = await StudentsSchedule.GetSchedule(id);
 
-            if (!response.IsError)
+            if(!response.IsError)
             {
                 var result = response.Lessons.GroupBy(x => StudentsSchedule.GetWeekNumber(x.Time))
-                    .ToDictionary(x => $"{x.First().Time:dd.MM.yyyy} - {x.Last().Time:dd.MM.yyyy}",
-                        x => x.ToArray()); // TODO: fix key
+                                     .ToDictionary(x => $"{x.First().Time:dd.MM.yyyy} - {x.Last().Time:dd.MM.yyyy}",
+                                                   x => x.ToArray()); // TODO: fix key
                 return View(result);
             }
 

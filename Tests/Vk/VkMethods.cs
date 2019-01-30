@@ -23,9 +23,9 @@ namespace Tests.Vk
         [Fact]
         public async Task SendMessage_Correct()
         {
-            await VkApi.Messages.Send(***REMOVED***, "test solo", new[] {"photo-146048760_456239017"});
+            await VkApi.Messages.Send(***REMOVED***, "test solo", new[] { "photo-146048760_456239017" });
             await VkApi.Messages.Send(new long[] { ***REMOVED***, ***REMOVED*** }, "test multi",
-                new[] { "photo-146048760_456239017" });
+                                      new[] { "photo-146048760_456239017" });
         }
     }
 }

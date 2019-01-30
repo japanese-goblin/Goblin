@@ -14,24 +14,24 @@ namespace Vk
 
         public async Task Send(long[] ids, string text, string[] attachs = null, Keyboard kb = null)
         {
-            if (string.IsNullOrEmpty(text) || ids.Length == 0)
+            if(string.IsNullOrEmpty(text) || ids.Length == 0)
             {
                 return;
             }
 
-            var values = new Dictionary<string, string>()
+            var values = new Dictionary<string, string>
             {
                 ["message"] = text,
                 ["random_id"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(), //TODO
                 ["peer_ids"] = string.Join(',', ids)
             };
 
-            if (!(attachs is null)) // если есть аттачи
+            if(!(attachs is null)) // если есть аттачи
             {
                 values.Add("attachment", string.Join(",", attachs));
             }
 
-            if (!(kb is null)) // если есть клавиатура
+            if(!(kb is null)) // если есть клавиатура
             {
                 values.Add("keyboard", kb.ToString());
             }

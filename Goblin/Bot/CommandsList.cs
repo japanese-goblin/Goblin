@@ -45,17 +45,17 @@ namespace Goblin.Bot
             var comm = split[0].ToLower();
             var response = new CommandResponse();
 
-            foreach (var command in Commands)
+            foreach(var command in Commands)
             {
-                if (!command.Allias.Contains(comm)) continue;
+                if(!command.Allias.Contains(comm)) continue;
 
-                if (command.IsAdmin && !DbHelper.GetAdmins().Any(x => x == msg.FromId)) continue;
+                if(command.IsAdmin && !DbHelper.GetAdmins().Any(x => x == msg.FromId)) continue;
 
                 response = await command.Execute(msg);
                 break;
             }
 
-            if (string.IsNullOrEmpty(response.Text))
+            if(string.IsNullOrEmpty(response.Text))
             {
                 response.Text = ErrorMessage;
             }

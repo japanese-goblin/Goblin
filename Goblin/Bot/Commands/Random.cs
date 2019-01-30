@@ -9,14 +9,14 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Рандом *smth*, *smth*, *smth*....";
         public string Decription { get; } = "Выбирает один из нескольких вариантов.";
         public string Usage { get; } = "Рандом 1, 2, 3,4 или 5";
-        public string[] Allias { get; } = {"рандом"};
+        public string[] Allias { get; } = { "рандом" };
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
         public async Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
-            if (!canExecute.Success)
+            if(!canExecute.Success)
             {
                 return new CommandResponse
                 {
@@ -35,13 +35,13 @@ namespace Goblin.Bot.Commands
         public (bool Success, string Text) CanExecute(Message msg)
         {
             var param = msg.GetParams();
-            if (string.IsNullOrEmpty(param))
+            if(string.IsNullOrEmpty(param))
             {
                 return (false, $"Ошибка. Пример использования команды: {Usage}");
             }
 
             var forRandom = Split(param);
-            if (forRandom.Length < 2)
+            if(forRandom.Length < 2)
             {
                 return (false, $"Введи два или более параметра ({Usage})");
             }
@@ -57,7 +57,7 @@ namespace Goblin.Bot.Commands
 
         private string[] Split(string str)
         {
-            return str.Split(new[] {",", ", ", " или "}, StringSplitOptions.None);
+            return str.Split(new[] { ",", ", ", " или " }, StringSplitOptions.None);
         }
     }
 }

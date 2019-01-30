@@ -9,14 +9,14 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Найти *часть ФИО*";
         public string Decription { get; } = "Найти преподавателя по части его ФИО";
         public string Usage { get; } = "Найти деменков";
-        public string[] Allias { get; } = {"найти"};
+        public string[] Allias { get; } = { "найти" };
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
         public async Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
-            if (!canExecute.Success)
+            if(!canExecute.Success)
             {
                 return new CommandResponse
                 {
@@ -33,14 +33,14 @@ namespace Goblin.Bot.Commands
         public (bool Success, string Text) CanExecute(Message msg)
         {
             var param = msg.GetParamsAsArray()[0];
-            if (param.Length < 4)
+            if(param.Length < 4)
             {
                 return (false, "Ошибка. Введите больше 4х символов в ФИО");
             }
 
             var teachers = TeachersSchedule.FindByName(param);
             var found = !string.IsNullOrEmpty(teachers);
-            if (!found)
+            if(!found)
             {
                 var text = "Ошибка!\n" +
                            "Данного преподавателя нет в списке\n" +

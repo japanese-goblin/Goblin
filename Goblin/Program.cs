@@ -1,8 +1,8 @@
-﻿using FluentScheduler;
+﻿using System;
+using System.Globalization;
+using FluentScheduler;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using System;
-using System.Globalization;
 
 namespace Goblin
 {
@@ -30,8 +30,8 @@ namespace Goblin
         public static IWebHost BuildWebHost(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+                          .UseStartup<Startup>()
+                          .Build();
         }
     }
 }

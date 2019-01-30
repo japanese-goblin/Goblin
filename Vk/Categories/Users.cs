@@ -24,7 +24,7 @@ namespace Vk.Categories
             var response = await VkApi.SendRequest("users.get", values);
             var usersInfo = JsonConvert.DeserializeObject<User[]>(response);
 
-            if (usersInfo.Length == 0)
+            if(usersInfo.Length == 0)
             {
                 return new User[] { }; // TODO ?
             }

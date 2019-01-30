@@ -7,6 +7,7 @@ namespace Tests.Schedule
     public class StudentsSchedule
     {
         private const int CorrectGroup = 351617;
+
         [Fact]
         public async Task GetSchedule_Correct()
         {

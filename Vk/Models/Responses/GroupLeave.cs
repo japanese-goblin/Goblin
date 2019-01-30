@@ -7,9 +7,13 @@ namespace Vk.Models.Responses
     {
         [JsonProperty("user_id")]
         public long UserId { get; set; }
+
         [JsonProperty("self")]
         public int Self { get; set; }
 
-        public static GroupLeave FromJson(string str) => JsonConvert.DeserializeObject<GroupLeave>(str);
+        public static GroupLeave FromJson(string str)
+        {
+            return JsonConvert.DeserializeObject<GroupLeave>(str);
+        }
     }
 }

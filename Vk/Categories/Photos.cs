@@ -21,7 +21,7 @@ namespace Vk.Categories
 
         public async Task<UploadServerInfo> GetMessagesUploadServer(long peerId)
         {
-            var values = new Dictionary<string, string>()
+            var values = new Dictionary<string, string>
             {
                 ["peer_id"] = peerId.ToString()
             };
@@ -31,7 +31,7 @@ namespace Vk.Categories
 
         public async Task<UploadImageInfo> UploadImage(string url, byte[] data)
         {
-            using (var client = new HttpClient())
+            using(var client = new HttpClient())
             {
                 var requestContent = new MultipartFormDataContent();
                 var imageContent = new ByteArrayContent(data);
@@ -49,7 +49,7 @@ namespace Vk.Categories
 
         public async Task<Photo> SaveMessagesPhoto(UploadImageInfo info)
         {
-            var values = new Dictionary<string, string>()
+            var values = new Dictionary<string, string>
             {
                 ["photo"] = info.Photo,
                 ["server"] = info.Server.ToString(),
@@ -57,7 +57,7 @@ namespace Vk.Categories
             };
 
             var res = await VkApi.SendRequest("photos.saveMessagesPhoto", values);
-            return JsonConvert.DeserializeObject<Photo>(res.Substring(1, res.Length-2));
+            return JsonConvert.DeserializeObject<Photo>(res.Substring(1, res.Length - 2));
         }
     }
 }

@@ -9,14 +9,14 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Вероятность *событие*";
         public string Decription { get; } = "Возвращает случайную вероятность события";
         public string Usage { get; } = "Вероятность сегодня будет дождь";
-        public string[] Allias { get; } = {"вероятность"};
+        public string[] Allias { get; } = { "вероятность" };
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
         public async Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
-            if (!canExecute.Success)
+            if(!canExecute.Success)
             {
                 return new CommandResponse
                 {
@@ -32,7 +32,7 @@ namespace Goblin.Bot.Commands
 
         public (bool Success, string Text) CanExecute(Message msg)
         {
-            if (string.IsNullOrEmpty(msg.GetParams()))
+            if(string.IsNullOrEmpty(msg.GetParams()))
             {
                 return (false, "Ошибка. Не указано событие, вероятность которого необходимо посчитать");
             }

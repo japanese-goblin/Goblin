@@ -27,30 +27,30 @@ namespace Goblin.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
-                .Property(b => b.Weather)
-                .HasDefaultValue(false)
-                .ValueGeneratedNever();
+                        .Property(b => b.Weather)
+                        .HasDefaultValue(false)
+                        .ValueGeneratedNever();
 
             modelBuilder.Entity<User>()
-                .Property(b => b.Schedule)
-                .HasDefaultValue(false)
-                .ValueGeneratedNever();
+                        .Property(b => b.Schedule)
+                        .HasDefaultValue(false)
+                        .ValueGeneratedNever();
 
             modelBuilder.Entity<User>()
-                .Property(b => b.City)
-                .IsRequired(false);
+                        .Property(b => b.City)
+                        .IsRequired(false);
 
             modelBuilder.Entity<User>()
-                .Property(b => b.Group)
-                .HasDefaultValue(0);
+                        .Property(b => b.Group)
+                        .HasDefaultValue(0);
 
             modelBuilder.Entity<User>()
-                .Property(b => b.Schedule)
-                .HasDefaultValue(false);
+                        .Property(b => b.Schedule)
+                        .HasDefaultValue(false);
 
             modelBuilder.Entity<User>()
-                .Property(b => b.Weather)
-                .HasDefaultValue(false);
+                        .Property(b => b.Weather)
+                        .HasDefaultValue(false);
         }
     }
 }

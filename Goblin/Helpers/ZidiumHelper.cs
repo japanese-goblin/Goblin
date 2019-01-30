@@ -10,23 +10,27 @@ namespace Goblin.Helpers
 
         private static IClient GetClient()
         {
-            if (_client != null) return _client;
-            lock (typeof(ZidiumHelper))
+            if(_client != null) return _client;
+            lock(typeof(ZidiumHelper))
             {
-                if (_client != null) return _client;
+                if(_client != null) return _client;
 
                 var zidiumConfig = ConfigHelper.LoadFromXmlOrGetDefault();
                 _client = new Client(zidiumConfig);
             }
+
             return _client;
         }
 
         public static IComponentControl GetSystemControl()
         {
-            if (_componentControl == null)
+            if(_componentControl == null)
             {
-                _componentControl = GetClient().GetRootComponentControl().GetOrCreateChildComponentControl("System.ComponentTypes.WebSite", "ASP.NET Goblin ");
+                _componentControl = GetClient().GetRootComponentControl()
+                                               .GetOrCreateChildComponentControl("System.ComponentTypes.WebSite",
+                                                                                 "ASP.NET Goblin ");
             }
+
             return _componentControl;
         }
     }

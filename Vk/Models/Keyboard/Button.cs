@@ -5,12 +5,15 @@ namespace Vk.Models.Keyboard
 {
     public class Button
     {
-        [JsonProperty("action")] public Dictionary<string, string> Action = new Dictionary<string, string>
+        [JsonProperty("action")]
+        public Dictionary<string, string> Action = new Dictionary<string, string>
         {
             ["type"] = "text"
         };
 
-        [JsonProperty("color")] public string Color => _color.ToString();
+        [JsonProperty("color")]
+        public string Color => _color.ToString();
+
         private readonly ButtonColor _color;
 
         public Button(string label, ButtonColor color, string cmd, string param)

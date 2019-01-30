@@ -11,14 +11,14 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Погода *название города*";
         public string Decription { get; } = "Возвращает погоду на текущее время";
         public string Usage { get; } = "Погода Москва";
-        public string[] Allias { get; } = {"погода"};
+        public string[] Allias { get; } = { "погода" };
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
         public async Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
-            if (!canExecute.Success)
+            if(!canExecute.Success)
             {
                 return new CommandResponse
                 {
@@ -28,7 +28,7 @@ namespace Goblin.Bot.Commands
 
             var param = msg.GetParams();
             var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
-            if (string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
+            if(string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
             {
                 return new CommandResponse
                 {
@@ -37,7 +37,7 @@ namespace Goblin.Bot.Commands
             }
 
             var text = "";
-            if (await WeatherInfo.CheckCity(param))
+            if(await WeatherInfo.CheckCity(param))
             {
                 text = await WeatherInfo.GetWeather(param);
             }
@@ -55,7 +55,7 @@ namespace Goblin.Bot.Commands
         public (bool Success, string Text) CanExecute(Message msg)
         {
             var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
-            if (string.IsNullOrEmpty(msg.GetParams()) && string.IsNullOrEmpty(user?.City))
+            if(string.IsNullOrEmpty(msg.GetParams()) && string.IsNullOrEmpty(user?.City))
             {
                 return (false, "Ошибка. Либо укажи город в команде через пробел, либо установи его командой 'город'");
             }

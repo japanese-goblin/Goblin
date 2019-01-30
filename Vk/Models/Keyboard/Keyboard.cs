@@ -6,9 +6,11 @@ namespace Vk.Models.Keyboard
 {
     public class Keyboard
     {
-        [JsonProperty("one_time")] public bool IsOneTime;
+        [JsonProperty("one_time")]
+        public bool IsOneTime;
 
-        [JsonProperty("buttons")] public List<List<Button>> Buttons = new List<List<Button>>();
+        [JsonProperty("buttons")]
+        public List<List<Button>> Buttons = new List<List<Button>>();
 
         public Keyboard(bool isOneTime)
         {

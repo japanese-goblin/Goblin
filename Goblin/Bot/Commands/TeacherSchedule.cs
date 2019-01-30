@@ -10,14 +10,14 @@ namespace Goblin.Bot.Commands
         public string Decription { get; } = "Поиск препода по его номеру ИЛИ получение расписания у препода";
 
         public string Usage { get; } = "Препод 22331";
-        public string[] Allias { get; } = {"препод"};
+        public string[] Allias { get; } = { "препод" };
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
         public async Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
-            if (!canExecute.Success)
+            if(!canExecute.Success)
             {
                 return new CommandResponse
                 {
@@ -33,10 +33,10 @@ namespace Goblin.Bot.Commands
 
         public (bool Success, string Text) CanExecute(Message msg)
         {
-            if (int.TryParse(msg.GetParams(), out var res))
+            if(int.TryParse(msg.GetParams(), out var res))
             {
                 var isFound = TeachersSchedule.FindById(res);
-                if (!isFound)
+                if(!isFound)
                 {
                     return (false, "Ошибка. Преподаватель с таким номером нет в базе");
                 }

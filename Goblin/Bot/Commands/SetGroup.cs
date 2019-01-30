@@ -11,14 +11,14 @@ namespace Goblin.Bot.Commands
         public string Name => "Устгр *номер группы*";
         public string Decription => "Установить группу для получения расписания";
         public string Usage => "Устгр 351617";
-        public string[] Allias { get; } = {"устгр"};
+        public string[] Allias { get; } = { "устгр" };
         public Category Category => Category.SAFU;
         public bool IsAdmin => false;
 
         public async Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
-            if (!canExecute.Success)
+            if(!canExecute.Success)
             {
                 return new CommandResponse
                 {
@@ -41,7 +41,7 @@ namespace Goblin.Bot.Commands
 
         public (bool Success, string Text) CanExecute(Message msg)
         {
-            if (int.TryParse(msg.GetParams(), out var i) && StudentsSchedule.IsCorrectGroup(i))
+            if(int.TryParse(msg.GetParams(), out var i) && StudentsSchedule.IsCorrectGroup(i))
             {
                 return (true, "");
             }

@@ -17,14 +17,14 @@ namespace Goblin.Bot.Commands
             "Возвращает расписание на указанную дату. Если дата не указана, расписание берется на текущую дату";
 
         public string Usage { get; } = "Расписание 21.12";
-        public string[] Allias { get; } = {"расписание"};
+        public string[] Allias { get; } = { "расписание" };
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
         public async Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
-            if (!canExecute.Success)
+            if(!canExecute.Success)
             {
                 return new CommandResponse
                 {
@@ -35,11 +35,11 @@ namespace Goblin.Bot.Commands
             var param = msg.GetParams();
             var user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == msg.FromId);
             DateTime time;
-            if (string.IsNullOrEmpty(param))
+            if(string.IsNullOrEmpty(param))
             {
                 time = DateTime.Now;
             }
-            else if (param.Trim().ToLower() == "завтра")
+            else if(param.Trim().ToLower() == "завтра")
             {
                 time = DateTime.Now.AddDays(1);
             }
@@ -59,28 +59,28 @@ namespace Goblin.Bot.Commands
         {
             var param = msg.GetParams();
             var user = DbHelper.Db.Users.First(x => x.Vk == msg.FromId);
-            if (user.Group == 0)
+            if(user.Group == 0)
             {
                 return (false,
-                    "Ошибка. Для просмотра расписания необходимо установить группу командой 'устгр *номер группы*' (без кавычек и звездочек - устгр 353535, например)");
+                        "Ошибка. Для просмотра расписания необходимо установить группу командой 'устгр *номер группы*' (без кавычек и звездочек - устгр 353535, например)");
             }
 
-            if (param == "" || param.ToLower() == "завтра")
+            if(param == "" || param.ToLower() == "завтра")
             {
                 return (true, "");
             }
 
             var date = param.Split('.');
-            if (date.Length != 2)
+            if(date.Length != 2)
             {
                 return (false, $"Ошибка. Указана неправильная дата. Пример использования команды: {Usage}");
             }
 
             var isGoodDate = DateTime.TryParseExact($"{date[0]}.{date[1]}",
-                new[] {"d.M", "d.MM", "dd.M", "dd.MM"},
-                null, DateTimeStyles.None, out _);
+                                                    new[] { "d.M", "d.MM", "dd.M", "dd.MM" },
+                                                    null, DateTimeStyles.None, out _);
 
-            if (!isGoodDate)
+            if(!isGoodDate)
             {
                 return (false, $"Ошибка. Указана неправильная дата Пример использования команды: {Usage}");
             }

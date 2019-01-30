@@ -26,20 +26,20 @@ namespace QuotesGenerator
             var image = await GetImageFromUrl(imageUrl);
             image = new Bitmap(image, new Size(195, 212));
             graphics.DrawImage(image, new PointF(10, 100));
-            
+
             var citRect = new RectangleF(220, 100, bitmap.Width - 220, 270);
             graphics.DrawString(quote, new Font("Tahoma", 20), Brushes.White, citRect);
-            
+
             var nameRect = new RectangleF(400, bitmap.Height - 50, bitmap.Width - 410, 60);
             graphics.DrawString($"(c) {name}\nid{id}",
-                new Font("Tahoma", 15), Brushes.White, nameRect, new StringFormat
-                {
-                    Alignment = StringAlignment.Far
-                });
+                                new Font("Tahoma", 15), Brushes.White, nameRect, new StringFormat
+                                {
+                                    Alignment = StringAlignment.Far
+                                });
 
             var dateRect = new RectangleF(10, bitmap.Height - 25, 200, 60);
             graphics.DrawString(dateString,
-                new Font("Tahoma", 15), Brushes.White, dateRect);
+                                new Font("Tahoma", 15), Brushes.White, dateRect);
 
             graphics.Flush();
             var bytes = ToByteArray(bitmap);
@@ -53,7 +53,7 @@ namespace QuotesGenerator
 
         internal static async Task<Image> GetImageFromUrl(string url)
         {
-            using (var client = new HttpClient())
+            using(var client = new HttpClient())
             {
                 var str = await client.GetStreamAsync(url);
                 return Image.FromStream(str);

@@ -6,43 +6,43 @@
     <title>Расписание</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="utf-8">
-    <link rel="stylesheet" href="~/styles/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/styles/sched.min.css" />
+    <link rel="stylesheet" href="~/styles/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/styles/sched.min.css"/>
 </head>
 
 <body>
-    <div class="container-fluid">
-        <h4>@ViewBag.Title</h4>
-        <ul class="nav nav-pills" id="pills-tab" role="tablist">
-            @foreach (var group in Model)
-            {
-                <li>
-                    <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#d@(group.Value.First().Time.DayOfYear)">@group.Key</a>
-                </li>
-            }
-        </ul>
+<div class="container-fluid">
+    <h4>@ViewBag.Title</h4>
+    <ul class="nav nav-pills" id="pills-tab" role="tablist">
+        @foreach(var group in Model)
+        {
+            <li>
+                <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#d@(group.Value.First().Time.DayOfYear)">@group.Key</a>
+            </li>
+        }
+    </ul>
 
-        <div class="tab-content" id="pills-tabContent">
-            @foreach (var group in Model)
-            {
-                <div id="d@(group.Value.First().Time.DayOfYear)" class="tab-pane fade">
-                    <div class="row">
-                        @foreach (var days in group.Value.GroupBy(x => x.Time.DayOfWeek))
-                        {
-                            <div class="col-md-2">
-                                <div class="dayofweek">@days.First().Time.ToString("dddd, dd.MM.yyyy", CultureInfo.CreateSpecificCulture("ru-RU"))</div>
-                                @foreach (var lesson in days)
-                                {
-                                    <lesson lesson="lesson"></lesson>
-                                }
-                            </div>
-                        }
-                    </div>
+    <div class="tab-content" id="pills-tabContent">
+        @foreach(var group in Model)
+        {
+            <div id="d@(group.Value.First().Time.DayOfYear)" class="tab-pane fade">
+                <div class="row">
+                    @foreach(var days in group.Value.GroupBy(x => x.Time.DayOfWeek))
+                    {
+                        <div class="col-md-2">
+                            <div class="dayofweek">@days.First().Time.ToString("dddd, dd.MM.yyyy", CultureInfo.CreateSpecificCulture("ru-RU"))</div>
+                            @foreach(var lesson in days)
+                            {
+                                <lesson lesson="lesson"></lesson>
+                            }
+                        </div>
+                    }
                 </div>
-            }
-        </div>
+            </div>
+        }
     </div>
-    <script src="~/js/jquery-3.1.1.min.js"></script>
-    <script src="~/js/popper.min.js"></script>
-    <script src="~/js/bootstrap.min.js"></script>
+</div>
+<script src="~/js/jquery-3.1.1.min.js"></script>
+<script src="~/js/popper.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
 </body>

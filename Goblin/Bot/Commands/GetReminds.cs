@@ -11,7 +11,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Напоминания";
         public string Decription { get; } = "Возвращает список с созданными напоминаниями";
         public string Usage { get; } = "Напоминания";
-        public string[] Allias { get; } = {"напоминания"};
+        public string[] Allias { get; } = { "напоминания" };
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
@@ -19,15 +19,16 @@ namespace Goblin.Bot.Commands
         {
             var text = "";
             var ureminds = await DbHelper.Db.Reminds.Where(x => x.VkID == msg.FromId).OrderBy(x => x.Date)
-                .ToListAsync();
-            if (!ureminds.Any())
+                                         .ToListAsync();
+            if(!ureminds.Any())
             {
                 text = "Напоминаний нет.";
             }
             else
             {
                 text = "Список напоминаний: \n" + string.Join("\n",
-                           ureminds.Select(rem => $"{rem.Date:dd.MM.yyyy (dddd) HH:mm} - {rem.Text}"));
+                                                              ureminds.Select(rem =>
+                                                                                  $"{rem.Date:dd.MM.yyyy (dddd) HH:mm} - {rem.Text}"));
             }
 
             return new CommandResponse

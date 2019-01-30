@@ -28,7 +28,7 @@ namespace Goblin.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            if (model.Nick != "equus" && model.Password != "1") // TODO: очен безопасно
+            if(model.Nick != "equus" && model.Password != "1") // TODO: очен безопасно
                 return View();
 
             // create claims
@@ -44,9 +44,8 @@ namespace Goblin.Controllers
             var principal = new ClaimsPrincipal(identity);
 
             // sign-in
-            await HttpContext.SignInAsync(
-                scheme: CookieAuthenticationDefaults.AuthenticationScheme,
-                principal: principal);
+            await HttpContext.SignInAsync(scheme: CookieAuthenticationDefaults.AuthenticationScheme,
+                                          principal: principal);
 
             return RedirectToAction("Index", "Admin");
         }

@@ -37,11 +37,11 @@ namespace Goblin.Bot
         private static async Task<string> MessageNew(CallbackResponse obj)
         {
             var message = Message.FromJson(obj.Object.ToString());
-            if (message.FromId != message.PeerId)
+            if(message.FromId != message.PeerId)
             {
                 //TODO: add conv to db
                 var match = Regex.Match(message.Text, @"\[club146048760\|.*\] (.*)").Groups[1].Value;
-                if (!string.IsNullOrEmpty(match))
+                if(!string.IsNullOrEmpty(match))
                 {
                     message.Text = match;
                 }
@@ -49,9 +49,9 @@ namespace Goblin.Bot
                 //TODO: оповещение о том, что гоблину не нужен доступ ко всей переписке?
             }
 
-            if (!DbHelper.GetUsers().Any(x => x.Vk == message.FromId))
+            if(!DbHelper.GetUsers().Any(x => x.Vk == message.FromId))
             {
-                await DbHelper.Db.Users.AddAsync(new User {Vk = message.FromId});
+                await DbHelper.Db.Users.AddAsync(new User { Vk = message.FromId });
                 await DbHelper.Db.SaveChangesAsync();
             }
 
@@ -85,7 +85,7 @@ namespace Goblin.Bot
         {
             var leave = Vk.Models.Responses.GroupLeave.FromJson(obj.Object.ToString());
             var userID = leave.UserId;
-            if (await DbHelper.Db.Users.AnyAsync(x => x.Vk == userID))
+            if(await DbHelper.Db.Users.AnyAsync(x => x.Vk == userID))
             {
                 DbHelper.Db.Users.Remove(DbHelper.Db.Users.First(x => x.Vk == userID));
                 await DbHelper.Db.SaveChangesAsync();

@@ -1,10 +1,11 @@
-﻿using NLog.Targets;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
 using NLog.Common;
+using NLog.Targets;
 using Zidium.Api;
+using LogLevel = Zidium.Api.LogLevel;
 
 namespace Zidium
 {
@@ -14,19 +15,19 @@ namespace Zidium
         protected override void Write(LogEventInfo logEvent)
         {
             var level = LogLevelHelper.GetLogLevel(logEvent.Level);
-            if (level <= Api.LogLevel.Info)
+            if(level <= LogLevel.Info)
                 return;
 
             string message;
 
-            if (logEvent.Exception != null && logEvent.Message == "{0}")
+            if(logEvent.Exception != null && logEvent.Message == "{0}")
                 message = logEvent.Exception.Message;
             else
                 message = logEvent.FormattedMessage;
 
             Dictionary<string, object> properties;
 
-            if (logEvent.HasProperties)
+            if(logEvent.HasProperties)
             {
                 properties = logEvent.Properties.ToDictionary(a => a.Key.ToString(), b => b.Value);
             }
@@ -35,7 +36,9 @@ namespace Zidium
                 properties = new Dictionary<string, object>();
             }
 
-            var errorData = Component.Client.ExceptionRender.CreateEventFromLog(Component, level, logEvent.Exception, message, properties);
+            var errorData =
+                Component.Client.ExceptionRender.CreateEventFromLog(Component, level, logEvent.Exception, message,
+                                                                    properties);
             errorData.Add();
         }
 
@@ -45,10 +48,13 @@ namespace Zidium
         {
             get
             {
-                if (_component == null)
+                if(_component == null)
                 {
-                    _component = _componentId != null ? Client.Instance.GetComponentControl(_componentId.Value) : Client.Instance.GetDefaultComponentControl();
+                    _component = _componentId != null ?
+                        Client.Instance.GetComponentControl(_componentId.Value) :
+                        Client.Instance.GetDefaultComponentControl();
                 }
+
                 return _component;
             }
         }
@@ -57,14 +63,8 @@ namespace Zidium
 
         public string ComponentId
         {
-            get
-            {
-                return _componentId != null ? _componentId.ToString() : null;
-            }
-            set
-            {
-                _componentId = !string.IsNullOrEmpty(value) ? new Guid(value) : (Guid?)null;
-            }
+            get => _componentId != null ? _componentId.ToString() : null;
+            set => _componentId = !string.IsNullOrEmpty(value) ? new Guid(value) : (Guid?) null;
         }
 
         protected override void FlushAsync(AsyncContinuation asyncContinuation)

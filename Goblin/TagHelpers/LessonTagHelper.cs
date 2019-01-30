@@ -11,8 +11,7 @@ namespace Goblin.TagHelpers
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             GetStyleForLessonType();
-            output.Content.SetHtmlContent(
-                $@"<div class='timetable_sheet {_cssStyle}'>
+            output.Content.SetHtmlContent($@"<div class='timetable_sheet {_cssStyle}'>
 	                <span class='time_para'>{Lesson.StartEndTime}</span>
 	                <span class='kindOfWork'>{Lesson.Type}</span>
 	                <span class='discipline'>{Lesson.Name} ({Lesson.Teacher})</span>
@@ -23,15 +22,15 @@ namespace Goblin.TagHelpers
 
         private void GetStyleForLessonType()
         {
-            if (Lesson.Type == "Лекции")
+            if(Lesson.Type == "Лекции")
                 _cssStyle = "green";
-            else if (Lesson.Type == "Лабораторные занятия")
+            else if(Lesson.Type == "Лабораторные занятия")
                 _cssStyle = "blue";
-            else if (Lesson.Type == "Практические занятия")
+            else if(Lesson.Type == "Практические занятия")
                 _cssStyle = "yellow";
-            else if (Lesson.Type == "Консультация")
+            else if(Lesson.Type == "Консультация")
                 _cssStyle = "orange";
-            else if (Lesson.Type.ToLower().Contains("экзамен") || Lesson.Type.ToLower().Contains("зачет"))
+            else if(Lesson.Type.ToLower().Contains("экзамен") || Lesson.Type.ToLower().Contains("зачет"))
                 _cssStyle = "red";
         }
     }

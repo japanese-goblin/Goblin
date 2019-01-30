@@ -7,6 +7,7 @@ namespace Tests.Bot.Controllers
     public class ScheduleController : IClassFixture<TestsFixture>
     {
         private readonly TestsFixture _fixture;
+
         public ScheduleController(TestsFixture fixt)
         {
             _fixture = fixt;

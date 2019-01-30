@@ -11,14 +11,14 @@ namespace Goblin.Bot.Commands
         public string Name => "Город *название города*";
         public string Decription => "Установка города для получения рассылки погоды";
         public string Usage => "Город Москва";
-        public string[] Allias { get; } = {"город"};
+        public string[] Allias { get; } = { "город" };
         public Category Category => Category.Common;
         public bool IsAdmin => false;
 
         public async Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
-            if (!canExecute.Success)
+            if(!canExecute.Success)
             {
                 return new CommandResponse
                 {
@@ -28,7 +28,7 @@ namespace Goblin.Bot.Commands
 
             var param = msg.GetParams(); // TODO первая буква была в верхнем регистре
             var text = "";
-            if (await WeatherInfo.CheckCity(param))
+            if(await WeatherInfo.CheckCity(param))
             {
                 var user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == msg.FromId);
                 user.City = param;
@@ -48,7 +48,7 @@ namespace Goblin.Bot.Commands
 
         public (bool Success, string Text) CanExecute(Message msg)
         {
-            if (string.IsNullOrEmpty(msg.GetParams()))
+            if(string.IsNullOrEmpty(msg.GetParams()))
             {
                 return (false, "Ошибка. Введите название города");
             }

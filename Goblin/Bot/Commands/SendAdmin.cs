@@ -10,7 +10,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Админ *сообщение*";
         public string Decription { get; } = "Отправляет сообщение администраторам бота.";
         public string Usage { get; } = "Админ хелп";
-        public string[] Allias { get; } = {"админ", "адм"};
+        public string[] Allias { get; } = { "админ", "адм" };
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
@@ -28,7 +28,7 @@ namespace Goblin.Bot.Commands
 
         public (bool Success, string Text) CanExecute(Message msg)
         {
-            if (string.IsNullOrEmpty(msg.GetParams()))
+            if(string.IsNullOrEmpty(msg.GetParams()))
             {
                 return (false, "Ошибка. Введите сообщение для отправки.");
             }

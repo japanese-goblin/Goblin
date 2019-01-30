@@ -7,6 +7,7 @@ namespace Tests.Bot.Controllers
     public class HomeController : IClassFixture<TestsFixture>
     {
         private readonly TestsFixture _fixture;
+
         public HomeController(TestsFixture fixt)
         {
             _fixture = fixt;

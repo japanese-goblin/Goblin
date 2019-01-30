@@ -9,13 +9,13 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Монета";
         public string Decription { get; } = "Подбрасывает монету и выдаёт орёл/решка";
         public string Usage { get; } = "Монета";
-        public string[] Allias { get; } = {"монета"};
+        public string[] Allias { get; } = { "монета" };
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
         public async Task<CommandResponse> Execute(Message msg)
         {
-            var choices = new[] {"Орёл", "Решка"};
+            var choices = new[] { "Орёл", "Решка" };
 
             var a = GetRandom(0, 1);
             return new CommandResponse

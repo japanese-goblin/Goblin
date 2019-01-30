@@ -13,8 +13,10 @@ namespace Vk.Models
     {
         [JsonProperty("error_code")]
         public int ErrorCode { get; set; }
+
         [JsonProperty("error_msg")]
         public string ErrorMsg { get; set; }
+
         [JsonProperty("request_params")]
         public RequestParams[] RequestParams { get; set; }
     }
@@ -23,6 +25,7 @@ namespace Vk.Models
     {
         [JsonProperty("key")]
         public string Key { get; set; }
+
         [JsonProperty("value")]
         public string Value { get; set; }
     }

@@ -8,6 +8,9 @@ namespace Vk.Models.Responses
         [JsonProperty("user_id")]
         public long UserId { get; set; }
 
-        public static MessageDeny FromJson(string str) => JsonConvert.DeserializeObject<MessageDeny>(str);
+        public static MessageDeny FromJson(string str)
+        {
+            return JsonConvert.DeserializeObject<MessageDeny>(str);
+        }
     }
 }

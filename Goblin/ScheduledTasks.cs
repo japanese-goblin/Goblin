@@ -25,9 +25,9 @@ namespace Goblin
         {
             var reminds =
                 DbHelper.Db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
-            if (!reminds.Any()) return;
+            if(!reminds.Any()) return;
 
-            foreach (var remind in reminds)
+            foreach(var remind in reminds)
             {
                 await VkApi.Messages.Send(remind.VkID, $"Напоминаю:\n {remind.Text}");
                 DbHelper.Db.Reminds.Remove(remind);
@@ -38,12 +38,12 @@ namespace Goblin
 
         private async Task SendSchedule()
         {
-            if (DateTime.Now.DayOfWeek == DayOfWeek.Sunday) return;
+            if(DateTime.Now.DayOfWeek == DayOfWeek.Sunday) return;
 
             await Task.Factory.StartNew(async () =>
             {
                 var grouped = DbHelper.GetScheduleUsers().GroupBy(x => x.Group);
-                foreach (var group in grouped)
+                foreach(var group in grouped)
                 {
                     var ids = group.Select(x => x.Vk).ToArray();
                     var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Today, group.Key);
@@ -58,7 +58,7 @@ namespace Goblin
             await Task.Factory.StartNew(async () =>
             {
                 var grouped = DbHelper.GetWeatherUsers().GroupBy(x => x.City);
-                foreach (var group in grouped)
+                foreach(var group in grouped)
                 {
                     var ids = group.Select(x => x.Vk).ToArray();
                     await VkApi.Messages.Send(ids, await WeatherInfo.GetWeather(group.Key));
@@ -70,7 +70,7 @@ namespace Goblin
         private async Task SendToConv(int id, int group = 0, string city = "")
         {
             //TODO
-            if (!StudentsSchedule.IsCorrectGroup(group))
+            if(!StudentsSchedule.IsCorrectGroup(group))
             {
                 return;
             }
@@ -80,7 +80,7 @@ namespace Goblin
             var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Now, group);
             await VkApi.Messages.Send(id, schedule);
 
-            if (!string.IsNullOrEmpty(city) && await WeatherInfo.CheckCity(city))
+            if(!string.IsNullOrEmpty(city) && await WeatherInfo.CheckCity(city))
             {
                 var weather = await WeatherInfo.GetWeather(city);
                 await VkApi.Messages.Send(id, weather);

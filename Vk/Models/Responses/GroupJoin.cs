@@ -7,9 +7,13 @@ namespace Vk.Models.Responses
     {
         [JsonProperty("user_id")]
         public long UserId { get; set; }
+
         [JsonProperty("join_type")]
         public string JoinType { get; set; }
 
-        public static GroupJoin FromJson(string str) => JsonConvert.DeserializeObject<GroupJoin>(str);
+        public static GroupJoin FromJson(string str)
+        {
+            return JsonConvert.DeserializeObject<GroupJoin>(str);
+        }
     }
 }

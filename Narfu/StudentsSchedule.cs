@@ -1,10 +1,10 @@
-﻿using Narfu.Models;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Narfu.Models;
+using Newtonsoft.Json;
 using Calendar = Ical.Net.Calendar;
 
 namespace Narfu
@@ -28,8 +28,9 @@ namespace Narfu
         public static async Task<(bool IsError, Lesson[] Lessons)> GetSchedule(int realGroup)
         {
             var userGroup = GetGroupByRealId(realGroup).SiteId;
-            var response = await Utils.Client.GetAsync($"{StudentsEndPoint}&oid={userGroup}&cod={realGroup}&from={DateTime.Now:dd.MM.yyyy}");
-            if (!response.IsSuccessStatusCode)
+            var url = $"{StudentsEndPoint}&oid={userGroup}&cod={realGroup}&from={DateTime.Now:dd.MM.yyyy}";
+            var response = await Utils.Client.GetAsync(url);
+            if(!response.IsSuccessStatusCode)
             {
                 return (true, new Lesson[] { });
             }
@@ -45,7 +46,7 @@ namespace Narfu
             }
 
             var events = calendar.Events.Distinct().OrderBy(x => x.Start.Value).ToList();
-            if (!events.Any())
+            if(!events.Any())
             {
                 return (false, new Lesson[] { });
             }
@@ -64,7 +65,7 @@ namespace Narfu
                     Time = ev.Start.AsSystemLocal,
                     Type = descr[3],
                     StartEndTime = descr[0].Replace(")", "").Replace("(", "").Replace("п", ")"),
-                    Number = (byte)descr[0].ElementAt(0)
+                    Number = (byte) descr[0].ElementAt(0)
                 };
             }).ToArray();
 
@@ -81,7 +82,7 @@ namespace Narfu
         {
             var res = await GetSchedule(realGroup);
 
-            if (res.IsError)
+            if(res.IsError)
             {
                 var group = GetGroupByRealId(realGroup).SiteId;
                 return "Ошибка :с\n" +
@@ -91,15 +92,15 @@ namespace Narfu
 
             var lessons = res.Lessons.Where(x => x.Time.DayOfYear == date.DayOfYear).ToList();
 
-            if (lessons.Count == 0)
+            if(lessons.Count == 0)
             {
                 return $"На {date:dd.MM (dddd)} расписание отсутствует!";
             }
 
             var lessonsInStr = lessons.Where(x => x.Time.DayOfYear == date.DayOfYear).Select(lesson =>
-                $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}] ({lesson.Teacher})\n" +
-                $"У группы {lesson.Groups}\n" +
-                $"В аудитории {lesson.Auditory} ({lesson.Address})\n\n");
+                                                                                                 $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}] ({lesson.Teacher})\n" +
+                                                                                                 $"У группы {lesson.Groups}\n" +
+                                                                                                 $"В аудитории {lesson.Auditory} ({lesson.Address})\n\n");
 
             var result = $"Расписание на {date:dd.MM (dddd)}:\n" + string.Join("\n\n", lessonsInStr);
             return result;
@@ -114,7 +115,7 @@ namespace Narfu
         {
             var res = await GetSchedule(realGroup);
 
-            if (res.IsError)
+            if(res.IsError)
             {
                 var group = GetGroupByRealId(realGroup).SiteId;
                 return "Какая-то ошибочка :с\n" +
@@ -123,17 +124,18 @@ namespace Narfu
             }
 
             var lessons = res.Lessons.Where(x =>
-                    x.Type.ToLower().Contains("экзамен") || x.Type.ToLower().Contains("зачет"))
-                .OrderBy(x => x.Time)
-                .ToArray();
+                                                x.Type.ToLower().Contains("экзамен") ||
+                                                x.Type.ToLower().Contains("зачет"))
+                             .OrderBy(x => x.Time)
+                             .ToArray();
 
-            if (lessons.Length == 0)
+            if(lessons.Length == 0)
             {
                 return "На данный момент список экзаменов отсутствует";
             }
 
             var result = "Список экзаменов:\n";
-            foreach (var exam in lessons.GroupBy(x => x.Name))
+            foreach(var exam in lessons.GroupBy(x => x.Name))
             {
                 var f = exam.First();
                 var l = exam.Last();
@@ -147,6 +149,7 @@ namespace Narfu
         }
 
         #region utils
+
         public static int GetWeekNumber(DateTime date)
         {
             var ciCurr = CultureInfo.CurrentCulture;
@@ -154,11 +157,21 @@ namespace Narfu
             return weekNum;
         }
 
-        public static bool IsCorrectGroup(int group) => Groups.Any(x => x.RealId == group);
+        public static bool IsCorrectGroup(int group)
+        {
+            return Groups.Any(x => x.RealId == group);
+        }
 
-        public static Group GetGroupByRealId(int realId) => Groups.FirstOrDefault(x => x.RealId == realId);
+        public static Group GetGroupByRealId(int realId)
+        {
+            return Groups.FirstOrDefault(x => x.RealId == realId);
+        }
 
-        public static Group GetGroupBySiteId(short siteId) => Groups.FirstOrDefault(x => x.SiteId == siteId);
+        public static Group GetGroupBySiteId(short siteId)
+        {
+            return Groups.FirstOrDefault(x => x.SiteId == siteId);
+        }
+
         #endregion
     }
 }
