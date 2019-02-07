@@ -1,93 +1,90 @@
-﻿//using System;
-//using System.Linq;
-//using System.Threading.Tasks;
-//using FluentScheduler;
-//using Goblin.Helpers;
-//using Goblin.Models;
-//using Narfu;
-//using OpenWeatherMap;
-//using Vk;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Goblin.Models;
+using Narfu;
+using OpenWeatherMap;
+using Vk;
 
-//namespace Goblin
-//{
-//    public class ScheduledTasks : Registry
-//    {
-//        public ScheduledTasks(MainContext db)
-//        {
-//            Schedule(async () => await SendRemind()).ToRunEvery(1).Minutes();
-//            Schedule(async () => await SendSchedule()).ToRunEvery(0).Days().At(6, 0);
-//            Schedule(async () => await SendWeather()).ToRunEvery(0).Days().At(7, 0);
-//            //TODO вынести в бд
-//            Schedule(async () => await SendToConv(5, 351616)).ToRunEvery(0).Days().At(6, 05); // IGOR
-//            Schedule(async () => await SendToConv(3, 351617, "Архангельск")).ToRunEvery(0).Days().At(6, 15); // MY
-//        }
+namespace Goblin
+{
+    public class ScheduledTasks
+    {
+        private readonly MainContext _db;
+        private readonly VkApi _api;
+        private readonly WeatherInfo _weather;
 
-//        private async Task SendRemind()
-//        {
-//            var reminds =
-//                DbHelper.Db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
-//            if(!reminds.Any()) return;
+        public ScheduledTasks(MainContext db, VkApi api, WeatherInfo weather)
+        {
+            _db = db;
+            _api = api;
+            _weather = weather;
+        }
 
-//            foreach(var remind in reminds)
-//            {
-//                await VkApi.Messages.Send(remind.VkID, $"Напоминаю:\n {remind.Text}");
-//                DbHelper.Db.Reminds.Remove(remind);
-//            }
+        public async Task SendRemind()
+        {
+            var reminds =
+                _db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
+            if(!reminds.Any()) return;
 
-//            await DbHelper.Db.SaveChangesAsync();
-//        }
+            foreach(var remind in reminds)
+            {
+                await _api.Messages.Send(remind.VkID, $"Напоминаю:\n {remind.Text}");
+                _db.Reminds.Remove(remind);
+            }
 
-//        private async Task SendSchedule()
-//        {
-//            if(DateTime.Now.DayOfWeek == DayOfWeek.Sunday) return;
+            await _db.SaveChangesAsync();
+        }
 
-//            await Task.Factory.StartNew(async () =>
-//            {
-//                var grouped = DbHelper.GetScheduleUsers().GroupBy(x => x.Group);
-//                foreach(var group in grouped)
-//                {
-//                    var ids = group.Select(x => x.Vk).ToArray();
-//                    var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Today, group.Key);
-//                    await VkApi.Messages.Send(ids, schedule);
-//                    await Task.Delay(500); //TODO - 3 запроса в секунду
-//                }
-//            });
-//        }
+        public async Task SendSchedule()
+        {
+            if(DateTime.Now.DayOfWeek == DayOfWeek.Sunday) return;
 
-//        private async Task SendWeather()
-//        {
-//            await Task.Factory.StartNew(async () =>
-//            {
-//                var grouped = DbHelper.GetWeatherUsers().GroupBy(x => x.City);
-//                foreach(var group in grouped)
-//                {
-//                    var ids = group.Select(x => x.Vk).ToArray();
-//                    await VkApi.Messages.Send(ids, await WeatherInfo.GetWeather(group.Key));
-//                    await Task.Delay(700); //TODO - 3 запроса в секунду
-//                }
-//            });
-//        }
+            await Task.Factory.StartNew(async () =>
+            {
+                var grouped = _db.GetScheduleUsers().GroupBy(x => x.Group);
+                foreach(var group in grouped)
+                {
+                    var ids = group.Select(x => x.Vk).ToArray();
+                    var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Today, group.Key);
+                    await _api.Messages.Send(ids, schedule);
+                    await Task.Delay(500); //TODO - 3 запроса в секунду
+                }
+            });
+        }
 
-//        private async Task SendToConv(int id, int group = 0, string city = "")
-//        {
-//            //TODO
-//            if(!StudentsSchedule.IsCorrectGroup(group))
-//            {
-//                return;
-//            }
+        public async Task SendWeather()
+        {
+            await Task.Factory.StartNew(async () =>
+            {
+                var grouped = _db.GetWeatherUsers().GroupBy(x => x.City);
+                foreach(var group in grouped)
+                {
+                    var ids = group.Select(x => x.Vk).ToArray();
+                    await _api.Messages.Send(ids, await _weather.GetWeather(group.Key));
+                    await Task.Delay(700); //TODO - 3 запроса в секунду
+                }
+            });
+        }
 
-//            id = 2000000000 + id;
+        public async Task SendToConv(int id, int group = 0, string city = "")
+        {
+            //TODO
+            if(!StudentsSchedule.IsCorrectGroup(group))
+            {
+                return;
+            }
 
-//            var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Now, group);
-//            await VkApi.Messages.Send(id, schedule);
+            id = 2000000000 + id;
 
-//            if(!string.IsNullOrEmpty(city) && await WeatherInfo.CheckCity(city))
-//            {
-//                var weather = await WeatherInfo.GetWeather(city);
-//                await VkApi.Messages.Send(id, weather);
-//            }
-//        }
-//    }
-//}
+            var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Now, group);
+            await _api.Messages.Send(id, schedule);
 
-
+            if(!string.IsNullOrEmpty(city) && await _weather.CheckCity(city))
+            {
+                var weather = await _weather.GetWeather(city);
+                await _api.Messages.Send(id, weather);
+            }
+        }
+    }
+}
