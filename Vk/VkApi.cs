@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Vk.Categories;
+using Vk.Category;
 
 namespace Vk
 {
-    public static class VkApi
+    public class VkApi
     {
         private const string EndPoint = "https://api.vk.com/method";
-        private static readonly HttpClient Client = new HttpClient();
+        private readonly HttpClient Client = new HttpClient(); //TODO: DI
         private const string Version = "5.92";
-        internal static string AccessToken { get; set; }
+        private string AccessToken { get; set; }
 
-        public static void SetAccessToken(string token)
+        public VkApi(string token)
         {
             AccessToken = token;
+            Messages = new Messages(this);
+            Users = new Users(this);
+            Photos = new Photos(this);
         }
 
-        internal static async Task<string> SendRequest(string method, Dictionary<string, string> @params)
+        internal async Task<string> CallApi(string method, Dictionary<string, string> @params)
         {
             if(string.IsNullOrEmpty(AccessToken)) throw new Exception("Токен отсутствует");
 
@@ -51,9 +54,9 @@ namespace Vk
 
         #region categories
 
-        public static readonly Messages Messages = new Messages();
-        public static readonly Users Users = new Users();
-        public static readonly Photos Photos = new Photos();
+        public readonly Messages Messages;
+        public readonly Users Users;
+        public readonly Photos Photos;
 
         #endregion
     }

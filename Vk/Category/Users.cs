@@ -4,10 +4,16 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Vk.Models;
 
-namespace Vk.Categories
+namespace Vk.Category
 {
     public class Users
     {
+        private readonly VkApi _api;
+        public Users(VkApi api)
+        {
+            _api = api;
+        }
+
         public async Task<User> Get(long id)
         {
             return (await Get(new[] { id })).FirstOrDefault(); //TODO ?
@@ -21,7 +27,7 @@ namespace Vk.Categories
                 ["fields"] = "photo_200_orig"
             };
 
-            var response = await VkApi.SendRequest("users.get", values);
+            var response = await _api.CallApi("users.get", values);
             var usersInfo = JsonConvert.DeserializeObject<User[]>(response);
 
             if(usersInfo.Length == 0)

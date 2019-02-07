@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
+using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 using Vk.Models.Messages;
 
@@ -15,20 +16,25 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
+        private readonly MainContext _db;
+        public GetReminds(MainContext db)
+        {
+            _db = db;
+        }
+
         public async Task<CommandResponse> Execute(Message msg)
         {
             var text = "";
-            var ureminds = await DbHelper.Db.Reminds.Where(x => x.VkID == msg.FromId).OrderBy(x => x.Date)
-                                         .ToListAsync();
+            var ureminds = await _db.Reminds.Where(x => x.VkID == msg.FromId)
+                                    .OrderBy(x => x.Date).ToListAsync();
             if(!ureminds.Any())
             {
                 text = "Напоминаний нет.";
             }
             else
             {
-                text = "Список напоминаний: \n" + string.Join("\n",
-                                                              ureminds.Select(rem =>
-                                                                                  $"{rem.Date:dd.MM.yyyy (dddd) HH:mm} - {rem.Text}"));
+                var selected = ureminds.Select(rem => $"{rem.Date:dd.MM.yyyy (dddd) HH:mm} - {rem.Text}");
+                text = "Список напоминаний: \n" + string.Join("\n", selected);
             }
 
             return new CommandResponse

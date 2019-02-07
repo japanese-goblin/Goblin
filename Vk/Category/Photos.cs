@@ -6,15 +6,21 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Vk.Models;
 
-namespace Vk.Categories
+namespace Vk.Category
 {
     public class Photos
     {
+        private readonly VkApi _api;
+        public Photos(VkApi api)
+        {
+            _api = api;
+        }
+
         public async Task<string> FastUploadPhoto(long peerId, byte[] image)
         {
-            var server = await VkApi.Photos.GetMessagesUploadServer(peerId);
-            var upload = await VkApi.Photos.UploadImage(server.UploadUrl, image);
-            var save = await VkApi.Photos.SaveMessagesPhoto(upload);
+            var server = await _api.Photos.GetMessagesUploadServer(peerId);
+            var upload = await _api.Photos.UploadImage(server.UploadUrl, image);
+            var save = await _api.Photos.SaveMessagesPhoto(upload);
 
             return $"photo{save.OwnerId}_{save.Id}_{save.AccessKey}";
         }
@@ -25,7 +31,7 @@ namespace Vk.Categories
             {
                 ["peer_id"] = peerId.ToString()
             };
-            var res = await VkApi.SendRequest("photos.getMessagesUploadServer", values);
+            var res = await _api.CallApi("photos.getMessagesUploadServer", values);
             return JsonConvert.DeserializeObject<UploadServerInfo>(res);
         }
 
@@ -56,7 +62,7 @@ namespace Vk.Categories
                 ["hash"] = info.Hash
             };
 
-            var res = await VkApi.SendRequest("photos.saveMessagesPhoto", values);
+            var res = await _api.CallApi("photos.saveMessagesPhoto", values);
             return JsonConvert.DeserializeObject<Photo>(res.Substring(1, res.Length - 2));
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Goblin.Helpers;
+using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 using Vk.Models.Messages;
 
@@ -13,6 +14,12 @@ namespace Goblin.Bot.Commands
         public string[] Allias { get; } = { "отписка" };
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
+
+        private readonly MainContext _db;
+        public UnsetMailing(MainContext db)
+        {
+            _db = db;
+        }
 
         public async Task<CommandResponse> Execute(Message msg)
         {
@@ -29,13 +36,13 @@ namespace Goblin.Bot.Commands
             var text = "";
             if(param == "погода")
             {
-                var user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == msg.FromId);
+                var user = await _db.Users.FirstAsync(x => x.Vk == msg.FromId);
                 user.Weather = false;
                 text = "Ты отписался от рассылки погоды :с";
             }
             else if(param == "расписание")
             {
-                var user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == msg.FromId);
+                var user = await _db.Users.FirstAsync(x => x.Vk == msg.FromId);
                 user.Schedule = false;
                 text = "Ты отписался от рассылки расписания :с";
             }
@@ -44,8 +51,8 @@ namespace Goblin.Bot.Commands
                 text = $"Ошибка. Можно отписаться от рассылки погоды или расписания (выбрано - {param})";
             }
 
-            if(DbHelper.Db.ChangeTracker.HasChanges())
-                await DbHelper.Db.SaveChangesAsync();
+            if(_db.ChangeTracker.HasChanges())
+                await _db.SaveChangesAsync();
 
             return new CommandResponse
             {

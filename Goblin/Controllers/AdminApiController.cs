@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
+using Goblin.Models;
 using Microsoft.AspNetCore.Mvc;
 using Vk;
 
@@ -8,15 +9,24 @@ namespace Goblin.Controllers
 {
     public class AdminApiController : Controller
     {
+        private readonly MainContext _db;
+        private readonly VkApi _api;
+
+        public AdminApiController(MainContext db, VkApi api)
+        {
+            _db = db;
+            _api = api;
+        }
+
         public async Task SendToAll(string msg, string[] attach)
         {
-            var gr = DbHelper.GetUsers().Select(x => x.Vk).ToArray();
-            await VkApi.Messages.Send(gr, msg, attach);
+            var gr = _db.GetUsers().Select(x => x.Vk).ToArray();
+            await _api.Messages.Send(gr, msg, attach);
         }
 
         public async Task SendToId(long id, string msg, string[] attachs)
         {
-            await VkApi.Messages.Send(id, msg, attachs);
+            await _api.Messages.Send(id, msg, attachs);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Goblin.Helpers;
+using Goblin.Models;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
@@ -14,15 +15,21 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = true;
 
+        private readonly MainContext _db;
+        public Debug(MainContext db)
+        {
+            _db = db;
+        }
+
         public async Task<CommandResponse> Execute(Message msg)
         {
             var bday = new DateTime(2017, 4, 29, 19, 42, 0);
             var dis = DateTime.Now - bday;
             var uptime = DateTime.Now - Program.StartDate;
 
-            var users = DbHelper.GetUsers().Length;
-            var scheduleUsers = DbHelper.GetScheduleUsers().Length;
-            var weatherUsers = DbHelper.GetWeatherUsers().Length;
+            var users = _db.GetUsers().Length;
+            var scheduleUsers = _db.GetScheduleUsers().Length;
+            var weatherUsers = _db.GetWeatherUsers().Length;
 
             var text =
                 $"Время старта: {Program.StartDate:F}\n" +

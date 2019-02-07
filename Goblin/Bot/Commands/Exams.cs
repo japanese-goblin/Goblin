@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
+using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
 using Vk.Models.Messages;
@@ -16,6 +17,12 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
+        private readonly MainContext _db;
+        public Exams(MainContext db)
+        {
+            _db = db;
+        }
+
         public async Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
@@ -27,7 +34,7 @@ namespace Goblin.Bot.Commands
                 };
             }
 
-            var user = await DbHelper.Db.Users.FirstOrDefaultAsync(x => x.Vk == msg.FromId);
+            var user = await _db.Users.FirstOrDefaultAsync(x => x.Vk == msg.FromId);
             return new CommandResponse
             {
                 Text = await StudentsSchedule.GetExams(user.Group)
@@ -36,7 +43,7 @@ namespace Goblin.Bot.Commands
 
         public (bool Success, string Text) CanExecute(Message msg)
         {
-            var user = DbHelper.Db.Users.First(x => x.Vk == msg.FromId);
+            var user = _db.Users.First(x => x.Vk == msg.FromId);
             if(user.Group == 0)
             {
                 return (false, "Ошибка. Группа не установлена. " +

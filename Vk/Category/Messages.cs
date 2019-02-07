@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Vk.Models.Keyboard;
 
-namespace Vk
+namespace Vk.Category
 {
     public class Messages
     {
+        private readonly VkApi _api;
+        public Messages(VkApi api)
+        {
+            _api = api;
+        }
+
         public async Task Send(long id, string text, string[] attachs = null, Keyboard kb = null)
         {
             await Send(new[] { id }, text, attachs, kb);
@@ -36,7 +42,7 @@ namespace Vk
                 values.Add("keyboard", kb.ToString());
             }
 
-            await VkApi.SendRequest("messages.send", values); //TODO to bool?
+            await _api.CallApi("messages.send", values); //TODO to bool?
         }
     }
 }

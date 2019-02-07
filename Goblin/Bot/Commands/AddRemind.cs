@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Goblin.Helpers;
 using Goblin.Models;
 using Vk.Models.Messages;
 
@@ -12,12 +11,21 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Напомни *день*.*месяц*.*год* *часы*:*минуты* *текст*";
 
         public string Decription { get; } =
-            "Напоминает в указанное время о каком-то очень ВАЖНОМ тексте. День и месяц обязательно должны содержать 2 цифры, а год - 4. В указанное время бот напишет в личку сообщение с заданным текстом.";
+            "Напоминает в указанное время о каком-то очень ВАЖНОМ тексте. " +
+            "День и месяц обязательно должны содержать 2 цифры, а год - 4. " +
+            "В указанное время бот напишет в личку сообщение с заданным текстом.";
 
         public string Usage { get; } = "Напомни 21.12.2018 15:35 зачет";
         public string[] Allias { get; } = { "напомни" };
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
+
+        private readonly MainContext _db;
+
+        public AddRemind(MainContext db)
+        {
+            _db = db;
+        }
 
         public async Task<CommandResponse> Execute(Message msg)
         {
@@ -45,13 +53,13 @@ namespace Goblin.Bot.Commands
             }
 
             var time = ParseTime(all[0], all[1]);
-            await DbHelper.Db.Reminds.AddAsync(new Remind
+            await _db.Reminds.AddAsync(new Remind
             {
                 Text = all[2],
                 Date = time.Result,
                 VkID = msg.FromId
             });
-            await DbHelper.Db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
 
             return new CommandResponse
             {
@@ -74,7 +82,7 @@ namespace Goblin.Bot.Commands
             }
 
             //TODO: все равно никто не пользуется ех
-            //if (!VkHelper.DevelopersID.Contains(id) && DbHelper.Db.Reminds.Count(x => x.VkID == id) > 7)
+            //if (!VkHelper.DevelopersID.Contains(id) && _db.Reminds.Count(x => x.VkID == id) > 7)
             //{
             //    Message = "Превышен лимит (8) напоминалок";
             //    return false;

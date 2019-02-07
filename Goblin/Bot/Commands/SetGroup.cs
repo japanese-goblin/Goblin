@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Goblin.Helpers;
+using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
 using Vk.Models.Messages;
@@ -15,6 +16,12 @@ namespace Goblin.Bot.Commands
         public Category Category => Category.SAFU;
         public bool IsAdmin => false;
 
+        private readonly MainContext _db;
+        public SetGroup(MainContext db)
+        {
+            _db = db;
+        }
+
         public async Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
@@ -29,9 +36,9 @@ namespace Goblin.Bot.Commands
             var group = int.Parse(msg.GetParams());
             var gr = StudentsSchedule.GetGroupByRealId(group);
 
-            var user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == msg.FromId);
+            var user = await _db.Users.FirstAsync(x => x.Vk == msg.FromId);
             user.Group = group;
-            await DbHelper.Db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
 
             return new CommandResponse
             {

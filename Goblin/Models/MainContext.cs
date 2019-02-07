@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Models
 {
@@ -8,20 +8,29 @@ namespace Goblin.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Remind> Reminds { get; set; }
 
-        public MainContext()
+        public MainContext(DbContextOptions<MainContext> options) : base(options)
         {
+            
         }
 
-        private static string con;
-
-        public MainContext(IConfiguration configuration) //TODO ???
+        public User[] GetUsers()
         {
-            con = configuration.GetConnectionString("DefaultConnection");
+            return Users.ToArray();
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public long[] GetAdmins()
         {
-            optionsBuilder.UseNpgsql(con);
+            return Users.Where(x => x.IsAdmin).Select(x => x.Vk).ToArray();
+        }
+
+        public User[] GetWeatherUsers()
+        {
+            return Users.Where(x => x.City != "" && x.Weather).ToArray();
+        }
+
+        public User[] GetScheduleUsers()
+        {
+            return Users.Where(x => x.Group != 0 && x.Schedule).ToArray();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

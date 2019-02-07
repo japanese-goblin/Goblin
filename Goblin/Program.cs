@@ -20,8 +20,6 @@ namespace Goblin
         {
             StartDate = DateTime.Now;
 
-            JobManager.Initialize(new ScheduledTasks());
-
             var culture = new CultureInfo("ru-RU");
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;

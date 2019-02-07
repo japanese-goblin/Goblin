@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
+using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
 using Vk.Models.Messages;
@@ -21,6 +22,12 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.SAFU;
         public bool IsAdmin { get; } = false;
 
+        private readonly MainContext _db;
+        public Schedule(MainContext db)
+        {
+            _db = db;
+        }
+
         public async Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
@@ -33,7 +40,7 @@ namespace Goblin.Bot.Commands
             }
 
             var param = msg.GetParams();
-            var user = await DbHelper.Db.Users.FirstAsync(x => x.Vk == msg.FromId);
+            var user = await _db.Users.FirstAsync(x => x.Vk == msg.FromId);
             DateTime time;
             if(string.IsNullOrEmpty(param))
             {
@@ -58,7 +65,7 @@ namespace Goblin.Bot.Commands
         public (bool Success, string Text) CanExecute(Message msg)
         {
             var param = msg.GetParams();
-            var user = DbHelper.Db.Users.First(x => x.Vk == msg.FromId);
+            var user = _db.Users.First(x => x.Vk == msg.FromId);
             if(user.Group == 0)
             {
                 return (false,

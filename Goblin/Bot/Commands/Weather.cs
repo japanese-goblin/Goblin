@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Helpers;
+using Goblin.Models;
 using OpenWeatherMap;
 using Vk.Models.Messages;
 
@@ -15,6 +16,12 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
+        private readonly MainContext _db;
+        public Weather(MainContext db)
+        {
+            _db = db;
+        }
+
         public async Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
@@ -27,7 +34,7 @@ namespace Goblin.Bot.Commands
             }
 
             var param = msg.GetParams();
-            var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
+            var user = _db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
             if(string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
             {
                 return new CommandResponse
@@ -54,7 +61,7 @@ namespace Goblin.Bot.Commands
 
         public (bool Success, string Text) CanExecute(Message msg)
         {
-            var user = DbHelper.Db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
+            var user = _db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
             if(string.IsNullOrEmpty(msg.GetParams()) && string.IsNullOrEmpty(user?.City))
             {
                 return (false, "Ошибка. Либо укажи город в команде через пробел, либо установи его командой 'город'");

@@ -13,10 +13,16 @@ namespace Goblin.Controllers
 {
     public class AdminController : Controller
     {
+        private readonly MainContext _db;
+        public AdminController(MainContext db)
+        {
+            _db = db;
+        }
+
         [Authorize]
         public IActionResult Index()
         {
-            return View(DbHelper.GetUsers().OrderBy(x => x.ID).ToList());
+            return View(_db.GetUsers().OrderBy(x => x.ID).ToList());
         }
 
         [HttpGet]

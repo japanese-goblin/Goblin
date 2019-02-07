@@ -15,6 +15,12 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
+        private readonly VkApi _api;
+        public Quote(VkApi api)
+        {
+            _api = api;
+        }
+
         public async Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
@@ -27,11 +33,11 @@ namespace Goblin.Bot.Commands
             }
 
             var forwarded = msg.ForwardMessages[0];
-            var user = await VkApi.Users.Get(forwarded.FromId);
+            var user = await _api.Users.Get(forwarded.FromId);
 
             var image = await Generator.GenerateQuote(forwarded.Text, forwarded.FromId,
                                                       user.ToString(), UnixToDate(forwarded.Date), user.Photo200Orig);
-            var attach = await VkApi.Photos.FastUploadPhoto(msg.FromId, image); //TODO change fromId
+            var attach = await _api.Photos.FastUploadPhoto(msg.FromId, image); //TODO change fromId
 
             return new CommandResponse
             {
