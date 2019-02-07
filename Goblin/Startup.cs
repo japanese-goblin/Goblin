@@ -1,4 +1,5 @@
-﻿using FluentScheduler;
+﻿using System.ComponentModel;
+using FluentScheduler;
 using Goblin.Bot;
 using Goblin.Bot.Commands;
 using Goblin.Models;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenWeatherMap;
 using Vk;
 using Schedule = Goblin.Bot.Commands.Schedule;
 
@@ -59,12 +61,9 @@ namespace Goblin
             services.AddScoped<ICommand, Help>();
 
             services.AddSingleton<VkApi>(x => new VkApi(Configuration["Config:AccessToken"]));
+            services.AddSingleton<WeatherInfo>(x => new WeatherInfo(Configuration["Config:OWMToken"]));
 
             //JobManager.Initialize(new ScheduledTasks(services.get)); // TODO
-
-            //Settings.AccessToken = Configuration["Config:AccessToken"];
-            //Settings.ConfirmationToken = Configuration["Config:ConfirmationCode"];
-            //VkApi.SetAccessToken(Settings.AccessToken); // TODO
 
             services.AddMvc();
         }

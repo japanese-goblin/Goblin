@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Helpers;
 using Goblin.Models;
 using OpenWeatherMap;
 using Vk.Models.Messages;
@@ -17,9 +16,12 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         private readonly MainContext _db;
-        public Weather(MainContext db)
+        private readonly WeatherInfo _weather;
+
+        public Weather(MainContext db, WeatherInfo weather)
         {
             _db = db;
+            _weather = weather;
         }
 
         public async Task<CommandResponse> Execute(Message msg)
@@ -39,14 +41,14 @@ namespace Goblin.Bot.Commands
             {
                 return new CommandResponse
                 {
-                    Text = await WeatherInfo.GetWeather(user.City)
+                    Text = await _weather.GetWeather(user.City)
                 };
             }
 
             var text = "";
-            if(await WeatherInfo.CheckCity(param))
+            if(await _weather.CheckCity(param))
             {
-                text = await WeatherInfo.GetWeather(param);
+                text = await _weather.GetWeather(param);
             }
             else
             {
