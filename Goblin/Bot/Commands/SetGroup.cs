@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Goblin.Helpers;
 using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
@@ -17,6 +16,7 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin => false;
 
         private readonly MainContext _db;
+
         public SetGroup(MainContext db)
         {
             _db = db;

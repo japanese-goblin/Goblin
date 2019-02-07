@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using FluentScheduler;
-using Goblin.Bot;
+﻿using Goblin.Bot;
 using Goblin.Bot.Commands;
 using Goblin.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -12,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenWeatherMap;
 using Vk;
-using Schedule = Goblin.Bot.Commands.Schedule;
 
 namespace Goblin
 {
@@ -60,8 +57,8 @@ namespace Goblin
             services.AddScoped<ICommand, Weather>();
             services.AddScoped<ICommand, Help>();
 
-            services.AddSingleton<VkApi>(x => new VkApi(Configuration["Config:AccessToken"]));
-            services.AddSingleton<WeatherInfo>(x => new WeatherInfo(Configuration["Config:OWMToken"]));
+            services.AddSingleton(x => new VkApi(Configuration["Config:AccessToken"]));
+            services.AddSingleton(x => new WeatherInfo(Configuration["Config:OWMToken"]));
 
             //JobManager.Initialize(new ScheduledTasks(services.get)); // TODO
 
@@ -69,7 +66,7 @@ namespace Goblin
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, MainContext ct)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if(env.IsDevelopment())
             {
@@ -80,9 +77,7 @@ namespace Goblin
             app.UseStaticFiles();
             app.UseAuthentication();
 
-            app.UseMiddleware<LoggerMiddleware>();
-
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection(); //TODO
             app.UseMvc(routes =>
             {
                 routes.MapRoute(name: "default",

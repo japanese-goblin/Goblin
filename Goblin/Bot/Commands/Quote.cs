@@ -16,6 +16,7 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         private readonly VkApi _api;
+
         public Quote(VkApi api)
         {
             _api = api;

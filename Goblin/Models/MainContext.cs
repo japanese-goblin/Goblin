@@ -10,7 +10,6 @@ namespace Goblin.Models
 
         public MainContext(DbContextOptions<MainContext> options) : base(options)
         {
-            
         }
 
         public User[] GetUsers()

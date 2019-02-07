@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Helpers;
 using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
@@ -23,6 +22,7 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         private readonly MainContext _db;
+
         public Schedule(MainContext db)
         {
             _db = db;

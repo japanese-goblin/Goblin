@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using FluentScheduler;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 

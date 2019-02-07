@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Bot.Commands;
-using Goblin.Helpers;
 using Goblin.Models;
 using Vk.Models.Messages;
 
@@ -14,6 +12,7 @@ namespace Goblin.Bot
 
         private readonly IEnumerable<ICommand> _commands;
         private readonly MainContext _db;
+
         public CommandExecutor(MainContext db, IEnumerable<ICommand> commands)
         {
             _db = db;

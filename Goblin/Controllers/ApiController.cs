@@ -8,6 +8,7 @@ namespace Goblin.Controllers
     public class ApiController : Controller
     {
         private readonly Handler _handler;
+
         public ApiController(Handler handler)
         {
             _handler = handler;

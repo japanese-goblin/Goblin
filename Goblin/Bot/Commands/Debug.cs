@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Goblin.Helpers;
 using Goblin.Models;
 using Vk.Models.Messages;
 
@@ -16,6 +15,7 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = true;
 
         private readonly MainContext _db;
+
         public Debug(MainContext db)
         {
             _db = db;

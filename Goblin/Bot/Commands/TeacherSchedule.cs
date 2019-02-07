@@ -7,7 +7,8 @@ namespace Goblin.Bot.Commands
     public class TeacherSchedule : ICommand
     {
         public string Name { get; } = "Препод *номер*";
-        public string Decription { get; } = 
+
+        public string Decription { get; } =
             "Поиск препода по его номеру ИЛИ получение расписания препода";
 
         public string Usage { get; } = "Препод 22331";

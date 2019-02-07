@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Goblin.Helpers;
 using Goblin.Models;
 using Vk;
 using Vk.Models.Messages;
@@ -17,6 +16,7 @@ namespace Goblin.Bot.Commands
 
         private readonly MainContext _db;
         private readonly VkApi _api;
+
         public SendAdmin(MainContext db, VkApi api)
         {
             _db = db;

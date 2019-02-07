@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Goblin.Helpers;
 using Goblin.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -14,6 +13,7 @@ namespace Goblin.Controllers
     public class AdminController : Controller
     {
         private readonly MainContext _db;
+
         public AdminController(MainContext db)
         {
             _db = db;
