@@ -41,11 +41,9 @@ namespace Goblin
             services.AddScoped<CommandExecutor>();
 
             services.AddScoped<ICommand, AddRemind>();
-            services.AddScoped<ICommand, Chance>();
             services.AddScoped<ICommand, Debug>();
             services.AddScoped<ICommand, Exams>();
             services.AddScoped<ICommand, FindTeacher>();
-            services.AddScoped<ICommand, Flip>();
             services.AddScoped<ICommand, GetReminds>();
             services.AddScoped<ICommand, KeyboardCommand>(); //TODO
             services.AddScoped<ICommand, Quote>();
