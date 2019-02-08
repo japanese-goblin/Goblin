@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Goblin.Models;
 using Vk.Models.Keyboard;
 using Vk.Models.Messages;
 

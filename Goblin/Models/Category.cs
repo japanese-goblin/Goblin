@@ -1,4 +1,4 @@
-﻿namespace Goblin.Bot
+﻿namespace Goblin.Models
 {
     public enum Category
     {

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Goblin.Models;
 using Narfu;
 using Vk.Models.Messages;
 

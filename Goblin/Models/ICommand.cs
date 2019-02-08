@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Vk.Models.Messages;
 
-namespace Goblin.Bot
+namespace Goblin.Models
 {
     public interface ICommand
     {

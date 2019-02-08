@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Narfu\Narfu.csproj" />
-    <ProjectReference Include="..\NLogAdapter\NLogAdapter.csproj" />
     <ProjectReference Include="..\OpenWeatherMap\OpenWeatherMap.csproj" />
     <ProjectReference Include="..\QuotesGenerator\QuotesGenerator.csproj" />
     <ProjectReference Include="..\Vk\Vk.csproj" />

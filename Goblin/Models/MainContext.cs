@@ -24,12 +24,12 @@ namespace Goblin.Models
 
         public User[] GetWeatherUsers()
         {
-            return Users.Where(x => x.City != "" && x.Weather).ToArray();
+            return Users.Where(x => x.Weather && x.City != "").ToArray();
         }
 
         public User[] GetScheduleUsers()
         {
-            return Users.Where(x => x.Group != 0 && x.Schedule).ToArray();
+            return Users.Where(x => x.Schedule && x.Group != 0).ToArray();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

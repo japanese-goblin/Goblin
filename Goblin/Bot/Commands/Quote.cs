@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Goblin.Models;
 using QuotesGenerator;
 using Vk;
 using Vk.Models.Messages;

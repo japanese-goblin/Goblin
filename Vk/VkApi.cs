@@ -12,7 +12,7 @@ namespace Vk
         private const string EndPoint = "https://api.vk.com/method";
         private readonly HttpClient Client = new HttpClient(); //TODO: DI
         private const string Version = "5.92";
-        private string AccessToken { get; set; }
+        private readonly string AccessToken;
 
         public VkApi(string token)
         {
@@ -26,19 +26,13 @@ namespace Vk
         {
             if(string.IsNullOrEmpty(AccessToken)) throw new Exception("Токен отсутствует");
 
-            var reqParams = new Dictionary<string, string>();
-            foreach(var (param, value) in @params)
-            {
-                reqParams.Add(param, value);
-            }
+            @params.Add("lang", "ru");
+            @params.Add("v", Version);
+            @params.Add("access_token", AccessToken);
 
-            reqParams.Add("lang", "ru");
-            reqParams.Add("v", Version);
-            reqParams.Add("access_token", AccessToken);
-
-            //TODO add sleep?
+            //TODO add sleep? (лимит для токена сообщества - 20 запросов в секунду)
             var response = await Client.PostAsync($"{EndPoint}/{method}",
-                                                  new FormUrlEncodedContent(reqParams));
+                                                  new FormUrlEncodedContent(@params));
             var responseStr = await response.Content.ReadAsStringAsync();
 
             if(responseStr.Contains("error"))

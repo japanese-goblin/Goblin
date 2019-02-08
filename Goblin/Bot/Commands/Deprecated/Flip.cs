@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Goblin.Models;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands

@@ -38,7 +38,8 @@ namespace Goblin
 
         public async Task SendSchedule()
         {
-            if(DateTime.Now.DayOfWeek == DayOfWeek.Sunday) return;
+            //TODO: это теперь задается в кроне
+            //if(DateTime.Now.DayOfWeek == DayOfWeek.Sunday) return;
 
             await Task.Factory.StartNew(async () =>
             {
@@ -48,7 +49,7 @@ namespace Goblin
                     var ids = group.Select(x => x.Vk).ToArray();
                     var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Today, group.Key);
                     await _api.Messages.Send(ids, schedule);
-                    await Task.Delay(500); //TODO - 3 запроса в секунду
+                    await Task.Delay(100); //TODO: 20 запросов в секунду
                 }
             });
         }
@@ -62,7 +63,7 @@ namespace Goblin
                 {
                     var ids = group.Select(x => x.Vk).ToArray();
                     await _api.Messages.Send(ids, await _weather.GetWeather(group.Key));
-                    await Task.Delay(700); //TODO - 3 запроса в секунду
+                    await Task.Delay(100); //TODO: 20 запроса в секунду
                 }
             });
         }
