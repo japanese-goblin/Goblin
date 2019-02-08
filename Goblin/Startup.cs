@@ -40,10 +40,7 @@ namespace Goblin
                          options.LoginPath = new PathString("/Admin/Login");
                      });
 
-            services.AddHangfire(config =>
-            {
-                config.UseMemoryStorage();
-            });
+            services.AddHangfire(config => { config.UseMemoryStorage(); });
 
             services.AddScoped<Handler>();
             services.AddScoped<CommandExecutor>();
@@ -100,6 +97,7 @@ namespace Goblin
 
         private void ConfigureJobs()
         {
+            // минуты часи дни месяцы дни-недели
             RecurringJob.AddOrUpdate<ScheduledTasks>(x => x.SendRemind(), "* * * * *",
                                                      TimeZoneInfo.Local);
             RecurringJob.AddOrUpdate<ScheduledTasks>(x => x.SendSchedule(), "0 6 * * 0-6",

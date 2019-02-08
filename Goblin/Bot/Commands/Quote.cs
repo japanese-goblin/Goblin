@@ -60,6 +60,11 @@ namespace Goblin.Bot.Commands
                 return (false, "Ошибка. Пересланное сообщение пустое");
             }
 
+            if(msg.ForwardMessages[0].FromId < 0)
+            {
+                return (false, "Ошибка. Нельзя цитировать сообщения от группы");
+            }
+
             return (true, "");
         }
 
