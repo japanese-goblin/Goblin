@@ -1,6 +1,5 @@
 ﻿using System;
 using Goblin.Bot;
-using Goblin.Bot.Commands;
 using Goblin.Models;
 using Hangfire;
 using Hangfire.MemoryStorage;
@@ -13,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenWeatherMap;
 using Vk;
-using Random = Goblin.Bot.Commands.Random;
 
 namespace Goblin
 {
@@ -44,24 +42,7 @@ namespace Goblin
 
             services.AddScoped<Handler>();
             services.AddScoped<CommandExecutor>();
-
-            services.AddScoped<ICommand, AddRemind>();
-            services.AddScoped<ICommand, Debug>();
-            services.AddScoped<ICommand, Exams>();
-            services.AddScoped<ICommand, FindTeacher>();
-            services.AddScoped<ICommand, GetReminds>();
-            services.AddScoped<ICommand, KeyboardCommand>(); //TODO
-            services.AddScoped<ICommand, Quote>();
-            services.AddScoped<ICommand, Random>();
-            services.AddScoped<ICommand, Schedule>();
-            services.AddScoped<ICommand, SendAdmin>();
-            services.AddScoped<ICommand, SetCity>();
-            services.AddScoped<ICommand, SetGroup>();
-            services.AddScoped<ICommand, SetMailing>();
-            services.AddScoped<ICommand, TeacherSchedule>();
-            services.AddScoped<ICommand, UnsetMailing>();
-            services.AddScoped<ICommand, Weather>();
-            services.AddScoped<ICommand, Help>();
+            services.AddBotCommands();
 
             services.AddSingleton(x => new VkApi(Configuration["Config:AccessToken"]));
             services.AddSingleton(x => new WeatherInfo(Configuration["Config:OWMToken"]));
@@ -98,19 +79,19 @@ namespace Goblin
         private void ConfigureJobs()
         {
             // минуты часи дни месяцы дни-недели
-            RecurringJob.AddOrUpdate<ScheduledTasks>(x => x.SendRemind(), "* * * * *",
+            RecurringJob.AddOrUpdate<ScheduledTasks>(x => x.SendRemind(), Cron.Minutely,
                                                      TimeZoneInfo.Local);
-            RecurringJob.AddOrUpdate<ScheduledTasks>(x => x.SendSchedule(), "0 6 * * 0-6",
-                                                     TimeZoneInfo.Local); //TODO: check
+            RecurringJob.AddOrUpdate<ScheduledTasks>(x => x.SendSchedule(), "0 6 * * 1-6",
+                                                     TimeZoneInfo.Local);
             RecurringJob.AddOrUpdate<ScheduledTasks>(x => x.SendWeather(), "0 7 * * *",
-                                                     TimeZoneInfo.Local); //TODO: check
+                                                     TimeZoneInfo.Local);
             //TODO вынести в бд
             RecurringJob.AddOrUpdate<ScheduledTasks>("igor",
                                                      x => x.SendToConv(5, 351616, ""),
-                                                     "05 6 * * 0-6", TimeZoneInfo.Local); //TODO: check
+                                                     "05 6 * * 1-6", TimeZoneInfo.Local); //TODO: check
             RecurringJob.AddOrUpdate<ScheduledTasks>("pesi",
                                                      x => x.SendToConv(3, 351617, "Архангельск"),
-                                                     "15 6 * * 0-6", TimeZoneInfo.Local); //TODO: check
+                                                     "15 6 * * 1-6", TimeZoneInfo.Local); //TODO: check
         }
     }
 }
