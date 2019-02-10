@@ -5,7 +5,7 @@ using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
 {
-    public class KeyboardCommand : ICommand
+    public class Keyboard : ICommand
     {
         public string Name { get; } = "Клавиатура";
         public string Decription { get; } = "показывает клавиатуру";
@@ -28,9 +28,9 @@ namespace Goblin.Bot.Commands
             return (true, "");
         }
 
-        private Keyboard GenerateKeyboard()
+        private Vk.Models.Keyboard.Keyboard GenerateKeyboard()
         {
-            var kb = new Keyboard(false);
+            var kb = new Vk.Models.Keyboard.Keyboard(false);
 
             kb.AddButton("Расписание", ButtonColor.Primary, "cmd", "schedule");
             kb.AddButton("Расписание завтра", ButtonColor.Primary, "cmd", "schedule_tomorrow");
