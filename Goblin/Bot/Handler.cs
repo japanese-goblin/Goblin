@@ -63,7 +63,7 @@ namespace Goblin.Bot
                 //TODO: оповещение о том, что гоблину не нужен доступ ко всей переписке?
             }
 
-            if(!_db.GetUsers().Any(x => x.Vk == message.FromId))
+            if(_db.GetUsers().All(x => x.Vk != message.FromId))
             {
                 await _db.Users.AddAsync(new User { Vk = message.FromId });
                 await _db.SaveChangesAsync();
@@ -77,10 +77,9 @@ namespace Goblin.Bot
         private async Task<string> MessageDeny(CallbackResponse obj)
         {
             var deny = Vk.Models.Responses.MessageDeny.FromJson(obj.Object.ToString());
-            var userID = deny.UserId;
 
-            var userName = await _api.Users.Get(userID);
-            await _api.Messages.Send(_db.GetAdmins(), $"@id{userID} ({userName}) запретил сообщения");
+            var userName = await _api.Users.Get(deny.UserId);
+            await _api.Messages.Send(_db.GetAdmins(), $"@id{deny.UserId} ({userName}) запретил сообщения");
 
             return "ok";
         }
@@ -88,25 +87,24 @@ namespace Goblin.Bot
         private async Task<string> GroupJoin(CallbackResponse obj)
         {
             var join = Vk.Models.Responses.GroupJoin.FromJson(obj.Object.ToString());
-            var userID = join.UserId;
-            var userName = await _api.Users.Get(userID);
+            var userName = await _api.Users.Get(join.UserId);
 
-            await _api.Messages.Send(_db.GetAdmins(), $"@id{userID} ({userName}) подписался");
+            await _api.Messages.Send(_db.GetAdmins(), $"@id{join.UserId} ({userName}) подписался");
             return "ok";
         }
 
         private async Task<string> GroupLeave(CallbackResponse obj)
         {
             var leave = Vk.Models.Responses.GroupLeave.FromJson(obj.Object.ToString());
-            var userID = leave.UserId;
-            if(await _db.Users.AnyAsync(x => x.Vk == userID))
+            var userId = leave.UserId;
+            if(await _db.Users.AnyAsync(x => x.Vk == userId))
             {
-                _db.Users.Remove(_db.Users.First(x => x.Vk == userID));
+                _db.Users.Remove(_db.Users.First(x => x.Vk == userId));
                 await _db.SaveChangesAsync();
             }
 
-            var userName = await _api.Users.Get(userID);
-            await _api.Messages.Send(_db.GetAdmins(), $"@id{userID} ({userName}) отписался");
+            var userName = await _api.Users.Get(userId);
+            await _api.Messages.Send(_db.GetAdmins(), $"@id{userId} ({userName}) отписался");
             return "ok";
         }
     }
