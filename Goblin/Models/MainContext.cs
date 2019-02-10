@@ -14,22 +14,22 @@ namespace Goblin.Models
 
         public User[] GetUsers()
         {
-            return Users.ToArray();
+            return Users.AsNoTracking().ToArray();
         }
 
         public long[] GetAdmins()
         {
-            return Users.Where(x => x.IsAdmin).Select(x => x.Vk).ToArray();
+            return Users.Where(x => x.IsAdmin).AsNoTracking().Select(x => x.Vk).ToArray();
         }
 
         public User[] GetWeatherUsers()
         {
-            return Users.Where(x => x.Weather && x.City != "").ToArray();
+            return Users.Where(x => x.Weather && x.City != "").AsNoTracking().ToArray();
         }
 
         public User[] GetScheduleUsers()
         {
-            return Users.Where(x => x.Schedule && x.Group != 0).ToArray();
+            return Users.Where(x => x.Schedule && x.Group != 0).AsNoTracking().ToArray();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

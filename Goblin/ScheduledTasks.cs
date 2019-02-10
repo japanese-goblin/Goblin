@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Models;
+using Microsoft.EntityFrameworkCore;
 using Narfu;
 using OpenWeatherMap;
 using Vk;
@@ -24,7 +25,10 @@ namespace Goblin
         public async Task SendRemind()
         {
             var reminds =
-                _db.Reminds.Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
+                _db.Reminds
+                   .AsNoTracking()
+                   .Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
+
             if(!reminds.Any()) return;
 
             foreach(var remind in reminds)
