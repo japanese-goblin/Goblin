@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Narfu.Models;
@@ -16,7 +17,8 @@ namespace Narfu
 
         static TeachersSchedule()
         {
-            Teachers = JsonConvert.DeserializeObject<Teacher[]>(File.ReadAllText("Data/Teachers.json"));
+            var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            Teachers = JsonConvert.DeserializeObject<Teacher[]>(File.ReadAllText($"{path}/Data/Teachers.json"));
         }
 
         public static async Task<(bool IsError, Lesson[] Lessons)> GetScheule(int id)

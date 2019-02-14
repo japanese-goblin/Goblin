@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Narfu.Models;
 using Newtonsoft.Json;
@@ -17,7 +18,8 @@ namespace Narfu
         static StudentsSchedule()
         {
             StudentsEndPoint = $"{Utils.EndPoint}/?icalendar";
-            Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText("Data/Groups.json"));
+            var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText($"{path}/Data/Groups.json"));
         }
 
         /// <summary>
@@ -97,10 +99,13 @@ namespace Narfu
                 return $"На {date:dd.MM (dddd)} расписание отсутствует!";
             }
 
-            var lessonsInStr = lessons.Where(x => x.Time.DayOfYear == date.DayOfYear).Select(lesson =>
-                                                                                                 $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}] ({lesson.Teacher})\n" +
-                                                                                                 $"У группы {lesson.Groups}\n" +
-                                                                                                 $"В аудитории {lesson.Auditory} ({lesson.Address})\n\n");
+            //TODO: string builder
+            var lessonsInStr = lessons
+                              .Where(x => x.Time.DayOfYear == date.DayOfYear)
+                              .Select(lesson =>
+                                          $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}] ({lesson.Teacher})\n" +
+                                          $"У группы {lesson.Groups}\n" +
+                                          $"В аудитории {lesson.Auditory} ({lesson.Address})\n\n");
 
             var result = $"Расписание на {date:dd.MM (dddd)}:\n" + string.Join("\n\n", lessonsInStr);
             return result;
@@ -134,6 +139,7 @@ namespace Narfu
                 return "На данный момент список экзаменов отсутствует";
             }
 
+            //TODO: string builder
             var result = "Список экзаменов:\n";
             foreach(var exam in lessons.GroupBy(x => x.Name))
             {
