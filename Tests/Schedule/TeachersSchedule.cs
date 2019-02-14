@@ -5,19 +5,19 @@ namespace Tests.Schedule
 {
     public class TeachersSchedule
     {
-        private const int CorrectId = 22913;
+        private const int Id = 22913;
 
         [Fact]
         public async Task GetScheule_Correct()
         {
-            var (isError, _) = await Narfu.TeachersSchedule.GetScheule(CorrectId);
+            var (isError, _) = await Narfu.TeachersSchedule.GetScheule(Id);
             Assert.False(isError);
         }
 
         [Fact]
         public async Task GetScheduleToSend_Correct()
         {
-            var result = await Narfu.TeachersSchedule.GetScheduleToSend(CorrectId);
+            var result = await Narfu.TeachersSchedule.GetScheduleToSend(Id);
             Assert.True(result.Contains("преподавателя"));
         }
 
