@@ -23,9 +23,9 @@ namespace Vk.Models.Keyboard
             Buttons.Last().Add(but);
         }
 
-        public void AddButton(string Title, ButtonColor color, string cmd, string param)
+        public void AddButton(string title, ButtonColor color, string cmd, string param)
         {
-            Buttons.Last().Add(new Button(Title, color, cmd, param));
+            Buttons.Last().Add(new Button(title, color, cmd, param));
         }
 
         public void AddLine()

@@ -8,6 +8,7 @@ namespace Vk.Category
     public class Messages
     {
         private readonly VkApi _api;
+
         public Messages(VkApi api)
         {
             _api = api;

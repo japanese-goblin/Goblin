@@ -10,13 +10,15 @@ namespace Vk
     public class VkApi
     {
         private const string EndPoint = "https://api.vk.com/method";
-        private readonly HttpClient Client = new HttpClient(); //TODO: DI
+        private readonly HttpClient Client; //TODO: DI
         private const string Version = "5.92";
         private readonly string AccessToken;
 
         public VkApi(string token)
         {
             AccessToken = token;
+            Client = new HttpClient();
+
             Messages = new Messages(this);
             Users = new Users(this);
             Photos = new Photos(this);
@@ -31,8 +33,7 @@ namespace Vk
             @params.Add("access_token", AccessToken);
 
             //TODO add sleep? (лимит для токена сообщества - 20 запросов в секунду)
-            var response = await Client.PostAsync($"{EndPoint}/{method}",
-                                                  new FormUrlEncodedContent(@params));
+            var response = await Client.PostAsync($"{EndPoint}/{method}", new FormUrlEncodedContent(@params));
             var responseStr = await response.Content.ReadAsStringAsync();
 
             if(responseStr.Contains("error"))
@@ -47,11 +48,9 @@ namespace Vk
         }
 
         #region categories
-
         public readonly Messages Messages;
         public readonly Users Users;
         public readonly Photos Photos;
-
         #endregion
     }
 }

@@ -9,6 +9,7 @@ namespace Vk.Category
     public class Users
     {
         private readonly VkApi _api;
+
         public Users(VkApi api)
         {
             _api = api;
@@ -21,7 +22,7 @@ namespace Vk.Category
 
         public async Task<User[]> Get(long[] ids)
         {
-            var values = new Dictionary<string, string>
+            var values = new Dictionary<string, string> 
             {
                 ["user_ids"] = string.Join(',', ids),
                 ["fields"] = "photo_200_orig"

@@ -11,6 +11,7 @@ namespace Vk.Category
     public class Photos
     {
         private readonly VkApi _api;
+
         public Photos(VkApi api)
         {
             _api = api;

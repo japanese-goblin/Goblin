@@ -11,6 +11,6 @@ namespace Vk.Models
         public object Object { get; set; }
 
         [JsonProperty("group_id")]
-        public int GroupId { get; set; }
+        public uint GroupId { get; set; }
     }
 }
