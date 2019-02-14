@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using Narfu.Models;
 using Newtonsoft.Json;
@@ -67,7 +68,7 @@ namespace Narfu
                     Time = ev.Start.AsSystemLocal,
                     Type = descr[3],
                     StartEndTime = descr[0].Replace(")", "").Replace("(", "").Replace("п", ")"),
-                    Number = (byte) descr[0].ElementAt(0)
+                    Number = (byte)descr[0].ElementAt(0)
                 };
             }).ToArray();
 
@@ -87,8 +88,7 @@ namespace Narfu
             if(res.IsError)
             {
                 var group = GetGroupByRealId(realGroup).SiteId;
-                return "Ошибка :с\n" +
-                       "Возможно, сайт с расписанием недоступен (либо ошибка на стороне бота)\n" +
+                return "Ошибка :с\n" + "Возможно, сайт с расписанием недоступен (либо ошибка на стороне бота)\n" +
                        $"Вы можете проверить расписание здесь: https://ruz.narfu.ru/?timetable&group={group}";
             }
 
@@ -99,16 +99,19 @@ namespace Narfu
                 return $"На {date:dd.MM (dddd)} расписание отсутствует!";
             }
 
-            //TODO: string builder
-            var lessonsInStr = lessons
-                              .Where(x => x.Time.DayOfYear == date.DayOfYear)
-                              .Select(lesson =>
-                                          $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}] ({lesson.Teacher})\n" +
-                                          $"У группы {lesson.Groups}\n" +
-                                          $"В аудитории {lesson.Auditory} ({lesson.Address})\n\n");
+            var strBuilder = new StringBuilder();
 
-            var result = $"Расписание на {date:dd.MM (dddd)}:\n" + string.Join("\n\n", lessonsInStr);
-            return result;
+            strBuilder.AppendFormat("Расписание на {0:dd.MM (dddd)}", date).AppendLine();
+            foreach(var lesson in lessons.Where(x => x.Time.DayOfYear == date.DayOfYear))
+            {
+                strBuilder.AppendFormat("{0} - {1} [{2}] ({3})", lesson.StartEndTime, lesson.Name, lesson.Type, lesson.Teacher)
+                          .AppendLine();
+                strBuilder.AppendFormat("У группы {0}", lesson.Groups).AppendLine();
+                strBuilder.AppendFormat("В аудитории {0} ({1})", lesson.Auditory, lesson.Address).AppendLine();
+                strBuilder.AppendLine().AppendLine();
+            }
+
+            return strBuilder.ToString();
         }
 
         /// <summary>
@@ -128,34 +131,33 @@ namespace Narfu
                        $"Вы можете проверить расписание здесь: https://ruz.narfu.ru/?timetable&group={group}";
             }
 
-            var lessons = res.Lessons.Where(x =>
-                                                x.Type.ToLower().Contains("экзамен") ||
-                                                x.Type.ToLower().Contains("зачет"))
-                             .OrderBy(x => x.Time)
-                             .ToArray();
+            var lessons = res.Lessons.Where(x => x.Type.ToLower().Contains("экзамен") || x.Type.ToLower().Contains("зачет"))
+                             .OrderBy(x => x.Time).ToArray();
 
             if(lessons.Length == 0)
             {
                 return "На данный момент список экзаменов отсутствует";
             }
 
-            //TODO: string builder
-            var result = "Список экзаменов:\n";
+            var strBuilder = new StringBuilder();
+
+            strBuilder.AppendLine("Список экзаменов:");
             foreach(var exam in lessons.GroupBy(x => x.Name))
             {
                 var f = exam.First();
                 var l = exam.Last();
-                result += $"{l.Time:dd.MM.yyyy (dddd)} ({f.Time:HH:mm} - {l.StartEndTime.Split("-")[1]})" +
-                          $" - {l.Name} [{l.Type}] ({l.Teacher})\n" +
-                          $"У группы {l.Groups}\n" +
-                          $"В аудитории {l.Auditory}\n\n";
+                var endTime = l.StartEndTime.Split("-")[1];
+                strBuilder.AppendFormat("{0:dd.MM.yyyy (dddd)} ({1:HH:mm} - {2}) - {3} [{4}] ({5})",
+                                        l.Time, f.Time, endTime, l.Name, l.Type, l.Teacher).AppendLine();
+                strBuilder.AppendFormat("У группы {0}", l.Groups).AppendLine();
+                strBuilder.AppendFormat("В аудитории {0}", l.Auditory).AppendLine();
+                strBuilder.AppendLine();
             }
 
-            return result;
+            return strBuilder.ToString();
         }
 
         #region utils
-
         public static int GetWeekNumber(DateTime date)
         {
             var ciCurr = CultureInfo.CurrentCulture;
@@ -177,7 +179,6 @@ namespace Narfu
         {
             return Groups.FirstOrDefault(x => x.SiteId == siteId);
         }
-
         #endregion
     }
 }

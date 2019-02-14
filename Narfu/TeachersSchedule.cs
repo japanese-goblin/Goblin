@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Narfu.Models;
@@ -109,22 +110,24 @@ namespace Narfu
                 return "На данные момент у этого преподавателя нет пар";
             }
 
-            var result = $"Расписание пар у преподавателя '{teacher.Name}':\n";
+            var strBuilder = new StringBuilder();
+
+            strBuilder.AppendFormat("Расписание пар у преподавателя '{0}':", teacher.Name).AppendLine();
             foreach(var group in lessons.Where(x => x.Time.Date >= DateTime.Now.Date)
                                         .GroupBy(x => x.Time.DayOfYear).Take(10))
             {
-                result += $"{group.First().Time:dd.MM (dddd)}:\n";
+                strBuilder.AppendFormat("{0:dd.MM (dddd)}", group.First().Time).AppendLine();
                 foreach(var lesson in group)
                 {
-                    result += $"{lesson.StartEndTime} - {lesson.Name} [{lesson.Type}]\n" +
-                              // $"{lesson.Groups}\n" + // TODO
-                              $"В {lesson.Auditory} ({lesson.Address})\n";
+                    strBuilder.AppendFormat("{0} - {1} [{2}]", lesson.StartEndTime, lesson.Name, lesson.Type)
+                              .AppendLine();
+                    strBuilder.AppendFormat("В {0} ({1})", lesson.Auditory, lesson.Address).AppendLine();
                 }
 
-                result += "\n\n";
+                strBuilder.AppendLine();
             }
 
-            return result;
+            return strBuilder.ToString();
         }
 
         public static string FindByName(string name)
