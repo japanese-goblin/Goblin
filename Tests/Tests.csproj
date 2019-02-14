@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="XCOPY &quot;$(SolutionDir)Goblin\Data&quot; &quot;$(TargetDir)&quot; /S /Y" />
+    <Exec Command="XCOPY &quot;$(SolutionDir)Narfu\Data&quot; &quot;$(TargetDir)&quot; /S /Y" />
   </Target>
 
 </Project>
