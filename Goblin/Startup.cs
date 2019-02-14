@@ -66,11 +66,7 @@ namespace Goblin
             app.UseHangfireServer(options);
 
             //app.UseHttpsRedirection(); //TODO
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(name: "default",
-                                template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvcWithDefaultRoute();
 
 
             ConfigureJobs();
@@ -88,10 +84,10 @@ namespace Goblin
             //TODO вынести в бд
             RecurringJob.AddOrUpdate<ScheduledTasks>("igor",
                                                      x => x.SendToConv(5, 351616, ""),
-                                                     "05 6 * * 1-6", TimeZoneInfo.Local); //TODO: check
+                                                     "05 6 * * 1-6", TimeZoneInfo.Local);
             RecurringJob.AddOrUpdate<ScheduledTasks>("pesi",
                                                      x => x.SendToConv(3, 351617, "Архангельск"),
-                                                     "15 6 * * 1-6", TimeZoneInfo.Local); //TODO: check
+                                                     "15 6 * * 1-6", TimeZoneInfo.Local);
         }
     }
 }
