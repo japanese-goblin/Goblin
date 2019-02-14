@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Goblin.Data.Models;
 using Goblin.Models;
 using Vk.Models.Messages;
 
@@ -57,7 +58,7 @@ namespace Goblin.Bot.Commands
             {
                 Text = all[2],
                 Date = time.Result,
-                VkID = msg.FromId
+                VkId = msg.FromId
             });
             await _db.SaveChangesAsync();
 

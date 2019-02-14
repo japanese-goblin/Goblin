@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Goblin.Data.Models;
+using Goblin.Data.ViewModels;
 using Goblin.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -22,7 +24,7 @@ namespace Goblin.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            return View(_db.GetUsers().OrderBy(x => x.ID).ToList());
+            return View(_db.GetUsers().OrderBy(x => x.Id).ToList());
         }
 
         [HttpGet]

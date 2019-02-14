@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Goblin.Data.Models;
 using Goblin.Models;
 using Microsoft.EntityFrameworkCore;
 using Vk.Models.Messages;
@@ -25,7 +26,7 @@ namespace Goblin.Bot.Commands
         public async Task<CommandResponse> Execute(Message msg)
         {
             var text = "";
-            var ureminds = await _db.Reminds.Where(x => x.VkID == msg.FromId)
+            var ureminds = await _db.Reminds.Where(x => x.VkId == msg.FromId)
                                     .OrderBy(x => x.Date).ToListAsync();
             if(!ureminds.Any())
             {

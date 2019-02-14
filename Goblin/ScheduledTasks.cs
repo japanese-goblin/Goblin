@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Models;
+using Goblin.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
 using OpenWeatherMap;
@@ -33,7 +33,7 @@ namespace Goblin
 
             foreach(var remind in reminds)
             {
-                await _api.Messages.Send(remind.VkID, $"Напоминаю:\n {remind.Text}");
+                await _api.Messages.Send(remind.VkId, $"Напоминаю:\n {remind.Text}");
                 _db.Reminds.Remove(remind);
             }
 

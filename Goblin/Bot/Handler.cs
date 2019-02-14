@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Goblin.Models;
+using Goblin.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Vk;
 using Vk.Models;
 using Vk.Models.Messages;
-using User = Goblin.Models.User;
+using User = Goblin.Data.Models.User;
 
 namespace Goblin.Bot
 {

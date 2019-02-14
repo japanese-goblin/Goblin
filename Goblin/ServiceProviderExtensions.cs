@@ -1,5 +1,5 @@
 ﻿using Goblin.Bot.Commands;
-using Goblin.Models;
+using Goblin.Data.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Goblin
@@ -27,5 +27,4 @@ namespace Goblin
             services.AddScoped<ICommand, Help>();
         }
     }
-
 }

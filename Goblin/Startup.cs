@@ -1,6 +1,6 @@
 ﻿using System;
 using Goblin.Bot;
-using Goblin.Models;
+using Goblin.Data.Models;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Authentication.Cookies;

@@ -21,13 +21,4 @@
     <ProjectReference Include="..\Vk\Vk.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="Data\Groups.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Data\Teachers.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
 </Project>
