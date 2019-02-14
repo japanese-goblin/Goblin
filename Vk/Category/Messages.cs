@@ -25,6 +25,7 @@ namespace Vk.Category
             {
                 throw new ArgumentNullException(nameof(ids), "Укажите хотя бы один peer_id");
             }
+
             if(string.IsNullOrEmpty(text) && attachs is null)
             {
                 throw new ArgumentNullException(nameof(text), "Укажите текст или прикрепления");

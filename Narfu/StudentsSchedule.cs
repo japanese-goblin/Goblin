@@ -88,8 +88,9 @@ namespace Narfu
             if(res.IsError)
             {
                 var group = GetGroupByRealId(realGroup).SiteId;
-                return "Ошибка :с\n" + "Возможно, сайт с расписанием недоступен (либо ошибка на стороне бота)\n" +
-                       $"Вы можете проверить расписание здесь: https://ruz.narfu.ru/?timetable&group={group}";
+                return $@"Ошибка :с
+                       Возможно, сайт с расписанием недоступен (либо ошибка на стороне бота)
+                       Вы можете проверить расписание здесь: https://ruz.narfu.ru/?timetable&group={group}";
             }
 
             var lessons = res.Lessons.Where(x => x.Time.DayOfYear == date.DayOfYear).ToList();
@@ -126,9 +127,9 @@ namespace Narfu
             if(res.IsError)
             {
                 var group = GetGroupByRealId(realGroup).SiteId;
-                return "Какая-то ошибочка :с\n" +
-                       "Возможно, сайт с расписанием недоступен (либо ошибка на стороне бота, но это вряд ли)\n" +
-                       $"Вы можете проверить расписание здесь: https://ruz.narfu.ru/?timetable&group={group}";
+                return $@"Какая-то ошибочка :с\n
+                       Возможно, сайт с расписанием недоступен (либо ошибка на стороне бота, но это вряд ли)\n
+                       Вы можете проверить расписание здесь: https://ruz.narfu.ru/?timetable&group={group}";
             }
 
             var lessons = res.Lessons.Where(x => x.Type.ToLower().Contains("экзамен") || x.Type.ToLower().Contains("зачет"))

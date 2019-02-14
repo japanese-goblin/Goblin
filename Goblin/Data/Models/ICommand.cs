@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Goblin.Models;
+using Goblin.Data.Enums;
 using Vk.Models.Messages;
 
 namespace Goblin.Data.Models

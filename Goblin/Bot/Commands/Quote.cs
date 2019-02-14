@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Goblin.Data.Models;
-using Goblin.Models;
+using Goblin.Data.Enums;
 using QuotesGenerator;
 using Vk;
 using Vk.Models.Messages;

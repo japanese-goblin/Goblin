@@ -91,18 +91,18 @@ namespace Narfu
             var teacher = Teachers.FirstOrDefault(x => x.Id == id);
             if(teacher is null)
             {
-                return "Ошибка :с\n" +
-                       "Данного преподавателя нет в списке\n" +
-                       "Если Вы уверены, что всё правильно, напишите мне для добавления препода в список (https://vk.com/id***REMOVED***)";
+                return @"Ошибка :с
+                       Данного преподавателя нет в списке
+                       Если Вы уверены, что всё правильно, напишите мне для добавления препода в список (https://vk.com/id***REMOVED***)";
             }
 
             var (error, lessons) = await GetScheule(id);
 
             if(error)
             {
-                return "Ошибка :с\n" +
-                       "Возможно, сайт с расписанием недоступен (либо введен неправильный номер преподавателя)\n" +
-                       $"Вы можете проверить расписание здесь: https://ruz.narfu.ru/?timetable&lecturer={id}";
+                return @"Ошибка :с
+                       Возможно, сайт с расписанием недоступен (либо введен неправильный номер преподавателя)
+                       Вы можете проверить расписание здесь: https://ruz.narfu.ru/?timetable&lecturer={id}";
             }
 
             if(lessons.Length == 0)
@@ -135,7 +135,7 @@ namespace Narfu
             name = name.ToLower(); //TODO ?
             var teachers = Teachers.Where(x => x.Name.ToLower().Contains(name));
             return string.Join("\n", teachers
-                                    .Select(x => $"{x.Name} ({x.Depart}) - {x.Id}"));
+                                   .Select(x => $"{x.Name} ({x.Depart}) - {x.Id}"));
         }
 
         public static bool FindById(int id)

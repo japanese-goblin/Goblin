@@ -34,10 +34,10 @@ namespace Goblin
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-                     {
-                         options.AccessDeniedPath = new PathString("/Admin/");
-                         options.LoginPath = new PathString("/Admin/Login");
-                     });
+                    {
+                        options.AccessDeniedPath = new PathString("/Admin/");
+                        options.LoginPath = new PathString("/Admin/Login");
+                    });
 
             services.AddHangfire(config => { config.UseMemoryStorage(); });
 

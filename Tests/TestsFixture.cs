@@ -14,8 +14,8 @@ namespace Tests
         {
             //VkApi.SetAccessToken(Settings.AccessToken);
             var server = new TestServer(new WebHostBuilder()
-                                       .UseEnvironment("Development")
-                                       .UseStartup<Startup>());
+                                        .UseEnvironment("Development")
+                                        .UseStartup<Startup>());
 
             Client = server.CreateClient();
         }

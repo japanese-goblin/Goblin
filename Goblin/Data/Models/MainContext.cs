@@ -8,9 +8,7 @@ namespace Goblin.Data.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Remind> Reminds { get; set; }
 
-        public MainContext(DbContextOptions<MainContext> options) : base(options)
-        {
-        }
+        public MainContext(DbContextOptions<MainContext> options) : base(options) { }
 
         public User[] GetUsers()
         {

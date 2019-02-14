@@ -4,7 +4,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Goblin.Data.Models;
 using Goblin.Data.ViewModels;
-using Goblin.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -52,8 +51,8 @@ namespace Goblin.Controllers
             var principal = new ClaimsPrincipal(identity);
 
             // sign-in
-            await HttpContext.SignInAsync(scheme: CookieAuthenticationDefaults.AuthenticationScheme,
-                                          principal: principal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                                          principal);
 
             return RedirectToAction("Index", "Admin");
         }
