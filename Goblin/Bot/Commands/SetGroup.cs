@@ -12,7 +12,7 @@ namespace Goblin.Bot.Commands
         public string Decription => "Установить группу для получения расписания";
         public string Usage => "Устгр 351617";
         public string[] Allias { get; } = { "устгр" };
-        public Category Category => Category.SAFU;
+        public Category Category => Category.Safu;
         public bool IsAdmin => false;
 
         private readonly MainContext _db;

@@ -14,7 +14,7 @@ namespace Goblin.Bot.Commands
 
         public string Usage { get; } = "Препод 22331";
         public string[] Allias { get; } = { "препод" };
-        public Category Category { get; } = Category.SAFU;
+        public Category Category { get; } = Category.Safu;
         public bool IsAdmin { get; } = false;
 
         public async Task<CommandResponse> Execute(Message msg)

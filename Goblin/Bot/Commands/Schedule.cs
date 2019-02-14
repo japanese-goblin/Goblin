@@ -18,7 +18,7 @@ namespace Goblin.Bot.Commands
 
         public string Usage { get; } = "Расписание 21.12";
         public string[] Allias { get; } = { "расписание" };
-        public Category Category { get; } = Category.SAFU;
+        public Category Category { get; } = Category.Safu;
         public bool IsAdmin { get; } = false;
 
         private readonly MainContext _db;

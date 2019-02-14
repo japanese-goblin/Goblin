@@ -13,7 +13,7 @@ namespace Goblin.Bot.Commands
         public string Decription { get; } = "Возвращает список экзаменов/зачетов/интернет-экзаменов";
         public string Usage { get; } = "Экзамены";
         public string[] Allias { get; } = { "экзамены" };
-        public Category Category { get; } = Category.SAFU;
+        public Category Category { get; } = Category.Safu;
         public bool IsAdmin { get; } = false;
 
         private readonly MainContext _db;

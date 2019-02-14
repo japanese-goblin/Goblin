@@ -3,6 +3,6 @@
     public enum Category
     {
         Common,
-        SAFU
+        Safu
     }
 }
