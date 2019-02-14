@@ -31,7 +31,7 @@ namespace OpenWeatherMap
             str.AppendFormat("Температура: {0}°С", w.Weather.Temperature).AppendLine();
             str.AppendFormat("Описание погоды: {0}", w.Info[0].State).AppendLine();
             str.AppendFormat("Влажность: {0}%", w.Weather.Humidity).AppendLine();
-            str.AppendFormat("Ветер: {0} м/с", w.Wind.Speed).AppendLine();
+            str.AppendFormat("Ветер: {0:N0} м/с", w.Wind.Speed).AppendLine();
             str.AppendFormat("Давление: {0:N0} мм.рт.ст", w.Weather.Pressure * pressureConvert).AppendLine();
             str.AppendFormat("Облачность: {0}%", w.Clouds.Cloudiness).AppendLine();
             str.AppendFormat("Видимость: {0} метров", w.Visibility).AppendLine();
