@@ -21,9 +21,13 @@ namespace Vk.Category
 
         public async Task Send(long[] ids, string text, string[] attachs = null, Keyboard kb = null)
         {
-            if(string.IsNullOrEmpty(text) || ids.Length == 0)
+            if(ids.Length == 0)
             {
-                return;
+                throw new ArgumentNullException(nameof(ids), "Укажите хотя бы один peer_id");
+            }
+            if(string.IsNullOrEmpty(text) && attachs is null)
+            {
+                throw new ArgumentNullException(nameof(text), "Укажите текст или прикрепления");
             }
 
             var values = new Dictionary<string, string>
