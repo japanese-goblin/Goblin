@@ -25,19 +25,19 @@ namespace OpenWeatherMap
             var w = JsonConvert.DeserializeObject<Models.WeatherInfo>(response);
 
             // на {UnixToDateTime(w.UnixTime):dd.MM.yyyy HH:mm}
+            const double pressureConvert = 0.75006375541921;
             var str = new StringBuilder();
             str.AppendFormat("Погода в городе {0} на данный момент:", city).AppendLine();
-            str.AppendFormat("Температура: {0}", w.Weather.Temperature).AppendLine();
+            str.AppendFormat("Температура: {0}°С", w.Weather.Temperature).AppendLine();
             str.AppendFormat("Описание погоды: {0}", w.Info[0].State).AppendLine();
-            str.AppendFormat("Влажность: {0}", w.Weather.Humidity).AppendLine();
-            str.AppendFormat("Ветер: {0}", w.Wind.SpeedInfo).AppendLine();
-            str.AppendFormat("Давление: {0}", w.Weather.Pressure).AppendLine();
-            str.AppendFormat("Облачность: {0}", w.Clouds.Cloudiness).AppendLine();
-            str.AppendFormat("Видимость: {0}", w.Visibility).AppendLine();
+            str.AppendFormat("Влажность: {0}%", w.Weather.Humidity).AppendLine();
+            str.AppendFormat("Ветер: {0} м/с", w.Wind.Speed).AppendLine();
+            str.AppendFormat("Давление: {0:N0} мм.рт.ст", w.Weather.Pressure * pressureConvert).AppendLine();
+            str.AppendFormat("Облачность: {0}%", w.Clouds.Cloudiness).AppendLine();
+            str.AppendFormat("Видимость: {0} метров", w.Visibility).AppendLine();
             str.AppendLine();
-            str.AppendFormat("Восход в {0:HH.mm}", w.OtherInfo.Sunrise).AppendLine();
-            str.AppendFormat("Закат в {0:HH.mm}", w.OtherInfo.Sunset).AppendLine();
-
+            str.AppendFormat("Восход в {0:HH:mm}", UnixToDateTime(w.OtherInfo.Sunrise)).AppendLine();
+            str.AppendFormat("Закат в {0:HH:mm}", UnixToDateTime(w.OtherInfo.Sunset)).AppendLine();
             return str.ToString();
         }
 
@@ -49,7 +49,7 @@ namespace OpenWeatherMap
             return r.IsSuccessStatusCode;
         }
 
-        internal static DateTime UnixToDateTime(double unixTimeStamp)
+        internal DateTime UnixToDateTime(double unixTimeStamp)
         {
             var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();

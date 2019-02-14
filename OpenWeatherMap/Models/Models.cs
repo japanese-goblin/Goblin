@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace OpenWeatherMap.Models
@@ -16,7 +15,7 @@ namespace OpenWeatherMap.Models
     internal class Weather
     {
         [JsonProperty("id")]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("main")]
         private string _main { get; set; }
@@ -31,25 +30,19 @@ namespace OpenWeatherMap.Models
     internal class Main
     {
         [JsonProperty("temp")]
-        private double _temperature { get; set; }
+        public double Temperature { get; set; }
 
         [JsonProperty("pressure")]
-        private double _pressure { get; set; }
+        public double Pressure { get; set; }
 
         [JsonProperty("humidity")]
-        private double _humidity { get; set; }
+        public double Humidity { get; set; }
 
         [JsonProperty("temp_min")]
-        private double _minTemp { get; set; }
+        public double MinTemp { get; set; }
 
         [JsonProperty("temp_max")]
-        private double _maxTemp { get; set; }
-
-        public string Temperature => $"{Math.Round(_temperature)}°С";
-        public string Pressure => $"{(int) (_pressure * 0.75006375541921)} мм.рт.ст.";
-        public string Humidity => $"{_humidity}%";
-        public string MinTemp => $"{_minTemp}°С";
-        public string MaxTemp => $"{_maxTemp}°С";
+        public double MaxTemp { get; set; }
     }
 
     internal class Wind
@@ -59,17 +52,12 @@ namespace OpenWeatherMap.Models
 
         [JsonProperty("deg")]
         public double Degrees { get; set; }
-
-        [JsonIgnore]
-        public string SpeedInfo => $"{Math.Round(Speed)} м/с";
     }
 
     internal class Clouds
     {
         [JsonProperty("all")]
-        private int _all { get; set; }
-
-        public string Cloudiness => $"{_all}%";
+        public int Cloudiness { get; set; }
     }
 
     internal class Sys
@@ -78,7 +66,7 @@ namespace OpenWeatherMap.Models
         public int Type { get; set; }
 
         [JsonProperty("id")]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("message")]
         public double Message { get; set; }
@@ -87,13 +75,10 @@ namespace OpenWeatherMap.Models
         public string Country { get; set; }
 
         [JsonProperty("sunrise")]
-        private int _sunrise { get; set; }
+        public int Sunrise { get; set; }
 
         [JsonProperty("sunset")]
-        private int _sunset { get; set; }
-
-        public DateTime Sunrise => OpenWeatherMap.WeatherInfo.UnixToDateTime(_sunrise);
-        public DateTime Sunset => OpenWeatherMap.WeatherInfo.UnixToDateTime(_sunset);
+        public int Sunset { get; set; }
     }
 
     internal class WeatherInfo
@@ -111,7 +96,7 @@ namespace OpenWeatherMap.Models
         public Main Weather { get; set; }
 
         [JsonProperty("visibility")]
-        private double _visibility { get; set; }
+        public double Visibility { get; set; }
 
         [JsonProperty("wind")]
         public Wind Wind { get; set; }
@@ -126,14 +111,12 @@ namespace OpenWeatherMap.Models
         public Sys OtherInfo { get; set; }
 
         [JsonProperty("id")]
-        private int ID { get; set; }
+        private int Id { get; set; }
 
         [JsonProperty("name")]
         public string CityName { get; set; }
 
         [JsonProperty("cod")]
         public int CityCode { get; set; }
-
-        public string Visibility => $"{_visibility} метров";
     }
 }
