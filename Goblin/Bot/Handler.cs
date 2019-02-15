@@ -15,6 +15,7 @@ namespace Goblin.Bot
 {
     public class Handler
     {
+        private const string OkResponse = "ok";
         private readonly MainContext _db;
         private readonly IConfiguration _config;
         private readonly CommandExecutor _executor;
@@ -36,6 +37,7 @@ namespace Goblin.Bot
                 ["confirmation"] = Confirmation,
                 ["message_new"] = MessageNew,
                 ["message_deny"] = MessageDeny,
+                ["message_reply"] = MessageReply,
                 ["group_join"] = GroupJoin,
                 ["group_leave"] = GroupLeave
             };
@@ -71,7 +73,7 @@ namespace Goblin.Bot
 
             var response = await _executor.ExecuteCommand(message);
             await _api.Messages.Send(message.PeerId, response.Text, response.Attachments, response.Keyboard);
-            return "ok";
+            return OkResponse;
         }
 
         private async Task<string> MessageDeny(CallbackResponse obj)
@@ -84,13 +86,28 @@ namespace Goblin.Bot
             return "ok";
         }
 
+        private async Task<string> MessageReply(CallbackResponse obj)
+        {
+            var message = Message.FromJson(obj.Object.ToString());
+
+            const long confId = 2000000000;
+            var isConf = (message.PeerId / confId) > 0;
+            if(isConf || !message.Text.StartsWith('!')) return OkResponse;
+
+            message.Text = message.Text.Substring(1, message.Text.Length - 1);
+            var response = await _executor.ExecuteCommand(message);
+            await _api.Messages.Send(message.PeerId, response.Text, response.Attachments, response.Keyboard);
+
+            return OkResponse;
+        }
+
         private async Task<string> GroupJoin(CallbackResponse obj)
         {
             var join = Vk.Models.Responses.GroupJoin.FromJson(obj.Object.ToString());
             var userName = await _api.Users.Get(join.UserId);
 
             await _api.Messages.Send(_db.GetAdmins(), $"@id{join.UserId} ({userName}) подписался");
-            return "ok";
+            return OkResponse;
         }
 
         private async Task<string> GroupLeave(CallbackResponse obj)
@@ -105,7 +122,7 @@ namespace Goblin.Bot
 
             var userName = await _api.Users.Get(userId);
             await _api.Messages.Send(_db.GetAdmins(), $"@id{userId} ({userName}) отписался");
-            return "ok";
+            return OkResponse;
         }
     }
 }
