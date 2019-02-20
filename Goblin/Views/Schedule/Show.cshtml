@@ -17,7 +17,7 @@
         @foreach(var group in Model)
         {
             <li>
-                <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#d@(group.Value.First().Time.DayOfYear)">@group.Key</a>
+                <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#d@(group.Value.First().StartTime.DayOfYear)">@group.Key</a>
             </li>
         }
     </ul>
@@ -25,12 +25,12 @@
     <div class="tab-content" id="pills-tabContent">
         @foreach(var group in Model)
         {
-            <div id="d@(group.Value.First().Time.DayOfYear)" class="tab-pane fade">
+            <div id="d@(group.Value.First().StartTime.DayOfYear)" class="tab-pane fade">
                 <div class="row">
-                    @foreach(var days in group.Value.GroupBy(x => x.Time.DayOfWeek))
+                    @foreach(var days in group.Value.GroupBy(x => x.StartTime.DayOfWeek))
                     {
                         <div class="col-md-2">
-                            <div class="dayofweek">@days.First().Time.ToString("dddd, dd.MM.yyyy", CultureInfo.CreateSpecificCulture("ru-RU"))</div>
+                            <div class="dayofweek">@days.First().StartTime.ToString("dddd, dd.MM.yyyy", CultureInfo.CreateSpecificCulture("ru-RU"))</div>
                             @foreach(var lesson in days)
                             {
                                 <lesson lesson="lesson"></lesson>

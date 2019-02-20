@@ -11,7 +11,7 @@ namespace Tests.Schedule
         [Fact]
         public async Task GetSchedule_Correct()
         {
-            var (isError, _) = await Narfu.StudentsSchedule.GetSchedule(Group);
+            var (isError, _, _) = await Narfu.StudentsSchedule.GetSchedule(Group);
             Assert.False(isError, "Сайт сломался?");
         }
 

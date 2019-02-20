@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,55 +25,57 @@ namespace Narfu
         }
 
         /// <summary>
-        /// Получение всего доступного расписания для группы
+        /// Получение всего доступного расписания группы на указанную дату
         /// </summary>
-        /// <param name="realGroup">Реальный номер группы</param>
-        /// <returns>(произошла ли ошибка, массив с парамаи)</returns>
-        public static async Task<(bool IsError, Lesson[] Lessons)> GetSchedule(int realGroup)
+        /// <param name="groupId">
+        /// ID группы на сайте
+        /// </param>
+        /// <returns>
+        /// Возвращает кортеж:
+        /// Error - произошла ли ошибка при выполнении запроса
+        /// Code - код ответа
+        /// Lessons - массив с парами
+        /// </returns>
+        public static async Task<(bool Error, HttpStatusCode Code, Lesson[] Lessons)> GetSchedule(int groupId)
         {
-            var userGroup = GetGroupByRealId(realGroup).SiteId;
-            var url = $"{StudentsEndPoint}&oid={userGroup}&cod={realGroup}&from={DateTime.Now:dd.MM.yyyy}";
-            var response = await Utils.Client.GetAsync(url);
-            if(!response.IsSuccessStatusCode)
+            var siteGroup = GetGroupByRealId(groupId).SiteId;
+            var requestUrl = $"{StudentsEndPoint}&oid={siteGroup}&cod={groupId}&from={DateTime.Now:dd.MM.yyyy}";
+            var response = await Utils.Client.GetAsync(requestUrl);
+            if(!response.IsSuccessStatusCode || response.Content is null)
             {
-                return (true, new Lesson[] { });
+                return (true, response.StatusCode, null);
             }
 
-            Calendar calendar;
-            try
-            {
-                calendar = Calendar.Load(await response.Content.ReadAsStringAsync());
-            }
-            catch // редирект на главную
-            {
-                return (true, new Lesson[] { }); //TODO: true -> false?
-            }
-
-            var events = calendar.Events.Distinct().OrderBy(x => x.Start.Value).ToList();
+            var calendar = Calendar.Load(await response.Content.ReadAsStringAsync());
+            var events = calendar.Events
+                                 .Distinct()
+                                 .OrderBy(x => x.DtStart.Value)
+                                 .ToArray();
             if(!events.Any())
             {
-                return (false, new Lesson[] { });
+                return (false, response.StatusCode, new Lesson[] { });
             }
 
             var lessons = events.Select(ev =>
             {
-                var descr = ev.Description.Split('\n');
-                var adr = ev.Location.Split('/');
+                var description = ev.Description.Split('\n');
+                var address = ev.Location.Split('/');
                 return new Lesson
                 {
-                    Address = adr[0],
-                    Auditory = adr[1],
-                    Groups = descr[1].Substring(3),
-                    Name = descr[2],
-                    Teacher = descr[4],
-                    Time = ev.Start.AsSystemLocal,
-                    Type = descr[3],
-                    StartEndTime = descr[0].Replace(")", "").Replace("(", "").Replace("п", ")"),
-                    Number = (byte)descr[0].ElementAt(0)
+                    Address = address[0],
+                    Auditory = address[1],
+                    Number = (byte)description[0].ElementAt(0),
+                    Groups = description[1].Substring(3),
+                    Name = description[2],
+                    Type = description[3],
+                    Teacher = description[4],
+                    StartTime = ev.DtStart.AsSystemLocal,
+                    EndTime = ev.DtEnd.AsSystemLocal,
+                    StartEndTime = description[0].Replace(")", "").Replace("(", "").Replace("п", ")"),
                 };
             }).ToArray();
 
-            return (false, lessons);
+            return (false, response.StatusCode, lessons);
         }
 
         /// <summary>
@@ -85,17 +88,15 @@ namespace Narfu
         {
             var res = await GetSchedule(realGroup);
 
-            if(res.IsError)
+            if(res.Error)
             {
                 var group = GetGroupByRealId(realGroup).SiteId;
-                return $@"Ошибка :с
-                       Возможно, сайт с расписанием недоступен (либо ошибка на стороне бота)
-                       Вы можете проверить расписание здесь: https://ruz.narfu.ru/?timetable&group={group}";
+                return GenerateErrorMessage(res.Code, group);
             }
 
-            var lessons = res.Lessons.Where(x => x.Time.DayOfYear == date.DayOfYear).ToList();
+            var lessons = res.Lessons.Where(x => x.StartTime.DayOfYear == date.DayOfYear).ToArray();
 
-            if(lessons.Count == 0)
+            if(lessons.Length == 0)
             {
                 return $"На {date:dd.MM (dddd)} расписание отсутствует!";
             }
@@ -103,9 +104,10 @@ namespace Narfu
             var strBuilder = new StringBuilder();
 
             strBuilder.AppendFormat("Расписание на {0:dd.MM (dddd)}", date).AppendLine();
-            foreach(var lesson in lessons.Where(x => x.Time.DayOfYear == date.DayOfYear))
+            foreach(var lesson in lessons.Where(x => x.StartTime.DayOfYear == date.DayOfYear))
             {
-                strBuilder.AppendFormat("{0} - {1} [{2}] ({3})", lesson.StartEndTime, lesson.Name, lesson.Type, lesson.Teacher)
+                strBuilder.AppendFormat("{0} - {1} [{2}] ({3})",
+                                        lesson.StartEndTime, lesson.Name, lesson.Type, lesson.Teacher)
                           .AppendLine();
                 strBuilder.AppendFormat("У группы {0}", lesson.Groups).AppendLine();
                 strBuilder.AppendFormat("В аудитории {0} ({1})", lesson.Auditory, lesson.Address).AppendLine();
@@ -124,16 +126,14 @@ namespace Narfu
         {
             var res = await GetSchedule(realGroup);
 
-            if(res.IsError)
+            if(res.Error)
             {
                 var group = GetGroupByRealId(realGroup).SiteId;
-                return $@"Какая-то ошибочка :с\n
-                       Возможно, сайт с расписанием недоступен (либо ошибка на стороне бота, но это вряд ли)\n
-                       Вы можете проверить расписание здесь: https://ruz.narfu.ru/?timetable&group={group}";
+                return GenerateErrorMessage(res.Code, group);
             }
 
             var lessons = res.Lessons.Where(x => x.Type.ToLower().Contains("экзамен") || x.Type.ToLower().Contains("зачет"))
-                             .OrderBy(x => x.Time).ToArray();
+                             .OrderBy(x => x.StartTime).ToArray();
 
             if(lessons.Length == 0)
             {
@@ -149,7 +149,7 @@ namespace Narfu
                 var l = exam.Last();
                 var endTime = l.StartEndTime.Split("-")[1];
                 strBuilder.AppendFormat("{0:dd.MM.yyyy (dddd)} ({1:HH:mm} - {2}) - {3} [{4}] ({5})",
-                                        l.Time, f.Time, endTime, l.Name, l.Type, l.Teacher).AppendLine();
+                                        l.StartTime, f.StartTime, endTime, l.Name, l.Type, l.Teacher).AppendLine();
                 strBuilder.AppendFormat("У группы {0}", l.Groups).AppendLine();
                 strBuilder.AppendFormat("В аудитории {0}", l.Auditory).AppendLine();
                 strBuilder.AppendLine();
@@ -164,6 +164,13 @@ namespace Narfu
             var ciCurr = CultureInfo.CurrentCulture;
             var weekNum = ciCurr.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
             return weekNum;
+        }
+
+        private static string GenerateErrorMessage(HttpStatusCode code, int group)
+        {
+            return $"Ошибка (код ошибки - {code}).\n" +
+                   "Сайт с расписанием недоступен (либо сломалось получение расписание со стороны САФУ).\n" +
+                   $"Вы можете проверить расписание здесь: {Utils.EndPoint}/?timetable&group={group}";
         }
 
         public static bool IsCorrectGroup(int group)

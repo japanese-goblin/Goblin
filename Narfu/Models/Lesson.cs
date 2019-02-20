@@ -6,7 +6,8 @@ namespace Narfu.Models
     {
         public string Type { get; set; }
         public string Name { get; set; }
-        public DateTime Time { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
         public string StartEndTime { get; set; }
         public byte Number { get; set; }
         public string Address { get; set; }
@@ -16,12 +17,12 @@ namespace Narfu.Models
 
         public bool Equals(Lesson other)
         {
-            return Time.Date == other.Time.Date && StartEndTime == other.StartEndTime;
+            return StartTime == other.StartTime && Name == other.Name;
         }
 
         public override int GetHashCode()
         {
-            return Time.GetHashCode() ^ StartEndTime.GetHashCode();
+            return Type.GetHashCode() ^ StartTime.GetHashCode();
         }
     }
 }

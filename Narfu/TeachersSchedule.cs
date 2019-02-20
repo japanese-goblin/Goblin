@@ -25,7 +25,6 @@ namespace Narfu
         public static async Task<(bool IsError, Lesson[] Lessons)> GetScheule(int id)
         {
             HtmlDocument doc;
-            var lessons = new List<Lesson>();
             try
             {
                 var web = new HtmlWeb
@@ -36,49 +35,45 @@ namespace Narfu
             }
             catch
             {
-                return (true, lessons.ToArray());
+                return (true, null);
             }
 
-            var v = doc.DocumentNode.SelectNodes("//div[contains(@class, 'timetable_sheet')]");
-            if(v is null)
+            var lessonItems = doc.DocumentNode.SelectNodes("//div[contains(@class, 'timetable_sheet')]");
+            if(lessonItems is null)
             {
-                return (true, lessons.ToArray()); //TODO некорректный ид (выкинуло на главную страницу)
+                return (true, null);
             }
 
-            foreach(var les in v)
+            var lessons = new List<Lesson>();
+            foreach(var lessonNode in lessonItems.Where(x => x.ChildNodes.Count > 3))
             {
-                var nodes = les.ChildNodes;
-                if(nodes.Count <= 3)
-                {
-                    continue; // пустая ячейка
-                }
+                var date = lessonNode.ParentNode.SelectSingleNode(".//div[contains(@class,'dayofweek')]")
+                                     .GetNormalizedInnerText()
+                                     .Split(',', 2)[1]
+                                     .Trim();
 
-                var date = les.ParentNode.ChildNodes.FirstOrDefault(x => x.HasClass("dayofweek"))?.InnerText
-                              .Trim()
-                              .Replace("\n", "").Split(',')[1]
-                              .Trim(); // TODO: шо за ужас...
+                var adr = lessonNode.SelectSingleNode(".//span[@class='auditorium']")
+                                    .GetNormalizedInnerText()
+                                    .Split(',', 2)
+                                    .Select(x => x.Trim())
+                                    .ToArray();
 
-                var adr = nodes.FirstOrDefault(x => x.HasClass("auditorium"))?.InnerText
-                               .Trim()
-                               .Replace("&nbsp;", " ")
-                               .Replace("\n", "").Split(',', 2);
-
-                var time = nodes.FirstOrDefault(x => x.HasClass("time_para"))?.InnerText
-                                .Replace("\n", "")
-                                .Replace("&ndash;", "-")
-                                .Trim();
+                var time = lessonNode.SelectSingleNode(".//span[@class='time_para']")
+                                     .GetNormalizedInnerText()
+                                     .Split('–', 2);
 
                 lessons.Add(new Lesson
                 {
-                    Address = adr[1].Trim(),
+                    Address = adr[1],
                     Auditory = adr[0],
-                    Groups = nodes.FirstOrDefault(x => x.HasClass("group"))?.InnerText,
-                    Name = nodes.FirstOrDefault(x => x.HasClass("discipline"))?.InnerText.Trim(),
-                    Number = byte.Parse(nodes.FirstOrDefault(x => x.HasClass("num_para"))?.InnerText),
-                    StartEndTime = time,
+                    Number = byte.Parse(lessonNode.SelectSingleNode(".//span[@class='num_para']").GetNormalizedInnerText()),
+                    Groups = lessonNode.SelectSingleNode(".//span[@class='group']").GetNormalizedInnerText(),
+                    Name = lessonNode.SelectSingleNode(".//span[@class='discipline']").GetNormalizedInnerText(),
+                    Type = lessonNode.SelectSingleNode(".//span[@class='kindOfWork']").GetNormalizedInnerText(),
                     Teacher = "",
-                    Time = DateTime.ParseExact(date, "dd.MM.yyyy", null, DateTimeStyles.None),
-                    Type = nodes.FirstOrDefault(x => x.HasClass("kindOfWork"))?.InnerText
+                    StartTime = DateTime.ParseExact($"{date} {time[0]}", "dd.MM.yyyy HH:mm", null, DateTimeStyles.None),
+                    EndTime = DateTime.ParseExact($"{date} {time[1]}", "dd.MM.yyyy HH:mm", null, DateTimeStyles.None),
+                    StartEndTime = lessonNode.SelectSingleNode(".//span[@class='time_para']").GetNormalizedInnerText()
                 });
             }
 
@@ -91,37 +86,36 @@ namespace Narfu
             var teacher = Teachers.FirstOrDefault(x => x.Id == id);
             if(teacher is null)
             {
-                return @"Ошибка :с
-                       Данного преподавателя нет в списке
-                       Если Вы уверены, что всё правильно, напишите мне для добавления препода в список (https://vk.com/id***REMOVED***)";
+                return "Ошибка. Данного преподавателя нет в списке.\n" +
+                       "Если Вы уверены, что всё правильно, свяжитесь с администрацией через команду 'админ *сообщение*' " +
+                       "для добавления преподавателя в список";
             }
 
             var (error, lessons) = await GetScheule(id);
 
             if(error)
             {
-                return @"Ошибка :с
-                       Возможно, сайт с расписанием недоступен (либо введен неправильный номер преподавателя)
-                       Вы можете проверить расписание здесь: https://ruz.narfu.ru/?timetable&lecturer={id}";
+                return "Ошибка.\n" +
+                       "Возможно, сайт с расписанием недоступен (либо введен неправильный номер преподавателя)\n" +
+                       $"Вы можете проверить расписание здесь: {Utils.EndPoint}/?timetable&lecturer={id}";
             }
 
             if(lessons.Length == 0)
             {
-                return "На данные момент у этого преподавателя нет пар";
+                return "На данный момент у этого преподавателя нет пар";
             }
 
             var strBuilder = new StringBuilder();
 
             strBuilder.AppendFormat("Расписание пар у преподавателя '{0}':", teacher.Name).AppendLine();
-            foreach(var group in lessons.Where(x => x.Time.Date >= DateTime.Now.Date)
-                                        .GroupBy(x => x.Time.DayOfYear).Take(10))
+            foreach(var group in lessons.Where(x => x.StartTime.Date >= DateTime.Now.Date)
+                                        .GroupBy(x => x.StartTime.DayOfYear).Take(10))
             {
-                strBuilder.AppendFormat("{0:dd.MM (dddd)}", group.First().Time).AppendLine();
+                strBuilder.AppendFormat("{0:dd.MM (dddd)}", group.First().StartTime).AppendLine();
                 foreach(var lesson in group)
                 {
-                    strBuilder.AppendFormat("{0} - {1} [{2}]", lesson.StartEndTime, lesson.Name, lesson.Type)
-                              .AppendLine();
-                    strBuilder.AppendFormat("В {0} ({1})", lesson.Auditory, lesson.Address).AppendLine();
+                    strBuilder.AppendFormat("{0} - {1} [{2}] ", lesson.StartEndTime, lesson.Name, lesson.Type);
+                    strBuilder.AppendFormat("в {0} ({1})", lesson.Auditory, lesson.Address).AppendLine();
                 }
 
                 strBuilder.AppendLine();
