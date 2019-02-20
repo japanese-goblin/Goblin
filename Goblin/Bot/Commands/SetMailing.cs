@@ -39,13 +39,15 @@ namespace Goblin.Bot.Commands
             {
                 var user = await _db.Users.FirstAsync(x => x.Vk == msg.FromId);
                 user.Weather = true;
-                text = "Ты успешно подписался на рассылку погоды!";
+                text = "Ты успешно подписался на рассылку погоды!\n" +
+                       $"Город для получения погоды - {user.City}";
             }
             else if(param == "расписание")
             {
                 var user = await _db.Users.FirstAsync(x => x.Vk == msg.FromId);
                 user.Schedule = true;
-                text = "Ты успешно подписался на рассылку расписания!";
+                text = "Ты успешно подписался на рассылку расписания!\n" +
+                       $"Группа для получения расписания - {user.Group}";
             }
             else
             {
