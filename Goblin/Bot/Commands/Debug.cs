@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Goblin.Data.Models;
 using Goblin.Data.Enums;
@@ -32,15 +33,15 @@ namespace Goblin.Bot.Commands
             var scheduleUsers = _db.GetScheduleUsers().Length;
             var weatherUsers = _db.GetWeatherUsers().Length;
 
-            var text =
-                $"Время старта: {Program.StartDate:F}\n" +
-                $"Гоблин работает уже {uptime.Hours} часов {uptime.Minutes} минут\n" +
-                $"Гоблину уже {dis.Days} дней ({bday:D})\n\n" +
-                $"Всего пользователей {users}, из которых {scheduleUsers} подписаны на рассылку расписание и {weatherUsers} подписаны на рассылку погоды";
+            var strBuilder = new StringBuilder();
+            strBuilder.AppendFormat("Время старта: {0:F}", Program.StartDate).AppendLine();
+            strBuilder.AppendFormat("Гоблин работает уже {0} часов {1} минут", uptime.Hours, uptime.Minutes).AppendLine();
+            strBuilder.AppendFormat("Гоблину уже {0} дней ({1:dd.MM.yyyy})", dis.Days, bday).AppendLine().AppendLine();
+            strBuilder.AppendFormat("Всего пользователей {0} ({1} расписание и {2} погода)", users, scheduleUsers, weatherUsers);
 
             return new CommandResponse
             {
-                Text = text
+                Text = strBuilder.ToString()
             };
             //TODO: дополнить чем-нибудь интересным
         }
