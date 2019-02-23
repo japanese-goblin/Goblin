@@ -2,8 +2,8 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Data.Models;
 using Goblin.Data.Enums;
+using Goblin.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
 using Vk.Models.Messages;

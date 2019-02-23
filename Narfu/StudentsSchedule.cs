@@ -25,16 +25,16 @@ namespace Narfu
         }
 
         /// <summary>
-        /// Получение всего доступного расписания группы на указанную дату
+        ///     Получение всего доступного расписания группы на указанную дату
         /// </summary>
         /// <param name="groupId">
-        /// ID группы на сайте
+        ///     ID группы на сайте
         /// </param>
         /// <returns>
-        /// Возвращает кортеж:
-        /// Error - произошла ли ошибка при выполнении запроса
-        /// Code - код ответа
-        /// Lessons - массив с парами
+        ///     Возвращает кортеж:
+        ///     Error - произошла ли ошибка при выполнении запроса
+        ///     Code - код ответа
+        ///     Lessons - массив с парами
         /// </returns>
         public static async Task<(bool Error, HttpStatusCode Code, Lesson[] Lessons)> GetSchedule(int groupId)
         {
@@ -64,14 +64,14 @@ namespace Narfu
                 {
                     Address = address[0],
                     Auditory = address[1],
-                    Number = (byte)description[0].ElementAt(0),
+                    Number = (byte) description[0].ElementAt(0),
                     Groups = description[1].Substring(3),
                     Name = description[2],
                     Type = description[3],
                     Teacher = description[4],
                     StartTime = ev.DtStart.AsSystemLocal,
                     EndTime = ev.DtEnd.AsSystemLocal,
-                    StartEndTime = description[0].Replace(")", "").Replace("(", "").Replace("п", ")"),
+                    StartEndTime = description[0].Replace(")", "").Replace("(", "").Replace("п", ")")
                 };
             }).ToArray();
 
@@ -79,7 +79,7 @@ namespace Narfu
         }
 
         /// <summary>
-        /// Получение расписания в строком виде
+        ///     Получение расписания в строком виде
         /// </summary>
         /// <param name="date">Дата, на которую нужно расписание</param>
         /// <param name="realGroup">Реальный номер группы сафу</param>
@@ -118,7 +118,7 @@ namespace Narfu
         }
 
         /// <summary>
-        /// Получение экзаменов в строковом виде
+        ///     Получение экзаменов в строковом виде
         /// </summary>
         /// <param name="realGroup">Реальный номер группы</param>
         /// <returns>Список экзаменов</returns>
@@ -132,8 +132,10 @@ namespace Narfu
                 return GenerateErrorMessage(res.Code, group);
             }
 
-            var lessons = res.Lessons.Where(x => x.Type.ToLower().Contains("экзамен") || x.Type.ToLower().Contains("зачет"))
-                             .OrderBy(x => x.StartTime).ToArray();
+            var lessons = res
+                          .Lessons
+                          .Where(x => x.Type.ToLower().Contains("экзамен") || x.Type.ToLower().Contains("зачет"))
+                          .OrderBy(x => x.StartTime).ToArray();
 
             if(lessons.Length == 0)
             {

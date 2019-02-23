@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Goblin.Data.Models;
 using Goblin.Data.Enums;
+using Goblin.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Vk.Models.Messages;
 
@@ -53,7 +53,9 @@ namespace Goblin.Bot.Commands
             }
 
             if(_db.ChangeTracker.HasChanges())
+            {
                 await _db.SaveChangesAsync();
+            }
 
             return new CommandResponse
             {

@@ -23,15 +23,25 @@ namespace Goblin.TagHelpers
         private void GetStyleForLessonType()
         {
             if(Lesson.Type == "Лекции")
+            {
                 _cssStyle = "green";
+            }
             else if(Lesson.Type == "Лабораторные занятия")
+            {
                 _cssStyle = "blue";
+            }
             else if(Lesson.Type == "Практические занятия")
+            {
                 _cssStyle = "yellow";
+            }
             else if(Lesson.Type == "Консультация")
+            {
                 _cssStyle = "orange";
+            }
             else if(Lesson.Type.ToLower().Contains("экзамен") || Lesson.Type.ToLower().Contains("зачет"))
+            {
                 _cssStyle = "red";
+            }
         }
     }
 }

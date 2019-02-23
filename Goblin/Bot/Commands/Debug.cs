@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using Goblin.Data.Models;
 using Goblin.Data.Enums;
+using Goblin.Data.Models;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
@@ -35,14 +35,17 @@ namespace Goblin.Bot.Commands
 
             var strBuilder = new StringBuilder();
             strBuilder.AppendFormat("Время старта: {0:F}", Program.StartDate).AppendLine();
-            strBuilder.AppendFormat("Гоблин работает уже {0} часов {1} минут", uptime.Hours, uptime.Minutes).AppendLine();
+            strBuilder.AppendFormat("Гоблин работает уже {0} часов {1} минут", uptime.Hours, uptime.Minutes)
+                      .AppendLine();
             strBuilder.AppendFormat("Гоблину уже {0} дней ({1:dd.MM.yyyy})", dis.Days, bday).AppendLine().AppendLine();
-            strBuilder.AppendFormat("Всего пользователей {0} ({1} расписание и {2} погода)", users, scheduleUsers, weatherUsers);
+            strBuilder.AppendFormat("Всего пользователей {0} ({1} расписание и {2} погода)", users, scheduleUsers,
+                                    weatherUsers);
 
             return new CommandResponse
             {
                 Text = strBuilder.ToString()
             };
+
             //TODO: дополнить чем-нибудь интересным
         }
 

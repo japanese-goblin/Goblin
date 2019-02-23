@@ -29,7 +29,10 @@ namespace Goblin
                    .AsNoTracking()
                    .Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
 
-            if(!reminds.Any()) return;
+            if(!reminds.Any())
+            {
+                return;
+            }
 
             foreach(var remind in reminds)
             {

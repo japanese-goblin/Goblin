@@ -9,7 +9,8 @@ namespace QuotesGenerator
 {
     public static class Generator
     {
-        public static async Task<byte[]> GenerateQuote(string quote, long id, string name, DateTime date, string imageUrl)
+        public static async Task<byte[]> GenerateQuote(string quote, long id, string name, DateTime date,
+                                                       string imageUrl)
         {
             var dateString = date.ToShortDateString();
             var bitmap = new Bitmap(700, 394, PixelFormat.Format32bppArgb);

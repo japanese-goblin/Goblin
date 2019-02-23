@@ -26,7 +26,10 @@ namespace Vk
 
         internal async Task<string> CallApi(string method, Dictionary<string, string> @params)
         {
-            if(string.IsNullOrEmpty(AccessToken)) throw new Exception("Токен отсутствует");
+            if(string.IsNullOrEmpty(AccessToken))
+            {
+                throw new Exception("Токен отсутствует");
+            }
 
             @params.Add("lang", "ru");
             @params.Add("v", Version);

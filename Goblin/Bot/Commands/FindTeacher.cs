@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Goblin.Data.Models;
 using Goblin.Data.Enums;
+using Goblin.Data.Models;
 using Narfu;
 using Vk.Models.Messages;
 

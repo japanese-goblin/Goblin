@@ -86,6 +86,7 @@ namespace Goblin
                                                      TimeZoneInfo.Local);
             RecurringJob.AddOrUpdate<ScheduledTasks>(x => x.SendWeather(), "0 7 * * *",
                                                      TimeZoneInfo.Local);
+
             //TODO вынести в бд
             RecurringJob.AddOrUpdate<ScheduledTasks>("igor",
                                                      x => x.SendToConv(5, 351616, ""),

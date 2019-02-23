@@ -66,7 +66,8 @@ namespace Narfu
                 {
                     Address = adr[1],
                     Auditory = adr[0],
-                    Number = byte.Parse(lessonNode.SelectSingleNode(".//span[@class='num_para']").GetNormalizedInnerText()),
+                    Number = byte.Parse(lessonNode.SelectSingleNode(".//span[@class='num_para']")
+                                                  .GetNormalizedInnerText()),
                     Groups = lessonNode.SelectSingleNode(".//span[@class='group']").GetNormalizedInnerText(),
                     Name = lessonNode.SelectSingleNode(".//span[@class='discipline']").GetNormalizedInnerText(),
                     Type = lessonNode.SelectSingleNode(".//span[@class='kindOfWork']").GetNormalizedInnerText(),

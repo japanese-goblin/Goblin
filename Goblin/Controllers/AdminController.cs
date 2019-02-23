@@ -36,7 +36,9 @@ namespace Goblin.Controllers
         public async Task<IActionResult> Login(LoginModel model)
         {
             if(model.Nick != "equus" && model.Password != "1") // TODO: очен безопасно
+            {
                 return View();
+            }
 
             // create claims
             var claims = new List<Claim>

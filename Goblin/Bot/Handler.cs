@@ -91,8 +91,11 @@ namespace Goblin.Bot
             var message = Message.FromJson(obj.Object.ToString());
 
             const long confId = 2000000000;
-            var isConf = (message.PeerId / confId) > 0;
-            if(isConf || !message.Text.StartsWith('!')) return OkResponse;
+            var isConf = message.PeerId / confId > 0;
+            if(isConf || !message.Text.StartsWith('!'))
+            {
+                return OkResponse;
+            }
 
             message.Text = message.Text.Substring(1, message.Text.Length - 1);
             var response = await _executor.ExecuteCommand(message);

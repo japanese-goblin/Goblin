@@ -27,9 +27,15 @@ namespace Goblin.Bot
 
             foreach(var command in _commands)
             {
-                if(!command.Allias.Contains(comm)) continue;
+                if(!command.Allias.Contains(comm))
+                {
+                    continue;
+                }
 
-                if(command.IsAdmin && _db.GetAdmins().All(x => x != msg.FromId)) continue;
+                if(command.IsAdmin && _db.GetAdmins().All(x => x != msg.FromId))
+                {
+                    continue;
+                }
 
                 response = await command.Execute(msg);
                 break;

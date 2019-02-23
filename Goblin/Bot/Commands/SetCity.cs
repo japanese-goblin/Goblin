@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Goblin.Data.Models;
 using Goblin.Data.Enums;
+using Goblin.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using OpenWeatherMap;
 using Vk.Models.Messages;

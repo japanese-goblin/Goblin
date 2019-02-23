@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Goblin.Data.Models;
 using Goblin.Data.Enums;
+using Goblin.Data.Models;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
