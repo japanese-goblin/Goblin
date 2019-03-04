@@ -16,6 +16,10 @@ namespace Vk
 
         public VkApi(string token)
         {
+            if(string.IsNullOrEmpty(token))
+            {
+                throw new ArgumentNullException(nameof(token), "Токен отсутствует");
+            }
             AccessToken = token;
             Client = new HttpClient();
 
@@ -26,11 +30,6 @@ namespace Vk
 
         internal async Task<string> CallApi(string method, Dictionary<string, string> @params)
         {
-            if(string.IsNullOrEmpty(AccessToken))
-            {
-                throw new Exception("Токен отсутствует");
-            }
-
             @params.Add("lang", "ru");
             @params.Add("v", Version);
             @params.Add("access_token", AccessToken);

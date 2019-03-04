@@ -17,10 +17,6 @@ namespace QuotesGenerator
             var graphics = Graphics.FromImage(bitmap);
             graphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(0, 0, bitmap.Width, bitmap.Height));
 
-            //graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            //graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            //graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
             var rectF = new RectangleF(10, 10, bitmap.Width, 70);
             graphics.DrawString("Цитаты великих людей", new Font("Tahoma", 40), Brushes.White, rectF);
 

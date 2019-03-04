@@ -27,7 +27,8 @@ namespace Goblin
             var reminds =
                 _db.Reminds
                    .AsNoTracking()
-                   .Where(x => $"{x.Date:dd.MM.yyyy HH:mm}" == $"{DateTime.Now:dd.MM.yyyy HH:mm}");
+                   .ToArray()
+                   .Where(x => x.Date.ToString("dd.MM.yyyy HH:mm") == DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
 
             if(!reminds.Any())
             {
@@ -45,9 +46,6 @@ namespace Goblin
 
         public async Task SendSchedule()
         {
-            //TODO: это теперь задается в кроне
-            //if(DateTime.Now.DayOfWeek == DayOfWeek.Sunday) return;
-
             await Task.Factory.StartNew(async () =>
             {
                 var grouped = _db.GetScheduleUsers().GroupBy(x => x.Group);
@@ -56,7 +54,7 @@ namespace Goblin
                     var ids = group.Select(x => x.Vk).ToArray();
                     var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Today, group.Key);
                     await _api.Messages.Send(ids, schedule);
-                    await Task.Delay(100); //TODO: 20 запросов в секунду
+                    await Task.Delay(700); //TODO: потому что сайт выдает 404
                 }
             });
         }
@@ -70,7 +68,7 @@ namespace Goblin
                 {
                     var ids = group.Select(x => x.Vk).ToArray();
                     await _api.Messages.Send(ids, await _weather.GetWeather(group.Key));
-                    await Task.Delay(100); //TODO: 20 запроса в секунду
+                    await Task.Delay(300); //TODO: 20 запроса в секунду
                 }
             });
         }

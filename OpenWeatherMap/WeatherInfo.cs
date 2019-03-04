@@ -14,6 +14,10 @@ namespace OpenWeatherMap
 
         public WeatherInfo(string token)
         {
+            if(string.IsNullOrEmpty(token))
+            {
+                throw new ArgumentNullException(nameof(token), "Токен отсутствует");
+            }
             Token = token;
             Client = new HttpClient();
         }
@@ -28,7 +32,7 @@ namespace OpenWeatherMap
             const double pressureConvert = 0.75006375541921;
             var str = new StringBuilder();
             str.AppendFormat("Погода в городе {0} на данный момент:", city).AppendLine();
-            str.AppendFormat("Температура: {0}°С", w.Weather.Temperature).AppendLine();
+            str.AppendFormat("Температура: {0:N0}°С", w.Weather.Temperature).AppendLine();
             str.AppendFormat("Описание погоды: {0}", w.Info[0].State).AppendLine();
             str.AppendFormat("Влажность: {0}%", w.Weather.Humidity).AppendLine();
             str.AppendFormat("Ветер: {0:N0} м/с", w.Wind.Speed).AppendLine();
