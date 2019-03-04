@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Vk.Models.Keyboard;
+using Vk.Models.Messages;
 
 namespace Vk.Category
 {
@@ -14,12 +16,12 @@ namespace Vk.Category
             _api = api;
         }
 
-        public async Task Send(long id, string text, string[] attachs = null, Keyboard kb = null)
+        public async Task<MessageSendResponse> Send(long id, string text, string[] attachs = null, Keyboard kb = null)
         {
-            await Send(new[] { id }, text, attachs, kb);
+            return (await Send(new[] { id }, text, attachs, kb))[0];
         }
 
-        public async Task Send(long[] ids, string text, string[] attachs = null, Keyboard kb = null)
+        public async Task<MessageSendResponse[]> Send(long[] ids, string text, string[] attachs = null, Keyboard kb = null)
         {
             if(ids.Length == 0)
             {
@@ -48,7 +50,25 @@ namespace Vk.Category
                 values.Add("keyboard", kb.ToString());
             }
 
-            await _api.CallApi("messages.send", values); //TODO to bool?
+            var result = await _api.CallApi("messages.send", values);
+            return JsonConvert.DeserializeObject<MessageSendResponse[]>(result);
+        }
+
+        public async Task Delete(long messageIds, bool isSpam = false, bool deleteForAll = true)
+        {
+            await Delete(new[] { messageIds }, isSpam, deleteForAll);
+        }
+
+        public async Task Delete(long[] messageIds, bool isSpam = false, bool deleteForAll = true)
+        {
+            var values = new Dictionary<string, string>
+            {
+                ["message_ids"] = string.Join(',', messageIds),
+                ["spam"] = (isSpam ? 1 : 0).ToString(), //TODO
+                ["delete_for_all"] = (deleteForAll ? 1 : 0).ToString()
+            };
+
+            await _api.CallApi("messages.delete", values); //TODO to bool?
         }
     }
 }

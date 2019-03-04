@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Vk.Category;
 
 namespace Vk
@@ -45,8 +46,9 @@ namespace Vk
                 throw new Exception($"[{method}]: error");
             }
 
-            string items = Convert.ToString(JsonConvert.DeserializeObject<dynamic>(responseStr)["response"]);
-            return items;
+            var x = JsonConvert.DeserializeObject<JObject>(responseStr);
+
+            return x.ContainsKey("response") ? x["response"].ToString() : string.Empty;
         }
 
         #region categories
