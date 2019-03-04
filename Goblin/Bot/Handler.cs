@@ -99,6 +99,8 @@ namespace Goblin.Bot
 
             message.Text = message.Text.Substring(1, message.Text.Length - 1);
             var response = await _executor.ExecuteCommand(message);
+
+            await _api.Messages.Delete(message.Id);
             await _api.Messages.Send(message.PeerId, response.Text, response.Attachments, response.Keyboard);
 
             return OkResponse;
