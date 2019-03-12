@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Goblin.Data.Models;
 using Vk.Models.Messages;
@@ -21,6 +22,8 @@ namespace Goblin.Bot
 
         public async Task<CommandResponse> ExecuteCommand(Message msg)
         {
+            msg.Text = Regex.Replace(msg.Text, @"\s+", " ").Trim();
+
             var split = msg.Text.Split(' ', 2);
             var comm = split[0].ToLower();
             var response = new CommandResponse();
