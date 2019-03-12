@@ -8,7 +8,7 @@ namespace OpenWeatherMap
 {
     public class WeatherInfo
     {
-        private const string EndPoint = "https://api.openweathermap.org/data/2.5";
+        private const string EndPoint = "https://api.openweathermap.org/data/2.5/";
         private readonly string Token;
         private readonly HttpClient Client;
 
@@ -18,31 +18,37 @@ namespace OpenWeatherMap
             {
                 throw new ArgumentNullException(nameof(token), "Токен отсутствует");
             }
+
             Token = token;
-            Client = new HttpClient();
+            Client = new HttpClient
+            {
+                BaseAddress = new Uri(EndPoint)
+            };
         }
 
         public async Task<string> GetWeather(string city)
         {
-            var req = $"weather?q={city}&units=metric&appid={Token}&lang=ru";
-            var response = await Client.GetStringAsync($"{EndPoint}/{req}");
+            city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
+            var response = await Client.GetStringAsync($"weather?q={city}&units=metric&appid={Token}&lang=ru");
             var w = JsonConvert.DeserializeObject<Models.WeatherInfo>(response);
 
             // на {UnixToDateTime(w.UnixTime):dd.MM.yyyy HH:mm}
             const double pressureConvert = 0.75006375541921;
-            var str = new StringBuilder();
-            str.AppendFormat("Погода в городе {0} на данный момент:", city).AppendLine();
-            str.AppendFormat("Температура: {0:N0}°С", w.Weather.Temperature).AppendLine();
-            str.AppendFormat("Описание погоды: {0}", w.Info[0].State).AppendLine();
-            str.AppendFormat("Влажность: {0}%", w.Weather.Humidity).AppendLine();
-            str.AppendFormat("Ветер: {0:N0} м/с", w.Wind.Speed).AppendLine();
-            str.AppendFormat("Давление: {0:N0} мм.рт.ст", w.Weather.Pressure * pressureConvert).AppendLine();
-            str.AppendFormat("Облачность: {0}%", w.Clouds.Cloudiness).AppendLine();
-            str.AppendFormat("Видимость: {0} метров", w.Visibility).AppendLine();
-            str.AppendLine();
-            str.AppendFormat("Восход в {0:HH:mm}", UnixToDateTime(w.OtherInfo.Sunrise)).AppendLine();
-            str.AppendFormat("Закат в {0:HH:mm}", UnixToDateTime(w.OtherInfo.Sunset)).AppendLine();
-            return str.ToString();
+            
+            var strBuilder = new StringBuilder();
+            strBuilder.AppendFormat("Погода в городе {0} на данный момент:", city).AppendLine();
+            strBuilder.AppendFormat("Температура: {0:N0}°С", w.Weather.Temperature).AppendLine();
+            strBuilder.AppendFormat("Описание погоды: {0}", w.Info[0].State).AppendLine();
+            strBuilder.AppendFormat("Влажность: {0}%", w.Weather.Humidity).AppendLine();
+            strBuilder.AppendFormat("Ветер: {0:N0} м/с", w.Wind.Speed).AppendLine();
+            strBuilder.AppendFormat("Давление: {0:N0} мм.рт.ст", w.Weather.Pressure * pressureConvert).AppendLine();
+            strBuilder.AppendFormat("Облачность: {0}%", w.Clouds.Cloudiness).AppendLine();
+            strBuilder.AppendFormat("Видимость: {0} метров", w.Visibility).AppendLine();
+            strBuilder.AppendLine();
+            strBuilder.AppendFormat("Восход в {0:HH:mm}", UnixToDateTime(w.OtherInfo.Sunrise)).AppendLine();
+            strBuilder.AppendFormat("Закат в {0:HH:mm}", UnixToDateTime(w.OtherInfo.Sunset)).AppendLine();
+            
+            return strBuilder.ToString();
         }
 
         public async Task<bool> CheckCity(string city)

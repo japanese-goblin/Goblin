@@ -31,7 +31,7 @@ namespace Narfu
                 {
                     UserAgent = Utils.UserAgent
                 };
-                doc = await web.LoadFromWebAsync($"https://ruz.narfu.ru/?timetable&lecturer={id}");
+                doc = await web.LoadFromWebAsync($"{Utils.EndPoint}?timetable&lecturer={id}");
             }
             catch
             {

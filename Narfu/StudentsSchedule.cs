@@ -15,11 +15,9 @@ namespace Narfu
     public static class StudentsSchedule
     {
         public static Group[] Groups;
-        private static readonly string StudentsEndPoint;
 
         static StudentsSchedule()
         {
-            StudentsEndPoint = $"{Utils.EndPoint}/?icalendar";
             var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText($"{path}/Data/Groups.json"));
         }
@@ -39,7 +37,7 @@ namespace Narfu
         public static async Task<(bool Error, HttpStatusCode Code, Lesson[] Lessons)> GetSchedule(int groupId)
         {
             var siteGroup = GetGroupByRealId(groupId).SiteId;
-            var requestUrl = $"{StudentsEndPoint}&oid={siteGroup}&cod={groupId}&from={DateTime.Now:dd.MM.yyyy}";
+            var requestUrl = $"?icalendar&oid={siteGroup}&cod={groupId}&from={DateTime.Now:dd.MM.yyyy}";
             var response = await Utils.Client.GetAsync(requestUrl);
             if(!response.IsSuccessStatusCode || response.Content is null)
             {
