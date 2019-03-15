@@ -25,6 +25,7 @@ namespace Goblin
             services.AddScoped<ICommand, UnsetMailing>();
             services.AddScoped<ICommand, Weather>();
             services.AddScoped<ICommand, Help>();
+            services.AddScoped<ICommand, MuteErrors>();
         }
     }
 }

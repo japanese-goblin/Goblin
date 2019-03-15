@@ -72,6 +72,13 @@ namespace Goblin.Bot
             }
 
             var response = await _executor.ExecuteCommand(message);
+
+            var user = await _db.Users.FirstOrDefaultAsync(x => x.Vk == message.FromId);
+            if(user.IsErrorsDisabled && response.Text == CommandExecutor.ErrorMessage)
+            {
+                return OkResponse;
+            }
+
             await _api.Messages.Send(message.PeerId, response.Text, response.Attachments, response.Keyboard);
             return OkResponse;
         }
