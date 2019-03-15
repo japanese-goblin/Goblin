@@ -62,7 +62,7 @@ namespace Narfu
                 {
                     Address = address[0],
                     Auditory = address[1],
-                    Number = (byte)description[0].ElementAt(0),
+                    Number = (byte) description[0].ElementAt(0),
                     Groups = description[1].Substring(3),
                     Name = description[2],
                     Type = description[3],

@@ -18,7 +18,7 @@ namespace OpenWeatherMap.Models
         public int Id { get; set; }
 
         [JsonProperty("main")]
-        private string _main { get; set; }
+        private string Main { get; set; }
 
         [JsonProperty("description")]
         public string State { get; set; }

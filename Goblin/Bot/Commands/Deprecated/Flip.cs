@@ -4,7 +4,7 @@ using Goblin.Data.Enums;
 using Goblin.Data.Models;
 using Vk.Models.Messages;
 
-namespace Goblin.Bot.Commands
+namespace Goblin.Bot.Commands.Deprecated
 {
     public class Flip : ICommand
     {

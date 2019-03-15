@@ -16,6 +16,7 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         private readonly MainContext _db;
+
         public MuteErrors(MainContext db)
         {
             _db = db;

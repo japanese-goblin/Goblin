@@ -21,6 +21,7 @@ namespace Vk
             {
                 throw new ArgumentNullException(nameof(token), "Токен отсутствует");
             }
+
             AccessToken = token;
 
             Client = new HttpClient

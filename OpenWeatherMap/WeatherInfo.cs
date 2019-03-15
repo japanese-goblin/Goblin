@@ -34,7 +34,7 @@ namespace OpenWeatherMap
 
             // на {UnixToDateTime(w.UnixTime):dd.MM.yyyy HH:mm}
             const double pressureConvert = 0.75006375541921;
-            
+
             var strBuilder = new StringBuilder();
             strBuilder.AppendFormat("Погода в городе {0} на данный момент:", city).AppendLine();
             strBuilder.AppendFormat("Температура: {0:N0}°С", w.Weather.Temperature).AppendLine();
@@ -47,7 +47,7 @@ namespace OpenWeatherMap
             strBuilder.AppendLine();
             strBuilder.AppendFormat("Восход в {0:HH:mm}", UnixToDateTime(w.OtherInfo.Sunrise)).AppendLine();
             strBuilder.AppendFormat("Закат в {0:HH:mm}", UnixToDateTime(w.OtherInfo.Sunset)).AppendLine();
-            
+
             return strBuilder.ToString();
         }
 

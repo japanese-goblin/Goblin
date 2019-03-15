@@ -21,7 +21,8 @@ namespace Vk.Category
             return (await Send(new[] { id }, text, attachs, kb))[0];
         }
 
-        public async Task<MessageSendResponse[]> Send(long[] ids, string text, string[] attachs = null, Keyboard kb = null)
+        public async Task<MessageSendResponse[]> Send(long[] ids, string text, string[] attachs = null,
+                                                      Keyboard kb = null)
         {
             if(ids.Length == 0)
             {
