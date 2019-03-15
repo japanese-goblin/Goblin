@@ -15,12 +15,12 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
-        public async Task<CommandResponse> Execute(Message msg)
+        public Task<CommandResponse> Execute(Message msg)
         {
-            return new CommandResponse
+            return Task.Run(() => new CommandResponse
             {
                 Text = "Список всех доступных команд доступен здесь: https://vk.com/@-146048760-commands"
-            };
+            });
         }
 
         public (bool Success, string Text) CanExecute(Message msg)

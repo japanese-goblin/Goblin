@@ -45,9 +45,9 @@ namespace Goblin.Bot
             return await dict[type](callbackResponse);
         }
 
-        private async Task<string> Confirmation(CallbackResponse r)
+        private Task<string> Confirmation(CallbackResponse r)
         {
-            return _config["Config:ConfirmationCode"];
+            return Task.Run(() => _config["Config:ConfirmationCode"]);
         }
 
         private async Task<string> MessageNew(CallbackResponse obj)

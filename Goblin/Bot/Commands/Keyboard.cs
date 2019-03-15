@@ -15,13 +15,13 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
-        public async Task<CommandResponse> Execute(Message msg)
+        public Task<CommandResponse> Execute(Message msg)
         {
-            return new CommandResponse
+            return Task.Run(() => new CommandResponse
             {
                 Text = "Вот тебе клавиатура",
                 Keyboard = GenerateKeyboard()
-            };
+            });
         }
 
         public (bool Success, string Text) CanExecute(Message msg)

@@ -23,7 +23,7 @@ namespace Goblin.Bot.Commands
             _db = db;
         }
 
-        public async Task<CommandResponse> Execute(Message msg)
+        public Task<CommandResponse> Execute(Message msg)
         {
             var bday = new DateTime(2017, 4, 29, 19, 42, 0);
             var dis = DateTime.Now - bday;
@@ -41,10 +41,10 @@ namespace Goblin.Bot.Commands
             strBuilder.AppendFormat("Всего пользователей {0} ({1} расписание и {2} погода)", users, scheduleUsers,
                                     weatherUsers);
 
-            return new CommandResponse
+            return Task.Run(() => new CommandResponse
             {
                 Text = strBuilder.ToString()
-            };
+            });
 
             //TODO: дополнить чем-нибудь интересным
         }

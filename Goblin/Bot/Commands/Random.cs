@@ -15,23 +15,23 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Common;
         public bool IsAdmin { get; } = false;
 
-        public async Task<CommandResponse> Execute(Message msg)
+        public Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
             if(!canExecute.Success)
             {
-                return new CommandResponse
+                return Task.Run(() => new CommandResponse
                 {
                     Text = canExecute.Text
-                };
+                });
             }
 
             var forRandom = Split(msg.GetParams());
             var index = GetRandom(0, forRandom.Length);
-            return new CommandResponse
+            return Task.Run(() => new CommandResponse
             {
                 Text = $"Я выбираю следующее: {forRandom[index]}"
-            };
+            });
         }
 
         public (bool Success, string Text) CanExecute(Message msg)

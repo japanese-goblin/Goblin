@@ -15,15 +15,15 @@ namespace Goblin.Bot.Commands
         public Category Category { get; } = Category.Safu;
         public bool IsAdmin { get; } = false;
 
-        public async Task<CommandResponse> Execute(Message msg)
+        public Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
             if(!canExecute.Success)
             {
-                return new CommandResponse
+                return Task.Run(() => new CommandResponse
                 {
                     Text = canExecute.Text
-                };
+                });
             }
 
             var text = TeachersSchedule.FindByName(msg.GetParamsAsArray()[0]);
@@ -34,10 +34,10 @@ namespace Goblin.Bot.Commands
                     "Пожалуйста, укажите более точные данные (например, введите фамилию и имя преподавателя).";
             }
 
-            return new CommandResponse
+            return Task.Run(() => new CommandResponse
             {
                 Text = text
-            };
+            });
         }
 
         public (bool Success, string Text) CanExecute(Message msg)
