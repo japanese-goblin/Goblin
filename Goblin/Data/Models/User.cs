@@ -13,5 +13,6 @@ namespace Goblin.Data.Models
         public bool Schedule { get; set; }
         public bool Weather { get; set; }
         public string City { get; set; }
+        public bool IsErrorsDisabled { get; set; }
     }
 }
