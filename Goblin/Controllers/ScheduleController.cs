@@ -21,18 +21,19 @@ namespace Goblin.Controllers
             }
 
             var group = StudentsSchedule.GetGroupByRealId(id);
-            ViewBag.Title = $"{group.RealId} - {group.Name}";
             var (error, _, lessons) = await StudentsSchedule.GetSchedule(id);
 
-            if(!error)
+            if(error)
             {
-                var result = lessons.GroupBy(x => StudentsSchedule.GetWeekNumber(x.StartTime))
-                                    .ToDictionary(x => $"{x.First().StartTime:dd.MM.yyyy} - {x.Last().StartTime:dd.MM.yyyy}",
-                                                  x => x.ToArray()); // TODO: fix key
-                return View(result);
+                HttpContext.Response.StatusCode = 503;
+                return View("Error");
             }
 
-            return View("Error");
+            ViewBag.Title = $"{group.RealId} - {group.Name}";
+            var result = lessons.GroupBy(x => StudentsSchedule.GetWeekNumber(x.StartTime))
+                                .ToDictionary(x => $"{x.First().StartTime:dd.MM.yyyy} - {x.Last().StartTime:dd.MM.yyyy}",
+                                              x => x.ToArray()); // TODO: fix key
+            return View(result);
         }
     }
 }
