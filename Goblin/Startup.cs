@@ -18,14 +18,23 @@ namespace Goblin
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        public Startup(IHostingEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+                          .SetBasePath(env.ContentRootPath)
+                          .AddJsonFile("appsettings.json", false, true)
+                          .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
+                          .AddEnvironmentVariables();
+            if(env.IsDevelopment())
+            {
+                builder.AddUserSecrets<Startup>();
+            }
+
+            Configuration = builder.Build();
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
@@ -45,14 +54,13 @@ namespace Goblin
             services.AddScoped<CommandExecutor>();
             services.AddBotCommands();
 
-            services.AddSingleton(x => new VkApi(Configuration["Config:AccessToken"]));
-            services.AddSingleton(x => new WeatherInfo(Configuration["Config:OWMToken"]));
+            services.AddSingleton(x => new VkApi(Configuration["Config:Vk_Token"]));
+            services.AddSingleton(x => new WeatherInfo(Configuration["Config:OWM_Token"]));
 
             services.AddMvc()
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if(env.IsDevelopment())

@@ -47,7 +47,7 @@ namespace Goblin.Bot
 
         private Task<string> Confirmation(CallbackResponse r)
         {
-            return Task.Run(() => _config["Config:ConfirmationCode"]);
+            return Task.Run(() => _config["Config:Vk_ConfirmCode"]);
         }
 
         private async Task<string> MessageNew(CallbackResponse obj)
