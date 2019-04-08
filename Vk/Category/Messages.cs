@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Vk.Models.Keyboard;
@@ -37,7 +38,7 @@ namespace Vk.Category
             var values = new Dictionary<string, string>
             {
                 ["message"] = text,
-                ["random_id"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(), //TODO
+                ["random_id"] = GetRandomId().ToString(),
                 ["peer_ids"] = string.Join(',', ids)
             };
 
@@ -70,6 +71,16 @@ namespace Vk.Category
             };
 
             await _api.CallApi("messages.delete", values); //TODO to bool?
+        }
+
+        private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
+
+
+        private static int GetRandomId()
+        {
+            var intBytes = new byte[4];
+            Rng.GetBytes(intBytes);
+            return BitConverter.ToInt32(intBytes, 0);
         }
     }
 }
