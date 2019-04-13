@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Data.Models;
 using Goblin.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Narfu;

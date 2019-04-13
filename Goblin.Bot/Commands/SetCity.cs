@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Goblin.Data.Enums;
-using Goblin.Data.Models;
+using Goblin.Bot.Enums;
+using Goblin.Bot.Models;
 using Goblin.Persistence;
 using Microsoft.EntityFrameworkCore;
 using OpenWeatherMap;
@@ -14,7 +14,7 @@ namespace Goblin.Bot.Commands
         public string Decription => "Установка города для получения рассылки погоды";
         public string Usage => "Город Москва";
         public string[] Allias { get; } = { "город" };
-        public Category Category => Category.Common;
+        public CommandCategory Category => CommandCategory.Common;
         public bool IsAdmin => false;
 
         private readonly MainContext _db;

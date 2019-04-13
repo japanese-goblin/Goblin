@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Goblin.Data.Enums;
-using Goblin.Data.Models;
+using Goblin.Bot.Enums;
+using Goblin.Bot.Models;
 using Narfu;
 using Vk.Models.Messages;
 
@@ -12,7 +12,7 @@ namespace Goblin.Bot.Commands
         public string Decription { get; } = "Найти преподавателя по части его ФИО";
         public string Usage { get; } = "Найти деменков";
         public string[] Allias { get; } = { "найти" };
-        public Category Category { get; } = Category.Safu;
+        public CommandCategory Category { get; } = CommandCategory.Safu;
         public bool IsAdmin { get; } = false;
 
         public Task<CommandResponse> Execute(Message msg)

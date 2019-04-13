@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Data.Enums;
-using Goblin.Data.Models;
+using Goblin.Bot.Enums;
+using Goblin.Bot.Models;
 using Goblin.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
@@ -15,7 +15,7 @@ namespace Goblin.Bot.Commands
         public string Decription { get; } = "Возвращает список экзаменов/зачетов/интернет-экзаменов";
         public string Usage { get; } = "Экзамены";
         public string[] Allias { get; } = { "экзамены" };
-        public Category Category { get; } = Category.Safu;
+        public CommandCategory Category { get; } = CommandCategory.Safu;
         public bool IsAdmin { get; } = false;
 
         private readonly MainContext _db;

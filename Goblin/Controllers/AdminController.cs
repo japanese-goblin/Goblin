@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Goblin.Data.Models;
 using Goblin.Data.ViewModels;
 using Goblin.Persistence;
 using Microsoft.AspNetCore.Authentication;

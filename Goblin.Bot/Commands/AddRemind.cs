@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Goblin.Data.Enums;
-using Goblin.Data.Models;
+using Goblin.Bot.Enums;
+using Goblin.Bot.Models;
 using Goblin.Domain.Entities;
 using Goblin.Persistence;
 using Vk.Models.Messages;
@@ -20,7 +20,7 @@ namespace Goblin.Bot.Commands
 
         public string Usage { get; } = "Напомни 21.12.2018 15:35 зачет";
         public string[] Allias { get; } = { "напомни" };
-        public Category Category { get; } = Category.Common;
+        public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
         private readonly MainContext _db;

@@ -1,6 +1,6 @@
 ﻿using Vk.Models.Keyboard;
 
-namespace Goblin.Data.Models
+namespace Goblin.Bot.Models
 {
     public class CommandResponse
     {

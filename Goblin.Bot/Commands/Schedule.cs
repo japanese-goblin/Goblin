@@ -2,8 +2,8 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Data.Enums;
-using Goblin.Data.Models;
+using Goblin.Bot.Enums;
+using Goblin.Bot.Models;
 using Goblin.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
@@ -20,7 +20,7 @@ namespace Goblin.Bot.Commands
 
         public string Usage { get; } = "Расписание 21.12";
         public string[] Allias { get; } = { "расписание" };
-        public Category Category { get; } = Category.Safu;
+        public CommandCategory Category { get; } = CommandCategory.Safu;
         public bool IsAdmin { get; } = false;
 
         private readonly MainContext _db;

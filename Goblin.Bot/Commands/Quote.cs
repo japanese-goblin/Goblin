@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Goblin.Data.Enums;
-using Goblin.Data.Models;
+using Goblin.Bot.Enums;
+using Goblin.Bot.Models;
 using QuotesGenerator;
 using Vk;
 using Vk.Models.Messages;
@@ -14,7 +14,7 @@ namespace Goblin.Bot.Commands
         public string Decription { get; } = "Создает картинку из пересланного сообщения";
         public string Usage { get; } = "Цитата";
         public string[] Allias { get; } = { "цитата" };
-        public Category Category { get; } = Category.Common;
+        public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
         private readonly VkApi _api;

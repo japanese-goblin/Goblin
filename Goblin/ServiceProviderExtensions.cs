@@ -1,5 +1,5 @@
 ﻿using Goblin.Bot.Commands;
-using Goblin.Data.Models;
+using Goblin.Bot.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Goblin

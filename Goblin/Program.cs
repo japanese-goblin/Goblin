@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
@@ -7,8 +6,6 @@ namespace Goblin
 {
     public class Program
     {
-        public static DateTime StartDate;
-
         public static void Main(string[] args)
         {
             Setup();
@@ -17,8 +14,6 @@ namespace Goblin
 
         private static void Setup()
         {
-            StartDate = DateTime.Now;
-
             var culture = new CultureInfo("ru-RU");
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Goblin.Data.Models;
+using Goblin.Bot.Models;
 using Goblin.Persistence;
 using Vk.Models.Messages;
 

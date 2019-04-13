@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Goblin.Bot\Goblin.Bot.csproj" />
     <ProjectReference Include="..\Goblin.Domain\Goblin.Domain.csproj" />
     <ProjectReference Include="..\Goblin.Persistence\Goblin.Persistence.csproj" />
     <ProjectReference Include="..\Narfu\Narfu.csproj" />

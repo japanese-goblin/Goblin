@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Goblin.Data.Enums;
-using Goblin.Data.Models;
+using Goblin.Bot.Enums;
+using Goblin.Bot.Models;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands.Deprecated
@@ -12,7 +12,7 @@ namespace Goblin.Bot.Commands.Deprecated
         public string Decription { get; } = "Возвращает случайную вероятность события";
         public string Usage { get; } = "Вероятность сегодня будет дождь";
         public string[] Allias { get; } = { "вероятность" };
-        public Category Category { get; } = Category.Common;
+        public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
         public Task<CommandResponse> Execute(Message msg)

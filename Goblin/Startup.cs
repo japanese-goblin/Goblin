@@ -1,6 +1,5 @@
 ﻿using System;
 using Goblin.Bot;
-using Goblin.Data.Models;
 using Goblin.Persistence;
 using Hangfire;
 using Hangfire.MemoryStorage;

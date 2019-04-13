@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Goblin.Data.Enums;
-using Goblin.Data.Models;
+using Goblin.Bot.Enums;
+using Goblin.Bot.Models;
 using Vk.Models.Keyboard;
 using Vk.Models.Messages;
 
@@ -12,7 +12,7 @@ namespace Goblin.Bot.Commands
         public string Decription { get; } = "показывает клавиатуру";
         public string Usage { get; } = "Клавиатура";
         public string[] Allias { get; } = { "клавиатура", "клава", "кб" };
-        public Category Category { get; } = Category.Common;
+        public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
         public Task<CommandResponse> Execute(Message msg)

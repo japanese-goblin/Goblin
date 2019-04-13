@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Goblin.Data.Enums;
-using Goblin.Data.Models;
+using Goblin.Bot.Enums;
+using Goblin.Bot.Models;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
@@ -12,7 +12,7 @@ namespace Goblin.Bot.Commands
         public string Decription { get; } = "Выбирает один из нескольких вариантов.";
         public string Usage { get; } = "Рандом 1, 2, 3,4 или 5";
         public string[] Allias { get; } = { "рандом" };
-        public Category Category { get; } = Category.Common;
+        public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
         public Task<CommandResponse> Execute(Message msg)

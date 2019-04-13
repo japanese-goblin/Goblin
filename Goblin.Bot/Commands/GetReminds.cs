@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Data.Enums;
-using Goblin.Data.Models;
+using Goblin.Bot.Enums;
+using Goblin.Bot.Models;
 using Goblin.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Vk.Models.Messages;
@@ -14,7 +14,7 @@ namespace Goblin.Bot.Commands
         public string Decription { get; } = "Возвращает список с созданными напоминаниями";
         public string Usage { get; } = "Напоминания";
         public string[] Allias { get; } = { "напоминания" };
-        public Category Category { get; } = Category.Common;
+        public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
         private readonly MainContext _db;

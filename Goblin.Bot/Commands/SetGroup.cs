@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Goblin.Data.Enums;
-using Goblin.Data.Models;
+using Goblin.Bot.Enums;
+using Goblin.Bot.Models;
 using Goblin.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
@@ -14,7 +14,7 @@ namespace Goblin.Bot.Commands
         public string Decription => "Установить группу для получения расписания";
         public string Usage => "Устгр 351617";
         public string[] Allias { get; } = { "устгр" };
-        public Category Category => Category.Safu;
+        public CommandCategory Category => CommandCategory.Safu;
         public bool IsAdmin => false;
 
         private readonly MainContext _db;

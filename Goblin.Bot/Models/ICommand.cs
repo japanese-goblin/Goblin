@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Goblin.Data.Enums;
+using Goblin.Bot.Enums;
 using Vk.Models.Messages;
 
-namespace Goblin.Data.Models
+namespace Goblin.Bot.Models
 {
     public interface ICommand
     {
@@ -10,7 +10,7 @@ namespace Goblin.Data.Models
         string Decription { get; }
         string Usage { get; }
         string[] Allias { get; }
-        Category Category { get; }
+        CommandCategory Category { get; }
         bool IsAdmin { get; }
 
         Task<CommandResponse> Execute(Message msg);

@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
-using Goblin.Data.Enums;
-using Goblin.Data.Models;
+using Goblin.Bot.Enums;
+using Goblin.Bot.Models;
 using Goblin.Persistence;
 using Vk.Models.Messages;
 
@@ -14,7 +15,7 @@ namespace Goblin.Bot.Commands
         public string Decription { get; } = "Инфа для дебага";
         public string Usage { get; } = "инфа";
         public string[] Allias { get; } = { "дебаг", "инфа", "debug", "дебуг" };
-        public Category Category { get; } = Category.Common;
+        public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = true;
 
         private readonly MainContext _db;
@@ -28,14 +29,16 @@ namespace Goblin.Bot.Commands
         {
             var bday = new DateTime(2017, 4, 29, 19, 42, 0);
             var dis = DateTime.Now - bday;
-            var uptime = DateTime.Now - Program.StartDate;
+
+            var startTime = Process.GetCurrentProcess().StartTime;
+            var uptime = DateTime.Now - startTime;
 
             var users = _db.GetUsers().Length;
             var scheduleUsers = _db.GetScheduleUsers().Length;
             var weatherUsers = _db.GetWeatherUsers().Length;
 
             var strBuilder = new StringBuilder();
-            strBuilder.AppendFormat("Время старта: {0:F}", Program.StartDate).AppendLine();
+            strBuilder.AppendFormat("Время старта: {0:F}", startTime).AppendLine();
             strBuilder.AppendFormat("Гоблин работает уже {0} часов {1} минут", uptime.Hours, uptime.Minutes)
                       .AppendLine();
             strBuilder.AppendFormat("Гоблину уже {0} дней ({1:dd.MM.yyyy})", dis.Days, bday).AppendLine().AppendLine();

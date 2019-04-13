@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Goblin.Data.Enums;
-using Goblin.Data.Models;
+using Goblin.Bot.Enums;
+using Goblin.Bot.Models;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
@@ -12,7 +12,7 @@ namespace Goblin.Bot.Commands
         public string Decription { get; } = "Описание команд";
         public string Usage { get; } = "Команды";
         public string[] Allias { get; } = { "help", "команды", "помощь", "помоги", "хелп" };
-        public Category Category { get; } = Category.Common;
+        public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
         public Task<CommandResponse> Execute(Message msg)
