@@ -53,8 +53,7 @@ namespace Goblin.Bot.Commands
 
         private int GetRandom(int start, int end)
         {
-            //todo: шо за магическое число
-            return new System.Random(DateTime.Now.Millisecond * 3819).Next(start, end);
+            return new System.Random(DateTime.Now.Millisecond).Next(start, end);
         }
 
         private string[] Split(string str)

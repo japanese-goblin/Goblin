@@ -36,10 +36,10 @@ namespace Vk.Models.Messages
         public bool Important { get; set; }
 
         [JsonProperty("random_id")]
-        public ulong RandomId { get; set; }
+        public long RandomId { get; set; } //TODO: было ulong
 
         [JsonProperty("attachments")]
-        public object[] Attachments { get; set; } //TODO
+        public object[] Attachments { get; set; } //TODO: добавить класс с аттачами
 
         [JsonProperty("is_hidden")]
         public bool IsHidden { get; set; }

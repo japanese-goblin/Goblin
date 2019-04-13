@@ -17,7 +17,7 @@ namespace Vk.Category
 
         public async Task<User> Get(long id)
         {
-            return (await Get(new[] { id })).FirstOrDefault(); //TODO ?
+            return (await Get(new[] { id }))[0]; //TODO по идее, всегда должен быть 0 элемент
         }
 
         public async Task<User[]> Get(long[] ids)

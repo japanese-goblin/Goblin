@@ -40,7 +40,7 @@ namespace Goblin.Bot.Commands
 
             var image = await Generator.GenerateQuote(forwarded.Text, forwarded.FromId,
                                                       user.ToString(), UnixToDate(forwarded.Date), user.Photo200Orig);
-            var attach = await _api.Photos.FastUploadPhoto(msg.FromId, image); //TODO change fromId
+            var attach = await _api.Photos.FastUploadPhoto(msg.FromId, image); //TODO fromId
 
             return new CommandResponse
             {

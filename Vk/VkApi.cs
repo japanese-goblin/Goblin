@@ -11,7 +11,7 @@ namespace Vk
     public class VkApi
     {
         private const string EndPoint = "https://api.vk.com/method/";
-        private readonly HttpClient Client; //TODO: DI
+        private readonly HttpClient Client; //TODO: DI?
         private const string Version = "5.92";
         private readonly string AccessToken;
 

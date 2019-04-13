@@ -68,7 +68,7 @@ namespace Goblin
                 {
                     var ids = group.Select(x => x.Vk).ToArray();
                     await _api.Messages.Send(ids, await _weather.GetWeather(group.Key));
-                    await Task.Delay(300); //TODO: 20 запроса в секунду
+                    await Task.Delay(300);
                 }
             });
         }
