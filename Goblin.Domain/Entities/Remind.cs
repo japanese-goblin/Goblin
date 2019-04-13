@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Goblin.Data.Models
+namespace Goblin.Domain.Entities
 {
     public class Remind
     {

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Goblin.Data.Enums;
 using Goblin.Data.Models;
+using Goblin.Domain.Entities;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands

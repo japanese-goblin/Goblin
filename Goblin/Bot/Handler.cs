@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Vk;
 using Vk.Models;
 using Vk.Models.Messages;
-using User = Goblin.Data.Models.User;
+using User = Goblin.Domain.Entities.User;
 
 namespace Goblin.Bot
 {

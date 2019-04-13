@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Data.Models

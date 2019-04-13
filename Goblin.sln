@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenWeatherMap", "OpenWeath
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuotesGenerator", "QuotesGenerator\QuotesGenerator.csproj", "{33D7EA2C-6A9C-475C-8F03-CE819A848A40}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Domain", "Goblin.Domain\Goblin.Domain.csproj", "{871292A8-E3D9-4EF8-9A2C-51495B9C638A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{33D7EA2C-6A9C-475C-8F03-CE819A848A40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33D7EA2C-6A9C-475C-8F03-CE819A848A40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33D7EA2C-6A9C-475C-8F03-CE819A848A40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{871292A8-E3D9-4EF8-9A2C-51495B9C638A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{871292A8-E3D9-4EF8-9A2C-51495B9C638A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{871292A8-E3D9-4EF8-9A2C-51495B9C638A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{871292A8-E3D9-4EF8-9A2C-51495B9C638A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
