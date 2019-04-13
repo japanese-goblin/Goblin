@@ -27,8 +27,8 @@ namespace Goblin
             var reminds =
                 _db.Reminds
                    .AsNoTracking()
-                   .ToArray()
-                   .Where(x => x.Date.ToString("dd.MM.yyyy HH:mm") == DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
+                   .Where(x => x.Date.ToString("dd.MM.yyyy HH:mm") == DateTime.Now.ToString("dd.MM.yyyy HH:mm"))
+                   .ToArray();
 
             if(!reminds.Any())
             {
@@ -37,7 +37,7 @@ namespace Goblin
 
             foreach(var remind in reminds)
             {
-                await _api.Messages.Send(remind.VkId, $"Напоминаю:\n {remind.Text}");
+                await _api.Messages.Send(remind.VkId, $"Напоминаю:\n{remind.Text}");
                 _db.Reminds.Remove(remind);
             }
 
