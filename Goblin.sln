@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuotesGenerator", "QuotesGe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Domain", "Goblin.Domain\Goblin.Domain.csproj", "{871292A8-E3D9-4EF8-9A2C-51495B9C638A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Persistence", "Goblin.Persistence\Goblin.Persistence.csproj", "{F294274F-9B73-403C-AB77-4028EFCC301B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Additions", "Additions", "{C61C101A-1A74-4916-9564-C7AF8F17E581}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,9 +55,19 @@ Global
 		{871292A8-E3D9-4EF8-9A2C-51495B9C638A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{871292A8-E3D9-4EF8-9A2C-51495B9C638A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{871292A8-E3D9-4EF8-9A2C-51495B9C638A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F294274F-9B73-403C-AB77-4028EFCC301B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F294274F-9B73-403C-AB77-4028EFCC301B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F294274F-9B73-403C-AB77-4028EFCC301B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F294274F-9B73-403C-AB77-4028EFCC301B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BFB396DB-8CFC-46C1-9148-1305B4A72066} = {C61C101A-1A74-4916-9564-C7AF8F17E581}
+		{2DC7F223-BDAF-4A3B-ADE2-0F378A918B3A} = {C61C101A-1A74-4916-9564-C7AF8F17E581}
+		{0CD1DD99-3862-49A8-B716-08B685AA2A93} = {C61C101A-1A74-4916-9564-C7AF8F17E581}
+		{33D7EA2C-6A9C-475C-8F03-CE819A848A40} = {C61C101A-1A74-4916-9564-C7AF8F17E581}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BC184D3B-C238-43B8-8361-49303B6D1A6B}

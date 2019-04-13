@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Goblin.Domain\Goblin.Domain.csproj" />
+    <ProjectReference Include="..\Goblin.Persistence\Goblin.Persistence.csproj" />
     <ProjectReference Include="..\Narfu\Narfu.csproj" />
     <ProjectReference Include="..\OpenWeatherMap\OpenWeatherMap.csproj" />
     <ProjectReference Include="..\QuotesGenerator\QuotesGenerator.csproj" />
