@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Persistence;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
 using OpenWeatherMap;
@@ -20,6 +21,8 @@ namespace Goblin
             _db = db;
             _api = api;
             _weather = weather;
+
+            InitJobs();
         }
 
         public async Task SendRemind()
@@ -75,22 +78,47 @@ namespace Goblin
 
         public async Task SendToConv(int id, int group = 0, string city = "")
         {
-            //TODO
-            if(!StudentsSchedule.IsCorrectGroup(group))
-            {
-                return;
-            }
-
-            id = 2000000000 + id;
-
-            var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Now, group);
-            await _api.Messages.Send(id, schedule);
+            const int convId = 2000000000;
+            id = convId + id;
 
             if(!string.IsNullOrEmpty(city) && await _weather.CheckCity(city))
             {
                 var weather = await _weather.GetWeather(city);
                 await _api.Messages.Send(id, weather);
             }
+
+            if(StudentsSchedule.IsCorrectGroup(group))
+            {
+                var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Now, group);
+                await _api.Messages.Send(id, schedule);
+            }
+        }
+
+        public void InitJobs()
+        {
+            // минуты часи дни месяцы дни-недели
+            RecurringJob.AddOrUpdate<ScheduledTasks>("SendRemind", x => x.SendRemind(), Cron.Minutely,
+                                                     TimeZoneInfo.Local);
+
+            RecurringJob.AddOrUpdate<ScheduledTasks>("SendSchedule", x => x.SendSchedule(),
+                                                     "0 6 * * 1-6", TimeZoneInfo.Local);
+
+            RecurringJob.AddOrUpdate<ScheduledTasks>("SendWeather", x => x.SendWeather(),
+                                                     "0 7 * * *", TimeZoneInfo.Local);
+
+            foreach(var job in _db.Jobs)
+            {
+                RecurringJob.AddOrUpdate<ScheduledTasks>(
+                    $"DAILY__{job.JobName}",
+                    x => x.SendToConv(job.Conversation, job.NarfuGroup, job.WeatherCity),
+                    $"{job.Minutes} {job.Hours} * * 1-6", TimeZoneInfo.Local
+                );
+            }
+        }
+
+        public void Dummy()
+        {
+
         }
     }
 }

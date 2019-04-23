@@ -1,5 +1,5 @@
-﻿using System;
-using Goblin.Bot;
+﻿using Goblin.Bot;
+using Goblin.Filters;
 using Goblin.Persistence;
 using Hangfire;
 using Hangfire.MemoryStorage;
@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenWeatherMap;
+using System;
 using Vk;
 
 namespace Goblin
@@ -27,7 +28,7 @@ namespace Goblin
                           .AddJsonFile("appsettings.json", false, true)
                           .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                           .AddEnvironmentVariables();
-            if(env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 builder.AddUserSecrets<Startup>();
             }
@@ -63,7 +64,7 @@ namespace Goblin
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if(env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -78,8 +79,11 @@ namespace Goblin
 
             var options = new BackgroundJobServerOptions { WorkerCount = Environment.ProcessorCount * 2 };
             app.UseHangfireServer(options);
+            app.UseHangfireDashboard("/Admin/HangFire", new DashboardOptions
+            {
+                Authorization = new[] { new AuthFilter() }
+            });
 
-            //app.UseHttpsRedirection(); //TODO
             app.UseMvcWithDefaultRoute();
 
             ConfigureJobs();
@@ -87,21 +91,7 @@ namespace Goblin
 
         private void ConfigureJobs()
         {
-            // минуты часи дни месяцы дни-недели
-            RecurringJob.AddOrUpdate<ScheduledTasks>(x => x.SendRemind(), Cron.Minutely,
-                                                     TimeZoneInfo.Local);
-            RecurringJob.AddOrUpdate<ScheduledTasks>(x => x.SendSchedule(), "0 6 * * 1-6",
-                                                     TimeZoneInfo.Local);
-            RecurringJob.AddOrUpdate<ScheduledTasks>(x => x.SendWeather(), "0 7 * * *",
-                                                     TimeZoneInfo.Local);
-
-            //TODO вынести в бд
-            RecurringJob.AddOrUpdate<ScheduledTasks>("igor",
-                                                     x => x.SendToConv(5, 351616, ""),
-                                                     "05 6 * * 1-6", TimeZoneInfo.Local);
-            RecurringJob.AddOrUpdate<ScheduledTasks>("pesi",
-                                                     x => x.SendToConv(3, 351617, "Архангельск"),
-                                                     "15 6 * * 1-6", TimeZoneInfo.Local);
+            BackgroundJob.Enqueue<ScheduledTasks>(x => x.Dummy()); //TODO:
         }
     }
 }
