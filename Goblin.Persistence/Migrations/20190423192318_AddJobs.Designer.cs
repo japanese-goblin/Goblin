@@ -3,15 +3,17 @@ using System;
 using Goblin.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Goblin.Persistence.Migrations
 {
     [DbContext(typeof(MainContext))]
-    partial class d9o30apvvh50ejContextModelSnapshot : ModelSnapshot
+    [Migration("20190423192318_AddJobs")]
+    partial class AddJobs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

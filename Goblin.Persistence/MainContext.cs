@@ -8,6 +8,7 @@ namespace Goblin.Persistence
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Remind> Reminds { get; set; }
+        public DbSet<RecurringJob> Jobs { get; set; }
 
         public MainContext(DbContextOptions<MainContext> options) : base(options) { }
 
