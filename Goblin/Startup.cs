@@ -81,7 +81,10 @@ namespace Goblin
             app.UseHangfireServer(options);
             app.UseHangfireDashboard("/Admin/HangFire", new DashboardOptions
             {
-                Authorization = new[] { new AuthFilter() }
+                Authorization = new[] { new AuthFilter() },
+                AppPath = "/Admin/",
+                StatsPollingInterval = 10000,
+                DisplayStorageConnectionString = false
             });
 
             app.UseMvcWithDefaultRoute();
