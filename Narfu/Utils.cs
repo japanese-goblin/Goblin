@@ -15,7 +15,8 @@ namespace Narfu
         {
             Client = new HttpClient
             {
-                BaseAddress = new Uri(EndPoint)
+                BaseAddress = new Uri(EndPoint),
+                Timeout = TimeSpan.FromSeconds(3)
             };
             Client.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
         }

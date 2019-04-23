@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,7 +39,17 @@ namespace Narfu
         {
             var siteGroup = GetGroupByRealId(groupId).SiteId;
             var requestUrl = $"?icalendar&oid={siteGroup}&cod={groupId}&from={DateTime.Now:dd.MM.yyyy}";
-            var response = await Utils.Client.GetAsync(requestUrl);
+
+            HttpResponseMessage response;
+            try
+            {
+                response = await Utils.Client.GetAsync(requestUrl);
+            }
+            catch(TaskCanceledException ex)
+            {
+                return (true, HttpStatusCode.GatewayTimeout, null);
+            }
+
             if(!response.IsSuccessStatusCode || response.Content is null)
             {
                 return (true, response.StatusCode, null);

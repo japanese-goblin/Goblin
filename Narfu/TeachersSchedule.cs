@@ -27,11 +27,11 @@ namespace Narfu
             HtmlDocument doc;
             try
             {
-                var web = new HtmlWeb
-                {
-                    UserAgent = Utils.UserAgent
-                };
-                doc = await web.LoadFromWebAsync($"{Utils.EndPoint}?timetable&lecturer={id}");
+                var web = new HtmlWeb();
+                //TODO: из-за gateway timeout
+                var response = await Utils.Client.GetStreamAsync($"{Utils.EndPoint}?timetable&lecturer={id}");
+                doc = new HtmlDocument();
+                doc.Load(response);
             }
             catch
             {
