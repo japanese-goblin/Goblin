@@ -17,9 +17,9 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
-        private readonly MainContext _db;
+        private readonly ApplicationDbContext _db;
 
-        public GetReminds(MainContext db)
+        public GetReminds(ApplicationDbContext db)
         {
             _db = db;
         }

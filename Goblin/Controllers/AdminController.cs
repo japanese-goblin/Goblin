@@ -13,9 +13,9 @@ namespace Goblin.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly MainContext _db;
+        private readonly ApplicationDbContext _db;
 
-        public AdminController(MainContext db)
+        public AdminController(ApplicationDbContext db)
         {
             _db = db;
         }

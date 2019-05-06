@@ -13,9 +13,9 @@ namespace Goblin.Bot
         public static string ErrorMessage = "Ошибочка, проверьте правильность написания команды!";
 
         private readonly IEnumerable<ICommand> _commands;
-        private readonly MainContext _db;
+        private readonly ApplicationDbContext _db;
 
-        public CommandExecutor(MainContext db, IEnumerable<ICommand> commands)
+        public CommandExecutor(ApplicationDbContext db, IEnumerable<ICommand> commands)
         {
             _db = db;
             _commands = commands;

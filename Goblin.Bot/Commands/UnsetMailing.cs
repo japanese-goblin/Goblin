@@ -16,9 +16,9 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
-        private readonly MainContext _db;
+        private readonly ApplicationDbContext _db;
 
-        public UnsetMailing(MainContext db)
+        public UnsetMailing(ApplicationDbContext db)
         {
             _db = db;
         }
@@ -38,13 +38,13 @@ namespace Goblin.Bot.Commands
             var text = "";
             if(param == "погода")
             {
-                var user = await _db.Users.FirstAsync(x => x.Vk == msg.FromId);
+                var user = await _db.BotUsers.FirstAsync(x => x.Vk == msg.FromId);
                 user.Weather = false;
                 text = "Ты отписался от рассылки погоды :с";
             }
             else if(param == "расписание")
             {
-                var user = await _db.Users.FirstAsync(x => x.Vk == msg.FromId);
+                var user = await _db.BotUsers.FirstAsync(x => x.Vk == msg.FromId);
                 user.Schedule = false;
                 text = "Ты отписался от рассылки расписания :с";
             }

@@ -17,9 +17,9 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category => CommandCategory.Safu;
         public bool IsAdmin => false;
 
-        private readonly MainContext _db;
+        private readonly ApplicationDbContext _db;
 
-        public SetGroup(MainContext db)
+        public SetGroup(ApplicationDbContext db)
         {
             _db = db;
         }
@@ -38,7 +38,7 @@ namespace Goblin.Bot.Commands
             var group = int.Parse(msg.GetParams());
             var gr = StudentsSchedule.GetGroupByRealId(group);
 
-            var user = await _db.Users.FirstAsync(x => x.Vk == msg.FromId);
+            var user = await _db.BotUsers.FirstAsync(x => x.Vk == msg.FromId);
             user.Group = group;
             await _db.SaveChangesAsync();
 

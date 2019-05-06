@@ -18,9 +18,9 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Safu;
         public bool IsAdmin { get; } = false;
 
-        private readonly MainContext _db;
+        private readonly ApplicationDbContext _db;
 
-        public Exams(MainContext db)
+        public Exams(ApplicationDbContext db)
         {
             _db = db;
         }
@@ -36,7 +36,7 @@ namespace Goblin.Bot.Commands
                 };
             }
 
-            var user = await _db.Users.FirstOrDefaultAsync(x => x.Vk == msg.FromId);
+            var user = await _db.BotUsers.FirstOrDefaultAsync(x => x.Vk == msg.FromId);
             return new CommandResponse
             {
                 Text = await StudentsSchedule.GetExams(user.Group)
@@ -45,7 +45,7 @@ namespace Goblin.Bot.Commands
 
         public (bool Success, string Text) CanExecute(Message msg)
         {
-            var user = _db.Users.First(x => x.Vk == msg.FromId);
+            var user = _db.BotUsers.First(x => x.Vk == msg.FromId);
             if(user.Group == 0)
             {
                 return (false, "Ошибка. Группа не установлена. " +

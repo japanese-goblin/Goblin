@@ -16,9 +16,9 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
-        private readonly MainContext _db;
+        private readonly ApplicationDbContext _db;
 
-        public SetMailing(MainContext db)
+        public SetMailing(ApplicationDbContext db)
         {
             _db = db;
         }
@@ -38,7 +38,7 @@ namespace Goblin.Bot.Commands
             var text = "";
             if(param == "погода")
             {
-                var user = await _db.Users.FirstAsync(x => x.Vk == msg.FromId);
+                var user = await _db.BotUsers.FirstAsync(x => x.Vk == msg.FromId);
 
                 if(!string.IsNullOrEmpty(user.City))
                 {
@@ -54,7 +54,7 @@ namespace Goblin.Bot.Commands
             }
             else if(param == "расписание")
             {
-                var user = await _db.Users.FirstAsync(x => x.Vk == msg.FromId);
+                var user = await _db.BotUsers.FirstAsync(x => x.Vk == msg.FromId);
                 if(user.Group != 0)
                 {
                     user.Schedule = true;

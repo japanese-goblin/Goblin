@@ -1,5 +1,11 @@
-﻿using Goblin.Domain.Entities;
-using Goblin.WebUI.Data;
+﻿using System;
+using Goblin.Bot;
+using Goblin.Domain.Entities;
+using Goblin.Persistence;
+using Goblin.WebUI.Extensions;
+using Goblin.WebUI.Filters;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +14,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenWeatherMap;
+using Vk;
 
 namespace Goblin.WebUI
 {
@@ -34,6 +42,15 @@ namespace Goblin.WebUI
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
+            services.AddHangfire(config => { config.UseMemoryStorage(); });
+
+            services.AddScoped<Handler>();
+            services.AddScoped<CommandExecutor>();
+            services.AddBotCommands();
+
+            services.AddSingleton(x => new VkApi(Configuration["Config:Vk_Token"]));
+            services.AddSingleton(x => new WeatherInfo(Configuration["Config:OWM_Token"]));
 
             services.AddDefaultIdentity<SiteUser>()
                     .AddDefaultUI(UIFramework.Bootstrap4)
@@ -68,12 +85,29 @@ namespace Goblin.WebUI
 
             app.UseAuthentication();
 
+            var options = new BackgroundJobServerOptions { WorkerCount = Environment.ProcessorCount * 2 };
+            app.UseHangfireServer(options);
+            app.UseHangfireDashboard("/Admin/HangFire", new DashboardOptions
+            {
+                Authorization = new[] { new AuthFilter() },
+                AppPath = "/Admin/",
+                StatsPollingInterval = 10000,
+                DisplayStorageConnectionString = false
+            });
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                                 "default",
                                 "{controller=Home}/{action=Index}/{id?}");
             });
+
+            ConfigureJobs();
+        }
+
+        private void ConfigureJobs()
+        {
+            BackgroundJob.Enqueue<ScheduledTasks>(x => x.Dummy()); //TODO:
         }
     }
 }

@@ -8,7 +8,7 @@ using Narfu;
 using OpenWeatherMap;
 using Vk;
 
-namespace Goblin
+namespace Goblin.WebUI
 {
     public class ScheduledTasks
     {

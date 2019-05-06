@@ -23,9 +23,9 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Safu;
         public bool IsAdmin { get; } = false;
 
-        private readonly MainContext _db;
+        private readonly ApplicationDbContext _db;
 
-        public Schedule(MainContext db)
+        public Schedule(ApplicationDbContext db)
         {
             _db = db;
         }
@@ -42,7 +42,7 @@ namespace Goblin.Bot.Commands
             }
 
             var param = msg.GetParams();
-            var user = await _db.Users.FirstAsync(x => x.Vk == msg.FromId);
+            var user = await _db.BotUsers.FirstAsync(x => x.Vk == msg.FromId);
             DateTime time;
             if(string.IsNullOrEmpty(param))
             {
@@ -67,7 +67,7 @@ namespace Goblin.Bot.Commands
         public (bool Success, string Text) CanExecute(Message msg)
         {
             var param = msg.GetParams();
-            var user = _db.Users.First(x => x.Vk == msg.FromId);
+            var user = _db.BotUsers.First(x => x.Vk == msg.FromId);
             if(user.Group == 0)
             {
                 return (false,

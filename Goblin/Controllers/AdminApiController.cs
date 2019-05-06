@@ -8,10 +8,10 @@ namespace Goblin.Controllers
 {
     public class AdminApiController : Controller
     {
-        private readonly MainContext _db;
+        private readonly ApplicationDbContext _db;
         private readonly VkApi _api;
 
-        public AdminApiController(MainContext db, VkApi api)
+        public AdminApiController(ApplicationDbContext db, VkApi api)
         {
             _db = db;
             _api = api;

@@ -17,10 +17,10 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category => CommandCategory.Common;
         public bool IsAdmin => false;
 
-        private readonly MainContext _db;
+        private readonly ApplicationDbContext _db;
         private readonly WeatherInfo _weather;
 
-        public SetCity(MainContext db, WeatherInfo weather)
+        public SetCity(ApplicationDbContext db, WeatherInfo weather)
         {
             _db = db;
             _weather = weather;
@@ -41,7 +41,7 @@ namespace Goblin.Bot.Commands
             var text = "";
             if(await _weather.CheckCity(param))
             {
-                var user = await _db.Users.FirstAsync(x => x.Vk == msg.FromId);
+                var user = await _db.BotUsers.FirstAsync(x => x.Vk == msg.FromId);
                 user.City = param;
                 await _db.SaveChangesAsync();
                 text = $"Город успешно установлен на {param}";

@@ -16,16 +16,16 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
-        private readonly MainContext _db;
+        private readonly ApplicationDbContext _db;
 
-        public MuteErrors(MainContext db)
+        public MuteErrors(ApplicationDbContext db)
         {
             _db = db;
         }
 
         public async Task<CommandResponse> Execute(Message msg)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(x => x.Vk == msg.FromId);
+            var user = await _db.BotUsers.FirstOrDefaultAsync(x => x.Vk == msg.FromId);
 
             user.IsErrorsDisabled = !user.IsErrorsDisabled;
             await _db.SaveChangesAsync();

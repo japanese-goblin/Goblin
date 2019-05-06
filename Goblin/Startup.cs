@@ -40,7 +40,7 @@ namespace Goblin
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<MainContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>

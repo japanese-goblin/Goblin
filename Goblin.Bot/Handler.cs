@@ -16,12 +16,12 @@ namespace Goblin.Bot
     public class Handler
     {
         private const string OkResponse = "ok";
-        private readonly MainContext _db;
+        private readonly ApplicationDbContext _db;
         private readonly IConfiguration _config;
         private readonly CommandExecutor _executor;
         private readonly VkApi _api;
 
-        public Handler(MainContext db, IConfiguration config, CommandExecutor exec, VkApi api)
+        public Handler(ApplicationDbContext db, IConfiguration config, CommandExecutor exec, VkApi api)
         {
             _db = db;
             _config = config;
@@ -67,13 +67,13 @@ namespace Goblin.Bot
 
             if(_db.GetUsers().All(x => x.Vk != message.FromId))
             {
-                await _db.Users.AddAsync(new BotUser { Vk = message.FromId });
+                await _db.BotUsers.AddAsync(new BotUser { Vk = message.FromId });
                 await _db.SaveChangesAsync();
             }
 
             var response = await _executor.ExecuteCommand(message);
 
-            var user = await _db.Users.FirstOrDefaultAsync(x => x.Vk == message.FromId);
+            var user = await _db.BotUsers.FirstOrDefaultAsync(x => x.Vk == message.FromId);
             if(user.IsErrorsDisabled && response.Text == CommandExecutor.ErrorMessage)
             {
                 return OkResponse;
@@ -126,9 +126,9 @@ namespace Goblin.Bot
         {
             var leave = Vk.Models.Responses.GroupLeave.FromJson(obj.Object.ToString());
             var userId = leave.UserId;
-            if(await _db.Users.AnyAsync(x => x.Vk == userId))
+            if(await _db.BotUsers.AnyAsync(x => x.Vk == userId))
             {
-                _db.Users.Remove(_db.Users.First(x => x.Vk == userId));
+                _db.BotUsers.Remove(_db.BotUsers.First(x => x.Vk == userId));
                 await _db.SaveChangesAsync();
             }
 

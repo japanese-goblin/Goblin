@@ -18,10 +18,10 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
-        private readonly MainContext _db;
+        private readonly ApplicationDbContext _db;
         private readonly WeatherInfo _weather;
 
-        public Weather(MainContext db, WeatherInfo weather)
+        public Weather(ApplicationDbContext db, WeatherInfo weather)
         {
             _db = db;
             _weather = weather;
@@ -57,7 +57,7 @@ namespace Goblin.Bot.Commands
         private async Task<string> ExecuteNow(Message msg)
         {
             var param = msg.GetParams();
-            var user = _db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
+            var user = _db.BotUsers.FirstOrDefault(x => x.Vk == msg.FromId);
             if(string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
             {
                 return await _weather.GetCurrentWeather(user.City);
@@ -78,7 +78,7 @@ namespace Goblin.Bot.Commands
 
         private async Task<string> ExecuteDaily(Message msg)
         {
-            var user = _db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
+            var user = _db.BotUsers.FirstOrDefault(x => x.Vk == msg.FromId);
             if(!string.IsNullOrEmpty(user?.City))
             {
                 return await _weather.GetDailyWeather(user.City, DateTime.Today.AddDays(1));
@@ -89,7 +89,7 @@ namespace Goblin.Bot.Commands
 
         public (bool Success, string Text) CanExecute(Message msg)
         {
-            var user = _db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
+            var user = _db.BotUsers.FirstOrDefault(x => x.Vk == msg.FromId);
             if(string.IsNullOrEmpty(msg.GetParams()) && string.IsNullOrEmpty(user?.City))
             {
                 return (false, "Ошибка. Либо укажи город в команде через пробел, либо установи его командой 'город'");

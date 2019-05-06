@@ -17,7 +17,6 @@ namespace Goblin.WebUI.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<SiteUser> _signInManager;
-        private readonly ILogger<LoginModel> _logger;
 
         public LoginModel(SignInManager<SiteUser> signInManager)
         {
