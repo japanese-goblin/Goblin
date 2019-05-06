@@ -1,0 +1,142 @@
+﻿﻿.list {
+    padding: 0;
+}
+
+.dayofweek {
+    font-size: small;
+    margin: 5px 0 5px 2px;
+}
+
+.timetable_sheet, .timetable_sheet_xs {
+    margin: 1px 1px 0 0;
+    padding: 5px;
+    border: solid 1px #ccc;
+    font-size: small;
+    position: relative;
+}
+
+.timetable_sheet {
+    min-height: 210px;
+    margin: 2px 2px 0 2px;
+}
+
+.last .timetable_sheet {
+    margin-right: 0;
+}
+
+.timetable_sheet span, .timetable_sheet_xs span {
+    display: block;
+}
+
+@media screen and (min-width:1500px) {
+    .timetable_sheet {
+        min-height: 150px;
+    }
+}
+
+.num_para {
+    position: relative;
+    top: -5px;
+    left: -5px;
+    display: inline-block !important;
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 20px;
+    height: 20px;
+    margin: 0 0 2px 0;
+    line-height: 20px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.time_para {
+    position: relative;
+    top: -3px;
+    display: inline-block !important;
+    height: 20px;
+    margin: 0 4px 2px 0;
+    line-height: 20px;
+    vertical-align: middle;
+    font-size: x-small;
+}
+
+.modify {
+    border-bottom: 1px dotted red;
+}
+
+.timetable_sheet > .auditorium {
+    border-top: 1px dotted #252C32;
+    padding: 2px 2px 0 2px;
+    margin-top: 3px;
+}
+
+.timetable_sheet > .auditorium_rgh {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    padding: 5px 2px 0 2px;
+    text-align: right;
+    font-weight: bold;
+}
+
+.auditorium_about {
+    display: inline-block !important;
+    float: right;
+    opacity: .6;
+}
+
+.timetable_sheet > .kindOfWork {
+    opacity: .8;
+    font-size: x-small;
+}
+
+.timetable_sheet_xs > .kindOfWork {
+    opacity: .8;
+}
+
+.timetable_sheet_xs > .lecturer, .timetable_sheet_xs > .discipline {
+    display: inline-block !important;
+}
+
+.group {
+    font-size: small;
+    display: block !important;
+    background: #fff;
+    font-style: italic;
+    margin-top: 2px;
+    padding: 2px 5px;
+    opacity: .6;
+}
+
+span {
+    color:black;
+}
+
+/* COLORS */
+.transparent {
+    background: transparent !important;
+}
+
+.white {
+    background: #fff !important;
+}
+
+.yellow {
+    background: #ffa !important;
+}
+
+.green {
+    background: #afa !important;
+}
+
+.blue {
+    background: #BDD6EE !important;
+}
+
+.red {
+    background: #fcc !important;
+}
+
+.orange {
+    background: #fc9 !important;
+}

@@ -1,0 +1,41 @@
+﻿@using System.Globalization
+@model Dictionary<string, Narfu.Models.Lesson[]>
+
+@{
+    ViewData["Title"] = "Расписание";
+}
+
+<h4>@ViewBag.Title</h4>
+<ul class="nav nav-pills" id="pills-tab" role="tablist">
+    @foreach(var group in Model)
+    {
+        <li>
+            <a class="nav-link" id="pills-home-tab" data-toggle="pill" href="#d@(group.Value.First().StartTime.DayOfYear)">@group.Key</a>
+        </li>
+    }
+</ul>
+
+<div class="tab-content" id="pills-tabContent">
+    @foreach(var group in Model)
+    {
+        <div id="d@(group.Value.First().StartTime.DayOfYear)" class="tab-pane fade">
+            <div class="row">
+                @foreach(var days in group.Value.GroupBy(x => x.StartTime.DayOfWeek))
+                {
+                    <div class="col-md-2">
+                        <div class="dayofweek">@days.First().StartTime.ToString("dddd, dd.MM.yyyy", CultureInfo.CreateSpecificCulture("ru-RU"))</div>
+                        @foreach(var lesson in days)
+                        {
+                            <lesson lesson="lesson"></lesson>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section NarfuStyles
+{
+    <link rel="stylesheet" href="~/css/narfu.css"/>
+}

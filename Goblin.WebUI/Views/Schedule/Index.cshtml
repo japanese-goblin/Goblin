@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Расписание";
+}
+<h2>Расписание САФУ</h2>
+<div class="col-md-3">
+    <form class="form" action="/Schedule/Show" method="get">
+        <div class="form-group">
+            <input type="number" class="form-control" name="id" placeholder="Номер группы" required="" autofocus="">
+        </div>
+        <button type="submit" class="btn btn-primary mb-2 btn-block">Посмотреть</button>
+    </form>
+</div>
