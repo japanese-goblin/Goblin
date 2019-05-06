@@ -52,7 +52,8 @@ namespace Goblin.WebUI
             services.AddSingleton(x => new VkApi(Configuration["Config:Vk_Token"]));
             services.AddSingleton(x => new WeatherInfo(Configuration["Config:OWM_Token"]));
 
-            services.AddDefaultIdentity<SiteUser>()
+            services.AddIdentity<SiteUser, IdentityRole>()
+                    .AddRoles<IdentityRole>()
                     .AddDefaultUI(UIFramework.Bootstrap4)
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 

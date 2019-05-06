@@ -1,11 +1,10 @@
-﻿using System.Threading.Tasks;
-using Goblin.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Goblin.WebUI.Controllers
 {
-    public class HomeController : Controller
+    [Authorize(Roles = "Admin")]
+    public class AdminController : Controller
     {
         public IActionResult Index()
         {

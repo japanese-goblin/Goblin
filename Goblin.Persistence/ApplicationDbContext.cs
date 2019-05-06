@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using Goblin.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Persistence
 {
-    public class ApplicationDbContext : IdentityDbContext<SiteUser>
+    public class ApplicationDbContext : IdentityDbContext<SiteUser, IdentityRole, string>
     {
         public DbSet<BotUser> BotUsers { get; set; }
         public DbSet<Remind> Reminds { get; set; }
