@@ -54,7 +54,7 @@ namespace Vk.Models.Messages
             var split = Text.Split(' ', 2);
             var param = split.Length > 1 ? split[1] : "";
 
-            return param;
+            return param.Trim();
         }
 
         public string[] GetParamsAsArray()

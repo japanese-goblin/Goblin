@@ -73,8 +73,22 @@ namespace OpenWeatherMap
 
             const double pressureConvert = 0.75006375541921;
 
+            string day;
+            if(date.Date == DateTime.Today.Date)
+            {
+                day = $"сегодня ({date:dddd, d MMMM})";
+            }
+            else if(date.Date == DateTime.Today.AddDays(1).Date)
+            {
+                day = $"завтра ({date:dddd, d MMMM})";
+            }
+            else
+            {
+                day = DateTime.Now.ToString("dddd, d MMMM");
+            }
+
             var strBuilder = new StringBuilder();
-            strBuilder.AppendFormat("Погода в городе {0} на сегодня ({1:dddd, d MMMM}):", city, DateTime.Today).AppendLine();
+            strBuilder.AppendFormat("Погода в городе {0} на {1}:", city, day).AppendLine();
             strBuilder.AppendFormat("Температура: от {0:+#;-#;0}°С до {1:+#;-#;0}°С", weatherToday.Temp.Min, weatherToday.Temp.Max).AppendLine();
             strBuilder.AppendFormat("Описание погоды: {0}", weatherToday.Weather[0].State).AppendLine();
             strBuilder.AppendFormat("Влажность: {0}%", weatherToday.Humidity).AppendLine();

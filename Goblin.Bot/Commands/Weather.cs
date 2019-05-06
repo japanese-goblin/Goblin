@@ -38,14 +38,29 @@ namespace Goblin.Bot.Commands
                 };
             }
 
+            string response;
+            if(msg.GetParams().ToLower() == "завтра")
+            {
+                response = await ExecuteDaily(msg);
+            }
+            else
+            {
+                response = await ExecuteNow(msg);
+            }
+
+            return new CommandResponse
+            {
+                Text = response
+            };
+        }
+
+        private async Task<string> ExecuteNow(Message msg)
+        {
             var param = msg.GetParams();
             var user = _db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
             if(string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
             {
-                return new CommandResponse
-                {
-                    Text = await _weather.GetCurrentWeather(user.City)
-                };
+                return await _weather.GetCurrentWeather(user.City);
             }
 
             var text = "";
@@ -58,10 +73,18 @@ namespace Goblin.Bot.Commands
                 text = $"Ошибка. Город '{param}' не найден (или ошибочка со стороны бота?)";
             }
 
-            return new CommandResponse
+            return text;
+        }
+
+        private async Task<string> ExecuteDaily(Message msg)
+        {
+            var user = _db.Users.FirstOrDefault(x => x.Vk == msg.FromId);
+            if(!string.IsNullOrEmpty(user?.City))
             {
-                Text = text
-            };
+                return await _weather.GetDailyWeather(user.City, DateTime.Today.AddDays(1));
+            }
+
+            return "Ошибка. Для просмотра погоды на завтра укажи город через команду 'город *название*'";
         }
 
         public (bool Success, string Text) CanExecute(Message msg)
