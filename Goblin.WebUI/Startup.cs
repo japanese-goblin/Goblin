@@ -42,7 +42,7 @@ namespace Goblin.WebUI
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
             services.AddHangfire(config => { config.UseMemoryStorage(); });
 
