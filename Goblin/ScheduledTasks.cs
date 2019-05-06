@@ -70,7 +70,7 @@ namespace Goblin
                 foreach(var group in grouped)
                 {
                     var ids = group.Select(x => x.Vk).ToArray();
-                    await _api.Messages.Send(ids, await _weather.GetWeather(group.Key));
+                    await _api.Messages.Send(ids, await _weather.GetDailyWeather(group.Key, DateTime.Today));
                     await Task.Delay(300);
                 }
             });
@@ -83,7 +83,7 @@ namespace Goblin
 
             if(!string.IsNullOrEmpty(city) && await _weather.CheckCity(city))
             {
-                var weather = await _weather.GetWeather(city);
+                var weather = await _weather.GetDailyWeather(city, DateTime.Today);
                 await _api.Messages.Send(id, weather);
             }
 

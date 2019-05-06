@@ -24,7 +24,7 @@
 //        [Fact]
 //        public async Task GetWeather_Valid_String()
 //        {
-//            var result = await OpenWeatherMap.WeatherInfo.GetWeather(ValidCity);
+//            var result = await OpenWeatherMap.WeatherInfo.GetCurrentWeather(ValidCity);
 //            Assert.False(string.IsNullOrEmpty(result));
 //        }
 //    }

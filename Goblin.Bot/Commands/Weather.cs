@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
@@ -43,14 +44,14 @@ namespace Goblin.Bot.Commands
             {
                 return new CommandResponse
                 {
-                    Text = await _weather.GetWeather(user.City)
+                    Text = await _weather.GetCurrentWeather(user.City)
                 };
             }
 
             var text = "";
             if(await _weather.CheckCity(param))
             {
-                text = await _weather.GetWeather(param);
+                text = await _weather.GetCurrentWeather(param);
             }
             else
             {
