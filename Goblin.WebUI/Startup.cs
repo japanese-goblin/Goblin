@@ -1,4 +1,5 @@
-﻿using Goblin.WebUI.Data;
+﻿using Goblin.Domain.Entities;
+using Goblin.WebUI.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -12,21 +13,40 @@ namespace Goblin.WebUI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        private IConfiguration Configuration { get; }
 
-        public IConfiguration Configuration { get; }
+        public Startup(IHostingEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+                          .SetBasePath(env.ContentRootPath)
+                          .AddJsonFile("appsettings.json", false, true)
+                          .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
+                          .AddEnvironmentVariables();
+            if(env.IsDevelopment())
+            {
+                builder.AddUserSecrets<Startup>();
+            }
+
+            Configuration = builder.Build();
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<SiteUser>()
                     .AddDefaultUI(UIFramework.Bootstrap4)
                     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddAuthentication()
+                    .AddVkontakte(options =>
+                    {
+                        options.ApiVersion = "5.8";
+                        options.ClientId = Configuration["VkAuth:AppId"];
+                        options.ClientSecret = Configuration["VkAuth:AppSecret"];
+                        options.Scope.Add("email");
+                    });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

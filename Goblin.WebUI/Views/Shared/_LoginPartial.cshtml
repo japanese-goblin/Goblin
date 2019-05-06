@@ -1,6 +1,7 @@
+@using Goblin.Domain.Entities
 @using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<SiteUser> SignInManager
+@inject UserManager<SiteUser> UserManager
 
 <ul class="navbar-nav">
     @if(SignInManager.IsSignedIn(User))
