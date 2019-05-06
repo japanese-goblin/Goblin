@@ -6,8 +6,22 @@
 <ul class="navbar-nav">
     @if(SignInManager.IsSignedIn(User))
     {
+        if(await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin"))
+        {
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+                    Админка
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" asp-controller="Admin" asp-action="Index">Главная</a>
+                    <a class="dropdown-item" asp-controller="Admin" asp-action="Messages">Сообщения</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Шото еще</a>
+                </div>
+            </li>
+        }
         <li class="nav-item">
-            <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Управление аккаунтом</a>
         </li>
         <li class="nav-item">
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
