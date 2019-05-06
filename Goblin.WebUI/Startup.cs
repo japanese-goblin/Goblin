@@ -4,6 +4,7 @@ using Goblin.Domain.Entities;
 using Goblin.Persistence;
 using Goblin.WebUI.Extensions;
 using Goblin.WebUI.Filters;
+using Goblin.WebUI.Hangfire;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
@@ -109,6 +110,7 @@ namespace Goblin.WebUI
         private void ConfigureJobs()
         {
             BackgroundJob.Enqueue<ScheduledTasks>(x => x.Dummy()); //TODO:
+            BackgroundJob.Enqueue<CreateRolesTask>(x => x.CreateRoles());
         }
     }
 }
