@@ -59,7 +59,7 @@ namespace Goblin.Persistence.Migrations
                     b.ToTable("Reminds");
                 });
 
-            modelBuilder.Entity("Goblin.Domain.Entities.User", b =>
+            modelBuilder.Entity("Goblin.Domain.Entities.BotUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();

@@ -6,13 +6,13 @@ namespace Goblin.Persistence
 {
     public class MainContext : DbContext
     {
-        public DbSet<User> Users { get; set; }
+        public DbSet<BotUser> Users { get; set; }
         public DbSet<Remind> Reminds { get; set; }
         public DbSet<RecurringJob> Jobs { get; set; }
 
         public MainContext(DbContextOptions<MainContext> options) : base(options) { }
 
-        public User[] GetUsers()
+        public BotUser[] GetUsers()
         {
             return Users.AsNoTracking().ToArray();
         }
@@ -22,12 +22,12 @@ namespace Goblin.Persistence
             return Users.AsNoTracking().Where(x => x.IsAdmin).Select(x => x.Vk).ToArray();
         }
 
-        public User[] GetWeatherUsers()
+        public BotUser[] GetWeatherUsers()
         {
             return Users.AsNoTracking().Where(x => x.Weather && x.City != "").ToArray();
         }
 
-        public User[] GetScheduleUsers()
+        public BotUser[] GetScheduleUsers()
         {
             return Users.AsNoTracking().Where(x => x.Schedule && x.Group != 0).ToArray();
         }

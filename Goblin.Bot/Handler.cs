@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Goblin.Domain.Entities;
 using Goblin.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Vk;
 using Vk.Models;
 using Vk.Models.Messages;
-using User = Goblin.Domain.Entities.User;
 
 namespace Goblin.Bot
 {
@@ -67,7 +67,7 @@ namespace Goblin.Bot
 
             if(_db.GetUsers().All(x => x.Vk != message.FromId))
             {
-                await _db.Users.AddAsync(new User { Vk = message.FromId });
+                await _db.Users.AddAsync(new BotUser { Vk = message.FromId });
                 await _db.SaveChangesAsync();
             }
 

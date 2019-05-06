@@ -2,7 +2,7 @@
 
 namespace Goblin.Domain.Entities
 {
-    public class User
+    public class BotUser
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
