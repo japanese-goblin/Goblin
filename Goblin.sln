@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin", "Goblin\Goblin.csproj", "{C4E21B58-F5A7-4BF6-B3A7-FA33D5290CD6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{08FB69E7-5D3E-408B-8219-8495B81796C9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Narfu", "Narfu\Narfu.csproj", "{BFB396DB-8CFC-46C1-9148-1305B4A72066}"
@@ -23,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Additions", "Additions", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.Bot", "Goblin.Bot\Goblin.Bot.csproj", "{86B80A91-2310-4A60-9A61-AA3ABFBFC38F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.WebUI", "Goblin.WebUI\Goblin.WebUI.csproj", "{C61FCD1B-EA0E-4AB5-B1AE-3E61B317CEC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.WebUI", "Goblin.WebUI\Goblin.WebUI.csproj", "{C61FCD1B-EA0E-4AB5-B1AE-3E61B317CEC9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bot", "Bot", "{D68023D1-660A-48E1-8C15-8F8F73F2CC74}"
 EndProject
@@ -33,10 +31,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C4E21B58-F5A7-4BF6-B3A7-FA33D5290CD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C4E21B58-F5A7-4BF6-B3A7-FA33D5290CD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C4E21B58-F5A7-4BF6-B3A7-FA33D5290CD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C4E21B58-F5A7-4BF6-B3A7-FA33D5290CD6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08FB69E7-5D3E-408B-8219-8495B81796C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{08FB69E7-5D3E-408B-8219-8495B81796C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08FB69E7-5D3E-408B-8219-8495B81796C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
