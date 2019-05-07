@@ -10,6 +10,7 @@ using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
@@ -72,6 +73,14 @@ namespace Goblin.WebUI
                         options.Scope.Add("email");
                     });
 
+            services.AddHttpsRedirection(options => { options.HttpsPort = 443; });
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -85,6 +94,7 @@ namespace Goblin.WebUI
             else
             {
                 app.UseHsts();
+                app.UseForwardedHeaders();
             }
 
             app.UseHttpsRedirection();
