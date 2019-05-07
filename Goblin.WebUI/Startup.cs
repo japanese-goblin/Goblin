@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Goblin.Bot;
 using Goblin.Domain.Entities;
 using Goblin.Persistence;
@@ -26,6 +27,10 @@ namespace Goblin.WebUI
 
         public Startup(IHostingEnvironment env)
         {
+            var culture = new CultureInfo("ru-RU");
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+
             var builder = new ConfigurationBuilder()
                           .SetBasePath(env.ContentRootPath)
                           .AddJsonFile("appsettings.json", false, true)
