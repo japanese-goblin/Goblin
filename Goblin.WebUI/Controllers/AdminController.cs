@@ -19,6 +19,7 @@ namespace Goblin.WebUI.Controllers
         {
             return View(_context.GetUsers().OrderBy(x => x.Id).ToList());
         }
+
         public IActionResult Messages()
         {
             return View();
