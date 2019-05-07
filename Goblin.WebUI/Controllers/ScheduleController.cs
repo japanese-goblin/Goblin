@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Narfu;
@@ -7,7 +8,6 @@ namespace Goblin.WebUI.Controllers
 {
     public class ScheduleController : Controller
     {
-        // GET
         public IActionResult Index()
         {
             return View();
@@ -17,8 +17,8 @@ namespace Goblin.WebUI.Controllers
         {
             if(!ModelState.IsValid || !StudentsSchedule.IsCorrectGroup(id))
             {
-                HttpContext.Response.StatusCode = 404;
-                return View("Error");
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return View("Error", $"Группа с номером {id} не найдена");
             }
 
             var group = StudentsSchedule.GetGroupByRealId(id);
@@ -26,8 +26,8 @@ namespace Goblin.WebUI.Controllers
 
             if(error)
             {
-                HttpContext.Response.StatusCode = 503;
-                return View("Error");
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadGateway;
+                return View("Error", "Сайт с расписанием недоступен. Попробуй позже.");
             }
 
             ViewBag.Title = $"{group.RealId} - {group.Name}";

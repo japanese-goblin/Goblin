@@ -1,7 +1,11 @@
-﻿@{
-    ViewData["Title"] = "Расписание";
+﻿@model string
+@{
+    ViewData["Title"] = "Ошибка";
 }
 
-<h2 class="text-center">
-    Ошибочка! Группа с таким номером не найдена, либо сайт с расписанием недоступен
-</h2>
+<div class="text-center">
+    <h1 class="text-danger">
+        Ошибочка!
+    </h1>
+    <h4>@Model</h4>
+</div>
