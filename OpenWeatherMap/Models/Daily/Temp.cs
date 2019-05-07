@@ -16,9 +16,9 @@ namespace OpenWeatherMap.Models.Daily {
         public double Night { get; set; }
 
         [JsonProperty("eve")]
-        public double Eve { get; set; }
+        public double Evening { get; set; }
 
         [JsonProperty("morn")]
-        public double Morn { get; set; }
+        public double Morning { get; set; }
     }
 }

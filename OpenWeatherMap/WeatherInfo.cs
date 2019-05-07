@@ -89,7 +89,15 @@ namespace OpenWeatherMap
 
             var strBuilder = new StringBuilder();
             strBuilder.AppendFormat("Погода в городе {0} на {1}:", city, day).AppendLine();
-            strBuilder.AppendFormat("Температура: от {0:+#;-#;0}°С до {1:+#;-#;0}°С", weatherToday.Temp.Min, weatherToday.Temp.Max).AppendLine();
+
+            strBuilder.AppendFormat("Температура: от {0:+#;-#;0}°С до {1:+#;-#;0}°С", weatherToday.Temp.Min,
+                                    weatherToday.Temp.Max).AppendLine();
+            strBuilder.AppendFormat("Температура ночью: {0:+#;-#;0}", weatherToday.Temp.Night).AppendLine();
+            strBuilder.AppendFormat("Температура утром: {0:+#;-#;0}", weatherToday.Temp.Morning).AppendLine();
+            strBuilder.AppendFormat("Температура днем: {0:+#;-#;0}", weatherToday.Temp.Day).AppendLine();
+            strBuilder.AppendFormat("Температура вечером: {0:+#;-#;0}", weatherToday.Temp.Evening).AppendLine();
+            strBuilder.AppendLine();
+
             strBuilder.AppendFormat("Описание погоды: {0}", weatherToday.Weather[0].State).AppendLine();
             strBuilder.AppendFormat("Влажность: {0}%", weatherToday.Humidity).AppendLine();
             strBuilder.AppendFormat("Ветер: {0:N0} м/с", weatherToday.Speed).AppendLine();
