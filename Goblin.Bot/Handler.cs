@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Goblin.Bot.Notifications.Confirmation;
+using Goblin.Bot.Notifications.GroupJoin;
+using Goblin.Bot.Notifications.GroupLeave;
+using Goblin.Bot.Notifications.MessageDeny;
 using Goblin.Domain.Entities;
 using Goblin.Persistence;
-using Microsoft.EntityFrameworkCore;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Vk;
 using Vk.Models;
@@ -15,18 +19,21 @@ namespace Goblin.Bot
 {
     public class Handler
     {
-        private const string OkResponse = "ok";
         private readonly ApplicationDbContext _db;
         private readonly IConfiguration _config;
         private readonly CommandExecutor _executor;
         private readonly VkApi _api;
+        private readonly IMediator _mediator;
 
-        public Handler(ApplicationDbContext db, IConfiguration config, CommandExecutor exec, VkApi api)
+        private const string OkResponse = "ok";
+
+        public Handler(ApplicationDbContext db, IConfiguration config, CommandExecutor exec, VkApi api, IMediator mediator)
         {
             _db = db;
             _config = config;
             _executor = exec;
             _api = api;
+            _mediator = mediator;
         }
 
         public async Task<string> Handle(CallbackResponse callbackResponse)
@@ -45,9 +52,10 @@ namespace Goblin.Bot
             return await dict[type](callbackResponse);
         }
 
-        private Task<string> Confirmation(CallbackResponse r)
+        private async Task<string> Confirmation(CallbackResponse obj)
         {
-            return Task.Run(() => _config["Config:Vk_ConfirmCode"]);
+            await _mediator.Publish(new ConfirmationNotification());
+            return _config["Config:Vk_ConfirmCode"];
         }
 
         private async Task<string> MessageNew(CallbackResponse obj)
@@ -65,32 +73,23 @@ namespace Goblin.Bot
                 //TODO: оповещение о том, что гоблину не нужен доступ ко всей переписке?
             }
 
-            if(_db.GetUsers().All(x => x.Vk != message.FromId))
+            var botUser = _db.BotUsers.FirstOrDefault(x => x.Vk == message.FromId);
+
+            if(botUser is null)
             {
-                await _db.BotUsers.AddAsync(new BotUser { Vk = message.FromId });
+                botUser = (await _db.BotUsers.AddAsync(new BotUser { Vk = message.FromId })).Entity;
                 await _db.SaveChangesAsync();
             }
 
             var response = await _executor.ExecuteCommand(message);
 
-            var user = await _db.BotUsers.FirstOrDefaultAsync(x => x.Vk == message.FromId);
-            if(user.IsErrorsDisabled && response.Text == CommandExecutor.ErrorMessage)
+            if(botUser.IsErrorsDisabled && response.Text == CommandExecutor.ErrorMessage)
             {
                 return OkResponse;
             }
 
             await _api.Messages.Send(message.PeerId, response.Text, response.Attachments, response.Keyboard);
             return OkResponse;
-        }
-
-        private async Task<string> MessageDeny(CallbackResponse obj)
-        {
-            var deny = Vk.Models.Responses.MessageDeny.FromJson(obj.Object.ToString());
-
-            var userName = await _api.Users.Get(deny.UserId);
-            await _api.Messages.Send(_db.GetAdmins(), $"@id{deny.UserId} ({userName}) запретил сообщения");
-
-            return "ok";
         }
 
         private async Task<string> MessageReply(CallbackResponse obj)
@@ -113,27 +112,21 @@ namespace Goblin.Bot
             return OkResponse;
         }
 
+        private async Task<string> MessageDeny(CallbackResponse obj)
+        {
+            await _mediator.Publish(new MessageDenyNotification { Response = obj });
+            return OkResponse;
+        }
+
         private async Task<string> GroupJoin(CallbackResponse obj)
         {
-            var join = Vk.Models.Responses.GroupJoin.FromJson(obj.Object.ToString());
-            var userName = await _api.Users.Get(join.UserId);
-
-            await _api.Messages.Send(_db.GetAdmins(), $"@id{join.UserId} ({userName}) подписался");
+            await _mediator.Publish(new GroupJoinNotification { Response = obj });
             return OkResponse;
         }
 
         private async Task<string> GroupLeave(CallbackResponse obj)
         {
-            var leave = Vk.Models.Responses.GroupLeave.FromJson(obj.Object.ToString());
-            var userId = leave.UserId;
-            if(await _db.BotUsers.AnyAsync(x => x.Vk == userId))
-            {
-                _db.BotUsers.Remove(_db.BotUsers.First(x => x.Vk == userId));
-                await _db.SaveChangesAsync();
-            }
-
-            var userName = await _api.Users.Get(userId);
-            await _api.Messages.Send(_db.GetAdmins(), $"@id{userId} ({userName}) отписался");
+            await _mediator.Publish(new GroupLeaveNotification { Response = obj });
             return OkResponse;
         }
     }

@@ -27,7 +27,7 @@ namespace Goblin.WebUI.Controllers
             if(error)
             {
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.BadGateway;
-                return View("Error", "Сайт с расписанием недоступен. Попробуй позже.");
+                return View("Error", "Сайт с расписанием недоступен. Попробуйте позже.");
             }
 
             ViewBag.Title = $"{group.RealId} - {group.Name}";

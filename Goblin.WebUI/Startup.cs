@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Globalization;
+using System.Reflection;
 using Goblin.Bot;
+using Goblin.Bot.Notifications.GroupJoin;
 using Goblin.Domain.Entities;
 using Goblin.Persistence;
 using Goblin.WebUI.Extensions;
@@ -8,6 +10,7 @@ using Goblin.WebUI.Filters;
 using Goblin.WebUI.Hangfire;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -80,6 +83,8 @@ namespace Goblin.WebUI
                 options.KnownProxies.Clear();
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
+
+            services.AddMediatR(typeof(GroupJoinNotification).GetTypeInfo().Assembly);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
