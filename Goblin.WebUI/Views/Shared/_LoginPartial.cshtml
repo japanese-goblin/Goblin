@@ -1,12 +1,11 @@
 @using Goblin.Domain.Entities
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<SiteUser> SignInManager
-@inject UserManager<SiteUser> UserManager
 
 <ul class="navbar-nav">
     @if(SignInManager.IsSignedIn(User))
     {
-        if(await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin"))
+        if(User.IsInRole("Admin"))
         {
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
