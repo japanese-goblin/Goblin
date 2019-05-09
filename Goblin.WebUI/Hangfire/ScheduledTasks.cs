@@ -62,7 +62,7 @@ namespace Goblin.WebUI.Hangfire
                         var ids = chunk.Select(x => x.Vk);
                         var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Today, group.Key);
                         await _api.Messages.Send(ids, schedule);
-                        await Task.Delay(700); //TODO: потому что сайт выдает 404
+                        await Task.Delay(700);
                     }   
                 }
             });

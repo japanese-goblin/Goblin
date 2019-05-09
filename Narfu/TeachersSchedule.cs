@@ -22,12 +22,11 @@ namespace Narfu
             Teachers = JsonConvert.DeserializeObject<Teacher[]>(File.ReadAllText($"{path}/Data/Teachers.json"));
         }
 
-        public static async Task<(bool IsError, Lesson[] Lessons)> GetScheule(int id)
+        public static async Task<(bool IsError, Lesson[] Lessons)> GetSchedule(int id)
         {
             HtmlDocument doc;
             try
             {
-                var web = new HtmlWeb();
                 //TODO: из-за gateway timeout
                 var response = await Utils.Client.GetStreamAsync($"{Utils.EndPoint}?timetable&lecturer={id}");
                 doc = new HtmlDocument();
@@ -92,7 +91,7 @@ namespace Narfu
                        "для добавления преподавателя в список";
             }
 
-            var (error, lessons) = await GetScheule(id);
+            var (error, lessons) = await GetSchedule(id);
 
             if(error)
             {

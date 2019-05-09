@@ -10,7 +10,7 @@ namespace Tests.Schedule
         [Fact]
         public async Task GetScheule_Correct()
         {
-            var (isError, _) = await Narfu.TeachersSchedule.GetScheule(Id);
+            var (isError, _) = await Narfu.TeachersSchedule.GetSchedule(Id);
             Assert.False(isError);
         }
 
