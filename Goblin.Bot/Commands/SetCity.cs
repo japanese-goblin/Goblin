@@ -37,12 +37,12 @@ namespace Goblin.Bot.Commands
                 };
             }
 
-            var param = msg.GetParams(); // TODO первая буква была в верхнем регистре
+            var param = msg.GetParams();
             var text = "";
             if(await _weather.CheckCity(param))
             {
                 var user = await _db.BotUsers.FirstAsync(x => x.Vk == msg.FromId);
-                user.City = param;
+                user.City = char.ToUpper(param[0]) + param.Substring(1).ToLower(); //чтобы первая буква была с боьшой буквы (потом для группировки пригодится)
                 await _db.SaveChangesAsync();
                 text = $"Город успешно установлен на {param}";
             }
