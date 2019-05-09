@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -22,10 +23,10 @@ namespace Vk.Category
             return (await Send(new[] { id }, text, attachs, kb))[0];
         }
 
-        public async Task<MessageSendResponse[]> Send(long[] ids, string text, string[] attachs = null,
+        public async Task<MessageSendResponse[]> Send(IEnumerable<long> ids, string text, string[] attachs = null,
                                                       Keyboard kb = null)
         {
-            if(ids.Length == 0)
+            if(!ids.Any())
             {
                 throw new ArgumentNullException(nameof(ids), "Укажите хотя бы один peer_id");
             }
@@ -42,12 +43,12 @@ namespace Vk.Category
                 ["peer_ids"] = string.Join(',', ids)
             };
 
-            if(!(attachs is null)) // если есть аттачи
+            if(attachs != null) // если есть аттачи
             {
                 values.Add("attachment", string.Join(",", attachs));
             }
 
-            if(!(kb is null)) // если есть клавиатура
+            if(kb != null) // если есть клавиатура
             {
                 values.Add("keyboard", kb.ToString());
             }

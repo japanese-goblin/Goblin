@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Persistence;
+using Goblin.WebUI.Extensions;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
@@ -15,6 +16,8 @@ namespace Goblin.WebUI.Hangfire
         private readonly ApplicationDbContext _db;
         private readonly VkApi _api;
         private readonly WeatherInfo _weather;
+
+        private const int ChunkLimit = 100;
 
         public ScheduledTasks(ApplicationDbContext db, VkApi api, WeatherInfo weather)
         {
@@ -30,8 +33,7 @@ namespace Goblin.WebUI.Hangfire
             var reminds =
                 _db.Reminds
                    .AsNoTracking()
-                   .Where(x => x.Date.ToString("dd.MM.yyyy HH:mm") == DateTime.Now.ToString("dd.MM.yyyy HH:mm"))
-                   .ToArray();
+                   .Where(x => x.Date.ToString("dd.MM.yyyy HH:mm") == DateTime.Now.ToString("dd.MM.yyyy HH:mm")); //TODO: что-то сделать с датой
 
             if(!reminds.Any())
             {
@@ -49,29 +51,37 @@ namespace Goblin.WebUI.Hangfire
 
         public async Task SendSchedule()
         {
+            //TODO: BackgroundJob
             await Task.Factory.StartNew(async () =>
             {
                 var grouped = _db.GetScheduleUsers().GroupBy(x => x.Group);
                 foreach(var group in grouped)
                 {
-                    var ids = group.Select(x => x.Vk).ToArray();
-                    var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Today, group.Key);
-                    await _api.Messages.Send(ids, schedule);
-                    await Task.Delay(700); //TODO: потому что сайт выдает 404
+                    foreach(var chunk in group.Chunk(ChunkLimit))
+                    {
+                        var ids = chunk.Select(x => x.Vk);
+                        var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Today, group.Key);
+                        await _api.Messages.Send(ids, schedule);
+                        await Task.Delay(700); //TODO: потому что сайт выдает 404
+                    }   
                 }
             });
         }
 
         public async Task SendWeather()
         {
+            //TODO: BackgroundJob
             await Task.Factory.StartNew(async () =>
             {
                 var grouped = _db.GetWeatherUsers().GroupBy(x => x.City);
                 foreach(var group in grouped)
                 {
-                    var ids = group.Select(x => x.Vk).ToArray();
-                    await _api.Messages.Send(ids, await _weather.GetDailyWeather(group.Key, DateTime.Today));
-                    await Task.Delay(300);
+                    foreach(var chunk in group.Chunk(ChunkLimit))
+                    {
+                        var ids = chunk.Select(x => x.Vk);
+                        await _api.Messages.Send(ids, await _weather.GetDailyWeather(group.Key, DateTime.Today));
+                        await Task.Delay(300);
+                    }
                 }
             });
         }
@@ -80,8 +90,9 @@ namespace Goblin.WebUI.Hangfire
         {
             const int convId = 2000000000;
             id = convId + id;
+            var x = id >= 0;
 
-            if(!string.IsNullOrEmpty(city) && await _weather.CheckCity(city))
+            if(!string.IsNullOrWhiteSpace(city) && await _weather.CheckCity(city))
             {
                 var weather = await _weather.GetDailyWeather(city, DateTime.Today);
                 await _api.Messages.Send(id, weather);
@@ -118,7 +129,7 @@ namespace Goblin.WebUI.Hangfire
 
         public void Dummy()
         {
-
+            //TODO: lol
         }
     }
 }
