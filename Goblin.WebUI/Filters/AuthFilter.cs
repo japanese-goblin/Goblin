@@ -8,7 +8,7 @@ namespace Goblin.WebUI.Filters
         {
             var httpContext = context.GetHttpContext();
 
-            return httpContext.User.Identity.IsAuthenticated;
+            return httpContext.User.IsInRole("Admin");
         }
     }
 }
