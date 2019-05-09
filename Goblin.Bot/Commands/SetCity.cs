@@ -44,11 +44,11 @@ namespace Goblin.Bot.Commands
                 var user = await _db.BotUsers.FirstAsync(x => x.Vk == msg.FromId);
                 user.City = char.ToUpper(param[0]) + param.Substring(1).ToLower(); //чтобы первая буква была с боьшой буквы (потом для группировки пригодится)
                 await _db.SaveChangesAsync();
-                text = $"Город успешно установлен на {param}";
+                text = $"Город успешно установлен на {user.City}";
             }
             else
             {
-                text = $"Ошибка. Город '{msg.GetParams()}' не найден";
+                text = $"Ошибка. Город '{param}' не найден";
             }
 
             return new CommandResponse
