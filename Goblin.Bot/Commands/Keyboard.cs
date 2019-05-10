@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
 using Vk.Models.Keyboard;
@@ -17,10 +18,23 @@ namespace Goblin.Bot.Commands
 
         public Task<CommandResponse> Execute(Message msg)
         {
+            var keyboard = new Vk.Models.Keyboard.Keyboard(true);
+            string text;
+            if(msg.GetParams().ToLower().Contains("убрать"))
+            {
+                text = "Клавиатура убрана";
+                keyboard.Buttons = new List<List<Button>>();
+            }
+            else
+            {
+                text = "Вот тебе клавиатура";
+                keyboard = GenerateKeyboard();
+            }
+
             return Task.Run(() => new CommandResponse
             {
-                Text = "Вот тебе клавиатура",
-                Keyboard = GenerateKeyboard()
+                Text = text,
+                Keyboard = keyboard
             });
         }
 
@@ -35,11 +49,13 @@ namespace Goblin.Bot.Commands
 
             kb.AddButton("Расписание", ButtonColor.Primary, "cmd", "schedule");
             kb.AddButton("Расписание завтра", ButtonColor.Primary, "cmd", "schedule_tomorrow");
-            kb.AddButton("Экзамены", ButtonColor.Negative, "cmd", "exams");
+            kb.AddButton("Экзамены", ButtonColor.Primary, "cmd", "exams");
             kb.AddLine();
             kb.AddButton("Погода", ButtonColor.Primary, "cmd", "weather");
-            kb.AddButton("Напоминания", ButtonColor.Primary, "cmd", "reminds");
-            kb.AddButton("Команды", ButtonColor.Primary, "cmd", "commands");
+            kb.AddButton("Погода завтра", ButtonColor.Primary, "cmd", "weather");
+            kb.AddLine();
+            kb.AddButton("Напоминания", ButtonColor.Default, "cmd", "reminds");
+            kb.AddButton("Команды", ButtonColor.Default, "cmd", "commands");
             return kb;
         }
     }
