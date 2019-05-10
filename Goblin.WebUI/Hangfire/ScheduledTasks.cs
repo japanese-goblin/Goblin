@@ -49,41 +49,41 @@ namespace Goblin.WebUI.Hangfire
             await _db.SaveChangesAsync();
         }
 
+        public void SendDailyStuff()
+        {
+            var weatherJob = BackgroundJob.Enqueue(() => SendWeather());
+            if (DateTime.Now.DayOfWeek != DayOfWeek.Sunday)
+            {
+                BackgroundJob.ContinueWith(weatherJob, () => SendSchedule());
+            }
+        }
+
         public async Task SendSchedule()
         {
-            //TODO: BackgroundJob
-            await Task.Factory.StartNew(async () =>
+            var grouped = _db.GetScheduleUsers().GroupBy(x => x.Group);
+            foreach(var group in grouped)
             {
-                var grouped = _db.GetScheduleUsers().GroupBy(x => x.Group);
-                foreach(var group in grouped)
+                foreach(var chunk in group.Chunk(ChunkLimit))
                 {
-                    foreach(var chunk in group.Chunk(ChunkLimit))
-                    {
-                        var ids = chunk.Select(x => x.Vk);
-                        var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Today, group.Key);
-                        await _api.Messages.Send(ids, schedule);
-                        await Task.Delay(700);
-                    }   
-                }
-            });
+                    var ids = chunk.Select(x => x.Vk);
+                    var schedule = await StudentsSchedule.GetScheduleAtDate(DateTime.Today, group.Key);
+                    BackgroundJob.Enqueue(() => _api.Messages.Send(ids, schedule, null, null));
+                }   
+            }
         }
 
         public async Task SendWeather()
         {
-            //TODO: BackgroundJob
-            await Task.Factory.StartNew(async () =>
+            var grouped = _db.GetWeatherUsers().GroupBy(x => x.City);
+            foreach(var group in grouped)
             {
-                var grouped = _db.GetWeatherUsers().GroupBy(x => x.City);
-                foreach(var group in grouped)
+                foreach(var chunk in group.Chunk(ChunkLimit))
                 {
-                    foreach(var chunk in group.Chunk(ChunkLimit))
-                    {
-                        var ids = chunk.Select(x => x.Vk);
-                        await _api.Messages.Send(ids, await _weather.GetDailyWeather(group.Key, DateTime.Today));
-                        await Task.Delay(300);
-                    }
+                    var ids = chunk.Select(x => x.Vk);
+                    var weather = await _weather.GetDailyWeather(group.Key, DateTime.Today);
+                    BackgroundJob.Enqueue(() => _api.Messages.Send(ids, weather, null, null));
                 }
-            });
+            }
         }
 
         public async Task SendToConv(int id, int group = 0, string city = "")
@@ -111,11 +111,14 @@ namespace Goblin.WebUI.Hangfire
             RecurringJob.AddOrUpdate<ScheduledTasks>("SendRemind", x => x.SendRemind(), Cron.Minutely,
                                                      TimeZoneInfo.Local);
 
-            RecurringJob.AddOrUpdate<ScheduledTasks>("SendSchedule", x => x.SendSchedule(),
-                                                     "0 6 * * 1-6", TimeZoneInfo.Local);
+            RecurringJob.AddOrUpdate<ScheduledTasks>("SendDailyStuff", x => x.SendDailyStuff(),
+                                                     "30 5 * * *", TimeZoneInfo.Local);
 
-            RecurringJob.AddOrUpdate<ScheduledTasks>("SendWeather", x => x.SendWeather(),
-                                                     "0 7 * * *", TimeZoneInfo.Local);
+            //RecurringJob.AddOrUpdate<ScheduledTasks>("SendSchedule", x => x.SendSchedule(),
+            //                                         "0 6 * * 1-6", TimeZoneInfo.Local);
+
+            //RecurringJob.AddOrUpdate<ScheduledTasks>("SendWeather", x => x.SendWeather(),
+            //                                         "0 7 * * *", TimeZoneInfo.Local);
 
             foreach(var job in _db.Jobs)
             {
