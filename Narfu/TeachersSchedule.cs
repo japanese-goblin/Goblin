@@ -27,7 +27,7 @@ namespace Narfu
             HtmlDocument doc;
             try
             {
-                //TODO: из-за gateway timeout
+                //из-за gateway timeout
                 var response = await Utils.Client.GetStreamAsync($"{Utils.EndPoint}?timetable&lecturer={id}");
                 doc = new HtmlDocument();
                 doc.Load(response);

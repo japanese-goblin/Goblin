@@ -23,18 +23,6 @@ namespace Narfu
             Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText($"{path}/Data/Groups.json"));
         }
 
-        /// <summary>
-        ///     Получение всего доступного расписания группы на указанную дату
-        /// </summary>
-        /// <param name="groupId">
-        ///     ID группы на сайте
-        /// </param>
-        /// <returns>
-        ///     Возвращает кортеж:
-        ///     Error - произошла ли ошибка при выполнении запроса
-        ///     Code - код ответа
-        ///     Lessons - массив с парами
-        /// </returns>
         public static async Task<(bool Error, HttpStatusCode Code, Lesson[] Lessons)> GetSchedule(int groupId)
         {
             var siteGroup = GetGroupByRealId(groupId).SiteId;
@@ -87,12 +75,6 @@ namespace Narfu
             return (false, response.StatusCode, lessons);
         }
 
-        /// <summary>
-        ///     Получение расписания в строком виде
-        /// </summary>
-        /// <param name="date">Дата, на которую нужно расписание</param>
-        /// <param name="realGroup">Реальный номер группы сафу</param>
-        /// <returns></returns>
         public static async Task<string> GetScheduleAtDate(DateTime date, int realGroup)
         {
             var res = await GetSchedule(realGroup);
@@ -126,11 +108,6 @@ namespace Narfu
             return strBuilder.ToString();
         }
 
-        /// <summary>
-        ///     Получение экзаменов в строковом виде
-        /// </summary>
-        /// <param name="realGroup">Реальный номер группы</param>
-        /// <returns>Список экзаменов</returns>
         public static async Task<string> GetExams(int realGroup)
         {
             var res = await GetSchedule(realGroup);
@@ -154,15 +131,14 @@ namespace Narfu
             var strBuilder = new StringBuilder();
 
             strBuilder.AppendLine("Список экзаменов:");
-            foreach(var exam in lessons.GroupBy(x => x.Name))
+            foreach(var group in lessons.GroupBy(x => x.Name))
             {
-                var f = exam.First();
-                var l = exam.Last();
-                var endTime = l.StartEndTime.Split("-")[1];
-                strBuilder.AppendFormat("{0:dd.MM.yyyy (dddd)} ({1:HH:mm} - {2}) - {3} [{4}] ({5})",
-                                        l.StartTime, f.StartTime, endTime, l.Name, l.Type, l.Teacher).AppendLine();
-                strBuilder.AppendFormat("У группы {0}", l.Groups).AppendLine();
-                strBuilder.AppendFormat("В аудитории {0}", l.Auditory).AppendLine();
+                var first = group.First();
+                var last = group.Last();
+                strBuilder.AppendFormat("{0:dd.MM.yyyy (dddd)} ({1:HH:mm} - {2:HH:mm}) - {3} [{4}] ({5})",
+                                        last.StartTime, first.StartTime, last.EndTime, last.Name, last.Type, last.Teacher).AppendLine();
+                strBuilder.AppendFormat("У группы {0}", last.Groups).AppendLine();
+                strBuilder.AppendFormat("В аудитории {0}", last.Auditory).AppendLine();
                 strBuilder.AppendLine();
             }
 
@@ -180,7 +156,7 @@ namespace Narfu
         private static string GenerateErrorMessage(HttpStatusCode code, int group)
         {
             return $"Ошибка (код ошибки - {code}).\n" +
-                   "Сайт с расписанием недоступен (либо сломалось получение расписание со стороны САФУ).\n" +
+                   "Сайт с расписанием недоступен (либо сломалось расписание со стороны САФУ).\n" +
                    $"Вы можете проверить расписание здесь: {Utils.EndPoint}/?timetable&group={group}";
         }
 
