@@ -2,7 +2,7 @@
 
 namespace OpenWeatherMap.Models.Current
 {
-    internal class CurrentWeather
+    public class CurrentWeather
     {
         [JsonProperty("coord")]
         private Coord Coord { get; set; }

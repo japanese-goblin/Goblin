@@ -13,6 +13,11 @@ namespace OpenWeatherMap.Tests
     {
         public HttpClient GetDailyHttpClient()
         {
+            return GenerateClient(File.ReadAllText("data/daily.json"));
+        }
+
+        private HttpClient GenerateClient(string content)
+        {
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
             handlerMock
                 .Protected()
@@ -20,11 +25,11 @@ namespace OpenWeatherMap.Tests
                                                   "SendAsync",
                                                   ItExpr.IsAny<HttpRequestMessage>(),
                                                   ItExpr.IsAny<CancellationToken>()
-                                                 )                 // Setup the PROTECTED method to mock
+                                                 ) // Setup the PROTECTED method to mock
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(File.ReadAllText("data/daily.json"))
+                    Content = new StringContent(content)
                 }) // prepare the expected response of the mocked http call
                 .Verifiable();
 

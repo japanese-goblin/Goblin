@@ -1,7 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace OpenWeatherMap.Models.Current {
-    internal class Sys
+namespace OpenWeatherMap.Models.Current
+{
+    public class Sys
     {
         [JsonProperty("type")]
         public int Type { get; set; }

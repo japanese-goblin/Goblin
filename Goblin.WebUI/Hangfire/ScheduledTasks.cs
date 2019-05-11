@@ -80,7 +80,7 @@ namespace Goblin.WebUI.Hangfire
                 foreach(var chunk in group.Chunk(ChunkLimit))
                 {
                     var ids = chunk.Select(x => x.Vk);
-                    var weather = await _weather.GetDailyWeather(group.Key, DateTime.Today);
+                    var weather = await _weather.GetDailyWeatherString(group.Key, DateTime.Today);
                     BackgroundJob.Enqueue(() => _api.Messages.Send(ids, weather, null, null));
                 }
             }
@@ -94,7 +94,7 @@ namespace Goblin.WebUI.Hangfire
 
             if(!string.IsNullOrWhiteSpace(city) && await _weather.CheckCity(city))
             {
-                var weather = await _weather.GetDailyWeather(city, DateTime.Today);
+                var weather = await _weather.GetDailyWeatherString(city, DateTime.Today);
                 await _api.Messages.Send(id, weather);
             }
 

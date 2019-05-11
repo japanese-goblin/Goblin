@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using OpenWeatherMap.Models.Current;
 
 namespace OpenWeatherMap
 {
@@ -35,11 +36,16 @@ namespace OpenWeatherMap
             Query = $"units={Units}&appid={Token}&lang={Language}";
         }
 
-        public async Task<string> GetCurrentWeather(string city)
+        public async Task<CurrentWeather> GetCurrentWeather(string city)
         {
             city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
             var response = await Client.GetAsync($"weather?q={city}&{Query}");
-            var w = JsonConvert.DeserializeObject<Models.Current.CurrentWeather>(await response.Content.ReadAsStringAsync());
+            return JsonConvert.DeserializeObject<Models.Current.CurrentWeather>(await response.Content.ReadAsStringAsync());
+        }
+
+        public async Task<string> GetCurrentWeatherString(string city)
+        {
+            var w = await GetCurrentWeather(city);
 
             // на {UnixToDateTime(w.UnixTime):dd.MM.yyyy HH:mm}
             const double pressureConvert = 0.75006375541921;
@@ -60,12 +66,17 @@ namespace OpenWeatherMap
             return strBuilder.ToString();
         }
 
-        public async Task<string> GetDailyWeather(string city, DateTime date)
+        public async Task<Models.Daily.DailyWeather> GetDailyWeather(string city, DateTime date)
         {
             const int count = 2;
             city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
             var response = await Client.GetAsync($"forecast/daily?q={city}&{Query}&cnt={count}");
-            var w = JsonConvert.DeserializeObject<Models.Daily.DailyWeather>(await response.Content.ReadAsStringAsync());
+            return JsonConvert.DeserializeObject<Models.Daily.DailyWeather>(await response.Content.ReadAsStringAsync());
+        }
+
+        public async Task<string> GetDailyWeatherString(string city, DateTime date)
+        {
+            var w = await GetDailyWeather(city, date);
             var weatherToday = w.List.FirstOrDefault(x => UnixToDateTime(x.UnixTime).Date == DateTime.Today);
             if(weatherToday is null)
             {

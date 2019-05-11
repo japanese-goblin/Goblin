@@ -60,13 +60,13 @@ namespace Goblin.Bot.Commands
             var user = _db.BotUsers.FirstOrDefault(x => x.Vk == msg.FromId);
             if(string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
             {
-                return await _weather.GetCurrentWeather(user.City);
+                return await _weather.GetCurrentWeatherString(user.City);
             }
 
             var text = "";
             if(await _weather.CheckCity(param))
             {
-                text = await _weather.GetCurrentWeather(param);
+                text = await _weather.GetCurrentWeatherString(param);
             }
             else
             {
@@ -81,7 +81,7 @@ namespace Goblin.Bot.Commands
             var user = _db.BotUsers.FirstOrDefault(x => x.Vk == msg.FromId);
             if(!string.IsNullOrEmpty(user?.City))
             {
-                return await _weather.GetDailyWeather(user.City, DateTime.Today.AddDays(1));
+                return await _weather.GetDailyWeatherString(user.City, DateTime.Today.AddDays(1));
             }
 
             return "Ошибка. Для просмотра погоды на завтра укажи город через команду 'город *название*'";
