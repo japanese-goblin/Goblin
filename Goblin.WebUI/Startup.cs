@@ -1,28 +1,18 @@
-﻿using System;
-using System.Globalization;
-using System.Net.Http;
+﻿using System.Globalization;
 using System.Reflection;
-using Goblin.Bot;
 using Goblin.Bot.Notifications.GroupJoin;
-using Goblin.Domain.Entities;
 using Goblin.Persistence;
 using Goblin.WebUI.Extensions;
-using Goblin.WebUI.Filters;
 using Goblin.WebUI.Hangfire;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OpenWeatherMap;
-using Vk;
 
 namespace Goblin.WebUI
 {
@@ -56,46 +46,13 @@ namespace Goblin.WebUI
 
             services.AddHangfire(config => { config.UseMemoryStorage(); });
 
-            services.AddScoped<Handler>();
-            services.AddScoped<CommandExecutor>();
-            services.AddBotCommands();
+            services.AddBotFeatures();
 
-            services.AddSingleton(x =>
-            {
-                var client = HttpClientFactory.Create();
-                client.BaseAddress = new Uri(VkApi.EndPoint);
+            services.AddAdditions(Configuration);
 
-                return new VkApi(Configuration["Config:Vk_Token"], client);
-            });
-            services.AddSingleton(x =>
-            {
-                var client = HttpClientFactory.Create();
-                client.BaseAddress = new Uri(WeatherInfo.EndPoint);
+            services.AddAuth(Configuration);
 
-                return new WeatherInfo(Configuration["Config:OWM_Token"], client);
-            });
-
-            services.AddIdentity<SiteUser, IdentityRole>()
-                    .AddRoles<IdentityRole>()
-                    .AddDefaultUI(UIFramework.Bootstrap4)
-                    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services.AddAuthentication()
-                    .AddVkontakte(options =>
-                    {
-                        options.ApiVersion = "5.8";
-                        options.ClientId = Configuration["VkAuth:AppId"];
-                        options.ClientSecret = Configuration["VkAuth:AppSecret"];
-                        options.Scope.Add("email");
-                    });
-
-            services.AddHttpsRedirection(options => { options.HttpsPort = 443; });
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.KnownNetworks.Clear();
-                options.KnownProxies.Clear();
-                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            });
+            services.AddHttpsRedirect();
 
             services.AddMediatR(typeof(GroupJoinNotification).GetTypeInfo().Assembly);
 
@@ -120,22 +77,9 @@ namespace Goblin.WebUI
 
             app.UseAuthentication();
 
-            var options = new BackgroundJobServerOptions { WorkerCount = Environment.ProcessorCount * 2 };
-            app.UseHangfireServer(options);
-            app.UseHangfireDashboard("/Admin/HangFire", new DashboardOptions
-            {
-                Authorization = new[] { new AuthFilter() },
-                AppPath = "/Admin/",
-                StatsPollingInterval = 10000,
-                DisplayStorageConnectionString = false
-            });
+            app.UseDashboard();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                                "default",
-                                "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvcWithDefaultRoute();
 
             ConfigureJobs();
         }
