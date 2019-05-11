@@ -82,7 +82,6 @@ namespace Narfu
 
         public static async Task<string> GetScheduleToSend(int id)
         {
-            //TODO ?
             var teacher = Teachers.FirstOrDefault(x => x.Id == id);
             if(teacher is null)
             {

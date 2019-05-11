@@ -32,7 +32,7 @@ namespace Goblin.WebUI.Hangfire
         {
             var reminds =
                 _db.Reminds
-                   .AsNoTracking()
+                   .ToArray()
                    .Where(x => x.Date.ToString("dd.MM.yyyy HH:mm") == DateTime.Now.ToString("dd.MM.yyyy HH:mm")); //TODO: что-то сделать с датой
 
             if(!reminds.Any())

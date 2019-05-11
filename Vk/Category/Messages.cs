@@ -67,7 +67,7 @@ namespace Vk.Category
             var values = new Dictionary<string, string>
             {
                 ["message_ids"] = string.Join(',', messageIds),
-                ["spam"] = (isSpam ? 1 : 0).ToString(), //TODO
+                ["spam"] = (isSpam ? 1 : 0).ToString(),
                 ["delete_for_all"] = (deleteForAll ? 1 : 0).ToString()
             };
 

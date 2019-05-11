@@ -43,13 +43,13 @@ namespace Goblin.Bot.Commands
 
             var param = msg.GetParams();
             var all = param.Split(' ', 3);
-            if(all[0].ToLower() == "завтра") //TODO: поменять
+            all[0] = all[0].ToLower();
+            if(all[0] == "завтра")
             {
                 var d = DateTime.Now.AddDays(1);
                 all[0] = $"{d.Day}.{d.Month}.{d.Year}";
             }
-
-            if(all[0].ToLower() == "сегодня") //TODO: поменять
+            else if(all[0] == "сегодня")
             {
                 var d = DateTime.Now;
                 all[0] = $"{d.Day}.{d.Month}.{d.Year}";
