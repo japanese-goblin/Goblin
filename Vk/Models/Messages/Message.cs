@@ -30,7 +30,7 @@ namespace Vk.Models.Messages
         public ForwardMessage[] ForwardMessages { get; set; }
 
         [JsonProperty("reply_message")]
-        public ForwardMessage[] ReplyMessages { get; set; }
+        public ForwardMessage ReplyMessages { get; set; }
 
         [JsonProperty("important")]
         public bool Important { get; set; }
