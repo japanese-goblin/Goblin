@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Net.Http;
 using System.Reflection;
 using Goblin.Bot;
 using Goblin.Bot.Notifications.GroupJoin;
@@ -60,7 +61,13 @@ namespace Goblin.WebUI
             services.AddBotCommands();
 
             services.AddSingleton(x => new VkApi(Configuration["Config:Vk_Token"]));
-            services.AddSingleton(x => new WeatherInfo(Configuration["Config:OWM_Token"]));
+            services.AddSingleton(x =>
+            {
+                var client = HttpClientFactory.Create();
+                client.BaseAddress = new Uri(WeatherInfo.EndPoint);
+
+                return new WeatherInfo(Configuration["Config:OWM_Token"], client);
+            });
 
             services.AddIdentity<SiteUser, IdentityRole>()
                     .AddRoles<IdentityRole>()

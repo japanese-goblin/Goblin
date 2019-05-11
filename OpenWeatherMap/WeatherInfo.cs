@@ -9,7 +9,7 @@ namespace OpenWeatherMap
 {
     public class WeatherInfo
     {
-        private const string EndPoint = "https://api.openweathermap.org/data/2.5/";
+        public const string EndPoint = "https://api.openweathermap.org/data/2.5/";
         private readonly string Token;
         private readonly HttpClient Client;
 
@@ -18,7 +18,7 @@ namespace OpenWeatherMap
 
         private readonly string Query;
 
-        public WeatherInfo(string token)
+        public WeatherInfo(string token, HttpClient client)
         {
             if(string.IsNullOrEmpty(token))
             {
@@ -26,12 +26,13 @@ namespace OpenWeatherMap
             }
 
             Token = token;
-            Client = new HttpClient
-            {
-                BaseAddress = new Uri(EndPoint)
-            };
+            //Client = new HttpClient
+            //{
+            //    BaseAddress = new Uri(EndPoint)
+            //};
+            Client = client;
 
-            Query = $"units=metric&appid={Token}&lang={Language}";
+            Query = $"units={Units}&appid={Token}&lang={Language}";
         }
 
         public async Task<string> GetCurrentWeather(string city)
