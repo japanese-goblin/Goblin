@@ -10,12 +10,12 @@ namespace Vk
 {
     public class VkApi
     {
-        private const string EndPoint = "https://api.vk.com/method/";
+        public const string EndPoint = "https://api.vk.com/method/";
         private readonly HttpClient Client; //TODO: DI?
         private const string Version = "5.92";
         private readonly string AccessToken;
 
-        public VkApi(string token)
+        public VkApi(string token, HttpClient client)
         {
             if(string.IsNullOrEmpty(token))
             {
@@ -24,10 +24,7 @@ namespace Vk
 
             AccessToken = token;
 
-            Client = new HttpClient
-            {
-                BaseAddress = new Uri(EndPoint)
-            };
+            Client = client ?? throw new ArgumentNullException(nameof(client), "Http client is null");
 
             Messages = new Messages(this);
             Users = new Users(this);

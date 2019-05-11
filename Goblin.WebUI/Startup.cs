@@ -60,7 +60,13 @@ namespace Goblin.WebUI
             services.AddScoped<CommandExecutor>();
             services.AddBotCommands();
 
-            services.AddSingleton(x => new VkApi(Configuration["Config:Vk_Token"]));
+            services.AddSingleton(x =>
+            {
+                var client = HttpClientFactory.Create();
+                client.BaseAddress = new Uri(VkApi.EndPoint);
+
+                return new VkApi(Configuration["Config:Vk_Token"], client);
+            });
             services.AddSingleton(x =>
             {
                 var client = HttpClientFactory.Create();
