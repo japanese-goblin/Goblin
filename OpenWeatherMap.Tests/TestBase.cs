@@ -16,6 +16,11 @@ namespace OpenWeatherMap.Tests
             return GenerateClient(File.ReadAllText("data/daily.json"));
         }
 
+        public HttpClient GetCurrentHttpClient()
+        {
+            return GenerateClient(File.ReadAllText("data/current.json"));
+        }
+
         private HttpClient GenerateClient(string content)
         {
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);

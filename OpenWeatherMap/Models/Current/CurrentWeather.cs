@@ -38,6 +38,6 @@ namespace OpenWeatherMap.Models.Current
         public string CityName { get; set; }
 
         [JsonProperty("cod")]
-        public int CityCode { get; set; }
+        public int ResponseCode { get; set; }
     }
 }

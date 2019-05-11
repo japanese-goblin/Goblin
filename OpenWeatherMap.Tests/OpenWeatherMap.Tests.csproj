@@ -14,16 +14,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="data\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\OpenWeatherMap\OpenWeatherMap.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="data\current.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="data\daily.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
