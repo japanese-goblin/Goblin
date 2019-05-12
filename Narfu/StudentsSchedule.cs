@@ -19,7 +19,7 @@ namespace Narfu
 
         static StudentsSchedule()
         {
-            var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(StudentsSchedule)).Location); //TODO:
             Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText($"{path}/Data/Groups.json"));
         }
 
