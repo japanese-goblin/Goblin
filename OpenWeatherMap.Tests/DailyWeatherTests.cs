@@ -5,7 +5,7 @@ namespace OpenWeatherMap.Tests
 {
     public class DailyWeatherTests : TestBase
     {
-        private const string City = "Город";
+        private const string City = "Р“РѕСЂРѕРґ";
 
         [Fact(DisplayName = "Get daily weather")]
         public async void GetWeather()
@@ -20,8 +20,8 @@ namespace OpenWeatherMap.Tests
         public async void GetString()
         {
             var result = await GetWeatherInfo().GetDailyWeatherString(City, DateTime.Today);
-            Assert.Contains("Температура", result);
-            Assert.Contains("сегодня", result);
+            Assert.Contains("РўРµРјРїРµСЂР°С‚СѓСЂР°", result);
+            Assert.Contains("СЃРµРіРѕРґРЅСЏ", result);
         }
 
         private WeatherInfo GetWeatherInfo()
