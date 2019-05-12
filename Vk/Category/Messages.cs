@@ -64,6 +64,11 @@ namespace Vk.Category
 
         public async Task Delete(long[] messageIds, bool isSpam = false, bool deleteForAll = true)
         {
+            if(messageIds.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(messageIds));
+            }
+
             var values = new Dictionary<string, string>
             {
                 ["message_ids"] = string.Join(',', messageIds),
@@ -75,7 +80,6 @@ namespace Vk.Category
         }
 
         private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
-
 
         private static int GetRandomId()
         {

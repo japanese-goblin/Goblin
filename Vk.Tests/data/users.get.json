@@ -1,0 +1,20 @@
+{
+  "response": [
+    {
+      "id": 1,
+      "first_name": "Павел",
+      "last_name": "Дуров",
+      "is_closed": false,
+      "can_access_closed": true,
+      "photo_200_orig": "https://pp.userap...WOVNTv67U.jpg?ava=1"
+    },
+    {
+      "id": 2,
+      "first_name": "Александра",
+      "last_name": "Владимирова",
+      "is_closed": true,
+      "can_access_closed": false,
+      "photo_200_orig": "https://sun1-15.u...xiJiKONBs.jpg?ava=1"
+    }
+  ]
+}
