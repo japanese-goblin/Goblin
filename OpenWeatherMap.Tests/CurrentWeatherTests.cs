@@ -7,7 +7,7 @@ namespace OpenWeatherMap.Tests
     {
         private const string City = "Город";
 
-        [Fact]
+        [Fact(DisplayName = "Get current weather")]
         public async void GetWeather()
         {
             var result = await GetWeatherInfo().GetCurrentWeather(City);
@@ -17,7 +17,7 @@ namespace OpenWeatherMap.Tests
             Assert.NotEmpty(result.Info);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Get current weather as string")]
         public async void GetString()
         {
             var result = await GetWeatherInfo().GetCurrentWeatherString(City);
