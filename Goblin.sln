@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OldTests", "Tests\OldTests.csproj", "{08FB69E7-5D3E-408B-8219-8495B81796C9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Narfu", "Narfu\Narfu.csproj", "{BFB396DB-8CFC-46C1-9148-1305B4A72066}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vk", "Vk\Vk.csproj", "{2DC7F223-BDAF-4A3B-ADE2-0F378A918B3A}"
@@ -37,10 +35,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{08FB69E7-5D3E-408B-8219-8495B81796C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{08FB69E7-5D3E-408B-8219-8495B81796C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{08FB69E7-5D3E-408B-8219-8495B81796C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{08FB69E7-5D3E-408B-8219-8495B81796C9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BFB396DB-8CFC-46C1-9148-1305B4A72066}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BFB396DB-8CFC-46C1-9148-1305B4A72066}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFB396DB-8CFC-46C1-9148-1305B4A72066}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -86,7 +80,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{08FB69E7-5D3E-408B-8219-8495B81796C9} = {58EF8ED8-8862-430B-859D-E7FA52DFB607}
 		{BFB396DB-8CFC-46C1-9148-1305B4A72066} = {C61C101A-1A74-4916-9564-C7AF8F17E581}
 		{2DC7F223-BDAF-4A3B-ADE2-0F378A918B3A} = {C61C101A-1A74-4916-9564-C7AF8F17E581}
 		{0CD1DD99-3862-49A8-B716-08B685AA2A93} = {C61C101A-1A74-4916-9564-C7AF8F17E581}
