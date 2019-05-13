@@ -36,5 +36,10 @@
 
 @section NarfuStyles
 {
-    <link rel="stylesheet" href="~/css/narfu.css"/>
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/narfu.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/narfu.min.css" asp-append-version="true"/>
+    </environment>
 }
