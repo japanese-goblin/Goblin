@@ -88,6 +88,7 @@ namespace Goblin.WebUI
         {
             BackgroundJob.Enqueue<ScheduledTasks>(x => x.Dummy()); //TODO:
             BackgroundJob.Enqueue<CreateRolesTask>(x => x.CreateRoles());
+            ScheduledTasks.Init();
         }
     }
 }

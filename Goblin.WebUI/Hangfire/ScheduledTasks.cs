@@ -107,13 +107,6 @@ namespace Goblin.WebUI.Hangfire
 
         public void InitJobs()
         {
-            // минуты часи дни месяцы дни-недели
-            RecurringJob.AddOrUpdate<ScheduledTasks>("SendRemind", x => x.SendRemind(), Cron.Minutely,
-                                                     TimeZoneInfo.Local);
-
-            RecurringJob.AddOrUpdate<ScheduledTasks>("SendDailyStuff", x => x.SendDailyStuff(),
-                                                     "30 5 * * *", TimeZoneInfo.Local);
-
             //RecurringJob.AddOrUpdate<ScheduledTasks>("SendSchedule", x => x.SendSchedule(),
             //                                         "0 6 * * 1-6", TimeZoneInfo.Local);
 
@@ -128,6 +121,15 @@ namespace Goblin.WebUI.Hangfire
                     $"{job.Minutes} {job.Hours} * * 1-6", TimeZoneInfo.Local
                 );
             }
+        }
+
+        public static void Init()
+        {
+            // минуты часи дни месяцы дни-недели
+            RecurringJob.AddOrUpdate<ScheduledTasks>("SendRemind", x => x.SendRemind(), Cron.Minutely,
+                                                     TimeZoneInfo.Local);
+            RecurringJob.AddOrUpdate<ScheduledTasks>("SendDailyStuff", x => x.SendDailyStuff(),
+                                                     "30 5 * * *", TimeZoneInfo.Local);
         }
 
         public void Dummy()
