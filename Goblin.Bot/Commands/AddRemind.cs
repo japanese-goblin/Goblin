@@ -79,9 +79,15 @@ namespace Goblin.Bot.Commands
                 return (false, $"Ошибка. Укажите дату, время и текст напоминания ({Usage})");
             }
 
-            if(all[0].ToLower() == "завтра" || all[0].ToLower() == "сегодня")
+            if(all[0] == "завтра")
             {
-                return (true, "");
+                var d = DateTime.Now.AddDays(1);
+                all[0] = $"{d.Day}.{d.Month}.{d.Year}";
+            }
+            else if(all[0] == "сегодня")
+            {
+                var d = DateTime.Now;
+                all[0] = $"{d.Day}.{d.Month}.{d.Year}";
             }
 
             //TODO: все равно никто не пользуется ех
@@ -127,7 +133,7 @@ namespace Goblin.Bot.Commands
                                                     "dd.MM.yyyy H:m", "d.MM.yyyy H:m",
                                                     "dd.M.yyyy H:m", "d.M.yyyy H:m"
                                                 },
-                                                null, DateTimeStyles.None, out var res);
+                                                null, DateTimeStyles.AssumeLocal, out var res);
 
             return (isGood, res);
         }
