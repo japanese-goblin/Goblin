@@ -27,7 +27,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{58EF8ED8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenWeatherMap.Tests", "OpenWeatherMap.Tests\OpenWeatherMap.Tests.csproj", "{9BF41426-954A-4B8B-A310-D5ACE2867373}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vk.Tests", "Vk.Tests\Vk.Tests.csproj", "{D4A68104-466D-4143-BE14-137B9403C12D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vk.Tests", "Vk.Tests\Vk.Tests.csproj", "{D4A68104-466D-4143-BE14-137B9403C12D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.WebUI.Tests", "Goblin.WebUI.Tests\Goblin.WebUI.Tests.csproj", "{9B92955E-8D66-43F2-A89F-D7B489664E75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{D4A68104-466D-4143-BE14-137B9403C12D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4A68104-466D-4143-BE14-137B9403C12D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4A68104-466D-4143-BE14-137B9403C12D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B92955E-8D66-43F2-A89F-D7B489664E75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B92955E-8D66-43F2-A89F-D7B489664E75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B92955E-8D66-43F2-A89F-D7B489664E75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B92955E-8D66-43F2-A89F-D7B489664E75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,6 +95,7 @@ Global
 		{86B80A91-2310-4A60-9A61-AA3ABFBFC38F} = {D68023D1-660A-48E1-8C15-8F8F73F2CC74}
 		{9BF41426-954A-4B8B-A310-D5ACE2867373} = {58EF8ED8-8862-430B-859D-E7FA52DFB607}
 		{D4A68104-466D-4143-BE14-137B9403C12D} = {58EF8ED8-8862-430B-859D-E7FA52DFB607}
+		{9B92955E-8D66-43F2-A89F-D7B489664E75} = {58EF8ED8-8862-430B-859D-E7FA52DFB607}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BC184D3B-C238-43B8-8361-49303B6D1A6B}
