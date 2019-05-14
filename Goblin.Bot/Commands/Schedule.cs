@@ -60,7 +60,7 @@ namespace Goblin.Bot.Commands
 
             return new CommandResponse
             {
-                Text = await StudentsSchedule.GetScheduleAtDate(time, user.Group)
+                Text = await StudentsSchedule.GetScheduleAsStringAtDate(time, user.Group)
             };
         }
 

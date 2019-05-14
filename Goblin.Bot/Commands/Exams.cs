@@ -39,7 +39,7 @@ namespace Goblin.Bot.Commands
             var user = await _db.BotUsers.FirstOrDefaultAsync(x => x.Vk == msg.FromId);
             return new CommandResponse
             {
-                Text = await StudentsSchedule.GetExams(user.Group)
+                Text = await StudentsSchedule.GetExamsAsString(user.Group)
             };
         }
 

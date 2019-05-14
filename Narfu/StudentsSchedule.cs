@@ -23,17 +23,22 @@ namespace Narfu
             Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText($"{path}/Data/Groups.json"));
         }
 
-        public static async Task<(bool Error, HttpStatusCode Code, Lesson[] Lessons)> GetSchedule(int groupId)
+        /// <summary>
+        /// Получить пары для группы
+        /// </summary>
+        /// <param name="realGroupId">Реальный номер группы</param>
+        /// <returns>(Ошибка, Код ответа, Массив с парами)</returns>
+        public static async Task<(bool Error, HttpStatusCode Code, Lesson[] Lessons)> GetSchedule(int realGroupId)
         {
-            var siteGroup = GetGroupByRealId(groupId).SiteId;
-            var requestUrl = $"?icalendar&oid={siteGroup}&cod={groupId}&from={DateTime.Now:dd.MM.yyyy}";
+            var siteGroup = GetGroupByRealId(realGroupId).SiteId;
+            var requestUrl = $"?icalendar&oid={siteGroup}&cod={realGroupId}&from={DateTime.Now:dd.MM.yyyy}";
 
             HttpResponseMessage response;
             try
             {
                 response = await Utils.Client.GetAsync(requestUrl);
             }
-            catch(TaskCanceledException ex)
+            catch(TaskCanceledException)
             {
                 return (true, HttpStatusCode.GatewayTimeout, null);
             }
@@ -43,7 +48,7 @@ namespace Narfu
                 return (true, response.StatusCode, null);
             }
 
-            var calendar = Calendar.Load(await response.Content.ReadAsStringAsync());
+            var calendar = Calendar.Load(await response.Content.ReadAsStreamAsync());
             var events = calendar.Events
                                  .Distinct()
                                  .OrderBy(x => x.DtStart.Value)
@@ -61,7 +66,7 @@ namespace Narfu
                 {
                     Address = address[0],
                     Auditory = address[1],
-                    Number = (byte) description[0].ElementAt(0),
+                    Number = (byte)description[0].ElementAt(0),
                     Groups = description[1].Substring(3),
                     Name = description[2],
                     Type = description[3],
@@ -75,13 +80,19 @@ namespace Narfu
             return (false, response.StatusCode, lessons);
         }
 
-        public static async Task<string> GetScheduleAtDate(DateTime date, int realGroup)
+        /// <summary>
+        /// Получить пары для группы в виде строки
+        /// </summary>
+        /// <param name="date">Дата, на которую нужно получить расписание</param>
+        /// <param name="realGroupId">Реальный номер группы</param>
+        /// <returns>Расписание</returns>
+        public static async Task<string> GetScheduleAsStringAtDate(DateTime date, int realGroupId)
         {
-            var res = await GetSchedule(realGroup);
+            var res = await GetSchedule(realGroupId);
 
             if(res.Error)
             {
-                var group = GetGroupByRealId(realGroup).SiteId;
+                var group = GetGroupByRealId(realGroupId).SiteId;
                 return GenerateErrorMessage(res.Code, group);
             }
 
@@ -108,14 +119,18 @@ namespace Narfu
             return strBuilder.ToString();
         }
 
-        public static async Task<string> GetExams(int realGroup)
+        /// <summary>
+        /// Получить экзамены для группы
+        /// </summary>
+        /// <param name="realGroupId">Реальный номер группы</param>
+        /// <returns>(Ошибка, Код ответа, Массив с парами)</returns>
+        public static async Task<(bool Error, HttpStatusCode Code, Lesson[] Lessons)> GetExams(int realGroupId)
         {
-            var res = await GetSchedule(realGroup);
+            var res = await GetSchedule(realGroupId);
 
             if(res.Error)
             {
-                var group = GetGroupByRealId(realGroup).SiteId;
-                return GenerateErrorMessage(res.Code, group);
+                return res;
             }
 
             var lessons = res
@@ -125,13 +140,32 @@ namespace Narfu
 
             if(lessons.Length == 0)
             {
-                return "На данный момент список экзаменов отсутствует";
+                return (false, HttpStatusCode.OK, new Lesson[] { });
+
+                //return "На данный момент список экзаменов отсутствует";
+            }
+
+            return (false, HttpStatusCode.OK, lessons);
+        }
+
+        /// <summary>
+        /// Получить экзамены для группы в виде строки
+        /// </summary>
+        /// <param name="realGroupId">Реальный номер группы</param>
+        /// <returns>Список экзаменов</returns>
+        public static async Task<string> GetExamsAsString(int realGroupId)
+        {
+            var res = await GetExams(realGroupId);
+            if(res.Error)
+            {
+                var siteId = GetGroupByRealId(realGroupId).SiteId;
+                return GenerateErrorMessage(res.Code, siteId);
             }
 
             var strBuilder = new StringBuilder();
 
             strBuilder.AppendLine("Список экзаменов:");
-            foreach(var group in lessons.GroupBy(x => x.Name))
+            foreach(var group in res.Lessons.GroupBy(x => x.Name))
             {
                 var first = group.First();
                 var last = group.Last();
@@ -149,30 +183,31 @@ namespace Narfu
         public static int GetWeekNumber(DateTime date)
         {
             var ciCurr = CultureInfo.CurrentCulture;
-            var weekNum = ciCurr.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            var weekNum = ciCurr.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek,
+                                                        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek);
             return weekNum;
         }
 
-        private static string GenerateErrorMessage(HttpStatusCode code, int group)
+        private static string GenerateErrorMessage(HttpStatusCode code, int siteGroupId)
         {
             return $"Ошибка (код ошибки - {code}).\n" +
-                   "Сайт с расписанием недоступен (либо сломалось расписание со стороны САФУ).\n" +
-                   $"Вы можете проверить расписание здесь: {Utils.EndPoint}/?timetable&group={group}";
+                   "Сайт с расписанием недоступен.\n" +
+                   $"Вы можете проверить расписание здесь: {Utils.EndPoint}/?timetable&group={siteGroupId}";
         }
 
-        public static bool IsCorrectGroup(int group)
+        public static bool IsCorrectGroup(int readlGroupId)
         {
-            return Groups.Any(x => x.RealId == group);
+            return Groups.Any(x => x.RealId == readlGroupId);
         }
 
-        public static Group GetGroupByRealId(int realId)
+        public static Group GetGroupByRealId(int realGroupId)
         {
-            return Groups.FirstOrDefault(x => x.RealId == realId);
+            return Groups.FirstOrDefault(x => x.RealId == realGroupId);
         }
 
-        public static Group GetGroupBySiteId(short siteId)
+        public static Group GetGroupBySiteId(short siteGroupId)
         {
-            return Groups.FirstOrDefault(x => x.SiteId == siteId);
+            return Groups.FirstOrDefault(x => x.SiteId == siteGroupId);
         }
         #endregion
     }
