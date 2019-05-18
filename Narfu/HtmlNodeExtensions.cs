@@ -3,7 +3,7 @@ using HtmlAgilityPack;
 
 namespace Narfu
 {
-    public static class Extensions
+    public static class HtmlNodeExtensions
     {
         public static string GetNormalizedInnerText(this HtmlNode node)
         {
