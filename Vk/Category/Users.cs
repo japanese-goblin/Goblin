@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Vk.Models;
 
 namespace Vk.Category
@@ -28,8 +27,7 @@ namespace Vk.Category
                 ["fields"] = "photo_200_orig"
             };
 
-            var response = await _api.CallApi("users.get", values);
-            var usersInfo = JsonConvert.DeserializeObject<User[]>(response);
+            var usersInfo = await _api.CallApi<User[]>("users.get", values);
 
             if(usersInfo.Length == 0)
             {

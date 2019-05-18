@@ -2,20 +2,23 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Flurl;
+using Flurl.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Vk.Category;
+using Vk.Models;
 
 namespace Vk
 {
     public class VkApi
     {
         public const string EndPoint = "https://api.vk.com/method/";
-        private readonly HttpClient Client;
         private const string Version = "5.92";
+        private const string Language = "ru";
         private readonly string AccessToken;
 
-        public VkApi(string token, HttpClient client)
+        public VkApi(string token)
         {
             if(string.IsNullOrEmpty(token))
             {
@@ -23,34 +26,43 @@ namespace Vk
             }
 
             AccessToken = token;
-
-            Client = client ?? throw new ArgumentNullException(nameof(client), "Http client is null");
-
-            Messages = new Messages(this);
+            
+            Messages = new Messages(this); //TODO: нормальный DI
             Users = new Users(this);
             Photos = new Photos(this);
         }
 
-        internal async Task<string> CallApi(string method, Dictionary<string, string> @params)
+        internal async Task<T> CallApi<T>(string method, Dictionary<string, string> @params)
         {
-            @params.Add("lang", "ru");
-            @params.Add("v", Version);
-            @params.Add("access_token", AccessToken);
-
             //TODO add sleep? (лимит для токена сообщества - 20 запросов в секунду)
-            var response = await Client.PostAsync(method, new FormUrlEncodedContent(@params));
-            var responseStr = await response.Content.ReadAsStringAsync();
+            var response = await BuildRequest()
+                               .AppendPathSegment(method)
+                               .SetQueryParams(@params)
+                               .PostAsync(null);
 
-            if(responseStr.Contains("error") || !response.IsSuccessStatusCode)
-            {
-                //TODO
-                //var error = JsonConvert.DeserializeObject<Error>(responseStr);
-                throw new Exception($"[{method}]: error");
-            }
+            //if(!response.IsSuccessStatusCode) //TODO: не сработает, потому что вк всегда возвращает 200
+            //{
+            //    //TODO
+            //    //var error = JsonConvert.DeserializeObject<Error>(responseStr);
+            //    throw new Exception($"[{method}]: error");
+            //}
 
-            var x = JsonConvert.DeserializeObject<JObject>(responseStr);
+            var x = JsonConvert.DeserializeObject<ApiResponse<T>>(await response.Content.ReadAsStringAsync());
 
-            return x.ContainsKey("response") ? x["response"].ToString() : string.Empty;
+            return x.Response;
+        }
+
+        internal IFlurlRequest BuildRequest()
+        {
+            return EndPoint.SetQueryParam("lang", Language)
+                           .SetQueryParam("access_token", AccessToken)
+                           .SetQueryParam("v", Version)
+                           .WithHeaders(new
+                           {
+                               Accept = "application/json",
+                               User_Agent = "Japanese Goblin 1.0"
+                           })
+                           .AllowAnyHttpStatus(); //TODO:
         }
 
         #region categories

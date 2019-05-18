@@ -47,13 +47,7 @@ namespace Goblin.WebUI.Extensions
 
         public static void AddAdditions(this IServiceCollection services, IConfiguration config)
         {
-            services.AddSingleton(x =>
-            {
-                var client = HttpClientFactory.Create();
-                client.BaseAddress = new Uri(VkApi.EndPoint);
-
-                return new VkApi(config["Config:Vk_Token"], client);
-            });
+            services.AddSingleton(x => new VkApi(config["Config:Vk_Token"]));
             services.AddSingleton(x => new WeatherService(config["Config:OWM_Token"]));
         }
 

@@ -32,8 +32,8 @@ namespace Vk.Category
             {
                 ["peer_id"] = peerId.ToString()
             };
-            var res = await _api.CallApi("photos.getMessagesUploadServer", values);
-            return JsonConvert.DeserializeObject<UploadServerInfo>(res);
+            var res = await _api.CallApi<UploadServerInfo>("photos.getMessagesUploadServer", values);
+            return res;
         }
 
         public async Task<UploadImageInfo> UploadImage(string url, byte[] data)
@@ -63,8 +63,8 @@ namespace Vk.Category
                 ["hash"] = info.Hash
             };
 
-            var res = await _api.CallApi("photos.saveMessagesPhoto", values);
-            return JsonConvert.DeserializeObject<Photo>(res.Substring(1, res.Length - 2));
+            var res = await _api.CallApi<Photo>("photos.saveMessagesPhoto", values);
+            return res;
         }
     }
 }
