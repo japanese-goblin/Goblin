@@ -54,7 +54,7 @@ namespace Goblin.WebUI.Extensions
 
                 return new VkApi(config["Config:Vk_Token"], client);
             });
-            services.AddSingleton(x => new WeatherInfo(config["Config:OWM_Token"]));
+            services.AddSingleton(x => new WeatherService(config["Config:OWM_Token"]));
         }
 
         public static void AddAuth(this IServiceCollection services, IConfiguration config)

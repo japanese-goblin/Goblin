@@ -15,11 +15,11 @@ namespace Goblin.WebUI.Hangfire
     {
         private readonly ApplicationDbContext _db;
         private readonly VkApi _api;
-        private readonly WeatherInfo _weather;
+        private readonly WeatherService _weather;
 
         private const int ChunkLimit = 100;
 
-        public ScheduledTasks(ApplicationDbContext db, VkApi api, WeatherInfo weather)
+        public ScheduledTasks(ApplicationDbContext db, VkApi api, WeatherService weather)
         {
             _db = db;
             _api = api;

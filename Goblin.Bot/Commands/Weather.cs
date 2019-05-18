@@ -19,9 +19,9 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         private readonly ApplicationDbContext _db;
-        private readonly WeatherInfo _weather;
+        private readonly WeatherService _weather;
 
-        public Weather(ApplicationDbContext db, WeatherInfo weather)
+        public Weather(ApplicationDbContext db, WeatherService weather)
         {
             _db = db;
             _weather = weather;

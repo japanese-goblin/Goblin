@@ -9,7 +9,7 @@ using OpenWeatherMap.Models.Daily;
 
 namespace OpenWeatherMap
 {
-    public class WeatherInfo
+    public class WeatherService
     {
         public const string EndPoint = "https://api.openweathermap.org/data/2.5/";
 
@@ -17,7 +17,7 @@ namespace OpenWeatherMap
         private const string Units = "metric";
         private readonly IFlurlRequest _request;
 
-        public WeatherInfo(string token)
+        public WeatherService(string token)
         {
             if(string.IsNullOrEmpty(token))
             {

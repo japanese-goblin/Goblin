@@ -19,10 +19,10 @@ namespace OpenWeatherMap.Tests
             {
                 httpTest.RespondWith(File.ReadAllText(DailyDataPath));
 
-                var wi = new WeatherInfo("SuperToken");
+                var wi = new WeatherService("SuperToken");
                 var result = await wi.GetDailyWeather(City, DateTime.Today);
 
-                httpTest.ShouldHaveCalled($"{WeatherInfo.EndPoint}*")
+                httpTest.ShouldHaveCalled($"{WeatherService.EndPoint}*")
                         .WithVerb(HttpMethod.Get)
                         .WithHeader("Accept", "application/json")
                         .Times(1);
@@ -40,10 +40,10 @@ namespace OpenWeatherMap.Tests
             {
                 httpTest.RespondWith(File.ReadAllText(DailyDataPath));
 
-                var wi = new WeatherInfo("SuperToken");
+                var wi = new WeatherService("SuperToken");
                 var result = await wi.GetDailyWeatherString(City, DateTime.Today);
 
-                httpTest.ShouldHaveCalled($"{WeatherInfo.EndPoint}*")
+                httpTest.ShouldHaveCalled($"{WeatherService.EndPoint}*")
                         .WithVerb(HttpMethod.Get)
                         .WithHeader("Accept", "application/json")
                         .Times(1);
