@@ -38,6 +38,11 @@ namespace Goblin.Bot
 
         public async Task<string> Handle(CallbackResponse callbackResponse)
         {
+            if(callbackResponse.Secret != _config["Config:Vk_Secret"])
+            {
+                return "а Вы кто и шо Вы тут делаете?";
+            }
+
             var type = callbackResponse.Type;
             var dict = new Dictionary<string, Func<CallbackResponse, Task<string>>>
             {

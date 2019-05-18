@@ -12,5 +12,8 @@ namespace Vk.Models
 
         [JsonProperty("group_id")]
         public uint GroupId { get; set; }
+
+        [JsonProperty("secret")]
+        public string Secret { get; set; }
     }
 }
