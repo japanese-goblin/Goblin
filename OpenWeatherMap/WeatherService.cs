@@ -15,7 +15,7 @@ namespace OpenWeatherMap
 
         private const string Language = "ru";
         private const string Units = "metric";
-        private readonly IFlurlRequest _request;
+        private readonly string _token;
 
         public WeatherService(string token)
         {
@@ -24,23 +24,15 @@ namespace OpenWeatherMap
                 throw new ArgumentNullException(nameof(token), "Токен отсутствует");
             }
 
-            _request = EndPoint.SetQueryParam("units", Units)
-                              .SetQueryParam("appid", token)
-                              .SetQueryParam("lang", Language)
-                              .WithHeaders(new
-                              {
-                                  Accept = "application/json",
-                                  User_Agent = "Japanese Goblin 1.0"
-                              })
-                              .AllowAnyHttpStatus();
+            _token = token;
         }
 
         public async Task<CurrentWeather> GetCurrentWeather(string city)
         {
             city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
-            var response = await _request.AppendPathSegment("weather")
-                                        .SetQueryParam("q", city)
-                                        .GetJsonAsync<CurrentWeather>();
+            var response = await BuildRequest().AppendPathSegment("weather")
+                                               .SetQueryParam("q", city)
+                                               .GetJsonAsync<CurrentWeather>();
 
             return response;
         }
@@ -73,10 +65,10 @@ namespace OpenWeatherMap
             const int count = 2;
             city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
 
-            var response = await _request.AppendPathSegment("forecast/daily")
-                                        .SetQueryParam("q", city)
-                                        .SetQueryParam("cnt", count)
-                                        .GetJsonAsync<DailyWeather>();
+            var response = await BuildRequest().AppendPathSegment("forecast/daily")
+                                               .SetQueryParam("q", city)
+                                               .SetQueryParam("cnt", count)
+                                               .GetJsonAsync<DailyWeather>();
 
             return response;
         }
@@ -128,11 +120,24 @@ namespace OpenWeatherMap
 
         public async Task<bool> CheckCity(string city)
         {
-            var response = await _request.AppendPathSegment("weather")
-                                        .SetQueryParam("q", city)
-                                        .GetAsync();
+            var response = await BuildRequest().AppendPathSegment("weather")
+                                               .SetQueryParam("q", city)
+                                               .GetAsync();
 
             return response.IsSuccessStatusCode;
+        }
+
+        internal IFlurlRequest BuildRequest()
+        {
+            return EndPoint.SetQueryParam("units", Units)
+                           .SetQueryParam("appid", _token)
+                           .SetQueryParam("lang", Language)
+                           .WithHeaders(new
+                           {
+                               Accept = "application/json",
+                               User_Agent = "Japanese Goblin 1.0"
+                           })
+                           .AllowAnyHttpStatus();
         }
 
         internal DateTime UnixToDateTime(double unixTimeStamp)
