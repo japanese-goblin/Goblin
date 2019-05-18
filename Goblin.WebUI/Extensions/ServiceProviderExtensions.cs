@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using Flurl.Http;
 using Goblin.Bot;
 using Goblin.Bot.Commands;
 using Goblin.Bot.Models;
@@ -53,13 +54,7 @@ namespace Goblin.WebUI.Extensions
 
                 return new VkApi(config["Config:Vk_Token"], client);
             });
-            services.AddSingleton(x =>
-            {
-                var client = HttpClientFactory.Create();
-                client.BaseAddress = new Uri(WeatherInfo.EndPoint);
-
-                return new WeatherInfo(config["Config:OWM_Token"], client);
-            });
+            services.AddSingleton(x => new WeatherInfo(config["Config:OWM_Token"]));
         }
 
         public static void AddAuth(this IServiceCollection services, IConfiguration config)

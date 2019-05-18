@@ -1,35 +1,58 @@
 ﻿using System;
+using System.IO;
+using System.Net.Http;
+using Flurl.Http.Testing;
 using Xunit;
 
 namespace OpenWeatherMap.Tests
 {
-    public class CurrentWeatherTests : TestBase
+    public class CurrentWeatherTests
     {
-        private const string City = "Город";
+        private const string City = "Архангельск";
+        private const string CurrentDataPath = "data/current.json";
 
         [Fact(DisplayName = "Get current weather")]
         public async void GetWeather()
         {
-            var result = await GetWeatherInfo().GetCurrentWeather(City);
-            Assert.NotNull(result);
-            Assert.Equal("Arkhangelsk", result.CityName);
-            Assert.Equal(200, result.ResponseCode);
-            Assert.NotEmpty(result.Info);
+            using(var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(File.ReadAllText(CurrentDataPath));
+
+                var wi = new WeatherInfo("Token");
+                var result = await wi.GetCurrentWeather(City);
+
+                httpTest.ShouldHaveCalled($"{WeatherInfo.EndPoint}*")
+                        .WithVerb(HttpMethod.Get)
+                        .WithHeader("Accept", "application/json")
+                        .Times(1);
+
+                Assert.NotNull(result);
+                Assert.Equal("Arkhangelsk", result.CityName);
+                Assert.Equal(200, result.ResponseCode);
+                Assert.NotEmpty(result.Info);
+            }
         }
 
         [Fact(DisplayName = "Get current weather as string")]
         public async void GetString()
         {
-            var result = await GetWeatherInfo().GetCurrentWeatherString(City);
-            Assert.NotEmpty(result);
-            Assert.Contains("Температура", result);
-            Assert.Contains("данный момент", result);
-        }
+            using(var httpTest = new HttpTest())
+            {
+                httpTest.RespondWith(File.ReadAllText(CurrentDataPath));
 
-        private WeatherInfo GetWeatherInfo()
-        {
-            var client = GetCurrentHttpClient();
-            return new WeatherInfo("test_token", client);
+                var wi = new WeatherInfo("Token");
+                var result = await wi.GetCurrentWeatherString(City);
+
+                httpTest.ShouldHaveCalled($"{WeatherInfo.EndPoint}*")
+                        .WithVerb(HttpMethod.Get)
+                        .WithHeader("Accept", "application/json")
+                        .Times(1);
+
+                Assert.NotNull(result);
+                Assert.NotEmpty(result);
+                Assert.Contains("Температура", result);
+                Assert.Contains("данный момент", result);
+            }
         }
     }
 }

@@ -1,46 +1,48 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using Flurl;
+using Flurl.Http;
 using OpenWeatherMap.Models.Current;
+using OpenWeatherMap.Models.Daily;
 
 namespace OpenWeatherMap
 {
     public class WeatherInfo
     {
         public const string EndPoint = "https://api.openweathermap.org/data/2.5/";
-        private readonly string Token;
-        private readonly HttpClient Client;
 
         private const string Language = "ru";
         private const string Units = "metric";
+        private readonly IFlurlRequest _request;
 
-        private readonly string Query;
-
-        public WeatherInfo(string token, HttpClient client)
+        public WeatherInfo(string token)
         {
             if(string.IsNullOrEmpty(token))
             {
                 throw new ArgumentNullException(nameof(token), "Токен отсутствует");
             }
 
-            Token = token;
-            //Client = new HttpClient
-            //{
-            //    BaseAddress = new Uri(EndPoint)
-            //};
-            Client = client;
-
-            Query = $"units={Units}&appid={Token}&lang={Language}";
+            _request = EndPoint.SetQueryParam("units", Units)
+                              .SetQueryParam("appid", token)
+                              .SetQueryParam("lang", Language)
+                              .WithHeaders(new
+                              {
+                                  Accept = "application/json",
+                                  User_Agent = "Japanese Goblin 1.0"
+                              })
+                              .AllowAnyHttpStatus();
         }
 
         public async Task<CurrentWeather> GetCurrentWeather(string city)
         {
             city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
-            var response = await Client.GetAsync($"weather?q={city}&{Query}");
-            return JsonConvert.DeserializeObject<Models.Current.CurrentWeather>(await response.Content.ReadAsStringAsync());
+            var response = await _request.AppendPathSegment("weather")
+                                        .SetQueryParam("q", city)
+                                        .GetJsonAsync<CurrentWeather>();
+
+            return response;
         }
 
         public async Task<string> GetCurrentWeatherString(string city)
@@ -66,12 +68,17 @@ namespace OpenWeatherMap
             return strBuilder.ToString();
         }
 
-        public async Task<Models.Daily.DailyWeather> GetDailyWeather(string city, DateTime date)
+        public async Task<DailyWeather> GetDailyWeather(string city, DateTime date)
         {
             const int count = 2;
             city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
-            var response = await Client.GetAsync($"forecast/daily?q={city}&{Query}&cnt={count}");
-            return JsonConvert.DeserializeObject<Models.Daily.DailyWeather>(await response.Content.ReadAsStringAsync());
+
+            var response = await _request.AppendPathSegment("forecast/daily")
+                                        .SetQueryParam("q", city)
+                                        .SetQueryParam("cnt", count)
+                                        .GetJsonAsync<DailyWeather>();
+
+            return response;
         }
 
         public async Task<string> GetDailyWeatherString(string city, DateTime date)
@@ -121,10 +128,11 @@ namespace OpenWeatherMap
 
         public async Task<bool> CheckCity(string city)
         {
-            var req = $"weather?q={city}&units=metric&appid={Token}";
-            var r = await Client.GetAsync($"{EndPoint}/{req}");
+            var response = await _request.AppendPathSegment("weather")
+                                        .SetQueryParam("q", city)
+                                        .GetAsync();
 
-            return r.IsSuccessStatusCode;
+            return response.IsSuccessStatusCode;
         }
 
         internal DateTime UnixToDateTime(double unixTimeStamp)
