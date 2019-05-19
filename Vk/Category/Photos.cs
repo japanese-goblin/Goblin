@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Flurl.Http;
 using Newtonsoft.Json;
 using Vk.Models;
 
@@ -36,7 +37,7 @@ namespace Vk.Category
             return res;
         }
 
-        public async Task<UploadImageInfo> UploadImage(string url, byte[] data)
+        public async Task<UploadImageInfo> UploadImage(string url, byte[] data) //TODO: переделать под flurl
         {
             using(var client = new HttpClient())
             {

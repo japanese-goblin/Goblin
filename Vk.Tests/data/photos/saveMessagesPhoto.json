@@ -1,0 +1,62 @@
+{
+  "response": [
+    {
+      "id": 456249550,
+      "album_id": -64,
+      "owner_id": 1,
+      "sizes": [
+        {
+          "type": "s",
+          "url": "https:\/\/pp.userapi.com\/c849020\/v849020618\/19b86c\/ZZ_K5ClWxOQ.jpg",
+          "width": 75,
+          "height": 42
+        },
+        {
+          "type": "m",
+          "url": "https:\/\/pp.userapi.com\/c849020\/v849020618\/19b86d\/tERAzChELEc.jpg",
+          "width": 130,
+          "height": 73
+        },
+        {
+          "type": "x",
+          "url": "https:\/\/pp.userapi.com\/c849020\/v849020618\/19b86e\/zBpfD3Ag9mk.jpg",
+          "width": 604,
+          "height": 340
+        },
+        {
+          "type": "y",
+          "url": "https:\/\/pp.userapi.com\/c849020\/v849020618\/19b86f\/i8YzdnZGd4Q.jpg",
+          "width": 700,
+          "height": 394
+        },
+        {
+          "type": "o",
+          "url": "https:\/\/pp.userapi.com\/c849020\/v849020618\/19b870\/4OOXzEZ57UQ.jpg",
+          "width": 130,
+          "height": 87
+        },
+        {
+          "type": "p",
+          "url": "https:\/\/pp.userapi.com\/c849020\/v849020618\/19b871\/s4BLK_LzhUA.jpg",
+          "width": 200,
+          "height": 133
+        },
+        {
+          "type": "q",
+          "url": "https:\/\/pp.userapi.com\/c849020\/v849020618\/19b872\/zgGHn7b5eWE.jpg",
+          "width": 320,
+          "height": 213
+        },
+        {
+          "type": "r",
+          "url": "https:\/\/pp.userapi.com\/c849020\/v849020618\/19b873\/rBBOqgGzf_M.jpg",
+          "width": 510,
+          "height": 340
+        }
+      ],
+      "text": "",
+      "date": 1558258050,
+      "access_key": "bd7dcd9b554d9b9ad9"
+    }
+  ]
+}
