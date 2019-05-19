@@ -18,6 +18,13 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Safu;
         public bool IsAdmin { get; } = false;
 
+        private readonly NarfuService _service;
+
+        public TeacherSchedule(NarfuService service)
+        {
+            _service = service;
+        }
+
         public async Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
@@ -31,7 +38,7 @@ namespace Goblin.Bot.Commands
 
             return new CommandResponse
             {
-                Text = await TeachersSchedule.GetScheduleToSend(int.Parse(msg.GetParams()))
+                Text = await _service.Teachers.GetScheduleToSend(int.Parse(msg.GetParams()))
             };
         }
 
@@ -39,7 +46,7 @@ namespace Goblin.Bot.Commands
         {
             if(int.TryParse(msg.GetParams(), out var res))
             {
-                var isFound = TeachersSchedule.FindById(res);
+                var isFound = _service.Teachers.FindById(res);
                 if(!isFound)
                 {
                     return (false, "Ошибка. Преподаватель с таким номером нет в базе");

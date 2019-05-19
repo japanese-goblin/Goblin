@@ -1,4 +1,5 @@
 ﻿@using Narfu
+@inject NarfuService Service
 @model List<Goblin.Domain.Entities.BotUser>
 
 @{
@@ -23,7 +24,7 @@
         @foreach (var user in Model)
         {
             var url = $"https://vk.com/id{user.Vk}";
-            var gr = StudentsSchedule.GetGroupByRealId(user.Group);
+            var gr = Service.Students.GetGroupByRealId(user.Group);
             var group = gr?.SiteId ?? 0;
             var grName = gr is null ? "" : gr.Name;
             <tr>

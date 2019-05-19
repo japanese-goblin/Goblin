@@ -24,10 +24,12 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         private readonly ApplicationDbContext _db;
+        private readonly NarfuService _service;
 
-        public Schedule(ApplicationDbContext db)
+        public Schedule(ApplicationDbContext db, NarfuService service)
         {
             _db = db;
+            _service = service;
         }
 
         public async Task<CommandResponse> Execute(Message msg)
@@ -60,7 +62,7 @@ namespace Goblin.Bot.Commands
 
             return new CommandResponse
             {
-                Text = await StudentsSchedule.GetScheduleAsStringAtDate(time, user.Group)
+                Text = await _service.Students.GetScheduleAsStringAtDate(time, user.Group)
             };
         }
 

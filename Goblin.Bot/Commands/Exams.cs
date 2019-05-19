@@ -19,10 +19,12 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin { get; } = false;
 
         private readonly ApplicationDbContext _db;
+        private readonly NarfuService _service;
 
-        public Exams(ApplicationDbContext db)
+        public Exams(ApplicationDbContext db, NarfuService service)
         {
             _db = db;
+            _service = service;
         }
 
         public async Task<CommandResponse> Execute(Message msg)
@@ -39,7 +41,7 @@ namespace Goblin.Bot.Commands
             var user = await _db.BotUsers.FirstOrDefaultAsync(x => x.Vk == msg.FromId);
             return new CommandResponse
             {
-                Text = await StudentsSchedule.GetExamsAsString(user.Group)
+                Text = await _service.Students.GetExamsAsString(user.Group)
             };
         }
 

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Narfu;
 using OpenWeatherMap;
 using Vk;
 using Random = Goblin.Bot.Commands.Random;
@@ -47,6 +48,7 @@ namespace Goblin.WebUI.Extensions
 
         public static void AddAdditions(this IServiceCollection services, IConfiguration config)
         {
+            services.AddSingleton(x => new NarfuService());
             services.AddSingleton(x => new VkApi(config["Config:Vk_Token"]));
             services.AddSingleton(x => new WeatherService(config["Config:OWM_Token"]));
         }

@@ -16,14 +16,16 @@ namespace Goblin.WebUI.Hangfire
         private readonly ApplicationDbContext _db;
         private readonly VkApi _api;
         private readonly WeatherService _weather;
+        private readonly NarfuService _service;
 
         private const int ChunkLimit = 100;
 
-        public ScheduledTasks(ApplicationDbContext db, VkApi api, WeatherService weather)
+        public ScheduledTasks(ApplicationDbContext db, VkApi api, WeatherService weather, NarfuService service)
         {
             _db = db;
             _api = api;
             _weather = weather;
+            _service = service;
 
             InitJobs();
         }
@@ -66,7 +68,7 @@ namespace Goblin.WebUI.Hangfire
                 foreach(var chunk in group.Chunk(ChunkLimit))
                 {
                     var ids = chunk.Select(x => x.Vk);
-                    var schedule = await StudentsSchedule.GetScheduleAsStringAtDate(DateTime.Today, group.Key);
+                    var schedule = await _service.Students.GetScheduleAsStringAtDate(DateTime.Today, group.Key);
                     BackgroundJob.Enqueue(() => _api.Messages.Send(ids, schedule, null, null));
                 }   
             }
@@ -98,9 +100,9 @@ namespace Goblin.WebUI.Hangfire
                 await _api.Messages.Send(id, weather);
             }
 
-            if(StudentsSchedule.IsCorrectGroup(group))
+            if(_service.Students.IsCorrectGroup(group))
             {
-                var schedule = await StudentsSchedule.GetScheduleAsStringAtDate(DateTime.Now, group);
+                var schedule = await _service.Students.GetScheduleAsStringAtDate(DateTime.Now, group);
                 await _api.Messages.Send(id, schedule);
             }
         }

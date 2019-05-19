@@ -15,18 +15,25 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Safu;
         public bool IsAdmin { get; } = false;
 
+        private readonly NarfuService _service;
+
+        public FindTeacher(NarfuService service)
+        {
+            _service = service;
+        }
+
         public Task<CommandResponse> Execute(Message msg)
         {
             var canExecute = CanExecute(msg);
             if(!canExecute.Success)
             {
-                return Task.Run(() => new CommandResponse
+                return Task.FromResult(new CommandResponse
                 {
                     Text = canExecute.Text
                 });
             }
 
-            var text = TeachersSchedule.FindByName(msg.GetParamsAsArray()[0]);
+            var text = _service.Teachers.FindByName(msg.GetParamsAsArray()[0]);
             if(text.Length >= 4095)
             {
                 text =
@@ -48,7 +55,7 @@ namespace Goblin.Bot.Commands
                 return (false, "Ошибка. Введите больше 4х символов в ФИО");
             }
 
-            var teachers = TeachersSchedule.FindByName(param);
+            var teachers = _service.Teachers.FindByName(param);
             var found = !string.IsNullOrEmpty(teachers);
             if(!found)
             {

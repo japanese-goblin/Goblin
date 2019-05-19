@@ -7,36 +7,41 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Flurl.Http;
 using Narfu.Models;
 using Newtonsoft.Json;
 using Calendar = Ical.Net.Calendar;
 
-namespace Narfu
+namespace Narfu.Schedule
 {
-    public static class StudentsSchedule
+    public class StudentsSchedule
     {
-        public static Group[] Groups;
+        public readonly Group[] Groups;
 
-        static StudentsSchedule()
+        public StudentsSchedule()
         {
             var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(StudentsSchedule)).Location); //TODO:
             Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText($"{path}/Data/Groups.json"));
         }
 
         /// <summary>
-        /// Получить пары для группы
+        ///     Получить пары для группы
         /// </summary>
         /// <param name="realGroupId">Реальный номер группы</param>
         /// <returns>(Ошибка, Код ответа, Массив с парами)</returns>
-        public static async Task<(bool Error, HttpStatusCode Code, Lesson[] Lessons)> GetSchedule(int realGroupId)
+        public async Task<(bool Error, HttpStatusCode Code, Lesson[] Lessons)> GetSchedule(int realGroupId)
         {
             var siteGroup = GetGroupByRealId(realGroupId).SiteId;
-            var requestUrl = $"?icalendar&oid={siteGroup}&cod={realGroupId}&from={DateTime.Now:dd.MM.yyyy}";
 
             HttpResponseMessage response;
             try
             {
-                response = await Utils.Client.GetAsync(requestUrl);
+                response = await RequestHelper.BuildRequest()
+                                              .SetQueryParam("icalendar")
+                                              .SetQueryParam("oid", siteGroup)
+                                              .SetQueryParam("cod", realGroupId)
+                                              .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
+                                              .GetAsync();
             }
             catch(TaskCanceledException)
             {
@@ -81,12 +86,12 @@ namespace Narfu
         }
 
         /// <summary>
-        /// Получить пары для группы в виде строки
+        ///     Получить пары для группы в виде строки
         /// </summary>
         /// <param name="date">Дата, на которую нужно получить расписание</param>
         /// <param name="realGroupId">Реальный номер группы</param>
         /// <returns>Расписание</returns>
-        public static async Task<string> GetScheduleAsStringAtDate(DateTime date, int realGroupId)
+        public async Task<string> GetScheduleAsStringAtDate(DateTime date, int realGroupId)
         {
             var res = await GetSchedule(realGroupId);
 
@@ -120,11 +125,11 @@ namespace Narfu
         }
 
         /// <summary>
-        /// Получить экзамены для группы
+        ///     Получить экзамены для группы
         /// </summary>
         /// <param name="realGroupId">Реальный номер группы</param>
         /// <returns>(Ошибка, Код ответа, Массив с парами)</returns>
-        public static async Task<(bool Error, HttpStatusCode Code, Lesson[] Lessons)> GetExams(int realGroupId)
+        public async Task<(bool Error, HttpStatusCode Code, Lesson[] Lessons)> GetExams(int realGroupId)
         {
             var res = await GetSchedule(realGroupId);
 
@@ -149,11 +154,11 @@ namespace Narfu
         }
 
         /// <summary>
-        /// Получить экзамены для группы в виде строки
+        ///     Получить экзамены для группы в виде строки
         /// </summary>
         /// <param name="realGroupId">Реальный номер группы</param>
         /// <returns>Список экзаменов</returns>
-        public static async Task<string> GetExamsAsString(int realGroupId)
+        public async Task<string> GetExamsAsString(int realGroupId)
         {
             var res = await GetExams(realGroupId);
             if(res.Error)
@@ -188,24 +193,24 @@ namespace Narfu
             return weekNum;
         }
 
-        private static string GenerateErrorMessage(HttpStatusCode code, int siteGroupId)
+        private string GenerateErrorMessage(HttpStatusCode code, int siteGroupId)
         {
             return $"Ошибка (код ошибки - {code}).\n" +
                    "Сайт с расписанием недоступен.\n" +
-                   $"Вы можете проверить расписание здесь: {Utils.EndPoint}/?timetable&group={siteGroupId}";
+                   $"Вы можете проверить расписание здесь: {Constants.EndPoint}/?timetable&group={siteGroupId}";
         }
 
-        public static bool IsCorrectGroup(int readlGroupId)
+        public bool IsCorrectGroup(int readlGroupId)
         {
             return Groups.Any(x => x.RealId == readlGroupId);
         }
 
-        public static Group GetGroupByRealId(int realGroupId)
+        public Group GetGroupByRealId(int realGroupId)
         {
             return Groups.FirstOrDefault(x => x.RealId == realGroupId);
         }
 
-        public static Group GetGroupBySiteId(short siteGroupId)
+        public Group GetGroupBySiteId(short siteGroupId)
         {
             return Groups.FirstOrDefault(x => x.SiteId == siteGroupId);
         }

@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using HtmlAgilityPack;
 
-namespace Narfu
+namespace Narfu.Extensions
 {
     public static class HtmlNodeExtensions
     {

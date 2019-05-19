@@ -6,29 +6,34 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Flurl.Http;
 using HtmlAgilityPack;
+using Narfu.Extensions;
 using Narfu.Models;
 using Newtonsoft.Json;
 
-namespace Narfu
+namespace Narfu.Schedule
 {
-    public static class TeachersSchedule
+    public class TeachersSchedule
     {
-        public static Teacher[] Teachers;
+        public readonly Teacher[] Teachers;
 
-        static TeachersSchedule()
+        public TeachersSchedule()
         {
             var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(TeachersSchedule)).Location); //TODO:
             Teachers = JsonConvert.DeserializeObject<Teacher[]>(File.ReadAllText($"{path}/Data/Teachers.json"));
         }
 
-        public static async Task<(bool IsError, Lesson[] Lessons)> GetSchedule(int id)
+        public async Task<(bool IsError, Lesson[] Lessons)> GetSchedule(int id)
         {
             HtmlDocument doc;
             try
             {
                 //из-за gateway timeout
-                var response = await Utils.Client.GetStreamAsync($"{Utils.EndPoint}?timetable&lecturer={id}");
+                var response = await RequestHelper.BuildRequest()
+                                                  .SetQueryParam("timetable")
+                                                  .SetQueryParam("lecturer", id)
+                                                  .GetStreamAsync();
                 doc = new HtmlDocument();
                 doc.Load(response);
             }
@@ -80,7 +85,7 @@ namespace Narfu
             return (false, lessons.Distinct().ToArray());
         }
 
-        public static async Task<string> GetScheduleToSend(int id)
+        public async Task<string> GetScheduleToSend(int id)
         {
             var teacher = Teachers.FirstOrDefault(x => x.Id == id);
             if(teacher is null)
@@ -96,8 +101,10 @@ namespace Narfu
             {
                 return "Ошибка.\n" +
                        "Возможно, сайт с расписанием недоступен (либо введен неправильный номер преподавателя)\n" +
-                       $"Вы можете проверить расписание здесь: {Utils.EndPoint}/?timetable&lecturer={id}";
+                       $"Вы можете проверить расписание здесь: {Constants.EndPoint}/?timetable&lecturer={id}";
             }
+
+            lessons = lessons.Where(x => x.StartTime > DateTime.Today).ToArray();
 
             if(lessons.Length == 0)
             {
@@ -123,7 +130,7 @@ namespace Narfu
             return strBuilder.ToString();
         }
 
-        public static string FindByName(string name)
+        public string FindByName(string name)
         {
             name = name.ToLower(); //TODO ?
             var teachers = Teachers.Where(x => x.Name.ToLower().Contains(name));
@@ -131,7 +138,7 @@ namespace Narfu
                                    .Select(x => $"{x.Name} ({x.Depart}) - {x.Id}"));
         }
 
-        public static bool FindById(int id)
+        public bool FindById(int id)
         {
             return Teachers.Any(x => x.Id == id);
         }

@@ -18,10 +18,12 @@ namespace Goblin.Bot.Commands
         public bool IsAdmin => false;
 
         private readonly ApplicationDbContext _db;
+        private readonly NarfuService _service;
 
-        public SetGroup(ApplicationDbContext db)
+        public SetGroup(ApplicationDbContext db, NarfuService service)
         {
             _db = db;
+            _service = service;
         }
 
         public async Task<CommandResponse> Execute(Message msg)
@@ -36,7 +38,7 @@ namespace Goblin.Bot.Commands
             }
 
             var group = int.Parse(msg.GetParams());
-            var gr = StudentsSchedule.GetGroupByRealId(group);
+            var gr = _service.Students.GetGroupByRealId(group);
 
             var user = await _db.BotUsers.FirstAsync(x => x.Vk == msg.FromId);
             user.Group = group;
@@ -50,7 +52,7 @@ namespace Goblin.Bot.Commands
 
         public (bool Success, string Text) CanExecute(Message msg)
         {
-            if(int.TryParse(msg.GetParams(), out var i) && StudentsSchedule.IsCorrectGroup(i))
+            if(int.TryParse(msg.GetParams(), out var i) && _service.Students.IsCorrectGroup(i))
             {
                 return (true, "");
             }

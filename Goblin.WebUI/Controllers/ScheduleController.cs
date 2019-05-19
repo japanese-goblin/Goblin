@@ -3,11 +3,19 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Narfu;
+using Narfu.Schedule;
 
 namespace Goblin.WebUI.Controllers
 {
     public class ScheduleController : Controller
     {
+        private readonly NarfuService _service;
+
+        public ScheduleController(NarfuService service)
+        {
+            _service = service;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -15,14 +23,14 @@ namespace Goblin.WebUI.Controllers
 
         public async Task<IActionResult> Show(int id)
         {
-            if(!ModelState.IsValid || !StudentsSchedule.IsCorrectGroup(id))
+            if(!ModelState.IsValid || !_service.Students.IsCorrectGroup(id))
             {
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return View("Error", $"Группа с номером {id} не найдена");
             }
 
-            var group = StudentsSchedule.GetGroupByRealId(id);
-            var (error, _, lessons) = await StudentsSchedule.GetSchedule(id);
+            var group = _service.Students.GetGroupByRealId(id);
+            var (error, _, lessons) = await _service.Students.GetSchedule(id);
 
             if(error)
             {
