@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Http;
 using Flurl.Http.Testing;
 using Xunit;
@@ -7,15 +8,14 @@ namespace Vk.Tests
 {
     public class UsersTests : TestBase
     {
-        [Fact(DisplayName = "users.get")]
-        public async void Get()
+        [Fact]
+        public async void Get_CorrectId_UsersList()
         {
             using(var httpTest = new HttpTest())
             {
                 httpTest.RespondWith(File.ReadAllText("data/users.get.json"));
 
-                var api = new VkApi("token");
-                var result = await api.Users.Get(new long[] { 1, 2 });
+                var result = await GetApi().Users.Get(new long[] { 1, 2 });
 
                 httpTest.ShouldHaveCalled($"{VkApi.EndPoint}*")
                         .WithVerb(HttpMethod.Post)
@@ -27,6 +27,13 @@ namespace Vk.Tests
                 Assert.True(user.Id == 1);
                 Assert.NotEmpty(new[] { user.FirstName, user.LastName, user.Photo200Orig });
             }
+        }
+
+        [Fact]
+        public async void Get_EmptyIds_ThrowsError()
+        {
+            await Assert.ThrowsAnyAsync<ArgumentException>(async () =>
+                                                               await GetApi().Users.Get(new long[] { }));
         }
     }
 }

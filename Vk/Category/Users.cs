@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Vk.Models;
@@ -21,6 +22,11 @@ namespace Vk.Category
 
         public async Task<User[]> Get(long[] ids)
         {
+            if(ids.Length == 0)
+            {
+                throw new ArgumentException("ids пустой");
+            }
+
             var values = new Dictionary<string, string>
             {
                 ["user_ids"] = string.Join(',', ids),

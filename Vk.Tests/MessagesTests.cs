@@ -8,14 +8,14 @@ namespace Vk.Tests
 {
     public class MessagesTests : TestBase
     {
-        [Fact(DisplayName = "messages.send correct")]
-        public async void Send__Correct()
+        [Fact]
+        public async void Send_CorrectData_SendMessage()
         {
             using(var httpTest = new HttpTest())
             {
                 httpTest.RespondWith(File.ReadAllText("data/messages.send.json"));
 
-                var result = await GetApi("messages.send").Messages.Send(1, "test");
+                var result = await GetApi().Messages.Send(1, "test");
 
                 httpTest.ShouldHaveCalled($"{VkApi.EndPoint}*")
                         .WithVerb(HttpMethod.Post)
@@ -25,38 +25,41 @@ namespace Vk.Tests
                 Assert.True(result.PeerId >= 0);
             }
         }
-
-        [Fact(DisplayName = "messages.send throws error")]
-        public async void Send__Incorrect()
+        
+        [Fact]
+        public async void Send_EmptyIds_ThrowsError()
         {
-            var api = new VkApi("token");
             await Assert.ThrowsAsync<ArgumentNullException>(async () =>
-                                                                await api.Messages.Send(new long[] { }, "asd"));
-            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
-                                                                await api.Messages.Send(1, ""));
+                                                                await GetApi().Messages.Send(new long[] { }, "asd"));
         }
 
-        [Fact(DisplayName = "messages.delete correct")]
-        public async void Delete_Correct()
+        [Fact]
+        public async void Send_EmptyTextAndAttachs_ThrowsError()
+        {
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+                                                                await GetApi().Messages.Send(1, ""));
+        }
+        
+        [Fact]
+        public async void Delete_CorrectId_DeleteMessage()
         {
             using(var httpTest = new HttpTest())
             {
                 httpTest.RespondWith(File.ReadAllText("data/messages.delete.json"));
-
-                var api = new VkApi("token");
-                await api.Messages.Delete(1);
+                
+                await GetApi().Messages.Delete(1);
 
                 httpTest.ShouldHaveCalled($"{VkApi.EndPoint}*")
                         .WithVerb(HttpMethod.Post)
                         .Times(1);
             }
         }
-
-        [Fact(DisplayName = "messages.delete throws error")]
-        public async void Delete_Incorrect()
+        
+        [Fact]
+        public async void Delete_EmptyIdList_ThrowsError()
         {
             await Assert.ThrowsAsync<ArgumentNullException>(async () =>
-                                                                await GetApi("messages.delete").Messages.Delete(new long[] { }));
+                                                                await GetApi().Messages.Delete(new long[] { }));
         }
     }
 }
