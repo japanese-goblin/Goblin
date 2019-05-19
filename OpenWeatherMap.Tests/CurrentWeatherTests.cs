@@ -1,29 +1,27 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using System.Net;
 using System.Net.Http;
 using Flurl.Http.Testing;
 using Xunit;
 
 namespace OpenWeatherMap.Tests
 {
-    public class CurrentWeatherTests
+    public class CurrentWeatherTests : TestBase
     {
-        private const string City = "Архангельск";
         private const string CurrentDataPath = "data/current.json";
 
-        [Fact(DisplayName = "Get current weather")]
-        public async void GetWeather()
+        [Fact]
+        public async void GetCurrentWeather_CorrectCity()
         {
             using(var httpTest = new HttpTest())
             {
                 httpTest.RespondWith(File.ReadAllText(CurrentDataPath));
 
-                var wi = new WeatherService("Token");
-                var result = await wi.GetCurrentWeather(City);
+                var result = await GetService().GetCurrentWeather(City);
 
                 httpTest.ShouldHaveCalled($"{WeatherService.EndPoint}*")
                         .WithVerb(HttpMethod.Get)
-                        .WithHeader("Accept", "application/json")
+                        .WithQueryParamValue("q", City)
                         .Times(1);
 
                 Assert.NotNull(result);
@@ -33,20 +31,14 @@ namespace OpenWeatherMap.Tests
             }
         }
 
-        [Fact(DisplayName = "Get current weather as string")]
-        public async void GetString()
+        [Fact]
+        public async void GetCurrentWeatherString_CorrectCity()
         {
             using(var httpTest = new HttpTest())
             {
                 httpTest.RespondWith(File.ReadAllText(CurrentDataPath));
 
-                var wi = new WeatherService("Token");
-                var result = await wi.GetCurrentWeatherString(City);
-
-                httpTest.ShouldHaveCalled($"{WeatherService.EndPoint}*")
-                        .WithVerb(HttpMethod.Get)
-                        .WithHeader("Accept", "application/json")
-                        .Times(1);
+                var result = await GetService().GetCurrentWeatherString(City);
 
                 Assert.NotNull(result);
                 Assert.NotEmpty(result);

@@ -1,30 +1,28 @@
 using System;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using Flurl.Http.Testing;
 using Xunit;
 
 namespace OpenWeatherMap.Tests
 {
-    public class DailyWeatherTests
+    public class DailyWeatherTests : TestBase
     {
-        private const string City = "Архангельск";
         private const string DailyDataPath = "data/daily.json";
 
-        [Fact(DisplayName = "Get daily weather")]
-        public async void GetWeather()
+        [Fact]
+        public async void GetDailyWeather_CorrectCity()
         {
             using(var httpTest = new HttpTest())
             {
                 httpTest.RespondWith(File.ReadAllText(DailyDataPath));
 
-                var wi = new WeatherService("SuperToken");
-                var result = await wi.GetDailyWeather(City, DateTime.Today);
+                var result = await GetService().GetDailyWeather(City, DateTime.Today);
 
                 httpTest.ShouldHaveCalled($"{WeatherService.EndPoint}*")
                         .WithVerb(HttpMethod.Get)
-                        .WithHeader("Accept", "application/json")
+                        .WithQueryParamValue("q", City)
+                        .WithQueryParam("cnt")
                         .Times(1);
 
                 Assert.Equal("Arkhangelsk", result.City.Name);
@@ -33,15 +31,14 @@ namespace OpenWeatherMap.Tests
             }
         }
 
-        [Fact(DisplayName = "Get daily weather as string")]
-        public async void GetString()
+        [Fact]
+        public async void GetDailyWeatherString_CorrectCity()
         {
             using(var httpTest = new HttpTest())
             {
                 httpTest.RespondWith(File.ReadAllText(DailyDataPath));
 
-                var wi = new WeatherService("SuperToken");
-                var result = await wi.GetDailyWeatherString(City, DateTime.Today);
+                var result = await GetService().GetDailyWeatherString(City, DateTime.Today);
 
                 httpTest.ShouldHaveCalled($"{WeatherService.EndPoint}*")
                         .WithVerb(HttpMethod.Get)
