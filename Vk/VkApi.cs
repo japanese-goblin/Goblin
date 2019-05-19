@@ -37,8 +37,7 @@ namespace Vk
             //TODO add sleep? (лимит для токена сообщества - 20 запросов в секунду)
             var response = await BuildRequest()
                                .AppendPathSegment(method)
-                               .SetQueryParams(@params)
-                               .PostAsync(null);
+                               .PostAsync(new FormUrlEncodedContent(@params));
             
             //if(!response.IsSuccessStatusCode) //TODO: не сработает, потому что вк всегда возвращает 200
             //{
