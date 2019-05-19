@@ -38,7 +38,7 @@ namespace Goblin.Bot.Commands
 
             return new CommandResponse
             {
-                Text = await _service.Teachers.GetScheduleToSend(int.Parse(msg.GetParams()))
+                Text = await _service.Teachers.GetScheduleAsString(int.Parse(msg.GetParams()))
             };
         }
 

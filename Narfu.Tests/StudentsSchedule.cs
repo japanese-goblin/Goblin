@@ -14,7 +14,7 @@ namespace Narfu.Tests
         {
             using(var httpTest = new HttpTest())
             {
-                httpTest.RespondWith(File.ReadAllText("data/studentsSchedule.txt"));
+                httpTest.RespondWith(File.ReadAllText("sched/studentsSchedule.txt"));
 
                 var result = await new NarfuService().Students.GetSchedule(351617);
 
@@ -34,12 +34,12 @@ namespace Narfu.Tests
         {
             using(var httpTest = new HttpTest())
             {
-                httpTest.RespondWith(File.ReadAllText("data/studentsSchedule.txt"));
+                httpTest.RespondWith(File.ReadAllText("sched/studentsSchedule.txt"));
 
                 var result = await new NarfuService().Students.GetScheduleAsStringAtDate(new DateTime(2019, 6, 14), 351617);
 
                 Assert.NotEmpty(result);
-                Assert.Contains("Предмет1", result);
+                Assert.Contains("РџСЂРµРґРјРµС‚1", result);
             }
         }
 
@@ -48,12 +48,12 @@ namespace Narfu.Tests
         {
             using(var httpTest = new HttpTest())
             {
-                httpTest.RespondWith(File.ReadAllText("data/studentsSchedule.txt"));
+                httpTest.RespondWith(File.ReadAllText("sched/studentsSchedule.txt"));
 
                 var result = await new NarfuService().Students.GetScheduleAsStringAtDate(new DateTime(2019, 1, 1), 351617);
 
                 Assert.NotEmpty(result);
-                Assert.Contains("отсутствует", result);
+                Assert.Contains("РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚", result);
             }
         }
 
@@ -62,7 +62,7 @@ namespace Narfu.Tests
         {
             using(var httpTest = new HttpTest())
             {
-                httpTest.RespondWith(File.ReadAllText("data/studentsSchedule.txt"));
+                httpTest.RespondWith(File.ReadAllText("sched/studentsSchedule.txt"));
 
                 var result = await new NarfuService().Students.GetExams(351617);
 
@@ -77,12 +77,12 @@ namespace Narfu.Tests
         {
             using(var httpTest = new HttpTest())
             {
-                httpTest.RespondWith(File.ReadAllText("data/studentsSchedule.txt"));
+                httpTest.RespondWith(File.ReadAllText("sched/studentsSchedule.txt"));
 
                 var result = await new NarfuService().Students.GetExamsAsString(351617);
 
                 Assert.NotEmpty(result);
-                Assert.Contains("Предмет1", result);
+                Assert.Contains("РџСЂРµРґРјРµС‚1", result);
             }
         }
 

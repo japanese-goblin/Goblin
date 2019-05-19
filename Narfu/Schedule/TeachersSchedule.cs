@@ -85,7 +85,7 @@ namespace Narfu.Schedule
             return (false, lessons.Distinct().ToArray());
         }
 
-        public async Task<string> GetScheduleToSend(int id)
+        public async Task<string> GetScheduleAsString(int id)
         {
             var teacher = Teachers.FirstOrDefault(x => x.Id == id);
             if(teacher is null)
