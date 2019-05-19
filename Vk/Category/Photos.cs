@@ -19,9 +19,9 @@ namespace Vk.Category
 
         public async Task<string> FastUploadPhoto(long peerId, byte[] image)
         {
-            var server = await _api.Photos.GetMessagesUploadServer(peerId);
-            var upload = await _api.Photos.UploadImage(server.UploadUrl, image);
-            var save = (await _api.Photos.SaveMessagesPhoto(upload))[0];
+            var server = await GetMessagesUploadServer(peerId);
+            var upload = await UploadImage(server.UploadUrl, image);
+            var save = (await SaveMessagesPhoto(upload))[0];
 
             return $"photo{save.OwnerId}_{save.Id}_{save.AccessKey}";
         }
