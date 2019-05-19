@@ -21,7 +21,7 @@ namespace Vk.Category
         {
             var server = await _api.Photos.GetMessagesUploadServer(peerId);
             var upload = await _api.Photos.UploadImage(server.UploadUrl, image);
-            var save = await _api.Photos.SaveMessagesPhoto(upload);
+            var save = (await _api.Photos.SaveMessagesPhoto(upload))[0];
 
             return $"photo{save.OwnerId}_{save.Id}_{save.AccessKey}";
         }
@@ -54,7 +54,7 @@ namespace Vk.Category
             }
         }
 
-        public async Task<Photo> SaveMessagesPhoto(UploadImageInfo info)
+        public async Task<Photo[]> SaveMessagesPhoto(UploadImageInfo info)
         {
             var values = new Dictionary<string, string>
             {
@@ -63,7 +63,7 @@ namespace Vk.Category
                 ["hash"] = info.Hash
             };
 
-            var res = await _api.CallApi<Photo>("photos.saveMessagesPhoto", values);
+            var res = await _api.CallApi<Photo[]>("photos.saveMessagesPhoto", values);
             return res;
         }
     }
