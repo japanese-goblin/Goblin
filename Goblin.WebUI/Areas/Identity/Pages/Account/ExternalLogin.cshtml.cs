@@ -136,7 +136,10 @@ namespace Goblin.WebUI.Areas.Identity.Pages.Account
                     }
                 }
 
-                foreach(var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
             }
 
             LoginProvider = info.LoginProvider;

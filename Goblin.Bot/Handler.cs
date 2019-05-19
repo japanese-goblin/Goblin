@@ -27,7 +27,8 @@ namespace Goblin.Bot
 
         private const string OkResponse = "ok";
 
-        public Handler(ApplicationDbContext db, IConfiguration config, CommandExecutor exec, VkApi api, IMediator mediator)
+        public Handler(ApplicationDbContext db, IConfiguration config, CommandExecutor exec, VkApi api,
+                       IMediator mediator)
         {
             _db = db;
             _config = config;

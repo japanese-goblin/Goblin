@@ -175,7 +175,8 @@ namespace Narfu.Schedule
                 var first = group.First();
                 var last = group.Last();
                 strBuilder.AppendFormat("{0:dd.MM.yyyy (dddd)} ({1:HH:mm} - {2:HH:mm}) - {3} [{4}] ({5})",
-                                        last.StartTime, first.StartTime, last.EndTime, last.Name, last.Type, last.Teacher).AppendLine();
+                                        last.StartTime, first.StartTime, last.EndTime, last.Name, last.Type,
+                                        last.Teacher).AppendLine();
                 strBuilder.AppendFormat("У группы {0}", last.Groups).AppendLine();
                 strBuilder.AppendFormat("В аудитории {0}", last.Auditory).AppendLine();
                 strBuilder.AppendLine();

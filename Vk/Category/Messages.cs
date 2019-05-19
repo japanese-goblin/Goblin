@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Vk.Models.Keyboard;
 using Vk.Models.Messages;
 

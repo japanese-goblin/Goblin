@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using Flurl.Http;
-using Goblin.Bot;
+﻿using Goblin.Bot;
 using Goblin.Bot.Commands;
 using Goblin.Bot.Models;
 using Goblin.Domain.Entities;
@@ -15,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Narfu;
 using OpenWeatherMap;
 using Vk;
-using Random = Goblin.Bot.Commands.Random;
 
 namespace Goblin.WebUI.Extensions
 {

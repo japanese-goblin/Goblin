@@ -36,7 +36,8 @@ namespace Narfu.Tests
             {
                 httpTest.RespondWith(File.ReadAllText("sched/studentsSchedule.txt"));
 
-                var result = await new NarfuService().Students.GetScheduleAsStringAtDate(new DateTime(2019, 6, 14), 351617);
+                var result =
+                    await new NarfuService().Students.GetScheduleAsStringAtDate(new DateTime(2019, 6, 14), 351617);
 
                 Assert.NotEmpty(result);
                 Assert.Contains("Предмет1", result);
@@ -50,7 +51,8 @@ namespace Narfu.Tests
             {
                 httpTest.RespondWith(File.ReadAllText("sched/studentsSchedule.txt"));
 
-                var result = await new NarfuService().Students.GetScheduleAsStringAtDate(new DateTime(2019, 1, 1), 351617);
+                var result =
+                    await new NarfuService().Students.GetScheduleAsStringAtDate(new DateTime(2019, 1, 1), 351617);
 
                 Assert.NotEmpty(result);
                 Assert.Contains("отсутствует", result);

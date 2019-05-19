@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Vk.Category;
 using Vk.Models;
 
@@ -16,7 +14,7 @@ namespace Vk
         public const string EndPoint = "https://api.vk.com/method/";
         private const string Version = "5.92";
         private const string Language = "ru";
-        private readonly string AccessToken;
+        private readonly string _token;
 
         public VkApi(string token)
         {
@@ -25,8 +23,8 @@ namespace Vk
                 throw new ArgumentNullException(nameof(token), "Токен отсутствует");
             }
 
-            AccessToken = token;
-            
+            _token = token;
+
             Messages = new Messages(this); //TODO: нормальный DI
             Users = new Users(this);
             Photos = new Photos(this);
@@ -36,9 +34,9 @@ namespace Vk
         {
             //TODO add sleep? (лимит для токена сообщества - 20 запросов в секунду)
             var response = await BuildRequest()
-                               .AppendPathSegment(method)
-                               .PostUrlEncodedAsync(@params);
-            
+                                 .AppendPathSegment(method)
+                                 .PostUrlEncodedAsync(@params);
+
             //if(!response.IsSuccessStatusCode) //TODO: не сработает, потому что вк всегда возвращает 200
             //{
             //    //TODO
@@ -54,7 +52,7 @@ namespace Vk
         internal IFlurlRequest BuildRequest()
         {
             return EndPoint.SetQueryParam("lang", Language)
-                           .SetQueryParam("access_token", AccessToken)
+                           .SetQueryParam("access_token", _token)
                            .SetQueryParam("v", Version)
                            .WithHeaders(new
                            {

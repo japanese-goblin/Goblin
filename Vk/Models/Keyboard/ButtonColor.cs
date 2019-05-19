@@ -2,7 +2,7 @@
 {
     public sealed class ButtonColor
     {
-        private readonly string name;
+        private readonly string _name;
 
         public static readonly ButtonColor Default = new ButtonColor("default");
         public static readonly ButtonColor Primary = new ButtonColor("primary");
@@ -11,12 +11,12 @@
 
         public ButtonColor(string name)
         {
-            this.name = name;
+            _name = name;
         }
 
         public override string ToString()
         {
-            return name;
+            return _name;
         }
     }
 }

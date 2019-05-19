@@ -26,7 +26,7 @@ namespace Vk.Tests
                 Assert.True(result.PeerId >= 0);
             }
         }
-        
+
         [Fact]
         public async void Send_EmptyIds_ThrowsError()
         {
@@ -40,14 +40,14 @@ namespace Vk.Tests
             await Assert.ThrowsAsync<ArgumentNullException>(async () =>
                                                                 await GetApi().Messages.Send(1, ""));
         }
-        
+
         [Fact]
         public async void Delete_CorrectId_DeleteMessage()
         {
             using(var httpTest = new HttpTest())
             {
                 httpTest.RespondWith(File.ReadAllText("data/messages/delete.json"));
-                
+
                 await GetApi().Messages.Delete(1);
 
                 httpTest.ShouldHaveCalled($"{VkApi.EndPoint}*")
@@ -56,7 +56,7 @@ namespace Vk.Tests
                         .Times(1);
             }
         }
-        
+
         [Fact]
         public async void Delete_EmptyIdList_ThrowsError()
         {

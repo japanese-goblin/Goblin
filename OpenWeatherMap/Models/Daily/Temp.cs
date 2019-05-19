@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 
-namespace OpenWeatherMap.Models.Daily {
+namespace OpenWeatherMap.Models.Daily
+{
     public class Temp
     {
         [JsonProperty("day")]
