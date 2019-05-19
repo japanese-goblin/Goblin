@@ -24,19 +24,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="data\messages.delete.json">
+    <None Update="data\messages\delete.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="data\messages.send.json">
+    <None Update="data\messages\send.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="data\users.get.json">
+    <None Update="data\users\get.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="data\" />
+    <Folder Include="data\photos\" />
   </ItemGroup>
 
 </Project>

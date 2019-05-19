@@ -39,7 +39,7 @@ namespace Vk
                                .AppendPathSegment(method)
                                .SetQueryParams(@params)
                                .PostAsync(null);
-
+            
             //if(!response.IsSuccessStatusCode) //TODO: не сработает, потому что вк всегда возвращает 200
             //{
             //    //TODO

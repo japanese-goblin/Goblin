@@ -13,12 +13,14 @@ namespace Vk.Tests
         {
             using(var httpTest = new HttpTest())
             {
-                httpTest.RespondWith(File.ReadAllText("data/messages.send.json"));
+                httpTest.RespondWith(File.ReadAllText("data/messages/send.json"));
 
                 var result = await GetApi().Messages.Send(1, "test");
 
                 httpTest.ShouldHaveCalled($"{VkApi.EndPoint}*")
                         .WithVerb(HttpMethod.Post)
+                        .WithQueryParamValue("message", "test")
+                        .WithQueryParamValue("peer_ids", 1)
                         .Times(1);
 
                 Assert.True(result.MessageId >= 0);
@@ -45,12 +47,13 @@ namespace Vk.Tests
         {
             using(var httpTest = new HttpTest())
             {
-                httpTest.RespondWith(File.ReadAllText("data/messages.delete.json"));
+                httpTest.RespondWith(File.ReadAllText("data/messages/delete.json"));
                 
                 await GetApi().Messages.Delete(1);
 
                 httpTest.ShouldHaveCalled($"{VkApi.EndPoint}*")
                         .WithVerb(HttpMethod.Post)
+                        .WithQueryParamValue("message_ids", 1)
                         .Times(1);
             }
         }

@@ -13,12 +13,13 @@ namespace Vk.Tests
         {
             using(var httpTest = new HttpTest())
             {
-                httpTest.RespondWith(File.ReadAllText("data/users.get.json"));
+                httpTest.RespondWith(File.ReadAllText("data/users/get.json"));
 
                 var result = await GetApi().Users.Get(new long[] { 1, 2 });
 
                 httpTest.ShouldHaveCalled($"{VkApi.EndPoint}*")
                         .WithVerb(HttpMethod.Post)
+                        .WithQueryParamValue("user_ids", "1,2")
                         .Times(1);
 
                 Assert.NotEmpty(result);
