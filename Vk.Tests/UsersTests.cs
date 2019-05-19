@@ -19,7 +19,7 @@ namespace Vk.Tests
 
                 httpTest.ShouldHaveCalled($"{VkApi.EndPoint}*")
                         .WithVerb(HttpMethod.Post)
-                        .WithQueryParamValue("user_ids", "1,2")
+                        .WithRequestBody("user_ids=*")
                         .Times(1);
 
                 Assert.NotEmpty(result);

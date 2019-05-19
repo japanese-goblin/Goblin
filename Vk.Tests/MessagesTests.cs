@@ -19,8 +19,7 @@ namespace Vk.Tests
 
                 httpTest.ShouldHaveCalled($"{VkApi.EndPoint}*")
                         .WithVerb(HttpMethod.Post)
-                        .WithQueryParamValue("message", "test")
-                        .WithQueryParamValue("peer_ids", 1)
+                        .WithRequestBody("message=test")
                         .Times(1);
 
                 Assert.True(result.MessageId >= 0);
@@ -53,7 +52,7 @@ namespace Vk.Tests
 
                 httpTest.ShouldHaveCalled($"{VkApi.EndPoint}*")
                         .WithVerb(HttpMethod.Post)
-                        .WithQueryParamValue("message_ids", 1)
+                        .WithRequestBody("message_ids=1")
                         .Times(1);
             }
         }

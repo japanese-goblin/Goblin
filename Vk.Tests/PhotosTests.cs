@@ -21,7 +21,7 @@ namespace Vk.Tests
 
                 httpTest.ShouldHaveCalled($"{VkApi.EndPoint}*")
                         .WithVerb(HttpMethod.Post)
-                        .WithQueryParamValue("peer_id", 1)
+                        .WithRequestBody("peer_id=1")
                         .Times(1);
 
                 Assert.Equal(-64, result.AlbumId);
