@@ -13,7 +13,7 @@ namespace Goblin.Bot.Commands
 {
     public class Schedule : ICommand
     {
-        public string Name { get; } = "Раписание *день*.*месяц*";
+        public string Name { get; } = "Раписание *день*.*месяц* ИЛИ Расписание завтра";
 
         public string Decription { get; } =
             "Возвращает расписание на указанную дату. Если дата не указана, расписание берется на текущую дату";

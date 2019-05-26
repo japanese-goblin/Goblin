@@ -13,12 +13,14 @@ namespace Goblin.Bot
         public static string ErrorMessage = "Ошибочка, проверьте правильность написания команды!";
 
         private readonly IEnumerable<ICommand> _commands;
+        private readonly IInfoCommand _helpcmd;
         private readonly ApplicationDbContext _db;
 
-        public CommandExecutor(ApplicationDbContext db, IEnumerable<ICommand> commands)
+        public CommandExecutor(ApplicationDbContext db, IEnumerable<ICommand> commands, IInfoCommand helpcmd)
         {
             _db = db;
             _commands = commands;
+            _helpcmd = helpcmd;
         }
 
         public async Task<CommandResponse> ExecuteCommand(Message msg)
@@ -28,6 +30,11 @@ namespace Goblin.Bot
             var split = msg.Text.Split(' ', 2);
             var comm = split[0].ToLower();
             var response = new CommandResponse();
+
+            if(_helpcmd.Allias.Contains(comm))
+            {
+                return await _helpcmd.Execute(msg);
+            }
 
             foreach(var command in _commands)
             {

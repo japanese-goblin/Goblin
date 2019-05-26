@@ -9,9 +9,9 @@ namespace Goblin.Bot.Commands
 {
     public class MuteErrors : ICommand
     {
-        public string Name { get; } = "мут";
+        public string Name { get; } = "Мут";
         public string Decription { get; } = "Выключить ошибки при написании неправильной команды";
-        public string Usage { get; } = "мут";
+        public string Usage { get; } = "Мут";
         public string[] Allias { get; } = { "мут" };
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;

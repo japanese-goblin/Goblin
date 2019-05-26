@@ -11,7 +11,7 @@ namespace Goblin.Bot.Commands
     public class GetReminds : ICommand
     {
         public string Name { get; } = "Напоминания";
-        public string Decription { get; } = "Возвращает список с созданными напоминаниями";
+        public string Decription { get; } = "Получить список с напоминаниями";
         public string Usage { get; } = "Напоминания";
         public string[] Allias { get; } = { "напоминания" };
         public CommandCategory Category { get; } = CommandCategory.Common;

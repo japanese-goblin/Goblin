@@ -38,8 +38,9 @@ namespace Goblin.WebUI.Extensions
             services.AddScoped<ICommand, TeacherSchedule>();
             services.AddScoped<ICommand, UnsetMailing>();
             services.AddScoped<ICommand, Weather>();
-            services.AddScoped<ICommand, Help>();
             services.AddScoped<ICommand, MuteErrors>();
+
+            services.AddScoped<IInfoCommand, Help>();
         }
 
         public static void AddAdditions(this IServiceCollection services, IConfiguration config)

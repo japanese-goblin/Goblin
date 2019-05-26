@@ -10,7 +10,7 @@ namespace Goblin.Bot.Commands
     public class Keyboard : ICommand
     {
         public string Name { get; } = "Клавиатура";
-        public string Decription { get; } = "показывает клавиатуру";
+        public string Decription { get; } = "Получить клавиатуру";
         public string Usage { get; } = "Клавиатура";
         public string[] Allias { get; } = { "клавиатура", "клава", "кб" };
         public CommandCategory Category { get; } = CommandCategory.Common;
