@@ -43,7 +43,7 @@ namespace Narfu.Schedule
                                               .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
                                               .GetAsync();
             }
-            catch(TaskCanceledException)
+            catch //TODO:
             {
                 return (true, HttpStatusCode.GatewayTimeout, null);
             }

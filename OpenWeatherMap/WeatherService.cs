@@ -30,9 +30,17 @@ namespace OpenWeatherMap
         public async Task<CurrentWeather> GetCurrentWeather(string city)
         {
             city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
-            var response = await BuildRequest().AppendPathSegment("weather")
-                                               .SetQueryParam("q", city)
-                                               .GetJsonAsync<CurrentWeather>();
+            CurrentWeather response;
+            try
+            {
+                response = await BuildRequest().AppendPathSegment("weather")
+                                                   .SetQueryParam("q", city)
+                                                   .GetJsonAsync<CurrentWeather>();
+            }
+            catch
+            {
+                return null;
+            }
 
             return response;
         }
@@ -40,6 +48,10 @@ namespace OpenWeatherMap
         public async Task<string> GetCurrentWeatherString(string city)
         {
             var w = await GetCurrentWeather(city);
+            if(w is null)
+            {
+                return "Ошбика получения погоды. Попробуйте позже.";
+            }
 
             // на {UnixToDateTime(w.UnixTime):dd.MM.yyyy HH:mm}
             const double pressureConvert = 0.75006375541921;
@@ -65,10 +77,18 @@ namespace OpenWeatherMap
             const int count = 2;
             city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
 
-            var response = await BuildRequest().AppendPathSegment("forecast/daily")
-                                               .SetQueryParam("q", city)
-                                               .SetQueryParam("cnt", count)
-                                               .GetJsonAsync<DailyWeather>();
+            DailyWeather response;
+            try
+            {
+                response = await BuildRequest().AppendPathSegment("forecast/daily")
+                                                   .SetQueryParam("q", city)
+                                                   .SetQueryParam("cnt", count)
+                                                   .GetJsonAsync<DailyWeather>();
+            }
+            catch
+            {
+                return null;
+            }
 
             return response;
         }
@@ -76,6 +96,11 @@ namespace OpenWeatherMap
         public async Task<string> GetDailyWeatherString(string city, DateTime date)
         {
             var w = await GetDailyWeather(city, date);
+            if(w is null)
+            {
+                return "Ошбика получения погоды. Попробуйте позже.";
+            }
+
             var weatherToday = w.List.FirstOrDefault(x => UnixToDateTime(x.UnixTime).Date == DateTime.Today);
             if(weatherToday is null)
             {
@@ -132,6 +157,7 @@ namespace OpenWeatherMap
             return EndPoint.SetQueryParam("units", Units)
                            .SetQueryParam("appid", _token)
                            .SetQueryParam("lang", Language)
+                           .WithTimeout(3)
                            .WithHeaders(new
                            {
                                Accept = "application/json",
