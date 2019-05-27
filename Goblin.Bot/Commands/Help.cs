@@ -31,7 +31,6 @@ namespace Goblin.Bot.Commands
             var com = 1;
             var saf = 1;
             var strBuilder = new StringBuilder();
-            strBuilder.AppendFormat("Общее число команд на данный момент: {0}", cmds.Count);
             strBuilder.AppendLine("Общие команды:");
 
             foreach(var cmd in cmds.Where(x => x.Category == CommandCategory.Common))
@@ -51,9 +50,11 @@ namespace Goblin.Bot.Commands
                           .AppendLine();
             }
 
-            strBuilder.AppendLine("Через звездочку (*) указаны параметры команд (например, для команды «устгр *номер группы*» параметром является номер группы). Звездочки писать не нужно!!!")
+            strBuilder.AppendLine()
+                      .AppendLine("Через звездочку (*) указаны параметры команд (например, для команды «устгр *номер группы*» параметром является номер группы). Звездочки писать не нужно!!!")
                       .AppendLine("Например, для использования команды «устгр» необходимо отправить сообщение «устгр 351010»")
-                .AppendLine("Более подробная информация с примерами представлена здесь - https://vk.com/@-146048760-commands");
+                      .AppendLine()
+                      .AppendLine("Более подробная информация с примерами представлена здесь - https://vk.com/@-146048760-commands");
             return Task.FromResult(new CommandResponse
             {
                 Text = strBuilder.ToString()
