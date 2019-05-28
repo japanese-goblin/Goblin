@@ -63,13 +63,21 @@
             asp-fallback-test="window.jQuery"
             crossorigin="anonymous"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
-        </script>
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"
             asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
             asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
             crossorigin="anonymous"
             integrity="sha256-E/V4cWE4qvAeO5MOhjtGtqDzPndRO1LBk8lJ/PR7CA4=">
-        </script>
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138253436-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-138253436-2');
+    </script>
 </environment>
 
 @RenderSection("Scripts", false)
