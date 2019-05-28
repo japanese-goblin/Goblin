@@ -17,7 +17,7 @@ namespace OpenWeatherMap.Tests
             {
                 httpTest.RespondWith(File.ReadAllText(DailyDataPath));
 
-                var result = await GetService().GetDailyWeather(City, DateTime.Today);
+                var result = await GetService().GetDailyWeather(City, new DateTime(2019, 05, 12));
 
                 httpTest.ShouldHaveCalled($"{WeatherService.EndPoint}*")
                         .WithVerb(HttpMethod.Get)
@@ -38,15 +38,15 @@ namespace OpenWeatherMap.Tests
             {
                 httpTest.RespondWith(File.ReadAllText(DailyDataPath));
 
-                var result = await GetService().GetDailyWeatherString(City, DateTime.Today);
+                var result = await GetService().GetDailyWeatherString(City, new DateTime(2019, 05, 12));
 
                 httpTest.ShouldHaveCalled($"{WeatherService.EndPoint}*")
                         .WithVerb(HttpMethod.Get)
                         .WithHeader("Accept", "application/json")
                         .Times(1);
 
+                Assert.Contains("слегка облачно", result);
                 Assert.Contains("Температура", result);
-                Assert.Contains("сегодня", result);
             }
         }
     }

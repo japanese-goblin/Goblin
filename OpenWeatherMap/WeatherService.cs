@@ -101,7 +101,7 @@ namespace OpenWeatherMap
                 return "Ошбика получения погоды. Попробуйте позже.";
             }
 
-            var weatherToday = w.List.FirstOrDefault(x => UnixToDateTime(x.UnixTime).Date == DateTime.Today);
+            var weatherToday = w.List.FirstOrDefault(x => UnixToDateTime(x.UnixTime).Date == date);
             if(weatherToday is null)
             {
                 return $"Погода на {date:dd.MM} не найдена";
@@ -120,7 +120,7 @@ namespace OpenWeatherMap
             }
             else
             {
-                day = DateTime.Now.ToString("dddd, d MMMM");
+                day = date.ToString("dddd, d MMMM");
             }
 
             var strBuilder = new StringBuilder();

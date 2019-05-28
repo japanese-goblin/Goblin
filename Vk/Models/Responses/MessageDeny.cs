@@ -2,7 +2,7 @@
 
 namespace Vk.Models.Responses
 {
-    // {"type":"message_deny","object":{"user_id":***REMOVED***},"group_id":146048760}
+    // {"type":"message_deny","object":{"user_id":366305213},"group_id":146048760}
     public class MessageDeny
     {
         [JsonProperty("user_id")]

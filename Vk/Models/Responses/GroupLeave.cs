@@ -2,7 +2,7 @@
 
 namespace Vk.Models.Responses
 {
-    // {"type":"group_leave","object":{"user_id":***REMOVED***,"self":1},"group_id":146048760}
+    // {"type":"group_leave","object":{"user_id":366305213,"self":1},"group_id":146048760}
     public class GroupLeave
     {
         [JsonProperty("user_id")]
