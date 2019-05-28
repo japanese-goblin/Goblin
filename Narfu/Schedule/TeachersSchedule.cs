@@ -56,13 +56,13 @@ namespace Narfu.Schedule
                                      .Split(',', 2)[1]
                                      .Trim();
 
-                var adr = lessonNode.SelectSingleNode(".//span[@class='auditorium']")
+                var adr = lessonNode.SelectSingleNode(".//span[contains(@class,'auditorium')]")
                                     .GetNormalizedInnerText()
                                     .Split(',', 2)
                                     .Select(x => x.Trim())
                                     .ToArray();
-
-                var time = lessonNode.SelectSingleNode(".//span[@class='time_para']")
+                    
+                var time = lessonNode.SelectSingleNode(".//span[contains(@class,'time_para')]")
                                      .GetNormalizedInnerText()
                                      .Split('–', 2);
 
@@ -70,15 +70,15 @@ namespace Narfu.Schedule
                 {
                     Address = adr[1],
                     Auditory = adr[0],
-                    Number = byte.Parse(lessonNode.SelectSingleNode(".//span[@class='num_para']")
+                    Number = byte.Parse(lessonNode.SelectSingleNode(".//span[contains(@class,'num_para')]") 
                                                   .GetNormalizedInnerText()),
-                    Groups = lessonNode.SelectSingleNode(".//span[@class='group']").GetNormalizedInnerText(),
-                    Name = lessonNode.SelectSingleNode(".//span[@class='discipline']").GetNormalizedInnerText(),
-                    Type = lessonNode.SelectSingleNode(".//span[@class='kindOfWork']").GetNormalizedInnerText(),
+                    Groups = lessonNode.SelectSingleNode(".//span[contains(@class,'group')]").GetNormalizedInnerText(), 
+                    Name = lessonNode.SelectSingleNode(".//span[contains(@class,'discipline')]").GetNormalizedInnerText(), 
+                    Type = lessonNode.SelectSingleNode(".//span[contains(@class,'kindOfWork')]").GetNormalizedInnerText(), 
                     Teacher = "",
                     StartTime = DateTime.ParseExact($"{date} {time[0]}", "dd.MM.yyyy HH:mm", null, DateTimeStyles.None),
                     EndTime = DateTime.ParseExact($"{date} {time[1]}", "dd.MM.yyyy HH:mm", null, DateTimeStyles.None),
-                    StartEndTime = lessonNode.SelectSingleNode(".//span[@class='time_para']").GetNormalizedInnerText()
+                    StartEndTime = lessonNode.SelectSingleNode(".//span[contains(@class,'time_para')]").GetNormalizedInnerText() 
                 });
             }
 
