@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
+using Goblin.Domain.Entities;
 using Goblin.Persistence;
 using Vk;
 using Vk.Models.Messages;
@@ -25,7 +26,7 @@ namespace Goblin.Bot.Commands
             _api = api;
         }
 
-        public async Task<CommandResponse> Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg, BotUser user)
         {
             var username = await _api.Users.Get(msg.FromId);
             var text = $"сообщение от @id{msg.FromId} ({username}):\n\n{msg.GetParams()}";
@@ -37,7 +38,7 @@ namespace Goblin.Bot.Commands
             };
         }
 
-        public (bool Success, string Text) CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg, BotUser user)
         {
             if(string.IsNullOrEmpty(msg.GetParams()))
             {

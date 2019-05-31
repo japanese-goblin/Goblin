@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
+using Goblin.Domain.Entities;
 using Goblin.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Vk.Models.Messages;
@@ -24,7 +25,7 @@ namespace Goblin.Bot.Commands
             _db = db;
         }
 
-        public async Task<CommandResponse> Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg, BotUser user)
         {
             var text = "";
             var ureminds = await _db.Reminds.Where(x => x.VkId == msg.FromId)
@@ -45,7 +46,7 @@ namespace Goblin.Bot.Commands
             };
         }
 
-        public (bool Success, string Text) CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg, BotUser user)
         {
             return (true, "");
         }

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
+using Goblin.Domain.Entities;
 using Narfu;
 using Vk.Models.Messages;
 
@@ -25,9 +26,9 @@ namespace Goblin.Bot.Commands
             _service = service;
         }
 
-        public async Task<CommandResponse> Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg, BotUser user)
         {
-            var canExecute = CanExecute(msg);
+            var canExecute = CanExecute(msg, user);
             if(!canExecute.Success)
             {
                 return new CommandResponse
@@ -42,7 +43,7 @@ namespace Goblin.Bot.Commands
             };
         }
 
-        public (bool Success, string Text) CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg, BotUser user)
         {
             if(int.TryParse(msg.GetParams(), out var res))
             {

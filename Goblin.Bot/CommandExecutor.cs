@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Goblin.Bot.Models;
+using Goblin.Domain.Entities;
 using Goblin.Persistence;
 using Vk.Models.Messages;
 
@@ -23,7 +24,7 @@ namespace Goblin.Bot
             _helpcmd = helpcmd;
         }
 
-        public async Task<CommandResponse> ExecuteCommand(Message msg)
+        public async Task<CommandResponse> ExecuteCommand(Message msg, BotUser botUser)
         {
             msg.Text = Regex.Replace(msg.Text, @"\s+", " ").Trim();
 
@@ -33,7 +34,7 @@ namespace Goblin.Bot
 
             if(_helpcmd.Allias.Contains(comm))
             {
-                return await _helpcmd.Execute(msg);
+                return await _helpcmd.Execute(msg, botUser);
             }
 
             foreach(var command in _commands)
@@ -43,12 +44,12 @@ namespace Goblin.Bot
                     continue;
                 }
 
-                if(command.IsAdmin && _db.GetAdmins().All(x => x != msg.FromId))
+                if(command.IsAdmin && !botUser.IsAdmin)
                 {
                     continue;
                 }
 
-                response = await command.Execute(msg);
+                response = await command.Execute(msg, botUser);
                 break;
             }
 

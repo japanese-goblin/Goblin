@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
+using Goblin.Domain.Entities;
 using Goblin.Persistence;
 using OpenWeatherMap;
 using Vk.Models.Messages;
@@ -27,9 +28,9 @@ namespace Goblin.Bot.Commands
             _weather = weather;
         }
 
-        public async Task<CommandResponse> Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg, BotUser user)
         {
-            var canExecute = CanExecute(msg);
+            var canExecute = CanExecute(msg, user);
             if(!canExecute.Success)
             {
                 return new CommandResponse
@@ -41,11 +42,11 @@ namespace Goblin.Bot.Commands
             string response;
             if(msg.GetParams().ToLower() == "завтра")
             {
-                response = await ExecuteDaily(msg);
+                response = await ExecuteDaily(msg, user);
             }
             else
             {
-                response = await ExecuteNow(msg);
+                response = await ExecuteNow(msg, user);
             }
 
             return new CommandResponse
@@ -54,10 +55,9 @@ namespace Goblin.Bot.Commands
             };
         }
 
-        private async Task<string> ExecuteNow(Message msg)
+        private async Task<string> ExecuteNow(Message msg, BotUser user)
         {
             var param = msg.GetParams();
-            var user = _db.BotUsers.FirstOrDefault(x => x.Vk == msg.FromId);
             if(string.IsNullOrEmpty(param) && !string.IsNullOrEmpty(user?.City))
             {
                 return await _weather.GetCurrentWeatherString(user.City);
@@ -76,9 +76,8 @@ namespace Goblin.Bot.Commands
             return text;
         }
 
-        private async Task<string> ExecuteDaily(Message msg)
+        private async Task<string> ExecuteDaily(Message msg, BotUser user)
         {
-            var user = _db.BotUsers.FirstOrDefault(x => x.Vk == msg.FromId);
             if(!string.IsNullOrEmpty(user?.City))
             {
                 return await _weather.GetDailyWeatherString(user.City, DateTime.Today.AddDays(1));
@@ -87,9 +86,8 @@ namespace Goblin.Bot.Commands
             return "Ошибка. Для просмотра погоды на завтра укажи город через команду 'город *название*'";
         }
 
-        public (bool Success, string Text) CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg, BotUser user)
         {
-            var user = _db.BotUsers.FirstOrDefault(x => x.Vk == msg.FromId);
             if(string.IsNullOrEmpty(msg.GetParams()) && string.IsNullOrEmpty(user?.City))
             {
                 return (false, "Ошибка. Либо укажи город в команде через пробел, либо установи его командой 'город'");

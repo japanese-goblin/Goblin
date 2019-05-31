@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
+using Goblin.Domain.Entities;
 using Vk.Models.Keyboard;
 using Vk.Models.Messages;
 
@@ -16,7 +17,7 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
-        public Task<CommandResponse> Execute(Message msg)
+        public Task<CommandResponse> Execute(Message msg, BotUser user)
         {
             var keyboard = new Vk.Models.Keyboard.Keyboard(true);
             string text;
@@ -38,7 +39,7 @@ namespace Goblin.Bot.Commands
             });
         }
 
-        public (bool Success, string Text) CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg, BotUser user)
         {
             return (true, "");
         }

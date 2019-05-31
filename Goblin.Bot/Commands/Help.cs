@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
+using Goblin.Domain.Entities;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
@@ -23,7 +24,7 @@ namespace Goblin.Bot.Commands
             _commands = commands;
         }
 
-        public Task<CommandResponse> Execute(Message msg)
+        public Task<CommandResponse> Execute(Message msg, BotUser user)
         {
             var cmds = _commands.Where(x => !x.IsAdmin).OrderBy(x => x.Name).ToList();
 
@@ -61,7 +62,7 @@ namespace Goblin.Bot.Commands
             });
         }
 
-        public (bool Success, string Text) CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg, BotUser user)
         {
             return (true, "");
         }

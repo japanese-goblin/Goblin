@@ -50,7 +50,7 @@ namespace Goblin.Bot
                 ["confirmation"] = Confirmation,
                 ["message_new"] = MessageNew,
                 ["message_deny"] = MessageDeny,
-                ["message_reply"] = MessageReply,
+                //["message_reply"] = MessageReply,
                 ["group_join"] = GroupJoin,
                 ["group_leave"] = GroupLeave
             };
@@ -87,7 +87,7 @@ namespace Goblin.Bot
                 await _db.SaveChangesAsync();
             }
 
-            var response = await _executor.ExecuteCommand(message);
+            var response = await _executor.ExecuteCommand(message, botUser);
 
             if(botUser.IsErrorsDisabled && response.Text == CommandExecutor.ErrorMessage)
             {
@@ -98,25 +98,25 @@ namespace Goblin.Bot
             return OkResponse;
         }
 
-        private async Task<string> MessageReply(CallbackResponse obj)
-        {
-            var message = Message.FromJson(obj.Object.ToString());
+        //private async Task<string> MessageReply(CallbackResponse obj)
+        //{
+        //    var message = Message.FromJson(obj.Object.ToString());
 
-            const long confId = 2000000000;
-            var isConf = message.PeerId / confId > 0;
-            if(isConf || !message.Text.StartsWith('!'))
-            {
-                return OkResponse;
-            }
+        //    const long confId = 2000000000;
+        //    var isConf = message.PeerId / confId > 0;
+        //    if(isConf || !message.Text.StartsWith('!'))
+        //    {
+        //        return OkResponse;
+        //    }
 
-            message.Text = message.Text.Substring(1, message.Text.Length - 1);
-            var response = await _executor.ExecuteCommand(message);
+        //    message.Text = message.Text.Substring(1, message.Text.Length - 1);
+        //    var response = await _executor.ExecuteCommand(message);
 
-            await _api.Messages.Delete(message.Id);
-            await _api.Messages.Send(message.PeerId, response.Text, response.Attachments, response.Keyboard);
+        //    await _api.Messages.Delete(message.Id);
+        //    await _api.Messages.Send(message.PeerId, response.Text, response.Attachments, response.Keyboard);
 
-            return OkResponse;
-        }
+        //    return OkResponse;
+        //}
 
         private async Task<string> MessageDeny(CallbackResponse obj)
         {
