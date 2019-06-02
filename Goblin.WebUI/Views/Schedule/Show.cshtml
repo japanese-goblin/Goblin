@@ -1,9 +1,5 @@
 ﻿@model Dictionary<string, Narfu.Models.Lesson[]>
 
-@{
-    ViewData["Title"] = "Расписание";
-}
-
 <h4>@ViewBag.Title</h4>
 <ul class="nav nav-tabs" role="tablist">
     @foreach(var group in Model)
