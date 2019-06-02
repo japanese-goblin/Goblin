@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Goblin.WebUI.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Narfu;
-using Narfu.Schedule;
 
 namespace Goblin.WebUI.Controllers
 {
@@ -21,7 +21,7 @@ namespace Goblin.WebUI.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Show(int id)
+        public async Task<IActionResult> Show(int id) //TODO
         {
             if(!ModelState.IsValid || !_service.Students.IsCorrectGroup(id))
             {
@@ -30,17 +30,17 @@ namespace Goblin.WebUI.Controllers
             }
 
             var group = _service.Students.GetGroupByRealId(id);
-            var (error, _, lessons) = await _service.Students.GetSchedule(id);
+            var (error, code, lessons) = await _service.Students.GetSchedule(id);
 
             if(error)
             {
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.BadGateway;
-                return View("Error", "Сайт с расписанием недоступен. Попробуйте позже.");
+                return View("Error", $"Сайт с расписанием недоступен (Код ошибки - {code}). Попробуйте позже.");
             }
 
-            ViewBag.Title = $"{group.RealId} - {group.Name}";
-            var result = lessons.GroupBy(x => StudentsSchedule.GetWeekNumber(x.StartTime))
-                                .ToDictionary(x => $"{x.First().StartTime:dd.MM.yyyy} - {x.Last().StartTime:dd.MM.yyyy}",
+            ViewBag.HtmlTitle = $"{group.RealId} - {group.Name}";
+            var result = lessons.GroupBy(x => x.StartTime.GetWeekNumber())
+                                .ToDictionary(x =>$"{x.First().StartTime:dd.MM.yyyy} - {x.Last().StartTime:dd.MM.yyyy}",
                                               x => x.ToArray()); // TODO: fix key
             return View(result);
         }
