@@ -1,14 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Persistence;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vk;
 
 namespace Goblin.WebUI.Controllers
 {
-    [Route("api/admin/[action]")]
-    [ValidateAntiForgeryToken]
-    public class AdminApiController
+    [Authorize(Roles = "Admin")]
+    public class AdminApiController : Controller
     {
         private readonly ApplicationDbContext _db;
         private readonly VkApi _api;
@@ -19,15 +19,17 @@ namespace Goblin.WebUI.Controllers
             _api = api;
         }
 
-        public async Task SendToAll(string msg, string[] attach)
+        public async Task<IActionResult> SendToAll(string msg, string[] attachs)
         {
             var gr = _db.GetUsers().Select(x => x.Vk).ToArray();
-            await _api.Messages.Send(gr, msg, attach);
+            await _api.Messages.Send(gr, msg, attachs);
+            return RedirectToAction("Messages", "Admin");
         }
 
-        public async Task SendToId(long id, string msg, string[] attachs)
+        public async Task<IActionResult> SendToId(long peerId, string msg, string[] attachs)
         {
-            await _api.Messages.Send(id, msg, attachs);
+            await _api.Messages.Send(peerId, msg, attachs);
+            return RedirectToAction("Messages", "Admin");
         }
     }
 }
