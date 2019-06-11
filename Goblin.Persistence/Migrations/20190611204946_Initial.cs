@@ -4,12 +4,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Goblin.Persistence.Migrations
 {
-    public partial class WebUiRework : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameTable("Users", null, "BotUsers", null);
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -49,6 +47,58 @@ namespace Goblin.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BotUsers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Vk = table.Column<long>(nullable: false),
+                    IsAdmin = table.Column<bool>(nullable: false),
+                    Group = table.Column<int>(nullable: false),
+                    Schedule = table.Column<bool>(nullable: false),
+                    Weather = table.Column<bool>(nullable: false),
+                    City = table.Column<string>(nullable: true),
+                    IsErrorsDisabled = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BotUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Jobs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    JobName = table.Column<string>(nullable: true),
+                    Conversation = table.Column<int>(nullable: false),
+                    NarfuGroup = table.Column<int>(nullable: false),
+                    WeatherCity = table.Column<string>(nullable: true),
+                    Hours = table.Column<int>(nullable: false),
+                    Minutes = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Jobs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reminds",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    VkId = table.Column<long>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    Text = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reminds", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -213,12 +263,19 @@ namespace Goblin.Persistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "BotUsers");
+
+            migrationBuilder.DropTable(
+                name: "Jobs");
+
+            migrationBuilder.DropTable(
+                name: "Reminds");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.RenameTable("BotUsers", null, "Users", null);
         }
     }
 }
