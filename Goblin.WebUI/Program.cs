@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore;
+﻿using Goblin.Persistence;
+using Goblin.WebUI.Extensions;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Goblin.WebUI
@@ -7,7 +9,9 @@ namespace Goblin.WebUI
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            CreateWebHostBuilder(args).Build()
+                                      .InitializeDatabase<ApplicationDbContext>()
+                                      .Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
