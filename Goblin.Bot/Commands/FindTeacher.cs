@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
+using Goblin.Domain.Entities;
 using Narfu;
 using Vk.Models.Messages;
 
@@ -22,9 +23,9 @@ namespace Goblin.Bot.Commands
             _service = service;
         }
 
-        public Task<CommandResponse> Execute(Message msg)
+        public Task<CommandResponse> Execute(Message msg, BotUser user)
         {
-            var canExecute = CanExecute(msg);
+            var canExecute = CanExecute(msg, user);
             if(!canExecute.Success)
             {
                 return Task.FromResult(new CommandResponse
@@ -41,13 +42,13 @@ namespace Goblin.Bot.Commands
                     "Пожалуйста, укажите более точные данные (например, введите фамилию и имя преподавателя).";
             }
 
-            return Task.Run(() => new CommandResponse
+            return Task.FromResult(new CommandResponse
             {
                 Text = text
             });
         }
 
-        public (bool Success, string Text) CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg, BotUser user)
         {
             var param = msg.GetParamsAsArray()[0];
             if(param.Length < 4)
@@ -59,8 +60,7 @@ namespace Goblin.Bot.Commands
             var found = !string.IsNullOrEmpty(teachers);
             if(!found)
             {
-                var text = "Ошибка!\n" +
-                           "Данного преподавателя нет в списке";
+                var text = "Ошибка. Данного преподавателя нет в списке";
 
                 return (false, text);
             }

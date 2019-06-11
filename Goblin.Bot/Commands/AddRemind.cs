@@ -30,9 +30,9 @@ namespace Goblin.Bot.Commands
             _db = db;
         }
 
-        public async Task<CommandResponse> Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg, BotUser user)
         {
-            var canExecute = CanExecute(msg);
+            var canExecute = CanExecute(msg, user);
             if(!canExecute.Success)
             {
                 return new CommandResponse
@@ -70,7 +70,7 @@ namespace Goblin.Bot.Commands
             };
         }
 
-        public (bool Success, string Text) CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg, BotUser user)
         {
             var param = msg.GetParams();
             var all = param.Split(' ', 3);

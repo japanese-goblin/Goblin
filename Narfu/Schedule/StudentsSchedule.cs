@@ -186,14 +186,6 @@ namespace Narfu.Schedule
         }
 
         #region utils
-        public static int GetWeekNumber(DateTime date)
-        {
-            var ciCurr = CultureInfo.CurrentCulture;
-            var weekNum = ciCurr.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek,
-                                                        CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek);
-            return weekNum;
-        }
-
         private string GenerateErrorMessage(HttpStatusCode code, int siteGroupId)
         {
             return $"Ошибка (код ошибки - {code}).\n" +

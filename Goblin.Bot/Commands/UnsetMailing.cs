@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
+using Goblin.Domain.Entities;
 using Goblin.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Vk.Models.Messages;
@@ -23,9 +24,9 @@ namespace Goblin.Bot.Commands
             _db = db;
         }
 
-        public async Task<CommandResponse> Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg, BotUser user)
         {
-            var canExecute = CanExecute(msg);
+            var canExecute = CanExecute(msg, user);
             if(!canExecute.Success)
             {
                 return new CommandResponse
@@ -38,13 +39,11 @@ namespace Goblin.Bot.Commands
             var text = "";
             if(param == "погода")
             {
-                var user = await _db.BotUsers.FirstAsync(x => x.Vk == msg.FromId);
                 user.Weather = false;
                 text = "Ты отписался от рассылки погоды :с";
             }
             else if(param == "расписание")
             {
-                var user = await _db.BotUsers.FirstAsync(x => x.Vk == msg.FromId);
                 user.Schedule = false;
                 text = "Ты отписался от рассылки расписания :с";
             }
@@ -64,7 +63,7 @@ namespace Goblin.Bot.Commands
             };
         }
 
-        public (bool Success, string Text) CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg, BotUser user)
         {
             if(string.IsNullOrEmpty(msg.GetParams()))
             {

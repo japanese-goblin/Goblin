@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
+using Goblin.Domain.Entities;
 using Goblin.Persistence;
 using Vk.Models.Messages;
 
@@ -25,7 +26,7 @@ namespace Goblin.Bot.Commands
             _db = db;
         }
 
-        public Task<CommandResponse> Execute(Message msg)
+        public Task<CommandResponse> Execute(Message msg, BotUser user)
         {
             var bday = new DateTime(2017, 4, 29, 19, 42, 0);
             var dis = DateTime.Now - bday;
@@ -53,7 +54,7 @@ namespace Goblin.Bot.Commands
             //TODO: дополнить чем-нибудь интересным
         }
 
-        public (bool Success, string Text) CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg, BotUser user)
         {
             return (true, "");
         }

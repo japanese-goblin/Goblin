@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Goblin.Persistence;
 using Goblin.WebUI.Extensions;
 using Hangfire;
-using Microsoft.EntityFrameworkCore;
 using Narfu;
 using OpenWeatherMap;
 using Vk;
@@ -18,7 +17,9 @@ namespace Goblin.WebUI.Hangfire
         private readonly WeatherService _weather;
         private readonly NarfuService _service;
 
-        private const int ChunkLimit = 100;
+        private const int ChunkLimit = 100; // максимум 100 ID в отправке
+        private const int VkApiLimit = 20; // в секунду
+        private const int ExtraDelay = 15; // милисекунд
 
         public ScheduledTasks(ApplicationDbContext db, VkApi api, WeatherService weather, NarfuService service)
         {
@@ -54,7 +55,7 @@ namespace Goblin.WebUI.Hangfire
         public void SendDailyStuff()
         {
             var weatherJob = BackgroundJob.Enqueue(() => SendWeather());
-            if (DateTime.Now.DayOfWeek != DayOfWeek.Sunday)
+            if (DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
             {
                 BackgroundJob.ContinueWith(weatherJob, () => SendSchedule());
             }
@@ -69,7 +70,8 @@ namespace Goblin.WebUI.Hangfire
                 {
                     var ids = chunk.Select(x => x.Vk);
                     var schedule = await _service.Students.GetScheduleAsStringAtDate(DateTime.Today, group.Key);
-                    BackgroundJob.Enqueue(() => _api.Messages.Send(ids, schedule, null, null));
+                    await _api.Messages.Send(ids, schedule);
+                    await Task.Delay((1000 / VkApiLimit) + ExtraDelay);
                 }   
             }
         }
@@ -83,7 +85,8 @@ namespace Goblin.WebUI.Hangfire
                 {
                     var ids = chunk.Select(x => x.Vk);
                     var weather = await _weather.GetDailyWeatherString(group.Key, DateTime.Today);
-                    BackgroundJob.Enqueue(() => _api.Messages.Send(ids, weather, null, null));
+                    await _api.Messages.Send(ids, weather);
+                    await Task.Delay((1000 / VkApiLimit) + ExtraDelay); 
                 }
             }
         }
@@ -92,7 +95,6 @@ namespace Goblin.WebUI.Hangfire
         {
             const int convId = 2000000000;
             id = convId + id;
-            var x = id >= 0;
 
             if(!string.IsNullOrWhiteSpace(city) && await _weather.CheckCity(city))
             {

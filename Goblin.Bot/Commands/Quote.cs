@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
+using Goblin.Domain.Entities;
 using QuotesGenerator;
 using Vk;
 using Vk.Models.Messages;
@@ -24,9 +25,9 @@ namespace Goblin.Bot.Commands
             _api = api;
         }
 
-        public async Task<CommandResponse> Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg, BotUser user)
         {
-            var canExecute = CanExecute(msg);
+            var canExecute = CanExecute(msg, user);
             if(!canExecute.Success)
             {
                 return new CommandResponse
@@ -36,10 +37,10 @@ namespace Goblin.Bot.Commands
             }
 
             var forwarded = msg.ForwardMessages[0];
-            var user = await _api.Users.Get(forwarded.FromId);
+            var vkUser = await _api.Users.Get(forwarded.FromId);
 
             var image = await Generator.GenerateQuote(forwarded.Text, forwarded.FromId,
-                                                      user.ToString(), UnixToDate(forwarded.Date), user.Photo200Orig);
+                                                      vkUser.ToString(), UnixToDate(forwarded.Date), vkUser.Photo200Orig);
             var attach = await _api.Photos.FastUploadPhoto(msg.FromId, image); //TODO fromId
 
             return new CommandResponse
@@ -49,7 +50,7 @@ namespace Goblin.Bot.Commands
             };
         }
 
-        public (bool Success, string Text) CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg, BotUser user)
         {
             if(msg.ForwardMessages.Length == 0)
             {

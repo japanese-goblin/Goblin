@@ -1,39 +1,39 @@
-﻿using System;
-using System.Threading.Tasks;
-using Goblin.Bot.Enums;
-using Goblin.Bot.Models;
-using Vk.Models.Messages;
+﻿//using System;
+//using System.Threading.Tasks;
+//using Goblin.Bot.Enums;
+//using Goblin.Bot.Models;
+//using Vk.Models.Messages;
 
-namespace Goblin.Bot.Commands.Deprecated
-{
-    public class Flip : ICommand
-    {
-        public string Name { get; } = "Монета";
-        public string Decription { get; } = "Подбрасывает монету и выдаёт орёл/решка";
-        public string Usage { get; } = "Монета";
-        public string[] Allias { get; } = { "монета" };
-        public CommandCategory Category { get; } = CommandCategory.Common;
-        public bool IsAdmin { get; } = false;
+//namespace Goblin.Bot.Commands.Deprecated
+//{
+//    public class Flip : ICommand
+//    {
+//        public string Name { get; } = "Монета";
+//        public string Decription { get; } = "Подбрасывает монету и выдаёт орёл/решка";
+//        public string Usage { get; } = "Монета";
+//        public string[] Allias { get; } = { "монета" };
+//        public CommandCategory Category { get; } = CommandCategory.Common;
+//        public bool IsAdmin { get; } = false;
 
-        public Task<CommandResponse> Execute(Message msg)
-        {
-            var choices = new[] { "Орёл", "Решка" };
+//        public Task<CommandResponse> Execute(Message msg, BotUser user)
+//        {
+//            var choices = new[] { "Орёл", "Решка" };
 
-            var a = GetRandom(0, 1);
-            return Task.Run(() => new CommandResponse
-            {
-                Text = choices[a]
-            });
-        }
+//            var a = GetRandom(0, 1);
+//            return Task.Run(() => new CommandResponse
+//            {
+//                Text = choices[a]
+//            });
+//        }
 
-        public (bool Success, string Text) CanExecute(Message msg)
-        {
-            return (true, "");
-        }
+//        public (bool Success, string Text) CanExecute(Message msg, BotUser user)
+//        {
+//            return (true, "");
+//        }
 
-        public static int GetRandom(int start, int end)
-        {
-            return new System.Random(DateTime.Now.Millisecond).Next(start, end);
-        }
-    }
-}
+//        public static int GetRandom(int start, int end)
+//        {
+//            return new System.Random(DateTime.Now.Millisecond).Next(start, end);
+//        }
+//    }
+//}

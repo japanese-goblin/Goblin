@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
+using Goblin.Domain.Entities;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands
@@ -15,9 +16,9 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
-        public Task<CommandResponse> Execute(Message msg)
+        public Task<CommandResponse> Execute(Message msg, BotUser user)
         {
-            var canExecute = CanExecute(msg);
+            var canExecute = CanExecute(msg, user);
             if(!canExecute.Success)
             {
                 return Task.Run(() => new CommandResponse
@@ -34,7 +35,7 @@ namespace Goblin.Bot.Commands
             });
         }
 
-        public (bool Success, string Text) CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg, BotUser user)
         {
             var param = msg.GetParams();
             if(string.IsNullOrEmpty(param))

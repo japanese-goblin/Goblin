@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
+using Goblin.Domain.Entities;
 using Goblin.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Narfu;
@@ -32,9 +33,9 @@ namespace Goblin.Bot.Commands
             _service = service;
         }
 
-        public async Task<CommandResponse> Execute(Message msg)
+        public async Task<CommandResponse> Execute(Message msg, BotUser user)
         {
-            var canExecute = CanExecute(msg);
+            var canExecute = CanExecute(msg, user);
             if(!canExecute.Success)
             {
                 return new CommandResponse
@@ -44,7 +45,6 @@ namespace Goblin.Bot.Commands
             }
 
             var param = msg.GetParams();
-            var user = await _db.BotUsers.FirstAsync(x => x.Vk == msg.FromId);
             DateTime time;
             if(string.IsNullOrEmpty(param))
             {
@@ -66,10 +66,9 @@ namespace Goblin.Bot.Commands
             };
         }
 
-        public (bool Success, string Text) CanExecute(Message msg)
+        public (bool Success, string Text) CanExecute(Message msg, BotUser user)
         {
             var param = msg.GetParams();
-            var user = _db.BotUsers.First(x => x.Vk == msg.FromId);
             if(user.Group == 0)
             {
                 return (false,
