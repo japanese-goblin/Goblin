@@ -10,6 +10,7 @@ namespace Goblin.WebUI
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build()
+                                      .InitializeDatabase<BotDbContext>()
                                       .InitializeDatabase<ApplicationDbContext>()
                                       .Run();
         }

@@ -12,7 +12,7 @@ namespace Goblin.WebUI.Hangfire
 {
     public class ScheduledTasks
     {
-        private readonly ApplicationDbContext _db;
+        private readonly BotDbContext _db;
         private readonly VkApi _api;
         private readonly WeatherService _weather;
         private readonly NarfuService _service;
@@ -21,7 +21,7 @@ namespace Goblin.WebUI.Hangfire
         private const int VkApiLimit = 20; // в секунду
         private const int ExtraDelay = 15; // милисекунд
 
-        public ScheduledTasks(ApplicationDbContext db, VkApi api, WeatherService weather, NarfuService service)
+        public ScheduledTasks(BotDbContext db, VkApi api, WeatherService weather, NarfuService service)
         {
             _db = db;
             _api = api;

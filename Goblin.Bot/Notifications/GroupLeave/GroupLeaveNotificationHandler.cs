@@ -9,9 +9,9 @@ namespace Goblin.Bot.Notifications.GroupLeave
     public class GroupLeaveNotificationHandler : INotificationHandler<GroupLeaveNotification>
     {
         private readonly VkApi _api;
-        private readonly ApplicationDbContext _context;
+        private readonly BotDbContext _context;
 
-        public GroupLeaveNotificationHandler(VkApi api, ApplicationDbContext context)
+        public GroupLeaveNotificationHandler(VkApi api, BotDbContext context)
         {
             _api = api;
             _context = context;

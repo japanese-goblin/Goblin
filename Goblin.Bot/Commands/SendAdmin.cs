@@ -17,10 +17,10 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
-        private readonly ApplicationDbContext _db;
+        private readonly BotDbContext _db;
         private readonly VkApi _api;
 
-        public SendAdmin(ApplicationDbContext db, VkApi api)
+        public SendAdmin(BotDbContext db, VkApi api)
         {
             _db = db;
             _api = api;

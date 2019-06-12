@@ -10,9 +10,9 @@ namespace Goblin.Bot.Notifications.MessageDeny
     public class MessageDenyNotificationHandler : INotificationHandler<MessageDenyNotification>
     {
         private readonly VkApi _api;
-        private readonly ApplicationDbContext _context;
+        private readonly BotDbContext _context;
 
-        public MessageDenyNotificationHandler(VkApi api, ApplicationDbContext context)
+        public MessageDenyNotificationHandler(VkApi api, BotDbContext context)
         {
             _api = api;
             _context = context;

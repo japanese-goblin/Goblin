@@ -19,7 +19,7 @@ namespace Goblin.Bot
 {
     public class Handler
     {
-        private readonly ApplicationDbContext _db;
+        private readonly BotDbContext _db;
         private readonly IConfiguration _config;
         private readonly CommandExecutor _executor;
         private readonly VkApi _api;
@@ -27,7 +27,7 @@ namespace Goblin.Bot
 
         private const string OkResponse = "ok";
 
-        public Handler(ApplicationDbContext db, IConfiguration config, CommandExecutor exec, VkApi api,
+        public Handler(BotDbContext db, IConfiguration config, CommandExecutor exec, VkApi api,
                        IMediator mediator)
         {
             _db = db;

@@ -9,9 +9,9 @@ namespace Goblin.Bot.Notifications.Confirmation
     public class ConfirmationNotificationHandler : INotificationHandler<ConfirmationNotification>
     {
         private readonly VkApi _api;
-        private readonly ApplicationDbContext _context;
+        private readonly BotDbContext _context;
 
-        public ConfirmationNotificationHandler(VkApi api, ApplicationDbContext context)
+        public ConfirmationNotificationHandler(VkApi api, BotDbContext context)
         {
             _api = api;
             _context = context;

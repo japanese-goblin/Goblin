@@ -9,9 +9,9 @@ namespace Goblin.Bot.Notifications.GroupJoin
     public class GroupJoinNotificationHandler : INotificationHandler<GroupJoinNotification>
     {
         private readonly VkApi _api;
-        private readonly ApplicationDbContext _context;
+        private readonly BotDbContext _context;
 
-        public GroupJoinNotificationHandler(VkApi api, ApplicationDbContext context)
+        public GroupJoinNotificationHandler(VkApi api, BotDbContext context)
         {
             _api = api;
             _context = context;

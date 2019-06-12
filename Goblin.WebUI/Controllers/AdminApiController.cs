@@ -10,10 +10,10 @@ namespace Goblin.WebUI.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminApiController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly BotDbContext _db;
         private readonly VkApi _api;
 
-        public AdminApiController(ApplicationDbContext db, VkApi api)
+        public AdminApiController(BotDbContext db, VkApi api)
         {
             _db = db;
             _api = api;

@@ -22,9 +22,7 @@ namespace Goblin.WebUI
 
         public Startup(IHostingEnvironment env)
         {
-            var culture = new CultureInfo("ru-RU");
-            CultureInfo.DefaultThreadCurrentCulture = culture;
-            CultureInfo.DefaultThreadCurrentUICulture = culture;
+            SetDefaultCulture();
 
             var builder = new ConfigurationBuilder()
                           .SetBasePath(env.ContentRootPath)
@@ -43,6 +41,7 @@ namespace Goblin.WebUI
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContext<BotDbContext>(options => options.UseNpgsql(connectionString));
 
             services.AddHangfire(config => { config.UseMemoryStorage(); });
 
@@ -89,6 +88,13 @@ namespace Goblin.WebUI
             BackgroundJob.Enqueue<ScheduledTasks>(x => x.Dummy()); //TODO:
             BackgroundJob.Enqueue<CreateRolesTask>(x => x.CreateRoles());
             ScheduledTasks.Init();
+        }
+
+        private void SetDefaultCulture()
+        {
+            var culture = new CultureInfo("ru-RU");
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
         }
     }
 }

@@ -19,9 +19,9 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = true;
 
-        private readonly ApplicationDbContext _db;
+        private readonly BotDbContext _db;
 
-        public Debug(ApplicationDbContext db)
+        public Debug(BotDbContext db)
         {
             _db = db;
         }
