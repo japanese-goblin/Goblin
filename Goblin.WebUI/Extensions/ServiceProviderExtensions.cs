@@ -48,7 +48,7 @@ namespace Goblin.WebUI.Extensions
         {
             services.AddSingleton(x => new NarfuService());
             services.AddSingleton(x => new VkApi(config["Config:Vk_Token"], loggerFactory.CreateLogger(typeof(VkApi)))); //TODO: 
-            services.AddSingleton(x => new WeatherService(config["Config:OWM_Token"]));
+            services.AddSingleton(x => new WeatherService(config["Config:OWM_Token"], loggerFactory.CreateLogger(typeof(WeatherService))));
         }
 
         public static void AddAuth(this IServiceCollection services, IConfiguration config)

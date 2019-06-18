@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
+using Microsoft.Extensions.Logging;
 using OpenWeatherMap.Models.Current;
 using OpenWeatherMap.Models.Daily;
 
@@ -16,8 +17,9 @@ namespace OpenWeatherMap
         private const string Language = "ru";
         private const string Units = "metric";
         private readonly string _token;
+        private readonly ILogger _logger;
 
-        public WeatherService(string token)
+        public WeatherService(string token, ILogger logger)
         {
             if(string.IsNullOrEmpty(token))
             {
@@ -25,24 +27,30 @@ namespace OpenWeatherMap
             }
 
             _token = token;
+            _logger = logger;
         }
 
         public async Task<CurrentWeather> GetCurrentWeather(string city)
         {
-            city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
-            CurrentWeather response;
-            try
+            using(_logger.BeginScope("Вызов метода {0}", nameof(GetCurrentWeather)))
             {
-                response = await BuildRequest().AppendPathSegment("weather")
+                city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
+                CurrentWeather response;
+                try
+                {
+                    response = await BuildRequest().AppendPathSegment("weather")
                                                    .SetQueryParam("q", city)
                                                    .GetJsonAsync<CurrentWeather>();
-            }
-            catch
-            {
-                return null;
-            }
+                    _logger.LogInformation("Успешно");
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogError(ex, "Ошибка");
+                    return null;
+                }
 
-            return response;
+                return response;
+            }
         }
 
         public async Task<string> GetCurrentWeatherString(string city)
@@ -50,7 +58,7 @@ namespace OpenWeatherMap
             var w = await GetCurrentWeather(city);
             if(w is null)
             {
-                return "Ошбика получения погоды. Попробуйте позже.";
+                return "Ошибка получения погоды. Попробуйте позже.";
             }
 
             // на {UnixToDateTime(w.UnixTime):dd.MM.yyyy HH:mm}
@@ -75,22 +83,28 @@ namespace OpenWeatherMap
         public async Task<DailyWeather> GetDailyWeather(string city, DateTime date)
         {
             const int count = 2;
-            city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
 
-            DailyWeather response;
-            try
+            using(_logger.BeginScope("Вызов метода {0}", nameof(GetDailyWeather)))
             {
-                response = await BuildRequest().AppendPathSegment("forecast/daily")
+                city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
+
+                DailyWeather response;
+                try
+                {
+                    response = await BuildRequest().AppendPathSegment("forecast/daily")
                                                    .SetQueryParam("q", city)
                                                    .SetQueryParam("cnt", count)
                                                    .GetJsonAsync<DailyWeather>();
-            }
-            catch
-            {
-                return null;
-            }
+                    _logger.LogInformation("Успешно");
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogError(ex, "Ошибка");
+                    return null;
+                }
 
-            return response;
+                return response;
+            }
         }
 
         public async Task<string> GetDailyWeatherString(string city, DateTime date)
