@@ -17,9 +17,9 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
-        private readonly ApplicationDbContext _db;
+        private readonly BotDbContext _db;
 
-        public MuteErrors(ApplicationDbContext db)
+        public MuteErrors(BotDbContext db)
         {
             _db = db;
         }
@@ -31,7 +31,7 @@ namespace Goblin.Bot.Commands
 
             return new CommandResponse
             {
-                Text = "Ошибочки " + (user.IsErrorsDisabled ? "выключены" : "включены")
+                Text = "Ошибки " + (user.IsErrorsDisabled ? "выключены" : "включены")
             };
         }
 

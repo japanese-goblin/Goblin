@@ -18,13 +18,11 @@ namespace Goblin.Bot.Commands
         public string[] Allias { get; } = { "погода" };
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
-
-        private readonly ApplicationDbContext _db;
+        
         private readonly WeatherService _weather;
 
-        public Weather(ApplicationDbContext db, WeatherService weather)
+        public Weather(WeatherService weather)
         {
-            _db = db;
             _weather = weather;
         }
 

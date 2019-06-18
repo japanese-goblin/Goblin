@@ -18,10 +18,10 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category => CommandCategory.Common;
         public bool IsAdmin => false;
 
-        private readonly ApplicationDbContext _db;
+        private readonly BotDbContext _db;
         private readonly WeatherService _weather;
 
-        public SetCity(ApplicationDbContext db, WeatherService weather)
+        public SetCity(BotDbContext db, WeatherService weather)
         {
             _db = db;
             _weather = weather;

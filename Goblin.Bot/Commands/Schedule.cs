@@ -23,13 +23,11 @@ namespace Goblin.Bot.Commands
         public string[] Allias { get; } = { "расписание" };
         public CommandCategory Category { get; } = CommandCategory.Safu;
         public bool IsAdmin { get; } = false;
-
-        private readonly ApplicationDbContext _db;
+        
         private readonly NarfuService _service;
 
-        public Schedule(ApplicationDbContext db, NarfuService service)
+        public Schedule(NarfuService service)
         {
-            _db = db;
             _service = service;
         }
 

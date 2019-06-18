@@ -19,12 +19,10 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category { get; } = CommandCategory.Safu;
         public bool IsAdmin { get; } = false;
 
-        private readonly ApplicationDbContext _db;
         private readonly NarfuService _service;
 
-        public Exams(ApplicationDbContext db, NarfuService service)
+        public Exams(NarfuService service)
         {
-            _db = db;
             _service = service;
         }
 

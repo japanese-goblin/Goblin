@@ -18,10 +18,10 @@ namespace Goblin.Bot.Commands
         public CommandCategory Category => CommandCategory.Safu;
         public bool IsAdmin => false;
 
-        private readonly ApplicationDbContext _db;
+        private readonly BotDbContext _db;
         private readonly NarfuService _service;
 
-        public SetGroup(ApplicationDbContext db, NarfuService service)
+        public SetGroup(BotDbContext db, NarfuService service)
         {
             _db = db;
             _service = service;
