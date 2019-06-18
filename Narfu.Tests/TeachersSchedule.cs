@@ -14,7 +14,7 @@ namespace Narfu.Tests
             {
                 httpTest.RespondWith(File.ReadAllText("sched/teachersSchedule.txt"));
 
-                var result = await new NarfuService().Teachers.GetSchedule(22585);
+                var result = await new NarfuService(null).Teachers.GetSchedule(22585);
 
                 httpTest.ShouldHaveCalled(Constants.EndPoint)
                         .WithVerb(HttpMethod.Get)
@@ -35,7 +35,7 @@ namespace Narfu.Tests
             {
                 httpTest.RespondWith(File.ReadAllText("sched/teachersSchedule.txt"));
 
-                var result = await new NarfuService().Teachers.GetScheduleAsString(id);
+                var result = await new NarfuService(null).Teachers.GetScheduleAsString(id);
                 Assert.NotEmpty(result);
                 Assert.Contains("Расписание пар у", result);
             }
@@ -50,7 +50,7 @@ namespace Narfu.Tests
             {
                 httpTest.RespondWith(File.ReadAllText("sched/teachersSchedule.txt"));
 
-                var result = await new NarfuService().Teachers.GetScheduleAsString(id);
+                var result = await new NarfuService(null).Teachers.GetScheduleAsString(id);
                 Assert.NotEmpty(result);
                 Assert.Contains("Ошибка", result);
             }
@@ -61,7 +61,7 @@ namespace Narfu.Tests
         [InlineData("Деменков")]
         public void FindByName_CorrectName_String(string name)
         {
-            var result = new NarfuService().Teachers.FindByName(name);
+            var result = new NarfuService(null).Teachers.FindByName(name);
 
             Assert.NotEmpty(result);
         }
@@ -71,7 +71,7 @@ namespace Narfu.Tests
         [InlineData("tyui")]
         public void FindByName_IncorrectName_String(string name)
         {
-            var result = new NarfuService().Teachers.FindByName(name);
+            var result = new NarfuService(null).Teachers.FindByName(name);
 
             Assert.Empty(result);
         }
@@ -81,7 +81,7 @@ namespace Narfu.Tests
         [InlineData(22586)]
         public void FindById_CorrectId_String(int id)
         {
-            var result = new NarfuService().Teachers.FindById(id);
+            var result = new NarfuService(null).Teachers.FindById(id);
 
             Assert.True(result);
         }
@@ -91,7 +91,7 @@ namespace Narfu.Tests
         [InlineData(1)]
         public void FindById_IncorrectId_String(int id)
         {
-            var result = new NarfuService().Teachers.FindById(id);
+            var result = new NarfuService(null).Teachers.FindById(id);
 
             Assert.False(result);
         }

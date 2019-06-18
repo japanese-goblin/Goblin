@@ -16,7 +16,7 @@ namespace Narfu.Tests
             {
                 httpTest.RespondWith(File.ReadAllText("sched/studentsSchedule.txt"));
 
-                var result = await new NarfuService().Students.GetSchedule(351617);
+                var result = await new NarfuService(null).Students.GetSchedule(351617);
 
                 httpTest.ShouldHaveCalled(Constants.EndPoint)
                         .WithVerb(HttpMethod.Get)
@@ -37,7 +37,7 @@ namespace Narfu.Tests
                 httpTest.RespondWith(File.ReadAllText("sched/studentsSchedule.txt"));
 
                 var result =
-                    await new NarfuService().Students.GetScheduleAsStringAtDate(new DateTime(2019, 6, 14), 351617);
+                    await new NarfuService(null).Students.GetScheduleAsStringAtDate(new DateTime(2019, 6, 14), 351617);
 
                 Assert.NotEmpty(result);
                 Assert.Contains("Предмет1", result);
@@ -52,7 +52,7 @@ namespace Narfu.Tests
                 httpTest.RespondWith(File.ReadAllText("sched/studentsSchedule.txt"));
 
                 var result =
-                    await new NarfuService().Students.GetScheduleAsStringAtDate(new DateTime(2019, 1, 1), 351617);
+                    await new NarfuService(null).Students.GetScheduleAsStringAtDate(new DateTime(2019, 1, 1), 351617);
 
                 Assert.NotEmpty(result);
                 Assert.Contains("отсутствует", result);
@@ -66,7 +66,7 @@ namespace Narfu.Tests
             {
                 httpTest.RespondWith(File.ReadAllText("sched/studentsSchedule.txt"));
 
-                var result = await new NarfuService().Students.GetExams(351617);
+                var result = await new NarfuService(null).Students.GetExams(351617);
 
                 Assert.False(result.Error);
                 Assert.Equal(HttpStatusCode.OK, result.Code);
@@ -81,7 +81,7 @@ namespace Narfu.Tests
             {
                 httpTest.RespondWith(File.ReadAllText("sched/studentsSchedule.txt"));
 
-                var result = await new NarfuService().Students.GetExamsAsString(351617);
+                var result = await new NarfuService(null).Students.GetExamsAsString(351617);
 
                 Assert.NotEmpty(result);
                 Assert.Contains("Предмет1", result);
@@ -93,7 +93,7 @@ namespace Narfu.Tests
         [InlineData(351618)]
         public void IsCorrectGroup_CorrectGroup_True(int id)
         {
-            var result = new NarfuService().Students.IsCorrectGroup(id);
+            var result = new NarfuService(null).Students.IsCorrectGroup(id);
             Assert.True(result);
         }
 
@@ -102,14 +102,14 @@ namespace Narfu.Tests
         [InlineData(654321)]
         public void IsCorrectGroup_IncorrectGroup_False(int id)
         {
-            var result = new NarfuService().Students.IsCorrectGroup(id);
+            var result = new NarfuService(null).Students.IsCorrectGroup(id);
             Assert.False(result);
         }
 
         [Fact]
         public void GetGroupByRealId_CorrectId_Group()
         {
-            var result = new NarfuService().Students.GetGroupByRealId(351617);
+            var result = new NarfuService(null).Students.GetGroupByRealId(351617);
 
             Assert.NotNull(result);
             Assert.Equal(9092, result.SiteId);
@@ -118,7 +118,7 @@ namespace Narfu.Tests
         [Fact]
         public void GetGroupBySiteId_CorrectId_Group()
         {
-            var result = new NarfuService().Students.GetGroupBySiteId(9092);
+            var result = new NarfuService(null).Students.GetGroupBySiteId(9092);
 
             Assert.NotNull(result);
             Assert.Equal(351617, result.RealId);

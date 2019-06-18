@@ -7,7 +7,7 @@
 
         public WeatherService GetService()
         {
-            return new WeatherService(Token);
+            return new WeatherService(Token, null);
         }
     }
 }

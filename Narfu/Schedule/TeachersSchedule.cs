@@ -29,7 +29,7 @@ namespace Narfu.Schedule
 
         public async Task<(bool IsError, Lesson[] Lessons)> GetSchedule(int id)
         {
-            using(_logger.BeginScope("Вызов метода {0} с ID {1}", nameof(GetSchedule), id))
+            using(_logger?.BeginScope("Вызов метода {0} с ID {1}", nameof(GetSchedule), id))
             {
                 HtmlDocument doc;
                 try
@@ -41,18 +41,18 @@ namespace Narfu.Schedule
                                                       .GetStreamAsync();
                     doc = new HtmlDocument();
                     doc.Load(response);
-                    _logger.LogInformation("Документ получен");
+                    _logger?.LogInformation("Документ получен");
                 }
                 catch(Exception ex)
                 {
-                    _logger.LogError(ex, "Ошибка получения расписанич");
+                    _logger?.LogError(ex, "Ошибка получения расписанич");
                     return (true, null);
                 }
 
                 var lessonItems = doc.DocumentNode.SelectNodes("//div[contains(@class, 'timetable_sheet')]");
                 if(lessonItems is null)
                 {
-                    _logger.LogWarning("timetable_sheet не найден");
+                    _logger?.LogWarning("timetable_sheet не найден");
                     return (true, null);
                 }
 

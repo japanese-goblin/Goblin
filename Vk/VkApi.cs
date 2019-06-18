@@ -36,9 +36,9 @@ namespace Vk
 
         internal async Task<T> CallApi<T>(string method, Dictionary<string, string> @params)
         {
-            using(_logger.BeginScope("Вызов метода {0}", method))
+            using(_logger?.BeginScope("Вызов метода {0}", method))
             {
-                _logger.LogInformation("С параметрами {0}", @params);
+                _logger?.LogInformation("С параметрами {0}", @params);
             }
             //TODO add sleep? (лимит для токена сообщества - 20 запросов в секунду)
             var response = await BuildRequest()

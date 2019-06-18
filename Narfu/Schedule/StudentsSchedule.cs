@@ -34,7 +34,7 @@ namespace Narfu.Schedule
         /// <returns>(Ошибка, Код ответа, Массив с парами)</returns>
         public async Task<(bool Error, HttpStatusCode Code, Lesson[] Lessons)> GetSchedule(int realGroupId)
         {
-            using(_logger.BeginScope("Вызов метода {0} для группы {1}", nameof(GetSchedule), realGroupId))
+            using(_logger?.BeginScope("Вызов метода {0} для группы {1}", nameof(GetSchedule), realGroupId))
             {
                 var siteGroup = GetGroupByRealId(realGroupId).SiteId;
 
@@ -47,17 +47,17 @@ namespace Narfu.Schedule
                                                   .SetQueryParam("cod", realGroupId)
                                                   .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
                                                   .GetAsync();
-                    _logger.LogInformation("Расписание получено");
+                    _logger?.LogInformation("Расписание получено");
                 }
                 catch(Exception ex) //TODO:
                 {
-                    _logger.LogWarning(ex, "Ошибка получения расписания (GatewayTimeout)");
+                    _logger?.LogWarning(ex, "Ошибка получения расписания (GatewayTimeout)");
                     return (true, HttpStatusCode.GatewayTimeout, null);
                 }
 
                 if(!response.IsSuccessStatusCode || response.Content is null)
                 {
-                    _logger.LogWarning("Сайт не вернул положительный кож");
+                    _logger?.LogWarning("Сайт не вернул положительный кож");
                     return (true, response.StatusCode, null);
                 }
 
@@ -65,11 +65,11 @@ namespace Narfu.Schedule
                 try
                 {
                     calendar = Calendar.Load(await response.Content.ReadAsStreamAsync());
-                    _logger.LogInformation("Календарь получен");
+                    _logger?.LogInformation("Календарь получен");
                 }
                 catch(Exception ex)
                 {
-                    _logger.LogWarning(ex, "Ошибка при получении календаря");
+                    _logger?.LogWarning(ex, "Ошибка при получении календаря");
                     return (true, response.StatusCode, null);
                 }
 

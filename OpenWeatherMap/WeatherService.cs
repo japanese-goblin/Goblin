@@ -32,7 +32,7 @@ namespace OpenWeatherMap
 
         public async Task<CurrentWeather> GetCurrentWeather(string city)
         {
-            using(_logger.BeginScope("Вызов метода {0}", nameof(GetCurrentWeather)))
+            using(_logger?.BeginScope("Вызов метода {0}", nameof(GetCurrentWeather)))
             {
                 city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
                 CurrentWeather response;
@@ -41,11 +41,11 @@ namespace OpenWeatherMap
                     response = await BuildRequest().AppendPathSegment("weather")
                                                    .SetQueryParam("q", city)
                                                    .GetJsonAsync<CurrentWeather>();
-                    _logger.LogInformation("Успешно");
+                    _logger?.LogInformation("Успешно");
                 }
                 catch(Exception ex)
                 {
-                    _logger.LogError(ex, "Ошибка");
+                    _logger?.LogError(ex, "Ошибка");
                     return null;
                 }
 
@@ -84,7 +84,7 @@ namespace OpenWeatherMap
         {
             const int count = 2;
 
-            using(_logger.BeginScope("Вызов метода {0}", nameof(GetDailyWeather)))
+            using(_logger?.BeginScope("Вызов метода {0}", nameof(GetDailyWeather)))
             {
                 city = char.ToUpper(city[0]) + city.Substring(1); //TODO ?
 
@@ -95,11 +95,11 @@ namespace OpenWeatherMap
                                                    .SetQueryParam("q", city)
                                                    .SetQueryParam("cnt", count)
                                                    .GetJsonAsync<DailyWeather>();
-                    _logger.LogInformation("Успешно");
+                    _logger?.LogInformation("Успешно");
                 }
                 catch(Exception ex)
                 {
-                    _logger.LogError(ex, "Ошибка");
+                    _logger?.LogError(ex, "Ошибка");
                     return null;
                 }
 

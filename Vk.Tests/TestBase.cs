@@ -6,7 +6,7 @@ namespace Vk.Tests
 
         public VkApi GetApi()
         {
-            return new VkApi(Token);
+            return new VkApi(Token, null);
         }
     }
 }
