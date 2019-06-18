@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Narfu;
 using OpenWeatherMap;
 using Vk;
@@ -43,10 +44,10 @@ namespace Goblin.WebUI.Extensions
             services.AddScoped<IInfoCommand, Help>();
         }
 
-        public static void AddAdditions(this IServiceCollection services, IConfiguration config)
+        public static void AddAdditions(this IServiceCollection services, IConfiguration config, ILoggerFactory loggerFactory)
         {
             services.AddSingleton(x => new NarfuService());
-            services.AddSingleton(x => new VkApi(config["Config:Vk_Token"]));
+            services.AddSingleton(x => new VkApi(config["Config:Vk_Token"], loggerFactory.CreateLogger(typeof(VkApi)))); //TODO: 
             services.AddSingleton(x => new WeatherService(config["Config:OWM_Token"]));
         }
 

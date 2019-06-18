@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Flurl;
 using Flurl.Http;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Vk.Category;
 using Vk.Models;
@@ -14,9 +15,11 @@ namespace Vk
         public const string EndPoint = "https://api.vk.com/method/";
         private const string Version = "5.92";
         private const string Language = "ru";
-        private readonly string _token;
 
-        public VkApi(string token)
+        private readonly string _token;
+        private readonly ILogger _logger;
+
+        public VkApi(string token, ILogger logger)
         {
             if(string.IsNullOrEmpty(token))
             {
@@ -24,6 +27,7 @@ namespace Vk
             }
 
             _token = token;
+            _logger = logger;
 
             Messages = new Messages(this); //TODO: нормальный DI
             Users = new Users(this);
@@ -32,6 +36,10 @@ namespace Vk
 
         internal async Task<T> CallApi<T>(string method, Dictionary<string, string> @params)
         {
+            using(_logger.BeginScope("Вызов метода {0}", method))
+            {
+                _logger.LogInformation("С параметрами {0}", @params);
+            }
             //TODO add sleep? (лимит для токена сообщества - 20 запросов в секунду)
             var response = await BuildRequest()
                                  .AppendPathSegment(method)
@@ -44,9 +52,9 @@ namespace Vk
             //    throw new Exception($"[{method}]: error");
             //}
 
-            var x = JsonConvert.DeserializeObject<ApiResponse<T>>(await response.Content.ReadAsStringAsync());
+            var result = JsonConvert.DeserializeObject<ApiResponse<T>>(await response.Content.ReadAsStringAsync());
 
-            return x.Response;
+            return result.Response;
         }
 
         internal IFlurlRequest BuildRequest()

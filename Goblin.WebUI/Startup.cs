@@ -13,15 +13,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Goblin.WebUI
 {
     public class Startup
     {
+        private readonly ILoggerFactory _loggerFactory;
         private IConfiguration Configuration { get; }
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            _loggerFactory = loggerFactory;
             SetDefaultCulture();
 
             var builder = new ConfigurationBuilder()
@@ -47,7 +50,7 @@ namespace Goblin.WebUI
 
             services.AddBotFeatures();
 
-            services.AddAdditions(Configuration);
+            services.AddAdditions(Configuration, _loggerFactory);
 
             services.AddAuth(Configuration);
 
