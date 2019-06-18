@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Goblin.WebUI.Extensions
 {
@@ -17,11 +19,18 @@ namespace Goblin.WebUI.Extensions
             using(var serviceScope = host.Services.CreateScope())
             {
                 var provider = serviceScope.ServiceProvider;
-                var context = provider.GetRequiredService<T>();
+                var logger = provider.GetService<ILogger>();
+                try
+                {
+                    var context = provider.GetRequiredService<T>();
 
-                context.Database.Migrate();
-
-                //TODO: logger
+                    context.Database.Migrate();
+                }
+                catch(Exception ex)
+                {
+                    logger?.LogError(ex, "Database migrate error");
+                    throw;
+                }
             }
 
             return host;
