@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Flurl.Http;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 using Narfu.Extensions;
 using Narfu.Models;
 using Newtonsoft.Json;
@@ -16,73 +17,81 @@ namespace Narfu.Schedule
 {
     public class TeachersSchedule
     {
+        private readonly ILogger _logger;
         public readonly Teacher[] Teachers;
 
-        public TeachersSchedule()
+        public TeachersSchedule(ILogger logger)
         {
+            _logger = logger;
             var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(TeachersSchedule)).Location); //TODO:
             Teachers = JsonConvert.DeserializeObject<Teacher[]>(File.ReadAllText($"{path}/Data/Teachers.json"));
         }
 
         public async Task<(bool IsError, Lesson[] Lessons)> GetSchedule(int id)
         {
-            HtmlDocument doc;
-            try
+            using(_logger.BeginScope("Вызов метода {0} с ID {1}", nameof(GetSchedule), id))
             {
-                //из-за gateway timeout
-                var response = await RequestHelper.BuildRequest()
-                                                  .SetQueryParam("timetable")
-                                                  .SetQueryParam("lecturer", id)
-                                                  .GetStreamAsync();
-                doc = new HtmlDocument();
-                doc.Load(response);
-            }
-            catch
-            {
-                return (true, null);
-            }
-
-            var lessonItems = doc.DocumentNode.SelectNodes("//div[contains(@class, 'timetable_sheet')]");
-            if(lessonItems is null)
-            {
-                return (true, null);
-            }
-
-            var lessons = new List<Lesson>();
-            foreach(var lessonNode in lessonItems.Where(x => x.ChildNodes.Count > 3))
-            {
-                var date = lessonNode.ParentNode.SelectSingleNode(".//div[contains(@class,'dayofweek')]")
-                                     .GetNormalizedInnerText()
-                                     .Split(',', 2)[1]
-                                     .Trim();
-
-                var adr = lessonNode.SelectSingleNode(".//span[contains(@class,'auditorium')]")
-                                    .GetNormalizedInnerText()
-                                    .Split(',', 2)
-                                    .Select(x => x.Trim())
-                                    .ToArray();
-                    
-                var time = lessonNode.SelectSingleNode(".//span[contains(@class,'time_para')]")
-                                     .GetNormalizedInnerText()
-                                     .Split('–', 2);
-
-                lessons.Add(new Lesson
+                HtmlDocument doc;
+                try
                 {
-                    Address = adr[1],
-                    Auditory = adr[0],
-                    Number = byte.Parse(lessonNode.SelectSingleNode(".//span[contains(@class,'num_para')]") 
-                                                  .GetNormalizedInnerText()),
-                    Groups = lessonNode.SelectSingleNode(".//span[contains(@class,'group')]").GetNormalizedInnerText(), 
-                    Name = lessonNode.SelectSingleNode(".//span[contains(@class,'discipline')]").GetNormalizedInnerText(), 
-                    Type = lessonNode.SelectSingleNode(".//span[contains(@class,'kindOfWork')]").GetNormalizedInnerText(), 
-                    Teacher = "",
-                    StartTime = DateTime.ParseExact($"{date} {time[0]}", "dd.MM.yyyy HH:mm", null, DateTimeStyles.None),
-                    EndTime = DateTime.ParseExact($"{date} {time[1]}", "dd.MM.yyyy HH:mm", null, DateTimeStyles.None),
-                    StartEndTime = lessonNode.SelectSingleNode(".//span[contains(@class,'time_para')]").GetNormalizedInnerText() 
-                });
-            }
+                    //из-за gateway timeout
+                    var response = await RequestHelper.BuildRequest()
+                                                      .SetQueryParam("timetable")
+                                                      .SetQueryParam("lecturer", id)
+                                                      .GetStreamAsync();
+                    doc = new HtmlDocument();
+                    doc.Load(response);
+                    _logger.LogInformation("Документ получен");
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogError(ex, "Ошибка получения расписанич");
+                    return (true, null);
+                }
 
-            return (false, lessons.Distinct().ToArray());
+                var lessonItems = doc.DocumentNode.SelectNodes("//div[contains(@class, 'timetable_sheet')]");
+                if(lessonItems is null)
+                {
+                    _logger.LogWarning("timetable_sheet не найден");
+                    return (true, null);
+                }
+
+                var lessons = new List<Lesson>();
+                foreach(var lessonNode in lessonItems.Where(x => x.ChildNodes.Count > 3))
+                {
+                    var date = lessonNode.ParentNode.SelectSingleNode(".//div[contains(@class,'dayofweek')]")
+                                         .GetNormalizedInnerText()
+                                         .Split(',', 2)[1]
+                                         .Trim();
+
+                    var adr = lessonNode.SelectSingleNode(".//span[contains(@class,'auditorium')]")
+                                        .GetNormalizedInnerText()
+                                        .Split(',', 2)
+                                        .Select(x => x.Trim())
+                                        .ToArray();
+
+                    var time = lessonNode.SelectSingleNode(".//span[contains(@class,'time_para')]")
+                                         .GetNormalizedInnerText()
+                                         .Split('–', 2);
+
+                    lessons.Add(new Lesson
+                    {
+                        Address = adr[1],
+                        Auditory = adr[0],
+                        Number = byte.Parse(lessonNode.SelectSingleNode(".//span[contains(@class,'num_para')]")
+                                                      .GetNormalizedInnerText()),
+                        Groups = lessonNode.SelectSingleNode(".//span[contains(@class,'group')]").GetNormalizedInnerText(),
+                        Name = lessonNode.SelectSingleNode(".//span[contains(@class,'discipline')]").GetNormalizedInnerText(),
+                        Type = lessonNode.SelectSingleNode(".//span[contains(@class,'kindOfWork')]").GetNormalizedInnerText(),
+                        Teacher = "",
+                        StartTime = DateTime.ParseExact($"{date} {time[0]}", "dd.MM.yyyy HH:mm", null, DateTimeStyles.None),
+                        EndTime = DateTime.ParseExact($"{date} {time[1]}", "dd.MM.yyyy HH:mm", null, DateTimeStyles.None),
+                        StartEndTime = lessonNode.SelectSingleNode(".//span[contains(@class,'time_para')]").GetNormalizedInnerText()
+                    });
+                }
+
+                return (false, lessons.Distinct().ToArray());
+            }
         }
 
         public async Task<string> GetScheduleAsString(int id)

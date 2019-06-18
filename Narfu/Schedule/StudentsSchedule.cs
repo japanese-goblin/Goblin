@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Flurl.Http;
+using Microsoft.Extensions.Logging;
 using Narfu.Models;
 using Newtonsoft.Json;
 using Calendar = Ical.Net.Calendar;
@@ -16,10 +17,12 @@ namespace Narfu.Schedule
 {
     public class StudentsSchedule
     {
+        private readonly ILogger _logger;
         public readonly Group[] Groups;
 
-        public StudentsSchedule()
+        public StudentsSchedule(ILogger logger)
         {
+            _logger = logger;
             var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(StudentsSchedule)).Location); //TODO:
             Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText($"{path}/Data/Groups.json"));
         }
@@ -31,58 +34,75 @@ namespace Narfu.Schedule
         /// <returns>(Ошибка, Код ответа, Массив с парами)</returns>
         public async Task<(bool Error, HttpStatusCode Code, Lesson[] Lessons)> GetSchedule(int realGroupId)
         {
-            var siteGroup = GetGroupByRealId(realGroupId).SiteId;
+            using(_logger.BeginScope("Вызов метода {0} для группы {1}", nameof(GetSchedule), realGroupId))
+            {
+                var siteGroup = GetGroupByRealId(realGroupId).SiteId;
 
-            HttpResponseMessage response;
-            try
-            {
-                response = await RequestHelper.BuildRequest()
-                                              .SetQueryParam("icalendar")
-                                              .SetQueryParam("oid", siteGroup)
-                                              .SetQueryParam("cod", realGroupId)
-                                              .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
-                                              .GetAsync();
-            }
-            catch //TODO:
-            {
-                return (true, HttpStatusCode.GatewayTimeout, null);
-            }
-
-            if(!response.IsSuccessStatusCode || response.Content is null)
-            {
-                return (true, response.StatusCode, null);
-            }
-
-            var calendar = Calendar.Load(await response.Content.ReadAsStreamAsync());
-            var events = calendar.Events
-                                 .Distinct()
-                                 .OrderBy(x => x.DtStart.Value)
-                                 .ToArray();
-            if(!events.Any())
-            {
-                return (false, response.StatusCode, new Lesson[] { });
-            }
-
-            var lessons = events.Select(ev =>
-            {
-                var description = ev.Description.Split('\n');
-                var address = ev.Location.Split('/');
-                return new Lesson
+                HttpResponseMessage response;
+                try
                 {
-                    Address = address[0],
-                    Auditory = address[1],
-                    Number = (byte)description[0].ElementAt(0),
-                    Groups = description[1].Substring(3),
-                    Name = description[2],
-                    Type = description[3],
-                    Teacher = description[4],
-                    StartTime = ev.DtStart.AsSystemLocal,
-                    EndTime = ev.DtEnd.AsSystemLocal,
-                    StartEndTime = description[0].Replace(")", "").Replace("(", "").Replace("п", ")")
-                };
-            }).ToArray();
+                    response = await RequestHelper.BuildRequest()
+                                                  .SetQueryParam("icalendar")
+                                                  .SetQueryParam("oid", siteGroup)
+                                                  .SetQueryParam("cod", realGroupId)
+                                                  .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
+                                                  .GetAsync();
+                    _logger.LogInformation("Расписание получено");
+                }
+                catch(Exception ex) //TODO:
+                {
+                    _logger.LogWarning(ex, "Ошибка получения расписания (GatewayTimeout)");
+                    return (true, HttpStatusCode.GatewayTimeout, null);
+                }
 
-            return (false, response.StatusCode, lessons);
+                if(!response.IsSuccessStatusCode || response.Content is null)
+                {
+                    _logger.LogWarning("Сайт не вернул положительный кож");
+                    return (true, response.StatusCode, null);
+                }
+
+                Calendar calendar;
+                try
+                {
+                    calendar = Calendar.Load(await response.Content.ReadAsStreamAsync());
+                    _logger.LogInformation("Календарь получен");
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogWarning(ex, "Ошибка при получении календаря");
+                    return (true, response.StatusCode, null);
+                }
+
+                var events = calendar.Events
+                                     .Distinct()
+                                     .OrderBy(x => x.DtStart.Value)
+                                     .ToArray();
+                if(!events.Any())
+                {
+                    return (false, response.StatusCode, new Lesson[] { });
+                }
+
+                var lessons = events.Select(ev =>
+                {
+                    var description = ev.Description.Split('\n');
+                    var address = ev.Location.Split('/');
+                    return new Lesson
+                    {
+                        Address = address[0],
+                        Auditory = address[1],
+                        Number = (byte)description[0].ElementAt(0),
+                        Groups = description[1].Substring(3),
+                        Name = description[2],
+                        Type = description[3],
+                        Teacher = description[4],
+                        StartTime = ev.DtStart.AsSystemLocal,
+                        EndTime = ev.DtEnd.AsSystemLocal,
+                        StartEndTime = description[0].Replace(")", "").Replace("(", "").Replace("п", ")")
+                    };
+                }).ToArray();
+
+                return (false, response.StatusCode, lessons);
+            }
         }
 
         /// <summary>
