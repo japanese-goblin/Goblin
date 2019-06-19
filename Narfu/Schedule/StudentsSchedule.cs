@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -8,10 +7,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Flurl.Http;
+using Ical.Net;
 using Microsoft.Extensions.Logging;
 using Narfu.Models;
 using Newtonsoft.Json;
-using Calendar = Ical.Net.Calendar;
 
 namespace Narfu.Schedule
 {

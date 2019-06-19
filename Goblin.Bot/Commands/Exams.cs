@@ -1,10 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
 using Goblin.Domain.Entities;
-using Goblin.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Narfu;
 using Vk.Models.Messages;
 

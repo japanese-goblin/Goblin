@@ -3,7 +3,6 @@ using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
 using Goblin.Domain.Entities;
 using Goblin.Persistence;
-using Microsoft.EntityFrameworkCore;
 using OpenWeatherMap;
 using Vk.Models.Messages;
 
@@ -42,7 +41,8 @@ namespace Goblin.Bot.Commands
             var text = "";
             if(await _weather.CheckCity(param))
             {
-                user.City = char.ToUpper(param[0]) + param.Substring(1).ToLower(); //чтобы первая буква была с боьшой буквы (потом для группировки пригодится)
+                user.City = char.ToUpper(param[0]) +
+                            param.Substring(1).ToLower(); //чтобы первая буква была с боьшой буквы (потом для группировки пригодится)
                 await _db.SaveChangesAsync();
                 text = $"Город успешно установлен на {user.City}";
             }

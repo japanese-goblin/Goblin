@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Goblin.Domain.Entities;
+﻿using Goblin.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

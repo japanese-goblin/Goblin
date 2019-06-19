@@ -3,7 +3,6 @@ using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
 using Goblin.Domain.Entities;
 using Goblin.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot.Commands

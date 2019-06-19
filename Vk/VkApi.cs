@@ -40,6 +40,7 @@ namespace Vk
             {
                 _logger?.LogInformation("С параметрами {0}", @params);
             }
+
             //TODO add sleep? (лимит для токена сообщества - 20 запросов в секунду)
             var response = await BuildRequest()
                                  .AppendPathSegment(method)

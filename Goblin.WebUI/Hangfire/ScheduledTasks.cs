@@ -36,7 +36,8 @@ namespace Goblin.WebUI.Hangfire
             var reminds =
                 _db.Reminds
                    .ToArray()
-                   .Where(x => x.Date.ToString("dd.MM.yyyy HH:mm") == DateTime.Now.ToString("dd.MM.yyyy HH:mm")); //TODO: что-то сделать с датой
+                   .Where(x => x.Date.ToString("dd.MM.yyyy HH:mm") ==
+                               DateTime.Now.ToString("dd.MM.yyyy HH:mm")); //TODO: что-то сделать с датой
 
             if(!reminds.Any())
             {
@@ -55,7 +56,7 @@ namespace Goblin.WebUI.Hangfire
         public void SendDailyStuff()
         {
             var weatherJob = BackgroundJob.Enqueue(() => SendWeather());
-            if (DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
+            if(DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
             {
                 BackgroundJob.ContinueWith(weatherJob, () => SendSchedule());
             }
@@ -72,7 +73,7 @@ namespace Goblin.WebUI.Hangfire
                     var schedule = await _service.Students.GetScheduleAsStringAtDate(DateTime.Today, group.Key);
                     await _api.Messages.Send(ids, schedule);
                     await Task.Delay((1000 / VkApiLimit) + ExtraDelay);
-                }   
+                }
             }
         }
 
@@ -86,7 +87,7 @@ namespace Goblin.WebUI.Hangfire
                     var ids = chunk.Select(x => x.Vk);
                     var weather = await _weather.GetDailyWeatherString(group.Key, DateTime.Today);
                     await _api.Messages.Send(ids, weather);
-                    await Task.Delay((1000 / VkApiLimit) + ExtraDelay); 
+                    await Task.Delay((1000 / VkApiLimit) + ExtraDelay);
                 }
             }
         }
@@ -120,10 +121,10 @@ namespace Goblin.WebUI.Hangfire
             foreach(var job in _db.Jobs)
             {
                 RecurringJob.AddOrUpdate<ScheduledTasks>(
-                    $"DAILY__{job.JobName}",
-                    x => x.SendToConv(job.Conversation, job.NarfuGroup, job.WeatherCity),
-                    $"{job.Minutes} {job.Hours} * * 1-6", TimeZoneInfo.Local
-                );
+                                                         $"DAILY__{job.JobName}",
+                                                         x => x.SendToConv(job.Conversation, job.NarfuGroup, job.WeatherCity),
+                                                         $"{job.Minutes} {job.Hours} * * 1-6", TimeZoneInfo.Local
+                                                        );
             }
         }
 

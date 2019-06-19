@@ -50,6 +50,7 @@ namespace Goblin.Bot
                 ["confirmation"] = Confirmation,
                 ["message_new"] = MessageNew,
                 ["message_deny"] = MessageDeny,
+
                 //["message_reply"] = MessageReply,
                 ["group_join"] = GroupJoin,
                 ["group_leave"] = GroupLeave

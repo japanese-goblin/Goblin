@@ -3,7 +3,6 @@ using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
 using Goblin.Domain.Entities;
 using Goblin.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Narfu;
 using Vk.Models.Messages;
 
@@ -40,7 +39,7 @@ namespace Goblin.Bot.Commands
 
             var group = int.Parse(msg.GetParams());
             var gr = _service.Students.GetGroupByRealId(group);
-            
+
             user.Group = group;
             await _db.SaveChangesAsync();
 

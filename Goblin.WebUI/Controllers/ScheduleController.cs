@@ -45,7 +45,7 @@ namespace Goblin.WebUI.Controllers
 
             ViewBag.HtmlTitle = $"{group.RealId} - {group.Name}";
             var result = lessons.GroupBy(x => x.StartTime.GetWeekNumber())
-                                .ToDictionary(x =>$"{x.First().StartTime:dd.MM.yyyy} - {x.Last().StartTime:dd.MM.yyyy}",
+                                .ToDictionary(x => $"{x.First().StartTime:dd.MM.yyyy} - {x.Last().StartTime:dd.MM.yyyy}",
                                               x => x.ToArray()); // TODO: fix key
             return View(result);
         }

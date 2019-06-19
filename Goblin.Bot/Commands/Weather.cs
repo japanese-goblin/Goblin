@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
 using Goblin.Domain.Entities;
-using Goblin.Persistence;
 using OpenWeatherMap;
 using Vk.Models.Messages;
 
@@ -18,7 +16,7 @@ namespace Goblin.Bot.Commands
         public string[] Allias { get; } = { "погода" };
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
-        
+
         private readonly WeatherService _weather;
 
         public Weather(WeatherService weather)

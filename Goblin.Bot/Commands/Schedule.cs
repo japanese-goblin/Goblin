@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using Goblin.Bot.Enums;
 using Goblin.Bot.Models;
 using Goblin.Domain.Entities;
-using Goblin.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Narfu;
 using Vk.Models.Messages;
 
@@ -23,7 +21,7 @@ namespace Goblin.Bot.Commands
         public string[] Allias { get; } = { "расписание" };
         public CommandCategory Category { get; } = CommandCategory.Safu;
         public bool IsAdmin { get; } = false;
-        
+
         private readonly NarfuService _service;
 
         public Schedule(NarfuService service)
