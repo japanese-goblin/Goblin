@@ -57,7 +57,7 @@ namespace Narfu.Schedule
 
                 if(!response.IsSuccessStatusCode || response.Content is null)
                 {
-                    _logger?.LogWarning("Сайт не вернул положительный кож");
+                    _logger?.LogWarning("Сайт не вернул положительный код");
                     return (true, response.StatusCode, null);
                 }
 
