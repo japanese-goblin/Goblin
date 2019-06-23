@@ -10,9 +10,9 @@ namespace Goblin.Bot.Commands
     public class SetMailing : ICommand
     {
         public string Name { get; } = "Подписка *расписание ИЛИ погода*";
-        public string Decription { get; } = "Подписка на рассылку расписания или погоды";
+        public string Description { get; } = "Подписка на рассылку расписания или погоды";
         public string Usage { get; } = "Подписка расписание";
-        public string[] Allias { get; } = { "подписка" };
+        public string[] Aliases { get; } = { "подписка" };
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 

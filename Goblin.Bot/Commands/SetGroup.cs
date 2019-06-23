@@ -11,9 +11,9 @@ namespace Goblin.Bot.Commands
     public class SetGroup : ICommand
     {
         public string Name => "Устгр *номер группы*";
-        public string Decription => "Установить группу для получения расписания";
+        public string Description => "Установить группу для получения расписания";
         public string Usage => "Устгр 351617";
-        public string[] Allias { get; } = { "устгр" };
+        public string[] Aliases { get; } = { "устгр" };
         public CommandCategory Category => CommandCategory.Safu;
         public bool IsAdmin => false;
 

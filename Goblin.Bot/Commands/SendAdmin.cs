@@ -11,9 +11,9 @@ namespace Goblin.Bot.Commands
     public class SendAdmin : ICommand
     {
         public string Name { get; } = "Админ *сообщение*";
-        public string Decription { get; } = "Отправляет сообщение администраторам.";
+        public string Description { get; } = "Отправляет сообщение администраторам.";
         public string Usage { get; } = "Админ хелп";
-        public string[] Allias { get; } = { "админ", "адм" };
+        public string[] Aliases { get; } = { "админ", "адм" };
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 

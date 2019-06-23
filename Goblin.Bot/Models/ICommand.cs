@@ -8,9 +8,9 @@ namespace Goblin.Bot.Models
     public interface ICommand
     {
         string Name { get; }
-        string Decription { get; }
+        string Description { get; }
         string Usage { get; }
-        string[] Allias { get; }
+        string[] Aliases { get; }
         CommandCategory Category { get; }
         bool IsAdmin { get; }
 

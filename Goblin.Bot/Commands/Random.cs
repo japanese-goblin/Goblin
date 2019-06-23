@@ -10,9 +10,9 @@ namespace Goblin.Bot.Commands
     public class Random : ICommand
     {
         public string Name { get; } = "Рандом *smth*, *smth*, *smth*....";
-        public string Decription { get; } = "Выбирает один из нескольких вариантов.";
+        public string Description { get; } = "Выбирает один из нескольких вариантов.";
         public string Usage { get; } = "Рандом 1, 2, 3,4 или 5";
-        public string[] Allias { get; } = { "рандом" };
+        public string[] Aliases { get; } = { "рандом" };
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 

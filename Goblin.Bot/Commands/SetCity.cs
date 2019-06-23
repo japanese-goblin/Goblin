@@ -11,9 +11,9 @@ namespace Goblin.Bot.Commands
     public class SetCity : ICommand
     {
         public string Name => "Город *название города*";
-        public string Decription => "Установка города для получения рассылки погоды";
+        public string Description => "Установка города для получения рассылки погоды";
         public string Usage => "Город Москва";
-        public string[] Allias { get; } = { "город" };
+        public string[] Aliases { get; } = { "город" };
         public CommandCategory Category => CommandCategory.Common;
         public bool IsAdmin => false;
 

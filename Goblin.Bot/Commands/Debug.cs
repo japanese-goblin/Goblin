@@ -13,9 +13,9 @@ namespace Goblin.Bot.Commands
     public class Debug : ICommand
     {
         public string Name { get; } = "Debug";
-        public string Decription { get; } = "Инфа для дебага";
+        public string Description { get; } = "Инфа для дебага";
         public string Usage { get; } = "инфа";
-        public string[] Allias { get; } = { "дебаг", "инфа", "debug", "дебуг" };
+        public string[] Aliases { get; } = { "дебаг", "инфа", "debug", "дебуг" };
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = true;
 

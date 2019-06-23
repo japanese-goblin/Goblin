@@ -9,9 +9,9 @@
 //    public class Flip : ICommand
 //    {
 //        public string Name { get; } = "Монета";
-//        public string Decription { get; } = "Подбрасывает монету и выдаёт орёл/решка";
+//        public string Description { get; } = "Подбрасывает монету и выдаёт орёл/решка";
 //        public string Usage { get; } = "Монета";
-//        public string[] Allias { get; } = { "монета" };
+//        public string[] Aliases { get; } = { "монета" };
 //        public CommandCategory Category { get; } = CommandCategory.Common;
 //        public bool IsAdmin { get; } = false;
 
