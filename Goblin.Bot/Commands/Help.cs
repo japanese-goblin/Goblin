@@ -11,13 +11,14 @@ namespace Goblin.Bot.Commands
 {
     public class Help : IInfoCommand
     {
-        private readonly IEnumerable<ICommand> _commands;
         public string Name { get; } = "Команды";
         public string Description { get; } = "Описание команд";
         public string Usage { get; } = "Команды";
         public string[] Aliases { get; } = { "help", "команды", "помощь", "помоги", "хелп" };
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
+
+        private readonly IEnumerable<ICommand> _commands;
 
         public Help(IEnumerable<ICommand> commands)
         {

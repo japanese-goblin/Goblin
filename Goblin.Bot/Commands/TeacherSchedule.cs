@@ -12,7 +12,7 @@ namespace Goblin.Bot.Commands
         public string Name { get; } = "Препод *номер*";
 
         public string Description { get; } =
-            "Поиск препода по его номеру ИЛИ получение расписания препода";
+            "Поиск препода по его номеру";
 
         public string Usage { get; } = "Препод 22331";
         public string[] Aliases { get; } = { "препод" };

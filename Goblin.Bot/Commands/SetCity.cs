@@ -10,12 +10,12 @@ namespace Goblin.Bot.Commands
 {
     public class SetCity : ICommand
     {
-        public string Name => "Город *название города*";
-        public string Description => "Установка города для получения рассылки погоды";
-        public string Usage => "Город Москва";
+        public string Name { get; } = "Город *название города*";
+        public string Description { get; } = "Установка города для получения рассылки погоды";
+        public string Usage { get; } = "Город Москва";
         public string[] Aliases { get; } = { "город" };
-        public CommandCategory Category => CommandCategory.Common;
-        public bool IsAdmin => false;
+        public CommandCategory Category { get; } = CommandCategory.Common;
+        public bool IsAdmin { get; } = false;
 
         private readonly BotDbContext _db;
         private readonly WeatherService _weather;
