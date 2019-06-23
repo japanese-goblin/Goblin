@@ -58,7 +58,7 @@ namespace Goblin.WebUI.Hangfire
             var weatherJob = BackgroundJob.Enqueue(() => SendWeather());
             if(DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
             {
-                BackgroundJob.ContinueWith(weatherJob, () => SendSchedule());
+                BackgroundJob.ContinueJobWith(weatherJob, () => SendSchedule());
             }
         }
 
