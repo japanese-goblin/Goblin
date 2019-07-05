@@ -71,6 +71,11 @@ namespace Goblin.WebUI.Hangfire
                 {
                     var ids = chunk.Select(x => x.Vk);
                     var schedule = await _service.Students.GetScheduleAsStringAtDate(DateTime.Today, group.Key);
+                    if(schedule.Contains("NotFound"))
+                    {
+                        continue;
+                    }
+
                     await _api.Messages.Send(ids, schedule);
                     await Task.Delay((1000 / VkApiLimit) + ExtraDelay);
                 }
