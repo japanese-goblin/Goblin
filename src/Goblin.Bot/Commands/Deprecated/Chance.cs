@@ -9,9 +9,9 @@
 //    public class Chance : ICommand
 //    {
 //        public string Name { get; } = "Вероятность *событие*";
-//        public string Decription { get; } = "Возвращает случайную вероятность события";
+//        public string Description { get; } = "Возвращает случайную вероятность события";
 //        public string Usage { get; } = "Вероятность сегодня будет дождь";
-//        public string[] Allias { get; } = { "вероятность" };
+//        public string[] Aliases { get; } = { "вероятность" };
 //        public CommandCategory Category { get; } = CommandCategory.Common;
 //        public bool IsAdmin { get; } = false;
 

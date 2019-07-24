@@ -10,9 +10,9 @@ namespace Goblin.Bot.Commands
     public class Exams : ICommand
     {
         public string Name { get; } = "Экзамены";
-        public string Decription { get; } = "Возвращает список экзаменов/зачетов/интернет-экзаменов";
+        public string Description { get; } = "Возвращает список экзаменов/зачетов/интернет-экзаменов";
         public string Usage { get; } = "Экзамены";
-        public string[] Allias { get; } = { "экзамены" };
+        public string[] Aliases { get; } = { "экзамены" };
         public CommandCategory Category { get; } = CommandCategory.Safu;
         public bool IsAdmin { get; } = false;
 

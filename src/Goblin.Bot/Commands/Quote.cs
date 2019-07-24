@@ -12,9 +12,9 @@ namespace Goblin.Bot.Commands
     public class Quote : ICommand
     {
         public string Name { get; } = "Цитата";
-        public string Decription { get; } = "Создает картинку из пересланного сообщения";
+        public string Description { get; } = "Создает картинку из пересланного сообщения";
         public string Usage { get; } = "Цитата";
-        public string[] Allias { get; } = { "цитата" };
+        public string[] Aliases { get; } = { "цитата" };
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 

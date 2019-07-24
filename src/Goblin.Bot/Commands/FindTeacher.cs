@@ -10,9 +10,9 @@ namespace Goblin.Bot.Commands
     public class FindTeacher : ICommand
     {
         public string Name { get; } = "Найти *часть ФИО*";
-        public string Decription { get; } = "Найти преподавателя по части его ФИО";
+        public string Description { get; } = "Найти преподавателя по части его ФИО";
         public string Usage { get; } = "Найти деменков";
-        public string[] Allias { get; } = { "найти" };
+        public string[] Aliases { get; } = { "найти" };
         public CommandCategory Category { get; } = CommandCategory.Safu;
         public bool IsAdmin { get; } = false;
 

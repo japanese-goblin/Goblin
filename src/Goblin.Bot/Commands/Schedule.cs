@@ -14,11 +14,11 @@ namespace Goblin.Bot.Commands
     {
         public string Name { get; } = "Раписание *день*.*месяц* ИЛИ Расписание завтра";
 
-        public string Decription { get; } =
+        public string Description { get; } =
             "Возвращает расписание на указанную дату. Если дата не указана, расписание берется на текущую дату";
 
         public string Usage { get; } = "Расписание 21.12";
-        public string[] Allias { get; } = { "расписание" };
+        public string[] Aliases { get; } = { "расписание" };
         public CommandCategory Category { get; } = CommandCategory.Safu;
         public bool IsAdmin { get; } = false;
 

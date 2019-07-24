@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Goblin.Domain.Entities
+﻿namespace Goblin.Domain.Entities
 {
     public class BotUser
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public long Vk { get; set; }

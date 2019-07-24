@@ -32,14 +32,14 @@ namespace Goblin.Bot
             var comm = split[0].ToLower();
             var response = new CommandResponse();
 
-            if(_helpcmd.Allias.Contains(comm))
+            if(_helpcmd.Aliases.Contains(comm))
             {
                 return await _helpcmd.Execute(msg, botUser);
             }
 
             foreach(var command in _commands)
             {
-                if(!command.Allias.Contains(comm))
+                if(!command.Aliases.Contains(comm))
                 {
                     continue;
                 }

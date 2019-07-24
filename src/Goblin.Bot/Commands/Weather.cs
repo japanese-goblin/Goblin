@@ -11,9 +11,9 @@ namespace Goblin.Bot.Commands
     public class Weather : ICommand
     {
         public string Name { get; } = "Погода *название города*";
-        public string Decription { get; } = "Возвращает погоду на текущее время";
+        public string Description { get; } = "Возвращает погоду на текущее время";
         public string Usage { get; } = "Погода Москва";
-        public string[] Allias { get; } = { "погода" };
+        public string[] Aliases { get; } = { "погода" };
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 

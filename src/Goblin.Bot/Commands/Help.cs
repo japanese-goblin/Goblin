@@ -11,13 +11,14 @@ namespace Goblin.Bot.Commands
 {
     public class Help : IInfoCommand
     {
-        private readonly IEnumerable<ICommand> _commands;
         public string Name { get; } = "Команды";
-        public string Decription { get; } = "Описание команд";
+        public string Description { get; } = "Описание команд";
         public string Usage { get; } = "Команды";
-        public string[] Allias { get; } = { "help", "команды", "помощь", "помоги", "хелп" };
+        public string[] Aliases { get; } = { "help", "команды", "помощь", "помоги", "хелп" };
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
+
+        private readonly IEnumerable<ICommand> _commands;
 
         public Help(IEnumerable<ICommand> commands)
         {
@@ -37,7 +38,7 @@ namespace Goblin.Bot.Commands
             foreach(var cmd in cmds.Where(x => x.Category == CommandCategory.Common))
             {
                 strBuilder.AppendFormat("{0}) {1} - {2}",
-                                        com++, cmd.Name, cmd.Decription)
+                                        com++, cmd.Name, cmd.Description)
                           .AppendLine();
             }
 
@@ -47,7 +48,7 @@ namespace Goblin.Bot.Commands
             foreach(var cmd in cmds.Where(x => x.Category == CommandCategory.Safu))
             {
                 strBuilder.AppendFormat("{0}) {1} - {2}",
-                                        saf++, cmd.Name, cmd.Decription)
+                                        saf++, cmd.Name, cmd.Description)
                           .AppendLine();
             }
 

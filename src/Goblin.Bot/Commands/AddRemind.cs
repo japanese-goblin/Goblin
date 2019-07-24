@@ -13,13 +13,13 @@ namespace Goblin.Bot.Commands
     {
         public string Name { get; } = "Напомни *день*.*месяц*.*год* *часы*:*минуты* *текст*";
 
-        public string Decription { get; } =
+        public string Description { get; } =
             "Напоминает в указанное время о каком-то очень ВАЖНОМ тексте. " +
             "День и месяц обязательно должны содержать 2 цифры, а год - 4. " +
             "В указанное время бот напишет в личку сообщение с заданным текстом.";
 
         public string Usage { get; } = "Напомни 21.12.2018 15:35 зачет";
-        public string[] Allias { get; } = { "напомни" };
+        public string[] Aliases { get; } = { "напомни" };
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 

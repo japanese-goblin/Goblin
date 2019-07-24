@@ -10,9 +10,9 @@ namespace Goblin.Bot.Commands
     public class UnsetMailing : ICommand
     {
         public string Name { get; } = "Отписка *расписание ИЛИ погода*";
-        public string Decription { get; } = "Отписка от рассылки расписания или погоды";
+        public string Description { get; } = "Отписка от рассылки расписания или погоды";
         public string Usage { get; } = "Отписка погода";
-        public string[] Allias { get; } = { "отписка" };
+        public string[] Aliases { get; } = { "отписка" };
         public CommandCategory Category { get; } = CommandCategory.Common;
         public bool IsAdmin { get; } = false;
 
