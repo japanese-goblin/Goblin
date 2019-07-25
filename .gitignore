@@ -54,4 +54,4 @@ DocProject/Help/html
 #!**/packages/repositories.config
 
 *.min.*
-.idea/
+src/.idea/
