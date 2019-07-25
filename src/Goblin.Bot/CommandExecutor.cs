@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Goblin.Bot.Models;
 using Goblin.Domain.Entities;
-using Goblin.Persistence;
 using Vk.Models.Messages;
 
 namespace Goblin.Bot
@@ -15,11 +14,9 @@ namespace Goblin.Bot
 
         private readonly IEnumerable<ICommand> _commands;
         private readonly IInfoCommand _helpcmd;
-        private readonly ApplicationDbContext _db;
 
-        public CommandExecutor(ApplicationDbContext db, IEnumerable<ICommand> commands, IInfoCommand helpcmd)
+        public CommandExecutor(IEnumerable<ICommand> commands, IInfoCommand helpcmd)
         {
-            _db = db;
             _commands = commands;
             _helpcmd = helpcmd;
         }
