@@ -1,48 +1,55 @@
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Goblin.Domain.Entities
 {
     public class BotUser
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; private set; } // Vk id
+        public int VkId { get; private set; } // Vk id
 
         public string WeatherCity { get; private set; }
         public int NarfuGroup { get; private set; }
 
         public bool IsErrorsEnabled { get; private set; }
         public bool IsAdmin { get; private set; }
+        
+        public virtual Remind[] Reminds { get; private set; }
+        public virtual Subscribe SubscribeInfo { get; private set; }
 
         private BotUser()
         {
         }
 
-        public BotUser(string city, int group, bool isAdmin, bool isErrorsEnabled)
+        public BotUser(int vkId, string city = "", int group = 0, bool isAdmin = false, bool isErrorsEnabled = true)
         {
+            SetVkId(vkId);
             SetCity(city);
             SetNarfuGroup(group);
             SetAdmin(isAdmin);
             SetErrorNotification(isErrorsEnabled);
         }
 
-        public void SetCity(string city)
+        private void SetVkId(int vkId)
         {
-            if(string.IsNullOrWhiteSpace(city))
+            if(vkId <= 0)
             {
-                throw new ArgumentException("Параметр должен быть непустым", nameof(city));
+                throw new ArgumentException("Параметр должен быть больше 0", nameof(vkId));
             }
 
+            VkId = vkId;
+        }
+
+        public void SetCity(string city)
+        { 
             WeatherCity = city;
         }
 
         public void SetNarfuGroup(int group)
         {
-            if(group <= 0)
+            if(group < 0)
             {
                 throw new ArgumentException("Параметр должен быть больше 0", nameof(group));
             }
-
+            
             NarfuGroup = group;
         }
 

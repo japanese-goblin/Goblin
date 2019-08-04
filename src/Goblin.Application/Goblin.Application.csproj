@@ -4,4 +4,9 @@
         <TargetFramework>netcoreapp2.2</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Goblin.DataAccess\Goblin.DataAccess.csproj" />
+      <ProjectReference Include="..\Goblin.Domain\Goblin.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
