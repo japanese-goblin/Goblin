@@ -13,6 +13,10 @@ namespace Goblin.Domain.Entities
 
         public int Hours { get; private set; }
         public int Minutes { get; private set; }
+
+        private CronJob()
+        {
+        }
         
         public CronJob(string name, int vkId, int narfuGroup, string weatherCity, int hours, int minutes)
         {
@@ -46,7 +50,7 @@ namespace Goblin.Domain.Entities
         
         public void SetNarfuGroup(int group)
         {
-            if(group <= 0)
+            if(group < 0)
             {
                 throw new ArgumentException("Параметр должен быть больше 0", nameof(group));
             }
@@ -56,11 +60,6 @@ namespace Goblin.Domain.Entities
         
         public void SetWeatherCity(string city)
         {
-            if(string.IsNullOrWhiteSpace(city))
-            {
-                throw new ArgumentException("Параметр должен быть непустым", nameof(city));
-            }
-
             WeatherCity = city;
         }
 
