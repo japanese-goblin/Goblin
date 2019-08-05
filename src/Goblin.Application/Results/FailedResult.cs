@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using Goblin.Application.Abstractions;
 
 namespace Goblin.Application.Results
 {
@@ -11,6 +13,11 @@ namespace Goblin.Application.Results
         public FailedResult(Dictionary<string, string> errors)
         {
             Errors = errors;
+        }
+
+        public override string ToString()
+        {
+            return string.Join('\n', Errors.Select(x => $"{x.Key} - {x.Value}"));
         }
     }
 }

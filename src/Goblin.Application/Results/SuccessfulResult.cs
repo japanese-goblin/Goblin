@@ -1,3 +1,5 @@
+using Goblin.Application.Abstractions;
+
 namespace Goblin.Application.Results
 {
     public class SuccessfulResult : IResult
