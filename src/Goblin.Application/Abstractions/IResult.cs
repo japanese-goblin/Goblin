@@ -1,4 +1,4 @@
-namespace Goblin.Application.Results
+namespace Goblin.Application.Abstractions
 {
     public interface IResult
     {
