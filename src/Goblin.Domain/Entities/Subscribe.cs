@@ -12,6 +12,10 @@ namespace Goblin.Domain.Entities
 
         public virtual BotUser BotUser { get; private set; }
 
+        private Subscribe()
+        {
+        }
+
         public Subscribe(int botUserId, bool isWeather, bool isSchedule)
         {
             SetBotUserId(botUserId);

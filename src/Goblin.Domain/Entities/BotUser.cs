@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 
 namespace Goblin.Domain.Entities
 {
     public class BotUser
     {
-        public int VkId { get; private set; } // Vk id
+        public int VkId { get; private set; }
 
         public string WeatherCity { get; private set; }
         public int NarfuGroup { get; private set; }
@@ -12,7 +13,7 @@ namespace Goblin.Domain.Entities
         public bool IsErrorsEnabled { get; private set; }
         public bool IsAdmin { get; private set; }
         
-        public virtual Remind[] Reminds { get; private set; }
+        public virtual ICollection<Remind> Reminds { get; private set; }
         public virtual Subscribe SubscribeInfo { get; private set; }
 
         private BotUser()

@@ -11,7 +11,9 @@ namespace Goblin.DataAccess.Configurations
             builder.HasKey(x => x.Id);
 
             builder.HasOne(x => x.BotUser)
-                   .WithMany(x => x.Reminds);
+                   .WithMany(x => x.Reminds)
+                   .HasForeignKey(x => x.BotUserId);
+            
             builder.Property(x => x.Text).HasMaxLength(100).IsRequired();
             builder.Property(x => x.Date).IsRequired();
         }
