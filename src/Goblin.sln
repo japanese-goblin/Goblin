@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Domain", "Goblin.Dom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Application", "Goblin.Application\Goblin.Application.csproj", "{3E9EC0CA-31BC-4636-9C16-DBBFA1F5B097}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.WebApp", "Goblin.WebApp\Goblin.WebApp.csproj", "{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,5 +60,17 @@ Global
 		{3E9EC0CA-31BC-4636-9C16-DBBFA1F5B097}.Release|x64.Build.0 = Release|Any CPU
 		{3E9EC0CA-31BC-4636-9C16-DBBFA1F5B097}.Release|x86.ActiveCfg = Release|Any CPU
 		{3E9EC0CA-31BC-4636-9C16-DBBFA1F5B097}.Release|x86.Build.0 = Release|Any CPU
+		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Debug|x64.Build.0 = Debug|Any CPU
+		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Debug|x86.Build.0 = Debug|Any CPU
+		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Release|x64.ActiveCfg = Release|Any CPU
+		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Release|x64.Build.0 = Release|Any CPU
+		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Release|x86.ActiveCfg = Release|Any CPU
+		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
