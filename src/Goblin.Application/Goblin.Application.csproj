@@ -9,4 +9,8 @@
       <ProjectReference Include="..\Goblin.Domain\Goblin.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="VkNet" Version="1.45.0" />
+    </ItemGroup>
+
 </Project>
