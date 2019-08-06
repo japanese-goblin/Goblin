@@ -5,7 +5,7 @@ namespace Goblin.Domain.Entities
     public class Remind
     {
         public int Id { get; private set; }
-        public int BotUserId { get; private set; }
+        public long BotUserId { get; private set; }
 
         public string Text { get; private set; }
         public DateTime Date { get; private set; }
@@ -16,7 +16,7 @@ namespace Goblin.Domain.Entities
         {
         }
 
-        public Remind(int botUserId, string text, DateTime date)
+        public Remind(long botUserId, string text, DateTime date)
         {
             SetBotUserId(botUserId);
             SetText(text);
@@ -43,7 +43,7 @@ namespace Goblin.Domain.Entities
             Date = date;
         }
 
-        private void SetBotUserId(int botUserId)
+        private void SetBotUserId(long botUserId)
         {
             if(botUserId <= 0)
             {
