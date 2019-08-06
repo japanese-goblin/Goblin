@@ -5,7 +5,7 @@ namespace Goblin.Domain.Entities
     public class Subscribe
     {
         public int Id { get; private set; }
-        public int BotUserId { get; private set; }
+        public long BotUserId { get; private set; }
 
         public bool IsWeather { get; private set; }
         public bool IsSchedule { get; private set; }
@@ -16,14 +16,14 @@ namespace Goblin.Domain.Entities
         {
         }
 
-        public Subscribe(int botUserId, bool isWeather, bool isSchedule)
+        public Subscribe(long botUserId, bool isWeather, bool isSchedule)
         {
             SetBotUserId(botUserId);
             SetIsWeather(isWeather);
             SetIsSchedule(isSchedule);
         }
 
-        private void SetBotUserId(int botUserId)
+        private void SetBotUserId(long botUserId)
         {
             if(botUserId <= 0)
             {

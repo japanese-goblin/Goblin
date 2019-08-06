@@ -5,7 +5,7 @@ namespace Goblin.Domain.Entities
 {
     public class BotUser
     {
-        public int VkId { get; private set; }
+        public long VkId { get; private set; }
 
         public string WeatherCity { get; private set; }
         public int NarfuGroup { get; private set; }
@@ -20,7 +20,7 @@ namespace Goblin.Domain.Entities
         {
         }
 
-        public BotUser(int vkId, string city = "", int group = 0, bool isAdmin = false, bool isErrorsEnabled = true)
+        public BotUser(long vkId, string city = "", int group = 0, bool isAdmin = false, bool isErrorsEnabled = true)
         {
             SetVkId(vkId);
             SetCity(city);
@@ -29,7 +29,7 @@ namespace Goblin.Domain.Entities
             SetErrorNotification(isErrorsEnabled);
         }
 
-        private void SetVkId(int vkId)
+        private void SetVkId(long vkId)
         {
             if(vkId <= 0)
             {

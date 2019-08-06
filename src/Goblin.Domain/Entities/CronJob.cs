@@ -6,7 +6,7 @@ namespace Goblin.Domain.Entities
     {
         public int Id { get; private set; }
         public string Name { get; private set; }
-        public int VkId { get; private set; }
+        public long VkId { get; private set; }
 
         public int NarfuGroup { get; private set; }
         public string WeatherCity { get; private set; }
@@ -18,7 +18,7 @@ namespace Goblin.Domain.Entities
         {
         }
         
-        public CronJob(string name, int vkId, int narfuGroup, string weatherCity, int hours, int minutes)
+        public CronJob(string name, long vkId, int narfuGroup, string weatherCity, int hours, int minutes)
         {
             SetName(name);
             SetVkId(vkId);
@@ -38,7 +38,7 @@ namespace Goblin.Domain.Entities
             Name = name;
         }
 
-        public void SetVkId(int vkId)
+        public void SetVkId(long vkId)
         {
             if(vkId <= 0)
             {
