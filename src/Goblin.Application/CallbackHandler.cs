@@ -1,10 +1,14 @@
 using System;
 using System.Threading.Tasks;
+using Goblin.Application.Extensions;
+using Goblin.Application.Results;
 using Goblin.DataAccess;
 using Goblin.Domain.Entities;
+using VkNet.Abstractions;
 using VkNet.Enums.SafetyEnums;
 using VkNet.Model;
 using VkNet.Model.GroupUpdate;
+using VkNet.Model.RequestParams;
 using VkNet.Utils;
 
 namespace Goblin.Application
@@ -13,13 +17,15 @@ namespace Goblin.Application
     {
         private readonly CommandsService _service;
         private readonly BotDbContext _db;
+        private readonly IVkApi _vkApi;
 
         public const string DefaultResult = "ok";
 
-        public CallbackHandler(CommandsService service, BotDbContext db)
+        public CallbackHandler(CommandsService service, BotDbContext db, IVkApi vkApi)
         {
             _service = service;
             _db = db;
+            _vkApi = vkApi;
         }
 
         public async Task<string> Handle(VkResponse response)
@@ -54,7 +60,22 @@ namespace Goblin.Application
                 await _db.SaveChangesAsync();
             }
             
-            await _service.ExecuteCommand(msg, user);
+            var result = await _service.ExecuteCommand(msg, user);
+            if(result is FailedResult failed)
+            {
+                _vkApi.Messages.SendError(failed.ToString(), msg.PeerId.Value);
+            }
+            else
+            {
+                var success = result as SuccessfulResult;
+                _vkApi.Messages.SendWithRandomId(new MessagesSendParams
+                {
+                    Message = success.Message,
+                    Attachments = success.Attachments,
+                    Keyboard = success.Keyboard,
+                    PeerId = msg.PeerId.Value
+                });
+            }
         }
 
         public async Task GroupLeave(GroupLeave leave)
