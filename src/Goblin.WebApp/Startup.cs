@@ -1,25 +1,19 @@
-﻿using Goblin.Application;
-using Goblin.Application.Abstractions;
-using Goblin.Application.Commands;
-using Goblin.DataAccess;
+﻿using Goblin.DataAccess;
+using Goblin.WebApp.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using VkNet;
-using VkNet.Abstractions;
-using VkNet.Model;
 
 namespace Goblin.WebApp
 {
     public class Startup
     {
         private IConfiguration Configuration { get; }
-        
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,26 +21,12 @@ namespace Goblin.WebApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContexts(Configuration);
 
-            services.AddDbContext<BotDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddDbContext<IdentityUsersDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddVkApi(Configuration);
 
-            services.AddSingleton<IVkApi, VkApi>(x =>
-            {
-                var token = Configuration["Vk:AccessToken"];
-                var api = new VkApi();
-                api.Authorize(new ApiAuthParams
-                {
-                    AccessToken = token
-                });
-                return api;
-            });
+            services.AddBotFeatures();
 
-            services.AddScoped<IBotCommand, RandomCommand>();
-            services.AddScoped<CommandsService>();
-            services.AddScoped<CallbackHandler>();
-            
             services.AddDefaultIdentity<IdentityUser>()
                     .AddDefaultUI(UIFramework.Bootstrap4)
                     .AddEntityFrameworkStores<IdentityUsersDbContext>();
