@@ -5,7 +5,27 @@ namespace Goblin.Application.Extensions
 {
     public static class MessageExtensions
     {
-        public static string[] GetCommandInfo(this Message msg)
+        public static string GetCommand(this Message msg)
+        {
+            msg = GetCommandInfo(msg);
+
+            return msg.Text.Split(' ', 2)[0];
+        }
+
+        public static string[] GetCommandParameters(this Message msg)
+        {
+            msg = GetCommandInfo(msg);
+
+            var @params = msg.Text.Split(' ');
+            if(@params.Length == 0)
+            {
+                return new[] { string.Empty };
+            }
+
+            return @params;
+        }
+
+        private static Message GetCommandInfo(Message msg)
         {
             if(msg.FromId != msg.PeerId)
             {
@@ -16,7 +36,9 @@ namespace Goblin.Application.Extensions
                 }
             }
 
-            return msg.Text.Trim().Split(' ', 2);
+            msg.Text = msg.Text.Trim();
+
+            return msg;
         }
     }
 }
