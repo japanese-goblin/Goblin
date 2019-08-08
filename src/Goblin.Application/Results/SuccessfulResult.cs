@@ -8,8 +8,8 @@ namespace Goblin.Application.Results
     {
         public bool IsSuccessful => true;
 
-        public string Message { get; }
-        public MediaAttachment[] Attachments { get; }
-        public MessageKeyboard Keyboard { get; } //TODO: change type
+        public string Message { get; set; }
+        public MediaAttachment[] Attachments { get; set; }
+        public MessageKeyboard Keyboard { get; set; }
     }
 }
