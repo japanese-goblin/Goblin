@@ -32,21 +32,21 @@ namespace Goblin.OpenWeatherMap
 
         public async Task<DailyWeatherListItem> GetDailyWeatherAt(string city, DateTime date)
         {
-            var dif = date - DateTime.Now;
+            var dif = date.Date - DateTime.Today;
             if(dif > TimeSpan.FromDays(Defaults.MaxDailyWeatherDifference))
             {
                 throw new
                         ArgumentException($"Погоду можно получить максимум на {Defaults.MaxDailyWeatherDifference} дней");
             }
 
-            var count = dif.Days;
+            var count = dif.Days + 1;
 
             var response = await Defaults.BuildRequest(_token)
                                          .AppendPathSegment("forecast/daily")
                                          .SetQueryParam("q", city)
                                          .SetQueryParam("cnt", count)
                                          .GetJsonAsync<DailyWeather>();
-            var weather = response.List.SingleOrDefault(x => Defaults.UnixToDateTime(x.UnixTime) == date);
+            var weather = response.List.SingleOrDefault(x => Defaults.UnixToDateTime(x.UnixTime).Date == date.Date);
             if(weather is null)
             {
                 throw new ArgumentException("Погода на указанную дату не найдена.");
