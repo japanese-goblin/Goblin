@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text.RegularExpressions;
 using VkNet.Model;
 
@@ -22,7 +23,7 @@ namespace Goblin.Application.Extensions
                 return new[] { string.Empty };
             }
 
-            return @params;
+            return @params.Skip(1).ToArray();
         }
 
         private static Message GetCommandInfo(Message msg)

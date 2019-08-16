@@ -1,6 +1,5 @@
 using Goblin.Application;
 using Goblin.Application.Abstractions;
-using Goblin.Application.Commands;
 using Goblin.Application.KeyboardCommands;
 using Goblin.Application.MergedCommands;
 using Goblin.Application.TextCommands;
@@ -45,6 +44,7 @@ namespace Goblin.WebApp.Extensions
         public static void AddBotFeatures(this IServiceCollection services)
         {
             services.AddScoped<ITextCommand, DebugCommand>();
+            services.AddScoped<ITextCommand, SetDataCommand>();
 
             services.AddScoped<IKeyboardCommand, StartCommand>();
             services.AddScoped<IKeyboardCommand, ScheduleKeyboardCommand>();
