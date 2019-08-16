@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Flurl.Http;
@@ -6,13 +5,15 @@ using Goblin.Application.Abstractions;
 using Goblin.Application.Results;
 using Goblin.Domain.Entities;
 using Goblin.Narfu;
-using Newtonsoft.Json;
 using VkNet.Model;
 
-namespace Goblin.Application.KeyboardCommands
+namespace Goblin.Application.MergedCommands
 {
-    public class ExamsCommand : IKeyboardCommand
+    public class ExamsCommand : IKeyboardCommand, ITextCommand
     {
+        public bool IsAdminCommand => false;
+        public string[] Aliases => new[] { "экзамены", "экзы" };
+        
         public string Trigger => "exams";
         
         private readonly NarfuApi _api;
@@ -21,7 +22,7 @@ namespace Goblin.Application.KeyboardCommands
         {
             _api = api;
         }
-        
+
         public async Task<IResult> Execute(Message msg, BotUser user = null)
         {
             if(user.NarfuGroup == 0)

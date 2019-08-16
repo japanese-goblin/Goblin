@@ -14,9 +14,6 @@ namespace Goblin.Application.Commands
 {
     public class DebugCommand : ITextCommand
     {
-        public string Name => "Дебаг";
-        public string Description => "Получить информацию о состоянии бота";
-        public string Usage => Name;
         public bool IsAdminCommand => true;
         public string[] Aliases => new[] { "дебуг", "дебаг" };
         
