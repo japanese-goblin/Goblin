@@ -32,7 +32,11 @@ namespace Goblin.WebApp.Extensions
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<BotDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<BotDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString)
+                       .UseLazyLoadingProxies();
+            });
             services.AddDbContext<IdentityUsersDbContext>(options => options.UseSqlServer(connectionString));
         }
 
@@ -49,6 +53,8 @@ namespace Goblin.WebApp.Extensions
 
             services.AddScoped<IKeyboardCommand, ScheduleCommand>();
             services.AddScoped<IKeyboardCommand, ExamsCommand>();
+
+            services.AddScoped<IKeyboardCommand, GetRemindsCommand>();
             
             services.AddScoped<CommandsService>();
             services.AddScoped<CallbackHandler>();
