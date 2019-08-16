@@ -1,6 +1,7 @@
 using Goblin.Application;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Commands;
+using Goblin.Application.KeyboardCommands;
 using Goblin.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -38,6 +39,9 @@ namespace Goblin.WebApp.Extensions
         public static void AddBotFeatures(this IServiceCollection services)
         {
             services.AddScoped<ITextCommand, DebugCommand>();
+
+            services.AddScoped<IKeyboardCommand, StartCommand>();
+            
             services.AddScoped<CommandsService>();
             services.AddScoped<CallbackHandler>();
         }
