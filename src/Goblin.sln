@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Application", "Gobli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.WebApp", "Goblin.WebApp\Goblin.WebApp.csproj", "{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.OpenWeatherMap", "Goblin.OpenWeatherMap\Goblin.OpenWeatherMap.csproj", "{B2FDC55D-A919-44FC-A21A-F5C408BABA11}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Additions", "Additions", "{4FA84E51-26A7-47AB-A2AD-61EDE5C73555}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,5 +76,20 @@ Global
 		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Release|x64.Build.0 = Release|Any CPU
 		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Release|x86.ActiveCfg = Release|Any CPU
 		{0ABAA2C8-9EEA-403B-81D2-6637D8A4D593}.Release|x86.Build.0 = Release|Any CPU
+		{B2FDC55D-A919-44FC-A21A-F5C408BABA11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2FDC55D-A919-44FC-A21A-F5C408BABA11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2FDC55D-A919-44FC-A21A-F5C408BABA11}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B2FDC55D-A919-44FC-A21A-F5C408BABA11}.Debug|x64.Build.0 = Debug|Any CPU
+		{B2FDC55D-A919-44FC-A21A-F5C408BABA11}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B2FDC55D-A919-44FC-A21A-F5C408BABA11}.Debug|x86.Build.0 = Debug|Any CPU
+		{B2FDC55D-A919-44FC-A21A-F5C408BABA11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2FDC55D-A919-44FC-A21A-F5C408BABA11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2FDC55D-A919-44FC-A21A-F5C408BABA11}.Release|x64.ActiveCfg = Release|Any CPU
+		{B2FDC55D-A919-44FC-A21A-F5C408BABA11}.Release|x64.Build.0 = Release|Any CPU
+		{B2FDC55D-A919-44FC-A21A-F5C408BABA11}.Release|x86.ActiveCfg = Release|Any CPU
+		{B2FDC55D-A919-44FC-A21A-F5C408BABA11}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B2FDC55D-A919-44FC-A21A-F5C408BABA11} = {4FA84E51-26A7-47AB-A2AD-61EDE5C73555}
 	EndGlobalSection
 EndGlobal
