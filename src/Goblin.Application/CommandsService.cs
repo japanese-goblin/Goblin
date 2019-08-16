@@ -11,18 +11,26 @@ namespace Goblin.Application
 {
     public class CommandsService
     {
-        private readonly IEnumerable<ITextCommand> _commands;
+        private readonly IEnumerable<ITextCommand> _textCommands;
+        private readonly IEnumerable<IKeyboardCommand> _keyboardCommands;
 
-        public CommandsService(IEnumerable<ITextCommand> commands)
+        public CommandsService(IEnumerable<ITextCommand> textCommands,
+                               IEnumerable<IKeyboardCommand> keyboardCommands)
         {
-            _commands = commands;
+            _textCommands = textCommands;
+            _keyboardCommands = keyboardCommands;
         }
 
         public async Task<IResult> ExecuteCommand(Message msg, BotUser user)
         {
+            if(!string.IsNullOrWhiteSpace(msg.Payload))
+            {
+                return await ExecuteKeyboard(msg, user);
+            }
+            
             var cmdName = msg.GetCommand();
 
-            foreach(var command in _commands)
+            foreach(var command in _textCommands)
             {
                 if(!command.Aliases.Contains(cmdName))
                 {
@@ -46,6 +54,22 @@ namespace Goblin.Application
             return new FailedResult(new List<string>
             {
                 "команда не найдена. Проверьте правильность написания команды."
+            });
+        }
+
+        private async Task<IResult> ExecuteKeyboard(Message msg, BotUser user)
+        {
+            foreach(var command in _keyboardCommands)
+            {
+                if(msg.Payload.Contains(command.Trigger))
+                {
+                    return await command.Execute(msg, user);
+                }
+            }
+            
+            return new FailedResult(new List<string>
+            {
+                "Команда не найдена."
             });
         }
     }
