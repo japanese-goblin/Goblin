@@ -1,4 +1,5 @@
 ﻿using Goblin.DataAccess;
+using Goblin.OpenWeatherMap;
 using Goblin.WebApp.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,6 +25,11 @@ namespace Goblin.WebApp
             services.AddDbContexts(Configuration);
 
             services.AddVkApi(Configuration);
+            services.AddSingleton(x =>
+            {
+                var api = new OpenWeatherMapApi(Configuration["OWM:AccessToken"]);
+                return api;
+            });
 
             services.AddBotFeatures();
 
