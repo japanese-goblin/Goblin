@@ -2,6 +2,8 @@ using Goblin.Application;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Commands;
 using Goblin.Application.KeyboardCommands;
+using Goblin.Application.MergedCommands;
+using Goblin.Application.TextCommands;
 using Goblin.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -47,14 +49,16 @@ namespace Goblin.WebApp.Extensions
             services.AddScoped<IKeyboardCommand, StartCommand>();
             services.AddScoped<IKeyboardCommand, ScheduleKeyboardCommand>();
             services.AddScoped<IKeyboardCommand, WeatherKeyboardCommand>();
-            
             services.AddScoped<IKeyboardCommand, WeatherNowCommand>();
             services.AddScoped<IKeyboardCommand, WeatherDailyCommand>();
-
             services.AddScoped<IKeyboardCommand, ScheduleCommand>();
+            
+            services.AddScoped<IKeyboardCommand, HelpCommand>();
+            services.AddScoped<ITextCommand, HelpCommand>();
             services.AddScoped<IKeyboardCommand, ExamsCommand>();
-
+            services.AddScoped<ITextCommand, ExamsCommand>();
             services.AddScoped<IKeyboardCommand, GetRemindsCommand>();
+            services.AddScoped<ITextCommand, GetRemindsCommand>();
             
             services.AddScoped<CommandsService>();
             services.AddScoped<CallbackHandler>();

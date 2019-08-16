@@ -9,7 +9,7 @@ namespace Goblin.Application.Extensions
         {
             msg = GetCommandInfo(msg);
 
-            return msg.Text.Split(' ', 2)[0];
+            return msg.Text.Split(' ', 2)[0].ToLower();
         }
 
         public static string[] GetCommandParameters(this Message msg)

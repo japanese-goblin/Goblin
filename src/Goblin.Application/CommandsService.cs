@@ -42,7 +42,7 @@ namespace Goblin.Application
                     continue;
                 }
 
-                var result = await command.Execute(msg);
+                var result = await command.Execute(msg, user);
                 if(result is FailedResult failedExecuteResult)
                 {
                     return failedExecuteResult;

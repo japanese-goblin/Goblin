@@ -6,9 +6,6 @@ namespace Goblin.Application.Abstractions
 {
     public interface ITextCommand
     {
-        string Name { get; }
-        string Description { get; }
-        string Usage { get; }
         bool IsAdminCommand { get; }
 
         string[] Aliases { get; }
