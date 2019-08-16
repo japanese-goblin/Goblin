@@ -11,9 +11,9 @@ namespace Goblin.Application
 {
     public class CommandsService
     {
-        private readonly IEnumerable<IBotCommand> _commands;
+        private readonly IEnumerable<ITextCommand> _commands;
 
-        public CommandsService(IEnumerable<IBotCommand> commands)
+        public CommandsService(IEnumerable<ITextCommand> commands)
         {
             _commands = commands;
         }
@@ -32,12 +32,6 @@ namespace Goblin.Application
                 if(command.IsAdminCommand && !user.IsAdmin)
                 {
                     continue;
-                }
-
-                var isCanExecute = await command.CanExecute(msg);
-                if(isCanExecute is FailedResult failedResult)
-                {
-                    return failedResult;
                 }
 
                 var result = await command.Execute(msg);
