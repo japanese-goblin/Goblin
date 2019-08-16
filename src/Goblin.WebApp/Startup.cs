@@ -1,4 +1,5 @@
 ﻿using Goblin.DataAccess;
+using Goblin.Narfu;
 using Goblin.OpenWeatherMap;
 using Goblin.WebApp.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,7 @@ namespace Goblin.WebApp
                 var api = new OpenWeatherMapApi(Configuration["OWM:AccessToken"]);
                 return api;
             });
+            services.AddSingleton<NarfuApi>();
 
             services.AddBotFeatures();
 
