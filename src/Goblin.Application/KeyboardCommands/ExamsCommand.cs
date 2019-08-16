@@ -11,13 +11,13 @@ using VkNet.Model;
 
 namespace Goblin.Application.KeyboardCommands
 {
-    public class ScheduleCommand : IKeyboardCommand
+    public class ExamsCommand : IKeyboardCommand
     {
-        public string Trigger => "schedule";
+        public string Trigger => "exams";
         
         private readonly NarfuApi _api;
 
-        public ScheduleCommand(NarfuApi api)
+        public ExamsCommand(NarfuApi api)
         {
             _api = api;
         }
@@ -28,14 +28,13 @@ namespace Goblin.Application.KeyboardCommands
             {
                 return new FailedResult(new List<string>
                 {
-                    "Для получения расписания сначала необходимо установить группу."
+                    "Для получения экзаменов сначала необходимо установить группу."
                 });
             }
             
-            var date = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)["schedule"];
             try
             {
-                var lessons = await _api.Students.GetScheduleAtDate(user.NarfuGroup, DateTime.Parse(date));
+                var lessons = await _api.Students.GetExams(user.NarfuGroup);
                 return new SuccessfulResult
                 {
                     Message = lessons.ToString()
@@ -45,14 +44,14 @@ namespace Goblin.Application.KeyboardCommands
             {
                 return new FailedResult(new List<string>
                 {
-                    $"Невозможно получить расписание с сайта. Попробуйте позже. (Код ошибки - {ex.Call.HttpStatus})"
+                    $"Невозможно получить экзамены с сайта. Попробуйте позже. (Код ошибки - {ex.Call.HttpStatus})"
                 });
             }
             catch
             {
                 return new FailedResult(new List<string>
                 {
-                    "Непредвиденная ошибка получения расписания с сайта. Попробуйте позже."
+                    "Непредвиденная ошибка получения экзаменов с сайта. Попробуйте позже."
                 });
             }
         }
