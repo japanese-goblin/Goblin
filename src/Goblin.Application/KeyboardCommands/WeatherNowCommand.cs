@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Results;
 using Goblin.Domain.Entities;
+using Goblin.OpenWeatherMap;
 using VkNet.Model;
 
 namespace Goblin.Application.KeyboardCommands
@@ -10,12 +12,38 @@ namespace Goblin.Application.KeyboardCommands
     {
         public string Trigger => "weatherNow";
         
-        public Task<IResult> Execute(Message msg, BotUser user = null)
+        private readonly OpenWeatherMapApi _api;
+
+        public WeatherNowCommand(OpenWeatherMapApi api)
         {
-            return Task.FromResult<IResult>(new SuccessfulResult
+            _api = api;
+        }
+        
+        public async Task<IResult> Execute(Message msg, BotUser user = null)
+        {
+            if(string.IsNullOrWhiteSpace(user.WeatherCity))
             {
-                Message = "Погода на данный момент"
-            });
+                return new FailedResult(new List<string>
+                {
+                    "Для получения погоды сначала необходимо установить город."
+                });
+            }
+
+            try
+            {
+                var weather = await _api.GetCurrentWeather(user.WeatherCity);
+                return new SuccessfulResult
+                {
+                    Message = weather.ToString()
+                };
+            }
+            catch
+            {
+                return new FailedResult(new List<string>
+                {
+                    "Невозможно получить погоду с внешнего сайта. Попробуйте позже."
+                });
+            }
         }
     }
 }
