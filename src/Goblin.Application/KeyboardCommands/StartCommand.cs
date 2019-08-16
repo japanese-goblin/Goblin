@@ -18,7 +18,7 @@ namespace Goblin.Application.KeyboardCommands
             kb.AddButton("Расписание", "scheduleKeyboard", KeyboardButtonColor.Primary, "123");
             kb.AddButton("Экзамены", "scheduleKeyboard", KeyboardButtonColor.Primary, "123");
             kb.AddLine();
-            kb.AddButton("Погода на текущий момент", "weatherNowKeyboard", KeyboardButtonColor.Primary, "123");
+            kb.AddButton("Погода на текущий момент", "weatherNow", KeyboardButtonColor.Primary, "123");
             kb.AddButton("Погода на день", "weatherDailyKeyboard", KeyboardButtonColor.Primary, "123");
 
             return Task.FromResult<IResult>(new SuccessfulResult
