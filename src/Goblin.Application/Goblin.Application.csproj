@@ -7,6 +7,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Goblin.DataAccess\Goblin.DataAccess.csproj" />
       <ProjectReference Include="..\Goblin.Domain\Goblin.Domain.csproj" />
+      <ProjectReference Include="..\Goblin.Narfu\Goblin.Narfu.csproj" />
       <ProjectReference Include="..\Goblin.OpenWeatherMap\Goblin.OpenWeatherMap.csproj" />
     </ItemGroup>
 
