@@ -41,6 +41,7 @@ namespace Goblin.WebApp.Extensions
             services.AddScoped<ITextCommand, DebugCommand>();
 
             services.AddScoped<IKeyboardCommand, StartCommand>();
+            services.AddScoped<IKeyboardCommand, ScheduleKeyboardCommand>();
             
             services.AddScoped<CommandsService>();
             services.AddScoped<CallbackHandler>();
