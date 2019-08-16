@@ -42,6 +42,7 @@ namespace Goblin.WebApp.Extensions
 
             services.AddScoped<IKeyboardCommand, StartCommand>();
             services.AddScoped<IKeyboardCommand, ScheduleKeyboardCommand>();
+            services.AddScoped<IKeyboardCommand, WeatherKeyboardCommand>();
             services.AddScoped<IKeyboardCommand, WeatherNowCommand>();
             
             services.AddScoped<CommandsService>();
