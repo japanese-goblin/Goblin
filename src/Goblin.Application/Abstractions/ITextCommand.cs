@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
+using Goblin.Domain.Entities;
 using VkNet.Model;
 
 namespace Goblin.Application.Abstractions
 {
-    public interface IBotCommand
+    public interface ITextCommand
     {
         string Name { get; }
         string Description { get; }
@@ -12,7 +13,6 @@ namespace Goblin.Application.Abstractions
 
         string[] Aliases { get; }
 
-        Task<IResult> Execute(Message msg);
-        Task<IResult> CanExecute(Message msg);
+        Task<IResult> Execute(Message msg, BotUser user = null);
     }
 }

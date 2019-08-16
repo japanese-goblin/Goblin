@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Results;
 using Goblin.DataAccess;
+using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using VkNet.Model;
 
 namespace Goblin.Application.Commands
 {
-    public class DebugCommand : IBotCommand
+    public class DebugCommand : ITextCommand
     {
         public string Name => "Дебаг";
         public string Description => "Получить информацию о состоянии бота";
@@ -26,7 +27,7 @@ namespace Goblin.Application.Commands
             _db = db;
         }
         
-        public Task<IResult> Execute(Message msg)
+        public Task<IResult> Execute(Message msg, BotUser user = null)
         {
             var strBuilder = new StringBuilder();
             
@@ -52,11 +53,6 @@ namespace Goblin.Application.Commands
             {
                 Message = strBuilder.ToString()
             });
-        }
-
-        public Task<IResult> CanExecute(Message msg)
-        {
-            return Task.FromResult<IResult>(new SuccessfulResult());
         }
     }
 }

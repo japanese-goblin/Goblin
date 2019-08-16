@@ -37,7 +37,7 @@ namespace Goblin.WebApp.Extensions
 
         public static void AddBotFeatures(this IServiceCollection services)
         {
-            services.AddScoped<IBotCommand, DebugCommand>();
+            services.AddScoped<ITextCommand, DebugCommand>();
             services.AddScoped<CommandsService>();
             services.AddScoped<CallbackHandler>();
         }
