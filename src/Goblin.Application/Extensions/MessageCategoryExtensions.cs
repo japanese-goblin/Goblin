@@ -1,5 +1,6 @@
 using System;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
@@ -9,19 +10,19 @@ namespace Goblin.Application.Extensions
     {
         private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
         
-        public static long SendError(this IMessagesCategory msgCategory, string error, long peerId)
+        public static async Task<long> SendError(this IMessagesCategory msgCategory, string error, long peerId)
         {
-            return msgCategory.SendWithRandomId(new MessagesSendParams
+            return await msgCategory.SendWithRandomId(new MessagesSendParams
             {
                 PeerId = peerId,
                 Message = $"❌ Ошибка: {error}"
             });
         }
 
-        public static long SendWithRandomId(this IMessagesCategory msgCategory, MessagesSendParams @params)
+        public static async Task<long> SendWithRandomId(this IMessagesCategory msgCategory, MessagesSendParams @params)
         {
             @params.RandomId = GetRandomId();
-            return msgCategory.Send(@params);
+            return await msgCategory.SendAsync(@params);
         }
         
         private static int GetRandomId()
