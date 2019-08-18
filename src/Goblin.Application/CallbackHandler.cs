@@ -58,6 +58,7 @@ namespace Goblin.Application
             if(user is null)
             {
                 user = _db.BotUsers.Add(new BotUser(msg.FromId.Value)).Entity;
+                _db.Subscribes.Add(new Subscribe(msg.FromId.Value, false, false));
                 await _db.SaveChangesAsync();
             }
 
