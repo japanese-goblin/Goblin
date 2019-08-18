@@ -4,6 +4,8 @@ using Goblin.Application.Commands.Keyboard;
 using Goblin.Application.Commands.Merged;
 using Goblin.Application.Commands.Text;
 using Goblin.DataAccess;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -69,6 +71,22 @@ namespace Goblin.WebApp.Extensions
             
             services.AddScoped<CommandsService>();
             services.AddScoped<CallbackHandler>();
+        }
+
+        public static void AddAuth(this IServiceCollection services, IConfiguration config)
+        {
+            services.AddDefaultIdentity<IdentityUser>()
+                    .AddDefaultUI(UIFramework.Bootstrap4)
+                    .AddEntityFrameworkStores<IdentityUsersDbContext>();
+            
+            services.AddAuthentication()
+                    .AddVkontakte(options =>
+                    {
+                        options.ApiVersion = "5.95";
+                        options.ClientId = config["VkAuth:AppId"];
+                        options.ClientSecret = config["VkAuth:SecretKey"];
+                        options.Scope.Add("email");
+                    });
         }
     }
 }
