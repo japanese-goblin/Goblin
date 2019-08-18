@@ -51,7 +51,6 @@ namespace Goblin.WebApp.Extensions
             services.AddScoped<IKeyboardCommand, StartCommand>();
             services.AddScoped<IKeyboardCommand, ScheduleKeyboardCommand>();
             services.AddScoped<IKeyboardCommand, WeatherKeyboardCommand>();
-            services.AddScoped<IKeyboardCommand, WeatherNowCommand>();
             services.AddScoped<IKeyboardCommand, WeatherDailyCommand>();
             services.AddScoped<IKeyboardCommand, ScheduleCommand>();
             
@@ -61,6 +60,8 @@ namespace Goblin.WebApp.Extensions
             services.AddScoped<ITextCommand, ExamsCommand>();
             services.AddScoped<IKeyboardCommand, GetRemindsCommand>();
             services.AddScoped<ITextCommand, GetRemindsCommand>();
+            services.AddScoped<IKeyboardCommand, WeatherNowCommand>();
+            services.AddScoped<ITextCommand, WeatherNowCommand>();
             
             services.AddScoped<CommandsService>();
             services.AddScoped<CallbackHandler>();

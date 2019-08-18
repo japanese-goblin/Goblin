@@ -5,9 +5,12 @@ namespace Goblin.Application.Extensions
 {
     public static class KeyboardBuilderExtensions
     {
-        public static KeyboardBuilder AddReturnToMenuButton(this KeyboardBuilder kb)
+        public static KeyboardBuilder AddReturnToMenuButton(this KeyboardBuilder kb, bool addNewLine = true)
         {
-            kb.AddLine();
+            if(addNewLine)
+            {
+                kb.AddLine();
+            }
 
             kb.AddButton("Вернуться в главное меню", "command",
                          KeyboardButtonColor.Default, "start");
