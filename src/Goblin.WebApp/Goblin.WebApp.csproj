@@ -21,4 +21,8 @@
       <ProjectReference Include="..\Goblin.OpenWeatherMap\Goblin.OpenWeatherMap.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\Home.cshtml" />
+    </ItemGroup>
+
 </Project>

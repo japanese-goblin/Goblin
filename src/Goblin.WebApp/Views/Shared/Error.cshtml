@@ -1,10 +1,11 @@
-﻿@model ErrorViewModel
+﻿@model Goblin.WebApp.ViewModels.ErrorViewModel
 @{
     ViewData["Title"] = "Ошибка";
 }
 
-<h1 class="text-danger">Ошибка.</h1>
-<h2 class="text-danger">При выполнении вашего запроса произошла ошибка.</h2>
+<h1 class="text-danger">Ой-ой.</h1>
+<h4 class="text-danger">При выполнении вашего запроса произошла ошибка.</h4>
+<p>@Model.Description</p>
 
 @if (Model.ShowRequestId)
 {
