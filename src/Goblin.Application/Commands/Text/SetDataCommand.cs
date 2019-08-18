@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Extensions;
@@ -9,7 +8,7 @@ using Goblin.Narfu;
 using Goblin.OpenWeatherMap;
 using VkNet.Model;
 
-namespace Goblin.Application.TextCommands
+namespace Goblin.Application.Commands.Text
 {
     public class SetDataCommand : ITextCommand
     {

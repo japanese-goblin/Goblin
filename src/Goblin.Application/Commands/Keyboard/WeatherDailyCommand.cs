@@ -1,20 +1,22 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Results;
 using Goblin.Domain.Entities;
 using Goblin.OpenWeatherMap;
+using Newtonsoft.Json;
 using VkNet.Model;
 
-namespace Goblin.Application.KeyboardCommands
+namespace Goblin.Application.Commands.Keyboard
 {
-    public class WeatherNowCommand : IKeyboardCommand
+    public class WeatherDailyCommand : IKeyboardCommand
     {
-        public string Trigger => "weatherNow";
+        public string Trigger => "weather";
         
         private readonly OpenWeatherMapApi _api;
 
-        public WeatherNowCommand(OpenWeatherMapApi api)
+        public WeatherDailyCommand(OpenWeatherMapApi api)
         {
             _api = api;
         }
@@ -26,9 +28,11 @@ namespace Goblin.Application.KeyboardCommands
                 return new FailedResult("Для получения погоды сначала необходимо установить город.");
             }
 
+            var day = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)["weather"];
+
             try
             {
-                var weather = await _api.GetCurrentWeather(user.WeatherCity);
+                var weather = await _api.GetDailyWeatherAt(user.WeatherCity, DateTime.Parse(day));
                 return new SuccessfulResult
                 {
                     Message = weather.ToString()

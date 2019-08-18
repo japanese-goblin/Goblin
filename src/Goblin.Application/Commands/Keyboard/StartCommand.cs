@@ -6,7 +6,7 @@ using VkNet.Enums.SafetyEnums;
 using VkNet.Model;
 using VkNet.Model.Keyboard;
 
-namespace Goblin.Application.KeyboardCommands
+namespace Goblin.Application.Commands.Keyboard
 {
     public class StartCommand : IKeyboardCommand
     {

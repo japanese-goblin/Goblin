@@ -10,7 +10,7 @@ using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using VkNet.Model;
 
-namespace Goblin.Application.TextCommands
+namespace Goblin.Application.Commands.Text
 {
     public class DebugCommand : ITextCommand
     {

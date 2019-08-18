@@ -1,8 +1,8 @@
 using Goblin.Application;
 using Goblin.Application.Abstractions;
-using Goblin.Application.KeyboardCommands;
-using Goblin.Application.MergedCommands;
-using Goblin.Application.TextCommands;
+using Goblin.Application.Commands.Keyboard;
+using Goblin.Application.Commands.Merged;
+using Goblin.Application.Commands.Text;
 using Goblin.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
