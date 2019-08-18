@@ -23,6 +23,7 @@ namespace Goblin.Application.Commands.Keyboard
             kb.AddLine();
             kb.AddButton("Напоминания", "reminds", KeyboardButtonColor.Default, "123");
             kb.AddButton("Справка", "help", KeyboardButtonColor.Default, "123");
+            kb.AddButton("Рассылка", "mailingKeyboard", KeyboardButtonColor.Default, "123");
 
             return Task.FromResult<IResult>(new SuccessfulResult
             {
