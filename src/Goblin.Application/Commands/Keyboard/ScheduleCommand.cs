@@ -9,7 +9,7 @@ using Goblin.Narfu;
 using Newtonsoft.Json;
 using VkNet.Model;
 
-namespace Goblin.Application.KeyboardCommands
+namespace Goblin.Application.Commands.Keyboard
 {
     public class ScheduleCommand : IKeyboardCommand
     {

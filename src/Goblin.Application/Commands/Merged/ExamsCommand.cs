@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Application.Abstractions;
@@ -7,7 +6,7 @@ using Goblin.Domain.Entities;
 using Goblin.Narfu;
 using VkNet.Model;
 
-namespace Goblin.Application.MergedCommands
+namespace Goblin.Application.Commands.Merged
 {
     public class ExamsCommand : IKeyboardCommand, ITextCommand
     {
