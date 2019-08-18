@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Extensions;
 using Goblin.Application.Results;
@@ -59,16 +60,16 @@ namespace Goblin.Application
                 user = _db.BotUsers.Add(new BotUser(msg.FromId.Value)).Entity;
                 await _db.SaveChangesAsync();
             }
-            
+
             var result = await _service.ExecuteCommand(msg, user);
             if(result is FailedResult failed)
             {
-                _vkApi.Messages.SendError(failed.ToString(), msg.PeerId.Value);
+                await _vkApi.Messages.SendError(failed.ToString(), msg.PeerId.Value);
             }
             else
             {
                 var success = result as SuccessfulResult;
-                _vkApi.Messages.SendWithRandomId(new MessagesSendParams
+                await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                 {
                     Message = success.Message,
                     Attachments = success.Attachments,
@@ -80,12 +81,28 @@ namespace Goblin.Application
 
         public async Task GroupLeave(GroupLeave leave)
         {
-            //TODO: 
+            var admins = _db.BotUsers.Where(x => x.IsAdmin).Select(x => x.VkId);
+            var vkUser = (await _vkApi.Users.GetAsync(new[] { leave.UserId.Value })).First();
+            var userName = $"{vkUser.FirstName} {vkUser.LastName}";
+            await _vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams
+            {
+                Message = $"@id{leave.UserId} ({userName}) отписался :С",
+                UserIds = admins,
+                RandomId = new Random().Next(0, 10000)
+            });
         }
-        
+
         public async Task GroupJoin(GroupJoin join)
         {
-            //TODO: 
+            var admins = _db.BotUsers.Where(x => x.IsAdmin).Select(x => x.VkId);
+            var vkUser = (await _vkApi.Users.GetAsync(new[] { join.UserId.Value })).First();
+            var userName = $"{vkUser.FirstName} {vkUser.LastName}";
+            await _vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams
+            {
+                Message = $"@id{join.UserId} ({userName}) подписался!",
+                UserIds = admins,
+                RandomId = new Random().Next(0, 10000)
+            });
         }
     }
 }
