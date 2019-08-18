@@ -2,6 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using VkNet.Abstractions;
+using VkNet.Model.Keyboard;
 using VkNet.Model.RequestParams;
 
 namespace Goblin.Application.Extensions
@@ -12,15 +13,26 @@ namespace Goblin.Application.Extensions
         
         public static async Task<long> SendError(this IMessagesCategory msgCategory, string error, long peerId)
         {
+            var kb = new KeyboardBuilder();
+            kb.AddReturnToMenuButton();
+            
             return await msgCategory.SendWithRandomId(new MessagesSendParams
             {
                 PeerId = peerId,
-                Message = $"❌ Ошибка: {error}"
+                Message = $"❌ Ошибка: {error}",
+                Keyboard = kb.Build()
             });
         }
 
         public static async Task<long> SendWithRandomId(this IMessagesCategory msgCategory, MessagesSendParams @params)
         {
+            if(@params.Keyboard is null)
+            {
+                var kb = new KeyboardBuilder();
+                kb.AddReturnToMenuButton();
+                @params.Keyboard = kb.Build();
+            }
+            
             @params.RandomId = GetRandomId();
             return await msgCategory.SendAsync(@params);
         }
