@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Goblin.WebApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Goblin.WebApp.Models;
 
 namespace Goblin.WebApp.Controllers
 {
