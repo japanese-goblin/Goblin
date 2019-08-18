@@ -8,16 +8,16 @@ namespace Goblin.Application.Results
     {
         public bool IsSuccessful => false;
         
-        public List<string> Errors { get; }
+        public string Error { get; }
 
-        public FailedResult(List<string> errors)
+        public FailedResult(string error)
         {
-            Errors = errors;
+            Error = error;
         }
 
         public override string ToString()
         {
-            return string.Join('\n', Errors);
+            return Error;
         }
     }
 }
