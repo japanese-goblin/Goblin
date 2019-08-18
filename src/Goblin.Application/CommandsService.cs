@@ -5,6 +5,7 @@ using Goblin.Application.Abstractions;
 using Goblin.Application.Extensions;
 using Goblin.Application.Results;
 using Goblin.Domain.Entities;
+using Newtonsoft.Json;
 using VkNet.Model;
 
 namespace Goblin.Application
@@ -61,9 +62,10 @@ namespace Goblin.Application
 
         private async Task<IResult> ExecuteKeyboardCommand(Message msg, BotUser user)
         {
+            var record = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload).FirstOrDefault();
             foreach(var command in _keyboardCommands)
             {
-                if(msg.Payload.Contains(command.Trigger))
+                if(record.Key.Contains(command.Trigger))
                 {
                     return await command.Execute(msg, user);
                 }
