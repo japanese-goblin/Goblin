@@ -25,9 +25,14 @@ namespace Goblin.Application
         {
             if(!string.IsNullOrWhiteSpace(msg.Payload))
             {
-                return await ExecuteKeyboard(msg, user);
+                return await ExecuteKeyboardCommand(msg, user);
             }
-            
+
+            return await ExecuteTextCommand(msg, user);
+        }
+
+        private async Task<IResult> ExecuteTextCommand(Message msg, BotUser user)
+        {
             var cmdName = msg.GetCommand();
 
             foreach(var command in _textCommands)
@@ -54,7 +59,7 @@ namespace Goblin.Application
             return new FailedResult("команда не найдена. Проверьте правильность написания команды.");
         }
 
-        private async Task<IResult> ExecuteKeyboard(Message msg, BotUser user)
+        private async Task<IResult> ExecuteKeyboardCommand(Message msg, BotUser user)
         {
             foreach(var command in _keyboardCommands)
             {
@@ -63,7 +68,7 @@ namespace Goblin.Application
                     return await command.Execute(msg, user);
                 }
             }
-            
+
             return new FailedResult("Команда не найдена.");
         }
     }

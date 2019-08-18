@@ -24,7 +24,7 @@ namespace Goblin.Application.TextCommands
             _db = db;
         }
         
-        public Task<IResult> Execute(Message msg, BotUser user = null)
+        public Task<IResult> Execute(Message msg, BotUser user)
         {
             var strBuilder = new StringBuilder();
             

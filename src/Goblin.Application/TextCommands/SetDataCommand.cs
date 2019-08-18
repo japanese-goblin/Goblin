@@ -28,7 +28,7 @@ namespace Goblin.Application.TextCommands
             _narfu = narfu;
         }
 
-        public async Task<IResult> Execute(Message msg, BotUser user = null)
+        public async Task<IResult> Execute(Message msg, BotUser user)
         {
             var botUser = _db.BotUsers.Find(user.VkId);
             var prms = msg.GetCommandParameters();

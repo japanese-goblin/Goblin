@@ -14,7 +14,7 @@ namespace Goblin.Application.KeyboardCommands
     {
         public string Trigger => "scheduleKeyboard";
         
-        public Task<IResult> Execute(Message msg, BotUser user = null)
+        public Task<IResult> Execute(Message msg, BotUser user)
         {
             const string DefaultFormat = "dd.MM.yyyy";
             var date = DateTime.Now;

@@ -12,7 +12,7 @@ namespace Goblin.Application.KeyboardCommands
     {
         public string Trigger => "command";
         
-        public Task<IResult> Execute(Message msg, BotUser user = null)
+        public Task<IResult> Execute(Message msg, BotUser user)
         {
             var kb = new KeyboardBuilder(true);
             kb.AddButton("Расписание", "scheduleKeyboard", KeyboardButtonColor.Primary, "123");

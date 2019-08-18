@@ -14,7 +14,7 @@ namespace Goblin.Application.MergedCommands
         
         public string Trigger => "reminds";
 
-        public Task<IResult> Execute(Message msg, BotUser user = null)
+        public Task<IResult> Execute(Message msg, BotUser user)
         {
             if(user.Reminds.Count == 0)
             {
