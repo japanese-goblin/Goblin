@@ -8,6 +8,6 @@ namespace Goblin.Application.Abstractions
     {
         string Trigger { get; }
         
-        Task<IResult> Execute(Message msg, BotUser user = null);
+        Task<IResult> Execute(Message msg, BotUser user);
     }
 }

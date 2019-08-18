@@ -4,7 +4,7 @@ using Goblin.Application.Results;
 using Goblin.Domain.Entities;
 using VkNet.Model;
 
-namespace Goblin.Application.TextCommands
+namespace Goblin.Application.MergedCommands
 {
     public class HelpCommand : IKeyboardCommand, ITextCommand
     {
