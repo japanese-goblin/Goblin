@@ -25,10 +25,7 @@ namespace Goblin.Application.KeyboardCommands
         {
             if(string.IsNullOrWhiteSpace(user.WeatherCity))
             {
-                return new FailedResult(new List<string>
-                {
-                    "Для получения погоды сначала необходимо установить город."
-                });
+                return new FailedResult("Для получения погоды сначала необходимо установить город.");
             }
 
             var day = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)["weather"];
@@ -43,10 +40,7 @@ namespace Goblin.Application.KeyboardCommands
             }
             catch
             {
-                return new FailedResult(new List<string>
-                {
-                    "Невозможно получить погоду с внешнего сайта. Попробуйте позже."
-                });
+                return new FailedResult("Невозможно получить погоду с внешнего сайта. Попробуйте позже.");
             }
         }
     }

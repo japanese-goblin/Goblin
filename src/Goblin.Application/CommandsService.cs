@@ -51,10 +51,7 @@ namespace Goblin.Application
                 return result as SuccessfulResult;
             }
 
-            return new FailedResult(new List<string>
-            {
-                "команда не найдена. Проверьте правильность написания команды."
-            });
+            return new FailedResult("команда не найдена. Проверьте правильность написания команды.");
         }
 
         private async Task<IResult> ExecuteKeyboard(Message msg, BotUser user)
@@ -67,10 +64,7 @@ namespace Goblin.Application
                 }
             }
             
-            return new FailedResult(new List<string>
-            {
-                "Команда не найдена."
-            });
+            return new FailedResult("Команда не найдена.");
         }
     }
 }

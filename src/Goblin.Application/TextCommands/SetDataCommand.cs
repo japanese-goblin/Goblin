@@ -34,10 +34,8 @@ namespace Goblin.Application.TextCommands
             var prms = msg.GetCommandParameters();
             if(prms.Length != 2)
             {
-                return new FailedResult(new List<string>
-                {
-                    "Укажите 2 параметра команды. Пример использования: установить город Москва / установить группу 123456"
-                });
+                return new FailedResult("Укажите 2 параметра команды." +
+                                        "Пример использования: установить город Москва / установить группу 123456");
             }
 
             if(prms[0] == "город")
@@ -46,10 +44,7 @@ namespace Goblin.Application.TextCommands
                 var isExists = await _weather.IsCityExists(city);
                 if(!isExists)
                 {
-                    return new FailedResult(new List<string>
-                    {
-                        $"Город {city} не найден"
-                    });
+                    return new FailedResult($"Город {city} не найден");
                 }
 
                 botUser.SetCity(city);
@@ -59,24 +54,19 @@ namespace Goblin.Application.TextCommands
                     Message = $"Город успешно установлен на {city}"
                 };
             }
-            else if(prms[0] == "группу" || prms[0] == "группа")
+
+            if(prms[0] == "группу" || prms[0] == "группа")
             {
                 var group = prms[1];
                 if(!int.TryParse(group, out var intGroup))
                 {
-                    return new FailedResult(new List<string>
-                    {
-                        "Укажите корректный номер группы."
-                    });
+                    return new FailedResult("Укажите корректный номер группы.");
                 }
 
                 var isExists = _narfu.Students.IsCorrectGroup(intGroup);
                 if(!isExists)
                 {
-                    return new FailedResult(new List<string>
-                    {
-                        $"Группа с номером {intGroup} не найдена."
-                    });
+                    return new FailedResult($"Группа с номером {intGroup} не найдена.");
                 }
 
                 user.SetNarfuGroup(intGroup);
@@ -87,11 +77,8 @@ namespace Goblin.Application.TextCommands
                 };
             }
 
-            return new FailedResult(new List<string>
-            {
-                "Укажите что вы хотите установить: группу или город. \n" +
-                "Пример использования: установить город Москва / установить группу 123456"
-            });
+            return new FailedResult("Укажите что вы хотите установить: группу или город. \n" +
+                                    "Пример использования: установить город Москва / установить группу 123456");
         }
     }
 }

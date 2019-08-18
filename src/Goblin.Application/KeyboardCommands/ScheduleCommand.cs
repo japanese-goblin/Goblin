@@ -26,10 +26,7 @@ namespace Goblin.Application.KeyboardCommands
         {
             if(user.NarfuGroup == 0)
             {
-                return new FailedResult(new List<string>
-                {
-                    "Для получения расписания сначала необходимо установить группу."
-                });
+                return new FailedResult("Для получения расписания сначала необходимо установить группу.");
             }
             
             var date = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)["schedule"];
@@ -43,17 +40,11 @@ namespace Goblin.Application.KeyboardCommands
             }
             catch(FlurlHttpException ex)
             {
-                return new FailedResult(new List<string>
-                {
-                    $"Невозможно получить расписание с сайта. Попробуйте позже. (Код ошибки - {ex.Call.HttpStatus})"
-                });
+                return new FailedResult($"Невозможно получить расписание с сайта. Попробуйте позже. (Код ошибки - {ex.Call.HttpStatus})");
             }
             catch
             {
-                return new FailedResult(new List<string>
-                {
-                    "Непредвиденная ошибка получения расписания с сайта. Попробуйте позже."
-                });
+                return new FailedResult("Непредвиденная ошибка получения расписания с сайта. Попробуйте позже.");
             }
         }
     }
