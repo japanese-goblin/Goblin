@@ -11,7 +11,7 @@ using VkNet.Model.RequestParams;
 
 namespace Goblin.WebApp.Controllers
 {
-    [Authorize] //TODO: roles
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly BotDbContext _db;

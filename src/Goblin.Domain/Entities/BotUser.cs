@@ -16,7 +16,7 @@ namespace Goblin.Domain.Entities
         public virtual ICollection<Remind> Reminds { get; private set; }
         public virtual Subscribe SubscribeInfo { get; private set; }
 
-        public BotUser()
+        protected BotUser()
         {
             
         }

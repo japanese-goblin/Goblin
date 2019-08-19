@@ -1,9 +1,12 @@
+using System;
 using Goblin.Application;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Commands.Keyboard;
 using Goblin.Application.Commands.Merged;
 using Goblin.Application.Commands.Text;
+using Goblin.Application.Hangfire;
 using Goblin.DataAccess;
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +25,7 @@ namespace Goblin.WebApp.Extensions
             services.AddSingleton<IVkApi, VkApi>(x =>
             {
                 var token = configuration["Vk:AccessToken"];
-                var api = new VkApi();
+                var api = new VkApi { RequestsPerSecond = 20 };
                 api.Authorize(new ApiAuthParams
                 {
                     AccessToken = token
@@ -75,7 +78,7 @@ namespace Goblin.WebApp.Extensions
 
         public static void AddAuth(this IServiceCollection services, IConfiguration config)
         {
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddIdentity<IdentityUser, IdentityRole>()
                     .AddDefaultUI(UIFramework.Bootstrap4)
                     .AddEntityFrameworkStores<IdentityUsersDbContext>();
             

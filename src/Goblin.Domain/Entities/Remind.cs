@@ -12,7 +12,7 @@ namespace Goblin.Domain.Entities
 
         public virtual BotUser BotUser { get; private set; }
 
-        private Remind()
+        protected Remind()
         {
         }
 
