@@ -29,8 +29,8 @@ namespace Goblin.Application.Commands.Keyboard
                                        ? "Отписаться от рассылки расписания"
                                        : "Подписаться на рассылку расписания";
             var weatherText = isWeather
-                                       ? "Отписаться от рассылки расписания"
-                                       : "Подписаться на рассылку расписания";
+                                       ? "Отписаться от рассылки погоды"
+                                       : "Подписаться на рассылку погоды";
             
             var kb = new KeyboardBuilder(true);
             kb.AddButton(scheduleText, "mailing", scheduleColor, "schedule");
