@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using VkNet.Abstractions;
+using VkNet.Model;
 using VkNet.Model.Keyboard;
 using VkNet.Model.RequestParams;
 
@@ -35,6 +38,33 @@ namespace Goblin.Application.Extensions
             
             @params.RandomId = GetRandomId();
             return await msgCategory.SendAsync(@params);
+        }
+        
+        public static async Task<ReadOnlyCollection<MessagesSendResult>> SendErrorToUserIds(this IMessagesCategory msgCategory,
+                                                                                            string error, IEnumerable<long> userIds)
+        {
+            var kb = new KeyboardBuilder(true);
+            kb.AddReturnToMenuButton(false);
+            
+            return await msgCategory.SendToUserIdsWithRandomId(new MessagesSendParams
+            {
+                UserIds = userIds,
+                Message = $"❌ Ошибка: {error}",
+                Keyboard = kb.Build()
+            });
+        }
+        
+        public static async Task<ReadOnlyCollection<MessagesSendResult>> SendToUserIdsWithRandomId(this IMessagesCategory msgCategory, MessagesSendParams @params)
+        {
+            if(@params.Keyboard is null)
+            {
+                var kb = new KeyboardBuilder(true);
+                kb.AddReturnToMenuButton(false);
+                @params.Keyboard = kb.Build();
+            }
+            
+            @params.RandomId = GetRandomId();
+            return await msgCategory.SendToUserIdsAsync(@params);
         }
         
         private static int GetRandomId()

@@ -36,11 +36,10 @@ namespace Goblin.Application.Commands.Text
 
             var msgText = $"Сообщение от @id{msg.FromId}:\n{string.Join(' ', param)}";
 
-            await _api.Messages.SendToUserIdsAsync(new MessagesSendParams
+            await _api.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
             {
                 UserIds = _db.BotUsers.Where(x => x.IsAdmin).Select(x => x.VkId),
-                Message = msgText,
-                RandomId = new Random().Next(0, int.MaxValue)
+                Message = msgText
             });
             return new SuccessfulResult
             {

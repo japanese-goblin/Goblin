@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Flurl.Http;
 using Goblin.Application.Extensions;
 using Goblin.DataAccess;
 using Goblin.Narfu;
@@ -36,21 +37,21 @@ namespace Goblin.Application.Hangfire
                     try
                     {
                         var schedule = await _narfuApi.Students.GetScheduleAtDate(group.Key, DateTime.Today);
-                        await _vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams
+                        await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
                         {
                             Message = schedule.ToString(),
                             UserIds = ids,
-                            RandomId = new Random().Next(0, int.MaxValue)
                         });
                     }
-                    catch
+                    catch(FlurlHttpException ex)
                     {
-                        await _vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams
-                        {
-                            Message = "Ошибка получения расписания с сайта.",
-                            UserIds = ids,
-                            RandomId = new Random().Next(0, int.MaxValue)
-                        });
+                        var msg = $"Невозможно получить расписание с сайта (код ошибки - {ex.Call.HttpStatus}).";
+                        await _vkApi.Messages.SendErrorToUserIds(msg, ids);
+                    }
+                    catch(Exception ex)
+                    {
+                        var msg = $"Непредвиденнная ошибка при получении расписания с сайта.";
+                        await _vkApi.Messages.SendErrorToUserIds(msg, ids);
                     }
                     
                     await Task.Delay(Defaults.ExtraDelay);
