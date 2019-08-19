@@ -20,7 +20,7 @@ namespace Goblin.DataAccess.ContextFactories
 
             var builder = new DbContextOptionsBuilder<IdentityUsersDbContext>();
             var connectionString = configuration.GetConnectionString("DefaultConnection");
-            builder.UseSqlServer(connectionString);
+            builder.UseNpgsql(connectionString);
             return new IdentityUsersDbContext(builder.Options);
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Goblin.DataAccess.Migrations.IdentityUsersDb
 {
@@ -46,8 +46,8 @@ namespace Goblin.DataAccess.Migrations.IdentityUsersDb
                                          table => new
                                          {
                                              Id = table.Column<int>()
-                                                       .Annotation("SqlServer:ValueGenerationStrategy",
-                                                                   SqlServerValueGenerationStrategy.IdentityColumn),
+                                                       .Annotation("Npgsql:ValueGenerationStrategy",
+                                                                   NpgsqlValueGenerationStrategy.SerialColumn),
                                              RoleId = table.Column<string>(),
                                              ClaimType = table.Column<string>(nullable: true),
                                              ClaimValue = table.Column<string>(nullable: true)
@@ -68,8 +68,8 @@ namespace Goblin.DataAccess.Migrations.IdentityUsersDb
                                          table => new
                                          {
                                              Id = table.Column<int>()
-                                                       .Annotation("SqlServer:ValueGenerationStrategy",
-                                                                   SqlServerValueGenerationStrategy.IdentityColumn),
+                                                       .Annotation("Npgsql:ValueGenerationStrategy",
+                                                                   NpgsqlValueGenerationStrategy.SerialColumn),
                                              UserId = table.Column<string>(),
                                              ClaimType = table.Column<string>(nullable: true),
                                              ClaimValue = table.Column<string>(nullable: true)
@@ -160,8 +160,7 @@ namespace Goblin.DataAccess.Migrations.IdentityUsersDb
                                          "RoleNameIndex",
                                          "AspNetRoles",
                                          "NormalizedName",
-                                         unique: true,
-                                         filter: "[NormalizedName] IS NOT NULL");
+                                         unique: true);
 
             migrationBuilder.CreateIndex(
                                          "IX_AspNetUserClaims_UserId",
@@ -187,8 +186,7 @@ namespace Goblin.DataAccess.Migrations.IdentityUsersDb
                                          "UserNameIndex",
                                          "AspNetUsers",
                                          "NormalizedUserName",
-                                         unique: true,
-                                         filter: "[NormalizedUserName] IS NOT NULL");
+                                         unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

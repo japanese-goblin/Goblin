@@ -37,10 +37,10 @@ namespace Goblin.WebApp.Extensions
 
             services.AddDbContext<BotDbContext>(options =>
             {
-                options.UseSqlServer(connectionString)
+                options.UseNpgsql(connectionString)
                        .UseLazyLoadingProxies();
             });
-            services.AddDbContext<IdentityUsersDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<IdentityUsersDbContext>(options => options.UseNpgsql(connectionString));
         }
 
         public static void AddBotFeatures(this IServiceCollection services)

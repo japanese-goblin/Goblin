@@ -3,9 +3,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Goblin.DataAccess.Migrations.BotDb
+namespace Goblin.DataAccess.Migrations
 {
     [DbContext(typeof(BotDbContext))]
     internal class BotDbContextModelSnapshot : ModelSnapshot
@@ -14,10 +14,9 @@ namespace Goblin.DataAccess.Migrations.BotDb
         {
 #pragma warning disable 612, 618
             modelBuilder
+                    .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                     .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
-                    .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                    .HasAnnotation("SqlServer:ValueGenerationStrategy",
-                                   SqlServerValueGenerationStrategy.IdentityColumn);
+                    .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Goblin.Domain.Entities.BotUser", b =>
             {
@@ -48,8 +47,7 @@ namespace Goblin.DataAccess.Migrations.BotDb
             modelBuilder.Entity("Goblin.Domain.Entities.CronJob", b =>
             {
                 b.Property<int>("Id")
-                 .ValueGeneratedOnAdd()
-                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                 .ValueGeneratedOnAdd();
 
                 b.Property<int>("Hours");
 
@@ -76,8 +74,7 @@ namespace Goblin.DataAccess.Migrations.BotDb
             modelBuilder.Entity("Goblin.Domain.Entities.Remind", b =>
             {
                 b.Property<int>("Id")
-                 .ValueGeneratedOnAdd()
-                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                 .ValueGeneratedOnAdd();
 
                 b.Property<long>("BotUserId");
 
@@ -97,8 +94,7 @@ namespace Goblin.DataAccess.Migrations.BotDb
             modelBuilder.Entity("Goblin.Domain.Entities.Subscribe", b =>
             {
                 b.Property<int>("Id")
-                 .ValueGeneratedOnAdd()
-                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                 .ValueGeneratedOnAdd();
 
                 b.Property<long>("BotUserId");
 
