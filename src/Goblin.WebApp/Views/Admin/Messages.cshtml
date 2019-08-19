@@ -1,0 +1,69 @@
+@{
+    ViewData["Title"] = "Отправка сообщений";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr/>
+
+<div class="row">
+    <div class="col-md-3">
+        <form method="post" asp-controller="Admin" asp-action="SendToAll">
+            <h3>Рассылка всем</h3>
+            <div class="form-group">
+                <label>Сообщение</label>
+                <textarea class="form-control message-all" name="msg" placeholder="Сообщение"></textarea>
+            </div>
+            <div class="btn-group">
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group mr-2">
+                        <button id="add-attach-all" type="button" class="btn btn-info">Добавить аттач</button>
+                    </div>
+                    <div class="btn-group mr-2">
+                        <button type="submit" class="btn btn-warning send-message-all">Отправить</button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group attachments-all">
+                <label>Прикрепления</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">1</span>
+                    </div>
+                    <input type="text" class="form-control attach-all" name="attachs[]" placholder="attach">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-3 offset-md-2">
+        <form method="post" asp-controller="Admin" asp-action="SendToId">
+            <h3>Письмо одному</h3>
+            <div class="form-group">
+                <label>ID (2000000001 для бесед)</label>
+                <input type="number" class="form-control user-id" name="peerId" placeholder="ID">
+            </div>
+            <div class="form-group">
+                <label>Сообщение</label>
+                <textarea class="form-control message-one" name="msg" placeholder="Сообщение"></textarea>
+            </div>
+            <div class="btn-group">
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group mr-2">
+                        <button id="add-attach-one" type="button" class="btn btn-info">Добавить аттач</button>
+                    </div>
+                    <div class="btn-group mr-2">
+                        <button type="submit" class="btn btn-warning send-message-one">Отправить</button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group attachments-one">
+                <label>Прикрепления</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">1</span>
+                    </div>
+                    <input type="text" class="form-control attach-one" name="attachs[]">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
