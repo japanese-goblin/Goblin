@@ -85,11 +85,10 @@ namespace Goblin.Application
             var admins = _db.BotUsers.Where(x => x.IsAdmin).Select(x => x.VkId);
             var vkUser = (await _vkApi.Users.GetAsync(new[] { leave.UserId.Value })).First();
             var userName = $"{vkUser.FirstName} {vkUser.LastName}";
-            await _vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams
+            await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
             {
                 Message = $"@id{leave.UserId} ({userName}) отписался :С",
-                UserIds = admins,
-                RandomId = new Random().Next(0, 10000)
+                UserIds = admins
             });
         }
 
@@ -98,11 +97,10 @@ namespace Goblin.Application
             var admins = _db.BotUsers.Where(x => x.IsAdmin).Select(x => x.VkId);
             var vkUser = (await _vkApi.Users.GetAsync(new[] { join.UserId.Value })).First();
             var userName = $"{vkUser.FirstName} {vkUser.LastName}";
-            await _vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams
+            await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
             {
                 Message = $"@id{join.UserId} ({userName}) подписался!",
                 UserIds = admins,
-                RandomId = new Random().Next(0, 10000)
             });
         }
     }

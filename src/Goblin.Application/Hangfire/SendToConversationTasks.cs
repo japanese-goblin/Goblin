@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Flurl.Http;
 using Goblin.Application.Extensions;
 using Goblin.DataAccess;
 using Goblin.Narfu;
@@ -40,12 +41,13 @@ namespace Goblin.Application.Hangfire
                     await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                     {
                         PeerId = id,
-                        Message = weather.ToString()
+                        Message = $"Погода в городе {city} на сегодня ({DateTime.Now:dddd, dd.MM.yyyy}):\n{weather}",
                     });
                 }
                 catch
                 {
-                    //TODO: log
+                    var msg = "Невозможно получить погоду с сайта.";
+                    await _vkApi.Messages.SendError(msg, id);
                 }
             }
 
@@ -60,9 +62,15 @@ namespace Goblin.Application.Hangfire
                         Message = schedule.ToString()
                     });
                 }
-                catch
+                catch(FlurlHttpException ex)
                 {
-                    //TODO: log
+                    var msg = $"Невозможно получить расписание с сайта (код ошибки - {ex.Call.HttpStatus}).";
+                    await _vkApi.Messages.SendError(msg, id);
+                }
+                catch(Exception ex)
+                {
+                    var msg = "Непредвиденнная ошибка при получении расписания с сайта.";
+                    await _vkApi.Messages.SendError(msg, id);
                 }
             }
         }

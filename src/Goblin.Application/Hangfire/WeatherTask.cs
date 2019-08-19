@@ -32,25 +32,19 @@ namespace Goblin.Application.Hangfire
             {
                 foreach(var chunk in group.Chunk(Defaults.ChunkLimit))
                 {
-                    var ids = chunk.Select(x => x.VkId);
+                    var ids = chunk.Select(x => x.VkId).ToArray();
                     try
                     {
                         var weather = await _weatherApi.GetDailyWeatherAt(group.Key, DateTime.Today);
-                        await _vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams
+                        await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
                         {
                             Message = $"Погода в городе {group.Key} на сегодня ({DateTime.Now:dddd, dd.MM.yyyy}):\n{weather}",
-                            UserIds = ids,
-                            RandomId = new Random().Next(0, int.MaxValue)
+                            UserIds = ids
                         });
                     }
                     catch
                     {
-                        await _vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams
-                        {
-                            Message = "Ошибка получения погоды с сайта.",
-                            UserIds = ids,
-                            RandomId = new Random().Next(0, int.MaxValue)
-                        });
+                        await _vkApi.Messages.SendErrorToUserIds("Невозможно получить погоду с сайта.", ids);
                     }
 
                     await Task.Delay(Defaults.ExtraDelay);

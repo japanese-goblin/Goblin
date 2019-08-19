@@ -37,11 +37,10 @@ namespace Goblin.WebApp.Controllers
         public async Task<IActionResult> SendToAll(string msg, string[] attachs)
         {
             var gr = _db.BotUsers.Select(x => x.VkId).ToArray();
-            await _vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams
+            await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
             {
                 Message = msg,
-                UserIds = gr,
-                RandomId = new Random().Next(0, int.MaxValue)
+                UserIds = gr
             });
             return RedirectToAction("Messages", "Admin");
         }
