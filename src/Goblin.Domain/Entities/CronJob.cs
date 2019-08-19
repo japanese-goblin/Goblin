@@ -14,7 +14,7 @@ namespace Goblin.Domain.Entities
         public int Hours { get; private set; }
         public int Minutes { get; private set; }
 
-        private CronJob()
+        protected CronJob()
         {
         }
         
