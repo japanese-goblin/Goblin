@@ -24,6 +24,7 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Pages\Home.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Admin\Pages\Users.cshtml" />
     </ItemGroup>
 
 </Project>
