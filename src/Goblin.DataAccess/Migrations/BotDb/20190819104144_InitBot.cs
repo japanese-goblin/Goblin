@@ -1,8 +1,8 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Goblin.DataAccess.Migrations.BotDb
+namespace Goblin.DataAccess.Migrations
 {
     public partial class InitBot : Migration
     {
@@ -27,8 +27,8 @@ namespace Goblin.DataAccess.Migrations.BotDb
                                          table => new
                                          {
                                              Id = table.Column<int>()
-                                                       .Annotation("SqlServer:ValueGenerationStrategy",
-                                                                   SqlServerValueGenerationStrategy.IdentityColumn),
+                                                       .Annotation("Npgsql:ValueGenerationStrategy",
+                                                                   NpgsqlValueGenerationStrategy.SerialColumn),
                                              Name = table.Column<string>(),
                                              VkId = table.Column<long>(),
                                              NarfuGroup = table.Column<int>(nullable: false, defaultValue: 0),
@@ -43,8 +43,8 @@ namespace Goblin.DataAccess.Migrations.BotDb
                                          table => new
                                          {
                                              Id = table.Column<int>()
-                                                       .Annotation("SqlServer:ValueGenerationStrategy",
-                                                                   SqlServerValueGenerationStrategy.IdentityColumn),
+                                                       .Annotation("Npgsql:ValueGenerationStrategy",
+                                                                   NpgsqlValueGenerationStrategy.SerialColumn),
                                              BotUserId = table.Column<long>(),
                                              Text = table.Column<string>(maxLength: 100),
                                              Date = table.Column<DateTime>()
@@ -65,8 +65,8 @@ namespace Goblin.DataAccess.Migrations.BotDb
                                          table => new
                                          {
                                              Id = table.Column<int>()
-                                                       .Annotation("SqlServer:ValueGenerationStrategy",
-                                                                   SqlServerValueGenerationStrategy.IdentityColumn),
+                                                       .Annotation("Npgsql:ValueGenerationStrategy",
+                                                                   NpgsqlValueGenerationStrategy.SerialColumn),
                                              BotUserId = table.Column<long>(),
                                              IsWeather = table.Column<bool>(nullable: false, defaultValue: false),
                                              IsSchedule = table.Column<bool>(nullable: false, defaultValue: false)
