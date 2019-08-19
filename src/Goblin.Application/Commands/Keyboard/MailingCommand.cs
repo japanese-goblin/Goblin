@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
@@ -19,7 +18,7 @@ namespace Goblin.Application.Commands.Keyboard
         {
             _db = db;
         }
-        
+
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
             user = _db.BotUsers.Find(user.VkId);
@@ -35,6 +34,7 @@ namespace Goblin.Application.Commands.Keyboard
                     Message = "Успешно."
                 };
             }
+
             if(choose == "schedule")
             {
                 user.SubscribeInfo.SetIsSchedule(!isSchedule);
@@ -44,7 +44,7 @@ namespace Goblin.Application.Commands.Keyboard
                     Message = "Успешно."
                 };
             }
-            
+
             return new FailedResult("Действие не найдено");
         }
     }

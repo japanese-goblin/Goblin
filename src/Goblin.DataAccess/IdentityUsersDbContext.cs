@@ -6,7 +6,9 @@ namespace Goblin.DataAccess
     public class IdentityUsersDbContext : IdentityDbContext
     {
         public IdentityUsersDbContext(DbContextOptions<IdentityUsersDbContext> options)
-                : base(options) { }
+                : base(options)
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

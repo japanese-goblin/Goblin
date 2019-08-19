@@ -20,7 +20,7 @@ namespace Goblin.WebApp.Extensions
                 DisplayStorageConnectionString = false
             });
         }
-        
+
         public static void AddHangfireJobs(this IApplicationBuilder services)
         {
             BackgroundJob.Enqueue<CreateRoleTask>(x => x.CreateRoles());

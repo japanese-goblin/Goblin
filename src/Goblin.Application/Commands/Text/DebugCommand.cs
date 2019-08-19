@@ -16,18 +16,18 @@ namespace Goblin.Application.Commands.Text
     {
         public bool IsAdminCommand => true;
         public string[] Aliases => new[] { "дебуг", "дебаг" };
-        
+
         private readonly BotDbContext _db;
 
         public DebugCommand(BotDbContext db)
         {
             _db = db;
         }
-        
+
         public Task<IResult> Execute(Message msg, BotUser user)
         {
             var strBuilder = new StringBuilder();
-            
+
             var bday = new DateTime(2017, 4, 29, 19, 42, 0);
             var dis = DateTime.Now - bday;
 
@@ -36,7 +36,7 @@ namespace Goblin.Application.Commands.Text
 
             var users = _db.BotUsers.AsNoTracking().Count();
             var subscribes = _db.Subscribes.AsNoTracking();
-            
+
             strBuilder.AppendFormat("Время старта: {0:F}", startTime).AppendLine();
             strBuilder.AppendFormat("Я работаю уже {0} часов {1} минут", uptime.Hours, uptime.Minutes)
                       .AppendLine();

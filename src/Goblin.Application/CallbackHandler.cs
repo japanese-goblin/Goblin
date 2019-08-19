@@ -100,7 +100,7 @@ namespace Goblin.Application
             await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
             {
                 Message = $"@id{join.UserId} ({userName}) подписался!",
-                UserIds = admins,
+                UserIds = admins
             });
         }
     }

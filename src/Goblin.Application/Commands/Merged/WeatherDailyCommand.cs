@@ -40,7 +40,7 @@ namespace Goblin.Application.Commands.Merged
             {
                 return new FailedResult("Для получения погоды сначала необходимо установить город.");
             }
-            
+
             return await GetWeather(user, DateTime.Today.AddDays(1));
         }
 

@@ -12,7 +12,7 @@ namespace Goblin.Application.Commands.Merged
         public string[] Aliases => new[] { "помоги", "справка", "помощь", "команды" };
 
         public string Trigger => "help";
-        
+
         public Task<IResult> Execute(Message msg, BotUser user)
         {
             const string guideLink = "https://vk.com/@-146048760-commands";

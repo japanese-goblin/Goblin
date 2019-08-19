@@ -15,14 +15,13 @@ namespace Goblin.Application.Commands.Merged
 
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "погода" };
-        
+
         private readonly OpenWeatherMapApi _api;
 
         public WeatherNowCommand(OpenWeatherMapApi api)
         {
             _api = api;
         }
-        
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
@@ -41,10 +40,12 @@ namespace Goblin.Application.Commands.Merged
             {
                 return await GetWeather(city);
             }
+
             if(string.IsNullOrWhiteSpace(user.WeatherCity) && string.IsNullOrWhiteSpace(city))
             {
                 return new FailedResult("Для получения погоды сначала необходимо установить город.");
             }
+
             if(!string.IsNullOrWhiteSpace(city))
             {
                 return await GetWeather(city);

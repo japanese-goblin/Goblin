@@ -11,7 +11,7 @@ namespace Goblin.Application.Commands.Keyboard
     public class StartCommand : IKeyboardCommand
     {
         public string Trigger => "command";
-        
+
         public Task<IResult> Execute(Message msg, BotUser user)
         {
             var kb = new KeyboardBuilder(true);

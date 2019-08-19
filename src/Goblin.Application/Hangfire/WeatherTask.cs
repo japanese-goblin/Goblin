@@ -38,7 +38,8 @@ namespace Goblin.Application.Hangfire
                         var weather = await _weatherApi.GetDailyWeatherAt(group.Key, DateTime.Today);
                         await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
                         {
-                            Message = $"Погода в городе {group.Key} на сегодня ({DateTime.Now:dddd, dd.MM.yyyy}):\n{weather}",
+                            Message =
+                                    $"Погода в городе {group.Key} на сегодня ({DateTime.Now:dddd, dd.MM.yyyy}):\n{weather}",
                             UserIds = ids
                         });
                     }

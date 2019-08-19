@@ -24,10 +24,10 @@ namespace Goblin.Application.Hangfire
             _narfuApi = narfuApi;
             _vkApi = vkApi;
             _db = db;
-            
+
             InitJobs();
         }
-        
+
         public async Task SendToConv(long id, int group = 0, string city = "")
         {
             const int convId = 2000000000;
@@ -41,7 +41,7 @@ namespace Goblin.Application.Hangfire
                     await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                     {
                         PeerId = id,
-                        Message = $"Погода в городе {city} на сегодня ({DateTime.Now:dddd, dd.MM.yyyy}):\n{weather}",
+                        Message = $"Погода в городе {city} на сегодня ({DateTime.Now:dddd, dd.MM.yyyy}):\n{weather}"
                     });
                 }
                 catch
@@ -80,10 +80,12 @@ namespace Goblin.Application.Hangfire
             foreach(var job in _db.CronJobs)
             {
                 RecurringJob.AddOrUpdate<SendToConversationTasks>(
-                                                         $"DAILY__{job.Name}",
-                                                         x => x.SendToConv(job.VkId, job.NarfuGroup, job.WeatherCity),
-                                                         $"{job.Minutes} {job.Hours} * * 1-6", TimeZoneInfo.Local
-                                                        );
+                                                                  $"DAILY__{job.Name}",
+                                                                  x => x.SendToConv(job.VkId, job.NarfuGroup,
+                                                                                    job.WeatherCity),
+                                                                  $"{job.Minutes} {job.Hours} * * 1-6",
+                                                                  TimeZoneInfo.Local
+                                                                 );
             }
         }
 

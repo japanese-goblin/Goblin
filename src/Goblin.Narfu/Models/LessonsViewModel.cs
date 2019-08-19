@@ -19,7 +19,7 @@ namespace Goblin.Narfu.Models
         public override string ToString()
         {
             var strBuilder = new StringBuilder();
-            
+
             foreach(var lesson in Lessons.Where(x => x.StartTime.DayOfYear == _date.DayOfYear))
             {
                 strBuilder.AppendFormat("{0} - {1} [{2}] ({3})",

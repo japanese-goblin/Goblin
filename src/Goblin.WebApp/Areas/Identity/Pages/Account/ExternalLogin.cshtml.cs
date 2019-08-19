@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -20,9 +17,9 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
-            SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager,
-            ILogger<ExternalLoginModel> logger)
+                SignInManager<IdentityUser> signInManager,
+                UserManager<IdentityUser> userManager,
+                ILogger<ExternalLoginModel> logger)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -77,7 +74,7 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account
 
             // Sign in the user with this external login provider if the user already has a login.
             var result =
-                await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false, true);
+                    await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false, true);
             if(result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name,
@@ -138,7 +135,10 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account
                     }
                 }
 
-                foreach(var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
             }
 
             LoginProvider = info.LoginProvider;
@@ -146,4 +146,4 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account
             return Page();
         }
     }
-} 
+}

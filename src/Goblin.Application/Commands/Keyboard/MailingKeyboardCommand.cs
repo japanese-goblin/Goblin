@@ -12,26 +12,26 @@ namespace Goblin.Application.Commands.Keyboard
     public class MailingKeyboardCommand : IKeyboardCommand
     {
         public string Trigger => "mailingKeyboard";
-        
+
         public Task<IResult> Execute(Message msg, BotUser user)
         {
             var isSchedule = user.SubscribeInfo.IsSchedule;
             var isWeather = user.SubscribeInfo.IsWeather;
-            
+
             var scheduleColor = isSchedule
                                         ? KeyboardButtonColor.Negative
                                         : KeyboardButtonColor.Positive;
             var weatherColor = isWeather
-                                        ? KeyboardButtonColor.Negative
-                                        : KeyboardButtonColor.Positive;
+                                       ? KeyboardButtonColor.Negative
+                                       : KeyboardButtonColor.Positive;
 
             var scheduleText = isSchedule
                                        ? "Отписаться от рассылки расписания"
                                        : "Подписаться на рассылку расписания";
             var weatherText = isWeather
-                                       ? "Отписаться от рассылки погоды"
-                                       : "Подписаться на рассылку погоды";
-            
+                                      ? "Отписаться от рассылки погоды"
+                                      : "Подписаться на рассылку погоды";
+
             var kb = new KeyboardBuilder(true);
             kb.AddButton(scheduleText, "mailing", scheduleColor, "schedule");
             kb.AddLine();
