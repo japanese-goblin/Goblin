@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using Goblin.Application;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using VkNet.Model.GroupUpdate;
 using VkNet.Utils;
 
 namespace Goblin.WebApp.Controllers
@@ -17,7 +16,7 @@ namespace Goblin.WebApp.Controllers
         {
             _handler = handler;
         }
-        
+
         [HttpPost]
         public async Task<string> Handle([FromBody] object update)
         {

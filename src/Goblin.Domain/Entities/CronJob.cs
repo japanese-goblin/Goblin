@@ -17,7 +17,7 @@ namespace Goblin.Domain.Entities
         protected CronJob()
         {
         }
-        
+
         public CronJob(string name, long vkId, int narfuGroup, string weatherCity, int hours, int minutes)
         {
             SetName(name);
@@ -27,7 +27,7 @@ namespace Goblin.Domain.Entities
             SetHours(hours);
             SetMinutes(minutes);
         }
-        
+
         public void SetName(string name)
         {
             if(string.IsNullOrWhiteSpace(name))
@@ -47,7 +47,7 @@ namespace Goblin.Domain.Entities
 
             VkId = vkId;
         }
-        
+
         public void SetNarfuGroup(int group)
         {
             if(group < 0)
@@ -57,7 +57,7 @@ namespace Goblin.Domain.Entities
 
             NarfuGroup = group;
         }
-        
+
         public void SetWeatherCity(string city)
         {
             WeatherCity = city;

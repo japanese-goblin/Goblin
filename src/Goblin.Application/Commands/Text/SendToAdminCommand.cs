@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
@@ -16,7 +15,7 @@ namespace Goblin.Application.Commands.Text
     {
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "админ", "сообщение" };
-        
+
         private readonly IVkApi _api;
         private readonly BotDbContext _db;
 

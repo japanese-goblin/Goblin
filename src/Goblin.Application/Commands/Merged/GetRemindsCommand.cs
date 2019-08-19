@@ -11,7 +11,7 @@ namespace Goblin.Application.Commands.Merged
     {
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "напоминания" };
-        
+
         public string Trigger => "reminds";
 
         public Task<IResult> Execute(Message msg, BotUser user)

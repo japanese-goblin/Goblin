@@ -18,7 +18,7 @@ namespace Goblin.Application.Hangfire
             _vkApi = vkApi;
             _db = db;
         }
-        
+
         public async Task SendRemind()
         {
             var reminds =

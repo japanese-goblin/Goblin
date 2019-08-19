@@ -23,7 +23,7 @@ namespace Goblin.Application.Hangfire
             _db = db;
             _vkApi = vkApi;
         }
-        
+
         public async Task SendSchedule()
         {
             var grouped = _db.BotUsers.Include(x => x.SubscribeInfo)
@@ -40,7 +40,7 @@ namespace Goblin.Application.Hangfire
                         await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
                         {
                             Message = schedule.ToString(),
-                            UserIds = ids,
+                            UserIds = ids
                         });
                     }
                     catch(FlurlHttpException ex)
@@ -50,10 +50,10 @@ namespace Goblin.Application.Hangfire
                     }
                     catch(Exception ex)
                     {
-                        var msg = $"Непредвиденнная ошибка при получении расписания с сайта.";
+                        var msg = "Непредвиденнная ошибка при получении расписания с сайта.";
                         await _vkApi.Messages.SendErrorToUserIds(msg, ids);
                     }
-                    
+
                     await Task.Delay(Defaults.ExtraDelay);
                 }
             }

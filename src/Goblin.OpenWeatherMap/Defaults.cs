@@ -10,11 +10,11 @@ namespace Goblin.OpenWeatherMap
 
         private const string Language = "ru";
         private const string Units = "metric";
-        
+
         internal const double PressureConvert = 0.75006375541921;
 
         internal const int MaxDailyWeatherDifference = 16;
-        
+
         internal static IFlurlRequest BuildRequest(string token)
         {
             return EndPoint.SetQueryParam("units", Units)

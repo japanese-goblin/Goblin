@@ -7,7 +7,7 @@ namespace Goblin.Application.Abstractions
     public interface IKeyboardCommand
     {
         string Trigger { get; }
-        
+
         Task<IResult> Execute(Message msg, BotUser user);
     }
 }

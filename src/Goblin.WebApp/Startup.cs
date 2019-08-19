@@ -1,13 +1,10 @@
-﻿using Goblin.DataAccess;
-using Goblin.Narfu;
+﻿using Goblin.Narfu;
 using Goblin.OpenWeatherMap;
 using Goblin.WebApp.Extensions;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,7 +33,7 @@ namespace Goblin.WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContexts(Configuration);
-            
+
             services.AddHangfire(config => { config.UseMemoryStorage(); });
 
             services.AddVkApi(Configuration);
@@ -72,7 +69,7 @@ namespace Goblin.WebApp
             app.UseCookiePolicy();
 
             app.UseAuthentication();
-            
+
             app.UseDashboard();
             app.AddHangfireJobs();
 

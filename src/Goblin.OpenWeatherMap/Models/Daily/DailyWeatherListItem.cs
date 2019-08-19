@@ -38,7 +38,7 @@ namespace Goblin.OpenWeatherMap.Models.Daily
         public override string ToString()
         {
             var strBuilder = new StringBuilder();
-            
+
             strBuilder.AppendFormat("Температура: от {0:+#;-#;0}°С до {1:+#;-#;0}°С", Temp.Min,
                                     Temp.Max).AppendLine();
             strBuilder.AppendFormat("Температура ночью: {0:+#;-#;0}", Temp.Night).AppendLine();

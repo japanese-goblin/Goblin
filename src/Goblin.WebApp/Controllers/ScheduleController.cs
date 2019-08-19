@@ -18,7 +18,7 @@ namespace Goblin.WebApp.Controllers
         {
             _narfuApi = narfuApi;
         }
-        
+
         public IActionResult Index()
         {
             return View();
@@ -28,13 +28,13 @@ namespace Goblin.WebApp.Controllers
         {
             if(!_narfuApi.Students.IsCorrectGroup(id))
             {
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                HttpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
                 return View("Error", new ErrorViewModel
                 {
                     Description = $"Группа с номером {id} не найдена"
                 });
             }
-            
+
             var group = _narfuApi.Students.GetGroupByRealId(id);
 
             try
@@ -60,7 +60,7 @@ namespace Goblin.WebApp.Controllers
             {
                 return View("Error", new ErrorViewModel
                 {
-                    Description = $"Непрведиденная ошибка получения расписания. Попробуйте позже."
+                    Description = "Непрведиденная ошибка получения расписания. Попробуйте позже."
                 });
             }
         }

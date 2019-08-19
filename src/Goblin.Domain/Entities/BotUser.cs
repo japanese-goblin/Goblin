@@ -12,13 +12,12 @@ namespace Goblin.Domain.Entities
 
         public bool IsErrorsEnabled { get; private set; }
         public bool IsAdmin { get; private set; }
-        
+
         public virtual ICollection<Remind> Reminds { get; private set; }
         public virtual Subscribe SubscribeInfo { get; private set; }
 
         protected BotUser()
         {
-            
         }
 
         public BotUser(long vkId, string city = "", int group = 0, bool isAdmin = false, bool isErrorsEnabled = true)
@@ -41,7 +40,7 @@ namespace Goblin.Domain.Entities
         }
 
         public void SetCity(string city)
-        { 
+        {
             WeatherCity = city;
         }
 
@@ -51,7 +50,7 @@ namespace Goblin.Domain.Entities
             {
                 throw new ArgumentException("Параметр должен быть больше 0", nameof(group));
             }
-            
+
             NarfuGroup = group;
         }
 

@@ -9,7 +9,7 @@ namespace Goblin.DataAccess.Configurations
         public void Configure(EntityTypeBuilder<CronJob> builder)
         {
             builder.HasKey(x => x.Id);
-            
+
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.VkId).IsRequired();
             builder.Property(x => x.NarfuGroup).HasDefaultValue(0);

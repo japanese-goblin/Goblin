@@ -13,12 +13,12 @@ namespace Goblin.Application.Commands.Keyboard
     public class ScheduleKeyboardCommand : IKeyboardCommand
     {
         public string Trigger => "scheduleKeyboard";
-        
+
         public Task<IResult> Execute(Message msg, BotUser user)
         {
             const string DefaultFormat = "dd.MM.yyyy";
             var date = DateTime.Now;
-            
+
             var kb = new KeyboardBuilder(true);
             kb.AddButton("На сегодня", "schedule",
                          KeyboardButtonColor.Primary, date.ToString(DefaultFormat));
@@ -26,7 +26,7 @@ namespace Goblin.Application.Commands.Keyboard
             kb.AddButton("На завтра", "schedule",
                          KeyboardButtonColor.Primary, date.AddDays(1).ToString(DefaultFormat));
             kb.AddReturnToMenuButton();
-            
+
             return Task.FromResult<IResult>(new SuccessfulResult
             {
                 Message = "Выберите день",

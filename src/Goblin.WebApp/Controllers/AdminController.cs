@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Extensions;
@@ -27,7 +26,7 @@ namespace Goblin.WebApp.Controllers
         {
             return View(_db.BotUsers.Include(x => x.SubscribeInfo).ToArray());
         }
-        
+
         public IActionResult Messages()
         {
             return View();

@@ -16,13 +16,13 @@ namespace Goblin.Narfu.Schedule
     public class TeachersSchedule
     {
         public Teacher[] Teachers { get; }
-        
+
         public TeachersSchedule()
         {
             var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(TeachersSchedule)).Location);
             Teachers = JsonConvert.DeserializeObject<Teacher[]>(File.ReadAllText($"{path}/Data/Teachers.json"));
         }
-        
+
         public async Task<Lesson[]> GetSchedule(int teacherId)
         {
             var response = await Defaults.BuildRequest()

@@ -1,12 +1,9 @@
-using System;
 using Goblin.Application;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Commands.Keyboard;
 using Goblin.Application.Commands.Merged;
 using Goblin.Application.Commands.Text;
-using Goblin.Application.Hangfire;
 using Goblin.DataAccess;
-using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
@@ -60,7 +57,7 @@ namespace Goblin.WebApp.Extensions
             services.AddScoped<IKeyboardCommand, ScheduleCommand>();
             services.AddScoped<IKeyboardCommand, MailingKeyboardCommand>();
             services.AddScoped<IKeyboardCommand, MailingCommand>();
-            
+
             services.AddScoped<IKeyboardCommand, HelpCommand>();
             services.AddScoped<ITextCommand, HelpCommand>();
             services.AddScoped<IKeyboardCommand, ExamsCommand>();
@@ -71,7 +68,7 @@ namespace Goblin.WebApp.Extensions
             services.AddScoped<ITextCommand, WeatherNowCommand>();
             services.AddScoped<IKeyboardCommand, WeatherDailyCommand>();
             services.AddScoped<ITextCommand, WeatherDailyCommand>();
-            
+
             services.AddScoped<CommandsService>();
             services.AddScoped<CallbackHandler>();
         }
@@ -81,7 +78,7 @@ namespace Goblin.WebApp.Extensions
             services.AddIdentity<IdentityUser, IdentityRole>()
                     .AddDefaultUI(UIFramework.Bootstrap4)
                     .AddEntityFrameworkStores<IdentityUsersDbContext>();
-            
+
             services.AddAuthentication()
                     .AddVkontakte(options =>
                     {

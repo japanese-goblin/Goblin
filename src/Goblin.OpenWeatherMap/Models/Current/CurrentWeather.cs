@@ -44,19 +44,20 @@ namespace Goblin.OpenWeatherMap.Models.Current
         public override string ToString()
         {
             var strBuilder = new StringBuilder();
-            
+
             strBuilder.AppendFormat("Погода в городе {0} на данный момент:", CityName).AppendLine();
             strBuilder.AppendFormat("Температура: {0:+#;-#;0}°С", Weather.Temperature).AppendLine();
             strBuilder.AppendFormat("Описание погоды: {0}", Info[0].State).AppendLine();
             strBuilder.AppendFormat("Влажность: {0}%", Weather.Humidity).AppendLine();
             strBuilder.AppendFormat("Ветер: {0:N0} м/с", Wind.Speed).AppendLine();
-            strBuilder.AppendFormat("Давление: {0:N0} мм.рт.ст", Weather.Pressure * Defaults.PressureConvert).AppendLine();
+            strBuilder.AppendFormat("Давление: {0:N0} мм.рт.ст", Weather.Pressure * Defaults.PressureConvert)
+                      .AppendLine();
             strBuilder.AppendFormat("Облачность: {0}%", Clouds.Cloudiness).AppendLine();
             strBuilder.AppendFormat("Видимость: {0} метров", Visibility).AppendLine();
             strBuilder.AppendLine();
             strBuilder.AppendFormat("Восход в {0:HH:mm}", Defaults.UnixToDateTime(OtherInfo.Sunrise)).AppendLine();
             strBuilder.AppendFormat("Закат в {0:HH:mm}", Defaults.UnixToDateTime(OtherInfo.Sunset)).AppendLine();
-            
+
             return strBuilder.ToString();
         }
     }

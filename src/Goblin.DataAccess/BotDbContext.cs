@@ -11,9 +11,11 @@ namespace Goblin.DataAccess
         public DbSet<Remind> Reminds { get; set; }
 
         public DbSet<CronJob> CronJobs { get; set; }
-        
+
         public BotDbContext(DbContextOptions<BotDbContext> options)
-                : base(options) { }
+                : base(options)
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

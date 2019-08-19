@@ -12,9 +12,9 @@ namespace Goblin.Application.Commands.Merged
     {
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "экзамены", "экзы" };
-        
+
         public string Trigger => "exams";
-        
+
         private readonly NarfuApi _api;
 
         public ExamsCommand(NarfuApi api)
@@ -28,7 +28,7 @@ namespace Goblin.Application.Commands.Merged
             {
                 return new FailedResult("Для получения экзаменов сначала необходимо установить группу.");
             }
-            
+
             try
             {
                 var lessons = await _api.Students.GetExams(user.NarfuGroup);
@@ -39,7 +39,8 @@ namespace Goblin.Application.Commands.Merged
             }
             catch(FlurlHttpException ex)
             {
-                return new FailedResult($"Невозможно получить экзамены с сайта. Попробуйте позже. (Код ошибки - {ex.Call.HttpStatus})");
+                return new
+                        FailedResult($"Невозможно получить экзамены с сайта. Попробуйте позже. (Код ошибки - {ex.Call.HttpStatus})");
             }
             catch
             {

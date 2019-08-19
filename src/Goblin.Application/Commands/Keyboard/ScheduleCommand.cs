@@ -14,21 +14,21 @@ namespace Goblin.Application.Commands.Keyboard
     public class ScheduleCommand : IKeyboardCommand
     {
         public string Trigger => "schedule";
-        
+
         private readonly NarfuApi _api;
 
         public ScheduleCommand(NarfuApi api)
         {
             _api = api;
         }
-        
+
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
             if(user.NarfuGroup == 0)
             {
                 return new FailedResult("Для получения расписания сначала необходимо установить группу.");
             }
-            
+
             var date = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)["schedule"];
             try
             {
@@ -40,7 +40,8 @@ namespace Goblin.Application.Commands.Keyboard
             }
             catch(FlurlHttpException ex)
             {
-                return new FailedResult($"Невозможно получить расписание с сайта. Попробуйте позже. (Код ошибки - {ex.Call.HttpStatus})");
+                return new
+                        FailedResult($"Невозможно получить расписание с сайта. Попробуйте позже. (Код ошибки - {ex.Call.HttpStatus})");
             }
             catch
             {

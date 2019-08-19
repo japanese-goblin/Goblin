@@ -13,7 +13,7 @@ namespace Goblin.Application.Commands.Keyboard
     public class WeatherKeyboardCommand : IKeyboardCommand
     {
         public string Trigger => "weatherKeyboard";
-        
+
         public Task<IResult> Execute(Message msg, BotUser user)
         {
             const string DefaultFormat = "dd.MM.yyyy";
