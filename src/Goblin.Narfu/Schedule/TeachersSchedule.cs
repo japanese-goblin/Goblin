@@ -15,13 +15,6 @@ namespace Goblin.Narfu.Schedule
 {
     public class TeachersSchedule
     {
-        public Teacher[] Teachers { get; }
-
-        public TeachersSchedule()
-        {
-            var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(TeachersSchedule)).Location);
-            Teachers = JsonConvert.DeserializeObject<Teacher[]>(File.ReadAllText($"{path}/Data/Teachers.json"));
-        }
 
         public async Task<Lesson[]> GetSchedule(int teacherId)
         {
@@ -80,17 +73,26 @@ namespace Goblin.Narfu.Schedule
             return new LessonsViewModel(lessons.Take(10), DateTime.Now);
         }
 
-        public string FindByName(string name)
+        public async Task<Teacher[]> FindByName(string name)
         {
-            name = name.ToLower();
-            var teachers = Teachers.Where(x => x.Name.ToLower().Contains(name));
-            return string.Join("\n", teachers
-                                       .Select(x => $"{x.Name} ({x.Depart}) - {x.Id}"));
+            var teachers = await Defaults.BuildRequest()
+                                         .AppendPathSegments("i", "ac.php")
+                                         .SetQueryParam("term", name)
+                                         .GetJsonAsync<Teacher[]>();
+
+            return teachers;
         }
 
-        public bool FindById(int id)
+        public async Task<bool> FindById(int teacherId)
         {
-            return Teachers.Any(x => x.Id == id);
+            const string NotFound = "Данные о расписании на эту неделю отсутствуют в системе.";
+            var response = await Defaults.BuildRequest()
+                                         .SetQueryParam("timetable")
+                                         .SetQueryParam("lecturer", teacherId)
+                                         .AllowAnyHttpStatus()
+                                         .GetStringAsync();
+
+            return !response.Contains(NotFound);
         }
     }
 }
