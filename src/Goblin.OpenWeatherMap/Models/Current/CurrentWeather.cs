@@ -55,8 +55,8 @@ namespace Goblin.OpenWeatherMap.Models.Current
             strBuilder.AppendFormat("Облачность: {0}%", Clouds.Cloudiness).AppendLine();
             strBuilder.AppendFormat("Видимость: {0} метров", Visibility).AppendLine();
             strBuilder.AppendLine();
-            strBuilder.AppendFormat("Восход в {0:HH:mm}", Defaults.UnixToDateTime(OtherInfo.Sunrise)).AppendLine();
-            strBuilder.AppendFormat("Закат в {0:HH:mm}", Defaults.UnixToDateTime(OtherInfo.Sunset)).AppendLine();
+            strBuilder.AppendFormat("Восход в {0:t}", Defaults.UnixToDateTime(OtherInfo.Sunrise)).AppendLine();
+            strBuilder.AppendFormat("Закат в {0:t}", Defaults.UnixToDateTime(OtherInfo.Sunset)).AppendLine();
 
             return strBuilder.ToString();
         }
