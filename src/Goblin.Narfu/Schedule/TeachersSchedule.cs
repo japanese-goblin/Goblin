@@ -9,7 +9,6 @@ using Flurl.Http;
 using Goblin.Narfu.Extensions;
 using Goblin.Narfu.Models;
 using HtmlAgilityPack;
-using Newtonsoft.Json;
 
 namespace Goblin.Narfu.Schedule
 {
@@ -64,13 +63,13 @@ namespace Goblin.Narfu.Schedule
                 });
             }
 
-            return lessons.ToArray();
+            return lessons.Distinct().ToArray();
         }
 
-        public async Task<LessonsViewModel> GetLimitedSchedule(int teacherId, int limit = 10)
+        public async Task<TeacherLessonsViewModel> GetLimitedSchedule(int teacherId, int limit = 10)
         {
             var lessons = await GetSchedule(teacherId);
-            return new LessonsViewModel(lessons.Take(10), DateTime.Now);
+            return new TeacherLessonsViewModel(lessons.Take(10), DateTime.Now);
         }
 
         public async Task<Teacher[]> FindByName(string name)
