@@ -50,6 +50,7 @@ namespace Goblin.WebApp.Extensions
             services.AddScoped<ITextCommand, ChooseCommand>();
             services.AddScoped<ITextCommand, SendToAdminCommand>();
             services.AddScoped<ITextCommand, AddRemindCommand>();
+            services.AddScoped<ITextCommand, FindTeacherCommand>();
 
             services.AddScoped<IKeyboardCommand, StartCommand>();
             services.AddScoped<IKeyboardCommand, ScheduleKeyboardCommand>();
