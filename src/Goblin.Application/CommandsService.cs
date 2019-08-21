@@ -57,7 +57,7 @@ namespace Goblin.Application
                 return result as SuccessfulResult;
             }
 
-            return new FailedResult("команда не найдена. Проверьте правильность написания команды.");
+            return new FailedResult("Команда не найдена. Проверьте правильность написания команды.");
         }
 
         private async Task<IResult> ExecuteKeyboardCommand(Message msg, BotUser user)
