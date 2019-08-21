@@ -49,7 +49,7 @@ namespace Goblin.Application.Commands.Text
                 var kb = new KeyboardBuilder(true);
                 foreach(var teacher in findResult)
                 {
-                    kb.AddButton(teacher.Name, "findTeacher", KeyboardButtonColor.Primary, teacher.Id.ToString());
+                    kb.AddButton(teacher.Name, "teacherSchedule", KeyboardButtonColor.Primary, teacher.Id.ToString());
                     kb.AddLine();
                 }
 
@@ -67,7 +67,7 @@ namespace Goblin.Application.Commands.Text
             }
             catch(Exception)
             {
-                return new FailedResult("Непредвиденная ошибка получения расписания. Попробуйте позже.");
+                return new FailedResult("Непредвиденная ошибка получения списка преподавателей. Попробуйте позже.");
             }
         }
     }

@@ -7,7 +7,7 @@ namespace Goblin.Narfu.Models
 {
     public class LessonsViewModel
     {
-        private readonly DateTime _date;
+        protected readonly DateTime _date;
         public IEnumerable<Lesson> Lessons { get; }
 
         public LessonsViewModel(IEnumerable<Lesson> lessons, DateTime date)
