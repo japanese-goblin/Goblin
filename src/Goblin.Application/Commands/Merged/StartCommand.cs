@@ -17,21 +17,10 @@ namespace Goblin.Application.Commands.Merged
 
         public Task<IResult> Execute(Message msg, BotUser user)
         {
-            var kb = new KeyboardBuilder(true);
-            kb.AddButton("Расписание", "", KeyboardButtonColor.Primary, "scheduleKeyboard");
-            kb.AddButton("Экзамены", "", KeyboardButtonColor.Primary, "exams");
-            kb.AddLine();
-            kb.AddButton("Погода на текущий момент", "", KeyboardButtonColor.Primary, "weatherNow");
-            kb.AddButton("Погода на день", "", KeyboardButtonColor.Primary, "weatherDailyKeyboard");
-            kb.AddLine();
-            kb.AddButton("Рассылка", "", KeyboardButtonColor.Primary, "mailingKeyboard");
-            kb.AddButton("Напоминания", "", KeyboardButtonColor.Default, "reminds");
-            kb.AddButton("Справка", "", KeyboardButtonColor.Primary, "help");
-
             return Task.FromResult<IResult>(new SuccessfulResult
             {
                 Message = "Выберите действие:",
-                Keyboard = kb.Build()
+                Keyboard = DefaultKeyboards.GetDefaultKeyboard()
             });
         }
     }
