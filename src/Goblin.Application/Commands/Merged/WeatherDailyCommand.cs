@@ -63,7 +63,7 @@ namespace Goblin.Application.Commands.Merged
                 var weather = await _api.GetDailyWeatherAt(user.WeatherCity, day);
                 return new SuccessfulResult
                 {
-                    Message = $"Погода в городе {user.WeatherCity} на {day:dddd (dd.MM)}: {weather}"
+                    Message = $"Погода в городе {user.WeatherCity} на {day:dd.MM (dddd)}:\n{weather}"
                 };
             }
             catch
