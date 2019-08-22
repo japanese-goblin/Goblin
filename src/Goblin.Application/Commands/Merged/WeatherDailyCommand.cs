@@ -51,7 +51,7 @@ namespace Goblin.Application.Commands.Merged
                 return new FailedResult("Для получения погоды сначала необходимо установить город.");
             }
 
-            var day = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)["weather"];
+            var day = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
 
             return await GetWeather(user, DateTime.Parse(day));
         }
