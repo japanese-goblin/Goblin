@@ -27,6 +27,12 @@ namespace Goblin.Application.Commands.Keyboard
             var isWeather = user.SubscribeInfo.IsWeather;
             if(choose == "weather")
             {
+                if(string.IsNullOrWhiteSpace(user.WeatherCity))
+                {
+                    return new FailedResult("Для подписки на рассылку погоды необходимо установить город " +
+                                            "(например - установить город Москва)");
+                }
+                
                 user.SubscribeInfo.SetIsWeather(!isWeather);
                 await _db.SaveChangesAsync();
                 return new SuccessfulResult
@@ -37,6 +43,12 @@ namespace Goblin.Application.Commands.Keyboard
 
             if(choose == "schedule")
             {
+                if(user.NarfuGroup == 0)
+                {
+                    return new FailedResult("Для подписки на рассылку расписания необходимо установить группу " +
+                                            "(например - установить группу 351633)");
+                }
+                
                 user.SubscribeInfo.SetIsSchedule(!isSchedule);
                 await _db.SaveChangesAsync();
                 return new SuccessfulResult
