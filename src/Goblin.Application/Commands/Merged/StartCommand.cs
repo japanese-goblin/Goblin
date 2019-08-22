@@ -8,9 +8,12 @@ using VkNet.Model.Keyboard;
 
 namespace Goblin.Application.Commands.Keyboard
 {
-    public class StartCommand : IKeyboardCommand
+    public class StartCommand : IKeyboardCommand, ITextCommand
     {
         public string Trigger => "command";
+
+        public bool IsAdminCommand => false;
+        public string[] Aliases => new[] { "старт" };
 
         public Task<IResult> Execute(Message msg, BotUser user)
         {
