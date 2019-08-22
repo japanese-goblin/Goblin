@@ -29,6 +29,7 @@ namespace Goblin.WebApp.Controllers
                 //TODO:
                 return _config["Vk:ConfirmationCode"];
             }
+
             return await _handler.Handle(new VkResponse(JToken.FromObject(update)));
         }
     }

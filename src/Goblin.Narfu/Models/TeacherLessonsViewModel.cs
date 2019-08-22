@@ -9,19 +9,19 @@ namespace Goblin.Narfu.Models
     {
         public TeacherLessonsViewModel(IEnumerable<Lesson> lessons, DateTime date) : base(lessons, date)
         {
-            
         }
 
         public override string ToString()
         {
             var strBuilder = new StringBuilder();
 
-            foreach(var group in Lessons.Where(x => x.StartTime.DayOfYear >= _date.DayOfYear).GroupBy(x => x.StartTime.Date))
+            foreach(var group in Lessons.Where(x => x.StartTime.DayOfYear >= _date.DayOfYear)
+                                        .GroupBy(x => x.StartTime.Date))
             {
                 strBuilder.AppendFormat("{0:D}", group.Key).AppendLine();
                 foreach(var lesson in group)
                 {
-                    strBuilder.AppendFormat("{0:t} - {1} [{2}] ({3})", 
+                    strBuilder.AppendFormat("{0:t} - {1} [{2}] ({3})",
                                             lesson.StartTime, lesson.Name, lesson.Type, lesson.Teacher)
                               .AppendLine()
                               .AppendFormat("У группы {0}", lesson.Groups).AppendLine()
