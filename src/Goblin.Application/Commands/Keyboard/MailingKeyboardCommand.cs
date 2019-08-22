@@ -33,9 +33,9 @@ namespace Goblin.Application.Commands.Keyboard
                                       : "Подписаться на рассылку погоды";
 
             var kb = new KeyboardBuilder(true);
-            kb.AddButton(scheduleText, "mailing", scheduleColor, "schedule");
+            kb.AddButton(scheduleText, "schedule", scheduleColor, "mailing");
             kb.AddLine();
-            kb.AddButton(weatherText, "mailing", weatherColor, "weather");
+            kb.AddButton(weatherText, "weather", weatherColor, "mailing");
             kb.AddReturnToMenuButton();
 
             return Task.FromResult<IResult>(new SuccessfulResult

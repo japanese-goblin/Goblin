@@ -20,11 +20,11 @@ namespace Goblin.Application.Commands.Keyboard
             var date = DateTime.Now;
 
             var kb = new KeyboardBuilder(true);
-            kb.AddButton("На сегодня", "schedule",
-                         KeyboardButtonColor.Primary, date.ToString(DefaultFormat));
+            kb.AddButton("На сегодня", date.ToString(DefaultFormat),
+                         KeyboardButtonColor.Primary, "schedule");
             kb.AddLine();
-            kb.AddButton("На завтра", "schedule",
-                         KeyboardButtonColor.Primary, date.AddDays(1).ToString(DefaultFormat));
+            kb.AddButton("На завтра", date.AddDays(1).ToString(DefaultFormat),
+                         KeyboardButtonColor.Primary, "schedule");
             kb.AddReturnToMenuButton();
 
             return Task.FromResult<IResult>(new SuccessfulResult

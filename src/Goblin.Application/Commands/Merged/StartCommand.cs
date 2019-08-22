@@ -6,7 +6,7 @@ using VkNet.Enums.SafetyEnums;
 using VkNet.Model;
 using VkNet.Model.Keyboard;
 
-namespace Goblin.Application.Commands.Keyboard
+namespace Goblin.Application.Commands.Merged
 {
     public class StartCommand : IKeyboardCommand, ITextCommand
     {
@@ -18,15 +18,15 @@ namespace Goblin.Application.Commands.Keyboard
         public Task<IResult> Execute(Message msg, BotUser user)
         {
             var kb = new KeyboardBuilder(true);
-            kb.AddButton("Расписание", "scheduleKeyboard", KeyboardButtonColor.Primary, "123");
-            kb.AddButton("Экзамены", "exams", KeyboardButtonColor.Primary, "123");
+            kb.AddButton("Расписание", "", KeyboardButtonColor.Primary, "scheduleKeyboard");
+            kb.AddButton("Экзамены", "", KeyboardButtonColor.Primary, "exams");
             kb.AddLine();
-            kb.AddButton("Погода на текущий момент", "weatherNow", KeyboardButtonColor.Primary, "123");
-            kb.AddButton("Погода на день", "weatherDailyKeyboard", KeyboardButtonColor.Primary, "123");
+            kb.AddButton("Погода на текущий момент", "", KeyboardButtonColor.Primary, "weatherNow");
+            kb.AddButton("Погода на день", "", KeyboardButtonColor.Primary, "weatherDailyKeyboard");
             kb.AddLine();
-            kb.AddButton("Напоминания", "reminds", KeyboardButtonColor.Default, "123");
-            kb.AddButton("Справка", "help", KeyboardButtonColor.Default, "123");
-            kb.AddButton("Рассылка", "mailingKeyboard", KeyboardButtonColor.Default, "123");
+            kb.AddButton("Напоминания", "", KeyboardButtonColor.Default, "reminds");
+            kb.AddButton("Справка", "", KeyboardButtonColor.Default, "help");
+            kb.AddButton("Рассылка", "", KeyboardButtonColor.Default, "mailingKeyboard");
 
             return Task.FromResult<IResult>(new SuccessfulResult
             {
