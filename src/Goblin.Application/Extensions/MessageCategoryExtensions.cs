@@ -16,14 +16,11 @@ namespace Goblin.Application.Extensions
 
         public static async Task<long> SendError(this IMessagesCategory msgCategory, string error, long peerId)
         {
-            var kb = new KeyboardBuilder(true);
-            kb.AddReturnToMenuButton(false);
-
             return await msgCategory.SendWithRandomId(new MessagesSendParams
             {
                 PeerId = peerId,
                 Message = $"❌ Ошибка: {error}",
-                Keyboard = kb.Build()
+                Keyboard = DefaultKeyboards.GetDefaultKeyboard()
             });
         }
 
@@ -31,9 +28,7 @@ namespace Goblin.Application.Extensions
         {
             if(@params.Keyboard is null)
             {
-                var kb = new KeyboardBuilder(true);
-                kb.AddReturnToMenuButton(false);
-                @params.Keyboard = kb.Build();
+                @params.Keyboard = DefaultKeyboards.GetDefaultKeyboard();
             }
 
             @params.RandomId = GetRandomId();
@@ -44,14 +39,11 @@ namespace Goblin.Application.Extensions
                 this IMessagesCategory msgCategory,
                 string error, IEnumerable<long> userIds)
         {
-            var kb = new KeyboardBuilder(true);
-            kb.AddReturnToMenuButton(false);
-
             return await msgCategory.SendToUserIdsWithRandomId(new MessagesSendParams
             {
                 UserIds = userIds,
                 Message = $"❌ Ошибка: {error}",
-                Keyboard = kb.Build()
+                Keyboard = DefaultKeyboards.GetDefaultKeyboard()
             });
         }
 
@@ -60,9 +52,7 @@ namespace Goblin.Application.Extensions
         {
             if(@params.Keyboard is null)
             {
-                var kb = new KeyboardBuilder(true);
-                kb.AddReturnToMenuButton(false);
-                @params.Keyboard = kb.Build();
+                @params.Keyboard = DefaultKeyboards.GetDefaultKeyboard();
             }
 
             @params.RandomId = GetRandomId();
