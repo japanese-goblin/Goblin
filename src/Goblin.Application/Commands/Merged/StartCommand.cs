@@ -24,13 +24,13 @@ namespace Goblin.Application.Commands.Merged
             kb.AddButton("Погода на текущий момент", "", KeyboardButtonColor.Primary, "weatherNow");
             kb.AddButton("Погода на день", "", KeyboardButtonColor.Primary, "weatherDailyKeyboard");
             kb.AddLine();
+            kb.AddButton("Рассылка", "", KeyboardButtonColor.Primary, "mailingKeyboard");
             kb.AddButton("Напоминания", "", KeyboardButtonColor.Default, "reminds");
-            kb.AddButton("Справка", "", KeyboardButtonColor.Default, "help");
-            kb.AddButton("Рассылка", "", KeyboardButtonColor.Default, "mailingKeyboard");
+            kb.AddButton("Справка", "", KeyboardButtonColor.Primary, "help");
 
             return Task.FromResult<IResult>(new SuccessfulResult
             {
-                Message = "Здравствуйте",
+                Message = "Выберите действие:",
                 Keyboard = kb.Build()
             });
         }
