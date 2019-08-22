@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Extensions;
@@ -31,16 +32,16 @@ namespace Goblin.Application.Commands.Text
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
             var botUser = _db.BotUsers.Find(user.VkId);
-            var prms = msg.GetCommandParameters();
+            var prms = msg.Text.Split(' ', 3);
             if(prms.Length != 2)
             {
                 return new FailedResult("Укажите 2 параметра команды." +
                                         "Пример использования: установить город Москва / установить группу 123456");
             }
 
-            if(prms[0] == "город")
+            if(prms[1] == "город")
             {
-                var city = prms[1].ToUpperFirstLetter();
+                var city = prms[2].ToUpperFirstLetter();
                 var isExists = await _weather.IsCityExists(city);
                 if(!isExists)
                 {
@@ -55,9 +56,9 @@ namespace Goblin.Application.Commands.Text
                 };
             }
 
-            if(prms[0] == "группу" || prms[0] == "группа")
+            if(prms[1] == "группу" || prms[1] == "группа")
             {
-                var group = prms[1];
+                var group = prms[2];
                 if(!int.TryParse(group, out var intGroup))
                 {
                     return new FailedResult("Укажите корректный номер группы.");
