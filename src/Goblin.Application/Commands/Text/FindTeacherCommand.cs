@@ -49,7 +49,7 @@ namespace Goblin.Application.Commands.Text
                 var kb = new KeyboardBuilder(true);
                 foreach(var teacher in findResult)
                 {
-                    kb.AddButton(teacher.Name, "teacherSchedule", KeyboardButtonColor.Primary, teacher.Id.ToString());
+                    kb.AddButton(teacher.Name, teacher.Id.ToString(), KeyboardButtonColor.Primary, "teacherSchedule");
                     kb.AddLine();
                 }
 
