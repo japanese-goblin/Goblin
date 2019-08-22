@@ -48,7 +48,7 @@ namespace Goblin.Application.Hangfire
                         var msg = $"Невозможно получить расписание с сайта (код ошибки - {ex.Call.HttpStatus}).";
                         await _vkApi.Messages.SendErrorToUserIds(msg, ids);
                     }
-                    catch(Exception ex)
+                    catch(Exception)
                     {
                         var msg = "Непредвиденнная ошибка при получении расписания с сайта.";
                         await _vkApi.Messages.SendErrorToUserIds(msg, ids);

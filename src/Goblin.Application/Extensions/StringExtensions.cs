@@ -5,7 +5,7 @@ namespace Goblin.Application.Extensions
         public static string ToUpperFirstLetter(this string str)
         {
             return char.ToUpper(str[0]) +
-                    str.Substring(1).ToLower();
+                   str.Substring(1).ToLower();
         }
     }
 }

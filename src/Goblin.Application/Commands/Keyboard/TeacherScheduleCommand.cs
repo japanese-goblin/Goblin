@@ -15,14 +15,14 @@ namespace Goblin.Application.Commands.Keyboard
     public class TeacherScheduleCommand : IKeyboardCommand
     {
         public string Trigger => "teacherSchedule";
-        
+
         private readonly NarfuApi _narfuApi;
 
         public TeacherScheduleCommand(NarfuApi narfuApi)
         {
             _narfuApi = narfuApi;
         }
-        
+
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
             if(string.IsNullOrWhiteSpace(msg.Payload))
@@ -41,7 +41,7 @@ namespace Goblin.Application.Commands.Keyboard
                         Message = "На данный момент у выбранного преподавателя нет пар."
                     };
                 }
-                
+
                 return new SuccessfulResult
                 {
                     Message = schedule.ToString()

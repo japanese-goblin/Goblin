@@ -17,14 +17,14 @@ namespace Goblin.Application.Commands.Text
     {
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "препод" };
-        
+
         private readonly NarfuApi _narfuApi;
 
         public FindTeacherCommand(NarfuApi narfuApi)
         {
             _narfuApi = narfuApi;
         }
-        
+
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
             var teacherName = string.Join(' ', msg.GetCommandParameters());
