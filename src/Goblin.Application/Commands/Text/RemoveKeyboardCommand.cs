@@ -17,6 +17,7 @@ namespace Goblin.Application.Commands.Text
             var kb = new KeyboardBuilder();
             return Task.FromResult<IResult>(new SuccessfulResult
             {
+                Message = "Окей",
                 Keyboard = kb.Build()
             });
         }
