@@ -12,8 +12,8 @@ namespace Goblin.Application.Extensions
                 kb.AddLine();
             }
 
-            kb.AddButton("Вернуться в главное меню", "command",
-                         KeyboardButtonColor.Default, "start");
+            kb.AddButton("Вернуться в главное меню", "start",
+                         KeyboardButtonColor.Default, "command");
             return kb;
         }
     }
