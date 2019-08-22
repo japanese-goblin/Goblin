@@ -12,7 +12,7 @@ namespace Goblin.Application.Commands.Merged
 {
     public class WeatherDailyCommand : IKeyboardCommand, ITextCommand
     {
-        public string Trigger => "weather";
+        public string Trigger => "weatherDaily";
 
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "погодаз" };
