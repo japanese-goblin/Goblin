@@ -33,7 +33,7 @@ namespace Goblin.Application.Commands.Text
         {
             var botUser = _db.BotUsers.Find(user.VkId);
             var prms = msg.Text.Split(' ', 3);
-            if(prms.Length != 2)
+            if(prms.Length != 3)
             {
                 return new FailedResult("Укажите 2 параметра команды." +
                                         "Пример использования: установить город Москва / установить группу 123456");
