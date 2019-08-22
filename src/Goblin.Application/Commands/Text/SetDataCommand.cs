@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Extensions;
-using Goblin.Application.Results;
+using Goblin.Application.Results.Failed;
+using Goblin.Application.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Entities;
 using Goblin.Narfu;

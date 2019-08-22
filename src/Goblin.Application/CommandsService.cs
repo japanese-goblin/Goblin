@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Extensions;
 using Goblin.Application.Results;
+using Goblin.Application.Results.Failed;
+using Goblin.Application.Results.Success;
 using Goblin.Domain.Entities;
 using Newtonsoft.Json;
 using VkNet.Model;
@@ -57,7 +59,7 @@ namespace Goblin.Application
                 return result as SuccessfulResult;
             }
 
-            return new FailedResult("Команда не найдена. Проверьте правильность написания команды.");
+            return new CommandNotFoundResult();
         }
 
         private async Task<IResult> ExecuteKeyboardCommand(Message msg, BotUser user)
@@ -71,7 +73,7 @@ namespace Goblin.Application
                 }
             }
 
-            return new FailedResult("Команда не найдена.");
+            return new CommandNotFoundResult();
         }
     }
 }

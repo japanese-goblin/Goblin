@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
-using Goblin.Application.Results;
+using Goblin.Application.Results.Failed;
+using Goblin.Application.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Entities;
 using Newtonsoft.Json;
@@ -32,7 +33,7 @@ namespace Goblin.Application.Commands.Keyboard
                     return new FailedResult("Для подписки на рассылку погоды необходимо установить город " +
                                             "(например - установить город Москва)");
                 }
-                
+
                 user.SubscribeInfo.SetIsWeather(!isWeather);
                 await _db.SaveChangesAsync();
                 return new SuccessfulResult
@@ -48,7 +49,7 @@ namespace Goblin.Application.Commands.Keyboard
                     return new FailedResult("Для подписки на рассылку расписания необходимо установить группу " +
                                             "(например - установить группу 351633)");
                 }
-                
+
                 user.SubscribeInfo.SetIsSchedule(!isSchedule);
                 await _db.SaveChangesAsync();
                 return new SuccessfulResult

@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Extensions;
 using Goblin.Application.Results;
+using Goblin.Application.Results.Failed;
+using Goblin.Application.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Entities;
 using VkNet.Abstractions;
@@ -65,6 +67,11 @@ namespace Goblin.Application
             var result = await _service.ExecuteCommand(msg, user);
             if(result is FailedResult failed)
             {
+                if(result is CommandNotFoundResult && !user.IsErrorsEnabled)
+                {
+                    // если команда не найдена, и у юзера отключены ошибки
+                    return;
+                }
                 await _vkApi.Messages.SendError(failed.ToString(), msg.PeerId.Value);
             }
             else

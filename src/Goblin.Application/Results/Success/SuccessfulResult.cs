@@ -2,7 +2,7 @@ using Goblin.Application.Abstractions;
 using VkNet.Model.Attachments;
 using VkNet.Model.Keyboard;
 
-namespace Goblin.Application.Results
+namespace Goblin.Application.Results.Success
 {
     public class SuccessfulResult : IResult
     {

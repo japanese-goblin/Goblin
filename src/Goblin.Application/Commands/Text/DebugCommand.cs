@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
-using Goblin.Application.Results;
+using Goblin.Application.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;

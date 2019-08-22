@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
-using Goblin.Application.Results;
+using Goblin.Application.Results.Success;
 using Goblin.Domain.Entities;
 using VkNet.Model;
 

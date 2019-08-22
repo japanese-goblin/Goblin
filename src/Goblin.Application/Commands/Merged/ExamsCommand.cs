@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Application.Abstractions;
-using Goblin.Application.Results;
+using Goblin.Application.Results.Failed;
+using Goblin.Application.Results.Success;
 using Goblin.Domain.Entities;
 using Goblin.Narfu;
 using VkNet.Model;
