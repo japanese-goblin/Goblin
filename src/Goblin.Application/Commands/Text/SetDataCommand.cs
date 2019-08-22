@@ -39,7 +39,7 @@ namespace Goblin.Application.Commands.Text
 
             if(prms[0] == "город")
             {
-                var city = prms[1];
+                var city = prms[1].ToUpperFirstLetter();
                 var isExists = await _weather.IsCityExists(city);
                 if(!isExists)
                 {
