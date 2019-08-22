@@ -10,9 +10,9 @@ using VkNet.Model.Keyboard;
 
 namespace Goblin.Application.Commands.Keyboard
 {
-    public class WeatherKeyboardCommand : IKeyboardCommand
+    public class WeatherDailyKeyboardCommand : IKeyboardCommand
     {
-        public string Trigger => "weatherKeyboard";
+        public string Trigger => "weatherDailyKeyboard";
 
         public Task<IResult> Execute(Message msg, BotUser user)
         {
@@ -20,10 +20,10 @@ namespace Goblin.Application.Commands.Keyboard
             var date = DateTime.Now;
             var kb = new KeyboardBuilder(true);
             kb.AddButton("На сегодня", date.ToString(DefaultFormat),
-                         KeyboardButtonColor.Primary, "weather");
+                         KeyboardButtonColor.Primary, "weatherDaily");
             kb.AddLine();
             kb.AddButton("На завтра", date.AddDays(1).ToString(DefaultFormat),
-                         KeyboardButtonColor.Primary, "weather");
+                         KeyboardButtonColor.Primary, "weatherDaily");
             kb.AddReturnToMenuButton();
 
             return Task.FromResult<IResult>(new SuccessfulResult
