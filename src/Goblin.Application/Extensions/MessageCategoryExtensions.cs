@@ -26,10 +26,7 @@ namespace Goblin.Application.Extensions
 
         public static async Task<long> SendWithRandomId(this IMessagesCategory msgCategory, MessagesSendParams @params)
         {
-            if(@params.Keyboard is null)
-            {
-                @params.Keyboard = DefaultKeyboards.GetDefaultKeyboard();
-            }
+            AddKeyboard(@params);
 
             @params.RandomId = GetRandomId();
             return await msgCategory.SendAsync(@params);
@@ -50,13 +47,19 @@ namespace Goblin.Application.Extensions
         public static async Task<ReadOnlyCollection<MessagesSendResult>> SendToUserIdsWithRandomId(
                 this IMessagesCategory msgCategory, MessagesSendParams @params)
         {
-            if(@params.Keyboard is null)
-            {
-                @params.Keyboard = DefaultKeyboards.GetDefaultKeyboard();
-            }
+            AddKeyboard(@params);
 
             @params.RandomId = GetRandomId();
             return await msgCategory.SendToUserIdsAsync(@params);
+        }
+        
+        private static void AddKeyboard(MessagesSendParams @params)
+        {
+            const int conversationsStartId = 2000000000;
+            if(@params.Keyboard is null && @params.PeerId < conversationsStartId)
+            {
+                @params.Keyboard = DefaultKeyboards.GetDefaultKeyboard();
+            }
         }
 
         private static int GetRandomId()
