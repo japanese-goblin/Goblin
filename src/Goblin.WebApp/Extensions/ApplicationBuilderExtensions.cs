@@ -10,7 +10,7 @@ namespace Goblin.WebApp.Extensions
     {
         public static void UseDashboard(this IApplicationBuilder app)
         {
-            var options = new BackgroundJobServerOptions { WorkerCount = Environment.ProcessorCount * 2 };
+            var options = new BackgroundJobServerOptions { WorkerCount = 4 };
             app.UseHangfireServer(options);
             app.UseHangfireDashboard("/Admin/HangFire", new DashboardOptions
             {
