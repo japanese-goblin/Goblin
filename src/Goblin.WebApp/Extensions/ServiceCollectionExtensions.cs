@@ -4,6 +4,8 @@ using Goblin.Application.Commands.Keyboard;
 using Goblin.Application.Commands.Merged;
 using Goblin.Application.Commands.Text;
 using Goblin.DataAccess;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
@@ -52,7 +54,7 @@ namespace Goblin.WebApp.Extensions
             services.AddScoped<ITextCommand, AddRemindCommand>();
             services.AddScoped<ITextCommand, FindTeacherCommand>();
             services.AddScoped<ITextCommand, RemoveKeyboardCommand>();
-            
+
             services.AddScoped<IKeyboardCommand, ScheduleKeyboardCommand>();
             services.AddScoped<IKeyboardCommand, WeatherDailyKeyboardCommand>();
             services.AddScoped<IKeyboardCommand, ScheduleCommand>();
@@ -91,6 +93,17 @@ namespace Goblin.WebApp.Extensions
                         options.ClientSecret = config["VkAuth:SecretKey"];
                         options.Scope.Add("email");
                     });
+        }
+
+        public static void AddHttpsRedirect(this IServiceCollection services)
+        {
+            services.AddHttpsRedirection(options => { options.HttpsPort = 443; });
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
         }
     }
 }
