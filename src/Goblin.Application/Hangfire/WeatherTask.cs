@@ -1,10 +1,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Flurl.Http;
 using Goblin.Application.Extensions;
 using Goblin.DataAccess;
 using Goblin.OpenWeatherMap;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
@@ -12,9 +14,9 @@ namespace Goblin.Application.Hangfire
 {
     public class WeatherTask
     {
-        private readonly OpenWeatherMapApi _weatherApi;
         private readonly BotDbContext _db;
         private readonly IVkApi _vkApi;
+        private readonly OpenWeatherMapApi _weatherApi;
 
         public WeatherTask(OpenWeatherMapApi weatherApi, BotDbContext db, IVkApi vkApi)
         {
@@ -43,9 +45,17 @@ namespace Goblin.Application.Hangfire
                             UserIds = ids
                         });
                     }
-                    catch
+                    catch(FlurlHttpException ex)
                     {
-                        await _vkApi.Messages.SendErrorToUserIds("Невозможно получить погоду с сайта.", ids);
+                        Log.Error("openweathermap API недоступен (http code - {0}", ex.Call.HttpStatus);
+                        var msg = "Невозможно получить погоду с сайта.";
+                        await _vkApi.Messages.SendErrorToUserIds(msg, ids);
+                    }
+                    catch(Exception ex)
+                    {
+                        Log.Fatal(ex, "Ошибка при получении погоды");
+                        var msg = "Непредвиденная ошибка при получении погоды.";
+                        await _vkApi.Messages.SendErrorToUserIds(msg, ids);
                     }
 
                     await Task.Delay(Defaults.ExtraDelay);

@@ -7,6 +7,7 @@ using Goblin.Narfu;
 using Goblin.WebApp.Extensions;
 using Goblin.WebApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Goblin.WebApp.Controllers
 {
@@ -28,6 +29,7 @@ namespace Goblin.WebApp.Controllers
         {
             if(!_narfuApi.Students.IsCorrectGroup(id))
             {
+                Log.Warning("Группа с id {0} не найдена", id);
                 HttpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
                 return View("Error", new ErrorViewModel
                 {
@@ -51,16 +53,18 @@ namespace Goblin.WebApp.Controllers
             }
             catch(FlurlHttpException ex)
             {
+                Log.Error("ruz.narfu.ru недоступен (http code - {0}", ex.Call.HttpStatus);
                 return View("Error", new ErrorViewModel
                 {
                     Description = $"Сайт с расписанием вернул ошибку ({ex.Call.HttpStatus}). Попробуйте позже."
                 });
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                Log.Fatal(ex, "Ошибка при получении расписания");
                 return View("Error", new ErrorViewModel
                 {
-                    Description = "Непрведиденная ошибка получения расписания. Попробуйте позже."
+                    Description = "Непрведиденная ошибка при получении расписания. Попробуйте позже."
                 });
             }
         }

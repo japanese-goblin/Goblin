@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Serilog;
 
 namespace Goblin.Application.Hangfire
 {
@@ -20,6 +21,7 @@ namespace Goblin.Application.Hangfire
                 return;
             }
 
+            Log.Information("Создание {0} роли", roleName);
             var role = new IdentityRole(roleName);
             await _manager.CreateAsync(role);
         }

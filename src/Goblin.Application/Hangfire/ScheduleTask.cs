@@ -6,6 +6,7 @@ using Goblin.Application.Extensions;
 using Goblin.DataAccess;
 using Goblin.Narfu;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
@@ -13,8 +14,8 @@ namespace Goblin.Application.Hangfire
 {
     public class ScheduleTask
     {
-        private readonly NarfuApi _narfuApi;
         private readonly BotDbContext _db;
+        private readonly NarfuApi _narfuApi;
         private readonly IVkApi _vkApi;
 
         public ScheduleTask(NarfuApi narfuApi, BotDbContext db, IVkApi vkApi)
@@ -45,11 +46,13 @@ namespace Goblin.Application.Hangfire
                     }
                     catch(FlurlHttpException ex)
                     {
+                        Log.Error("ruz.narfu.ru недоступен (http code - {0}", ex.Call.HttpStatus);
                         var msg = $"Невозможно получить расписание с сайта (код ошибки - {ex.Call.HttpStatus}).";
                         await _vkApi.Messages.SendErrorToUserIds(msg, ids);
                     }
-                    catch(Exception)
+                    catch(Exception ex)
                     {
+                        Log.Fatal(ex, "Ошибка при получении расписания");
                         var msg = "Непредвиденнная ошибка при получении расписания с сайта.";
                         await _vkApi.Messages.SendErrorToUserIds(msg, ids);
                     }

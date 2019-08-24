@@ -6,6 +6,7 @@ using Goblin.DataAccess;
 using Goblin.Narfu;
 using Goblin.OpenWeatherMap;
 using Hangfire;
+using Serilog;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
@@ -13,10 +14,10 @@ namespace Goblin.Application.Hangfire
 {
     public class SendToConversationTasks
     {
-        private readonly OpenWeatherMapApi _weatherApi;
+        private readonly BotDbContext _db;
         private readonly NarfuApi _narfuApi;
         private readonly IVkApi _vkApi;
-        private readonly BotDbContext _db;
+        private readonly OpenWeatherMapApi _weatherApi;
 
         public SendToConversationTasks(OpenWeatherMapApi weatherApi, NarfuApi narfuApi, IVkApi vkApi, BotDbContext db)
         {
@@ -37,6 +38,7 @@ namespace Goblin.Application.Hangfire
             {
                 try
                 {
+                    Log.Information("Отправка погоды в беседу {0}", id);
                     var weather = await _weatherApi.GetDailyWeatherAt(city, DateTime.Today);
                     await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                     {
@@ -44,9 +46,16 @@ namespace Goblin.Application.Hangfire
                         Message = $"Погода в городе {city} на сегодня ({DateTime.Now:dddd, dd.MM.yyyy}):\n{weather}"
                     });
                 }
-                catch
+                catch(FlurlHttpException ex)
                 {
+                    Log.Error("openweathermap API недоступен (http code - {0}", ex.Call.HttpStatus);
                     var msg = "Невозможно получить погоду с сайта.";
+                    await _vkApi.Messages.SendError(msg, id);
+                }
+                catch(Exception ex)
+                {
+                    Log.Fatal(ex, "Ошибка при получении погоды");
+                    var msg = "Непредвиденная ошибка при получении погоды.";
                     await _vkApi.Messages.SendError(msg, id);
                 }
             }
@@ -55,6 +64,7 @@ namespace Goblin.Application.Hangfire
             {
                 try
                 {
+                    Log.Information("Отправка расписания в беседу {0}", id);
                     var schedule = await _narfuApi.Students.GetScheduleAtDate(group, DateTime.Now);
                     await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                     {
@@ -64,11 +74,13 @@ namespace Goblin.Application.Hangfire
                 }
                 catch(FlurlHttpException ex)
                 {
+                    Log.Error("ruz.narfu.ru недоступен (http code - {0}", ex.Call.HttpStatus);
                     var msg = $"Невозможно получить расписание с сайта (код ошибки - {ex.Call.HttpStatus}).";
                     await _vkApi.Messages.SendError(msg, id);
                 }
-                catch(Exception)
+                catch(Exception ex)
                 {
+                    Log.Fatal(ex, "Ошибка при получении расписания");
                     var msg = "Непредвиденнная ошибка при получении расписания с сайта.";
                     await _vkApi.Messages.SendError(msg, id);
                 }

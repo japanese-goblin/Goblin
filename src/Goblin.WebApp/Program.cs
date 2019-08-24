@@ -3,6 +3,7 @@ using Goblin.DataAccess;
 using Goblin.WebApp.Extensions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Serilog;
 
 namespace Goblin.WebApp
 {
@@ -11,6 +12,7 @@ namespace Goblin.WebApp
         public static void Main(string[] args)
         {
             SetDefaultLocale();
+
             CreateWebHostBuilder(args).Build()
                                       .InitializeDatabase<IdentityUsersDbContext>()
                                       .InitializeDatabase<BotDbContext>()
@@ -20,6 +22,13 @@ namespace Goblin.WebApp
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
+                          .UseSerilog((hostingContext, loggerConfiguration) =>
+                          {
+                              loggerConfiguration
+                                      .ReadFrom.Configuration(hostingContext.Configuration)
+                                      .Enrich.FromLogContext()
+                                      .WriteTo.Console();
+                          })
                           .UseStartup<Startup>();
         }
 

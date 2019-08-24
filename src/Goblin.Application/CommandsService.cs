@@ -3,19 +3,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Extensions;
-using Goblin.Application.Results;
 using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.Domain.Entities;
 using Newtonsoft.Json;
+using Serilog;
 using VkNet.Model;
 
 namespace Goblin.Application
 {
     public class CommandsService
     {
-        private readonly IEnumerable<ITextCommand> _textCommands;
         private readonly IEnumerable<IKeyboardCommand> _keyboardCommands;
+        private readonly IEnumerable<ITextCommand> _textCommands;
 
         public CommandsService(IEnumerable<ITextCommand> textCommands,
                                IEnumerable<IKeyboardCommand> keyboardCommands)
@@ -28,9 +28,11 @@ namespace Goblin.Application
         {
             if(!string.IsNullOrWhiteSpace(msg.Payload))
             {
+                Log.Information("Обработка команды с клавиатуры");
                 return await ExecuteKeyboardCommand(msg, user);
             }
 
+            Log.Information("Обработка текстовой команды");
             return await ExecuteTextCommand(msg, user);
         }
 
