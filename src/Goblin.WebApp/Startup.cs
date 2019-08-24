@@ -48,8 +48,6 @@ namespace Goblin.WebApp
 
             services.AddAuth(Configuration);
 
-            services.AddHttpsRedirect();
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
