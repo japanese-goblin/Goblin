@@ -25,9 +25,7 @@ namespace Goblin.WebApp
                           .UseSerilog((hostingContext, loggerConfiguration) =>
                           {
                               loggerConfiguration
-                                      .ReadFrom.Configuration(hostingContext.Configuration)
-                                      .Enrich.FromLogContext()
-                                      .WriteTo.Console();
+                                      .ReadFrom.Configuration(hostingContext.Configuration);
                           })
                           .UseStartup<Startup>();
         }
