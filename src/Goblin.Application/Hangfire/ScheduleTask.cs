@@ -46,7 +46,7 @@ namespace Goblin.Application.Hangfire
                     }
                     catch(FlurlHttpException ex)
                     {
-                        Log.Error("ruz.narfu.ru недоступен (http code - {0}", ex.Call.HttpStatus);
+                        Log.Error("ruz.narfu.ru недоступен (http code - {0})", ex.Call.HttpStatus);
                         var msg = $"Невозможно получить расписание с сайта (код ошибки - {ex.Call.HttpStatus}).";
                         await _vkApi.Messages.SendErrorToUserIds(msg, ids);
                     }

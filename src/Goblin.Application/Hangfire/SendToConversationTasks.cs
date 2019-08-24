@@ -48,7 +48,7 @@ namespace Goblin.Application.Hangfire
                 }
                 catch(FlurlHttpException ex)
                 {
-                    Log.Error("openweathermap API недоступен (http code - {0}", ex.Call.HttpStatus);
+                    Log.Error("openweathermap API недоступен (http code - {0})", ex.Call.HttpStatus);
                     var msg = "Невозможно получить погоду с сайта.";
                     await _vkApi.Messages.SendError(msg, id);
                 }
@@ -74,7 +74,7 @@ namespace Goblin.Application.Hangfire
                 }
                 catch(FlurlHttpException ex)
                 {
-                    Log.Error("ruz.narfu.ru недоступен (http code - {0}", ex.Call.HttpStatus);
+                    Log.Error("ruz.narfu.ru недоступен (http code - {0})", ex.Call.HttpStatus);
                     var msg = $"Невозможно получить расписание с сайта (код ошибки - {ex.Call.HttpStatus}).";
                     await _vkApi.Messages.SendError(msg, id);
                 }

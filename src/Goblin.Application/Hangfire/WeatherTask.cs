@@ -47,7 +47,7 @@ namespace Goblin.Application.Hangfire
                     }
                     catch(FlurlHttpException ex)
                     {
-                        Log.Error("openweathermap API недоступен (http code - {0}", ex.Call.HttpStatus);
+                        Log.Error("openweathermap API недоступен (http code - {0})", ex.Call.HttpStatus);
                         var msg = "Невозможно получить погоду с сайта.";
                         await _vkApi.Messages.SendErrorToUserIds(msg, ids);
                     }

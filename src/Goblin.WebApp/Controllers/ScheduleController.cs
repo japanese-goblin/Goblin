@@ -53,7 +53,7 @@ namespace Goblin.WebApp.Controllers
             }
             catch(FlurlHttpException ex)
             {
-                Log.Error("ruz.narfu.ru недоступен (http code - {0}", ex.Call.HttpStatus);
+                Log.Error("ruz.narfu.ru недоступен (http code - {0})", ex.Call.HttpStatus);
                 return View("Error", new ErrorViewModel
                 {
                     Description = $"Сайт с расписанием вернул ошибку ({ex.Call.HttpStatus}). Попробуйте позже."
