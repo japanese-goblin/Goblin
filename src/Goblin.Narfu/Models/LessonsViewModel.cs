@@ -18,6 +18,11 @@ namespace Goblin.Narfu.Models
 
         public override string ToString()
         {
+            if(!Lessons.Any())
+            {
+                return $"На {_date:dd.MM (dddd)} расписание отсутствует!";
+            }
+            
             var strBuilder = new StringBuilder();
 
             foreach(var lesson in Lessons.Where(x => x.StartTime.DayOfYear == _date.DayOfYear))

@@ -58,7 +58,6 @@ namespace Goblin.OpenWeatherMap
         public async Task<bool> IsCityExists(string city)
         {
             var response = await Defaults.BuildRequest(_token)
-                                         .AllowAnyHttpStatus()
                                          .AppendPathSegment("weather")
                                          .SetQueryParam("q", city)
                                          .GetAsync();

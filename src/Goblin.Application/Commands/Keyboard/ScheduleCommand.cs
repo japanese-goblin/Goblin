@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Application.Abstractions;
+using Goblin.Application.Extensions;
 using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.Domain.Entities;
@@ -31,23 +32,8 @@ namespace Goblin.Application.Commands.Keyboard
             }
 
             var date = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)["schedule"];
-            try
-            {
-                var lessons = await _api.Students.GetScheduleAtDate(user.NarfuGroup, DateTime.Parse(date));
-                return new SuccessfulResult
-                {
-                    Message = lessons.ToString()
-                };
-            }
-            catch(FlurlHttpException ex)
-            {
-                return new
-                        FailedResult($"Невозможно получить расписание с сайта. Попробуйте позже. (Код ошибки - {ex.Call.HttpStatus})");
-            }
-            catch
-            {
-                return new FailedResult("Непредвиденная ошибка получения расписания с сайта. Попробуйте позже.");
-            }
+
+            return await _api.Students.GetScheduleAtDateWithResult(user.NarfuGroup, DateTime.Parse(date));
         }
     }
 }

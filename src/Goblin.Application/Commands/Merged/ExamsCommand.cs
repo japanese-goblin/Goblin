@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Application.Abstractions;
+using Goblin.Application.Extensions;
 using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.Domain.Entities;
@@ -30,23 +31,7 @@ namespace Goblin.Application.Commands.Merged
                 return new FailedResult("Для получения экзаменов сначала необходимо установить группу.");
             }
 
-            try
-            {
-                var lessons = await _api.Students.GetExams(user.NarfuGroup);
-                return new SuccessfulResult
-                {
-                    Message = lessons.ToString()
-                };
-            }
-            catch(FlurlHttpException ex)
-            {
-                return new
-                        FailedResult($"Невозможно получить экзамены с сайта. Попробуйте позже. (Код ошибки - {ex.Call.HttpStatus})");
-            }
-            catch
-            {
-                return new FailedResult("Непредвиденная ошибка получения экзаменов с сайта. Попробуйте позже.");
-            }
+            return await _api.Students.GetExamsWithResult(user.NarfuGroup);
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
+using Goblin.Application.Extensions;
 using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.Domain.Entities;
@@ -42,7 +43,7 @@ namespace Goblin.Application.Commands.Merged
                 return new FailedResult("Для получения погоды сначала необходимо установить город.");
             }
 
-            return await GetWeather(user, DateTime.Today.AddDays(1));
+            return await _api.GetDailyWeatherWithResult(user.WeatherCity, DateTime.Today.AddDays(1));
         }
 
         private async Task<IResult> ExecutePayload(Message msg, BotUser user)
@@ -54,23 +55,7 @@ namespace Goblin.Application.Commands.Merged
 
             var day = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
 
-            return await GetWeather(user, DateTime.Parse(day));
-        }
-
-        private async Task<IResult> GetWeather(BotUser user, DateTime day)
-        {
-            try
-            {
-                var weather = await _api.GetDailyWeatherAt(user.WeatherCity, day);
-                return new SuccessfulResult
-                {
-                    Message = $"Погода в городе {user.WeatherCity} на {day:dd.MM (dddd)}:\n{weather}"
-                };
-            }
-            catch(Exception ex)
-            {
-                return new FailedResult($"Невозможно получить погоду с внешнего сайта ({ex.Message}). Попробуйте позже.");
-            }
+            return await _api.GetDailyWeatherWithResult(user.WeatherCity, DateTime.Parse(day));
         }
     }
 }

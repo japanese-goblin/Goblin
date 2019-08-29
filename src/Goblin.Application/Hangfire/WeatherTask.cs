@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Application.Extensions;
+using Goblin.Application.Results.Failed;
+using Goblin.Application.Results.Success;
 using Goblin.DataAccess;
 using Goblin.OpenWeatherMap;
 using Microsoft.EntityFrameworkCore;
@@ -35,27 +37,19 @@ namespace Goblin.Application.Hangfire
                 foreach(var chunk in group.Chunk(Defaults.ChunkLimit))
                 {
                     var ids = chunk.Select(x => x.VkId).ToArray();
-                    try
+                    var weather = await _weatherApi.GetDailyWeatherWithResult(group.Key, DateTime.Today);
+                    if(weather is FailedResult failed)
                     {
-                        var weather = await _weatherApi.GetDailyWeatherAt(group.Key, DateTime.Today);
+                        await _vkApi.Messages.SendErrorToUserIds(failed.Error, ids);
+                    }
+                    else
+                    {
+                        var success = weather as SuccessfulResult;
                         await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
                         {
-                            Message =
-                                    $"Погода в городе {group.Key} на сегодня ({DateTime.Now:dddd, dd.MM.yyyy}):\n{weather}",
-                            UserIds = ids
+                            UserIds = ids,
+                            Message = success.Message
                         });
-                    }
-                    catch(FlurlHttpException ex)
-                    {
-                        Log.Error("openweathermap API недоступен (http code - {0})", ex.Call.HttpStatus);
-                        var msg = "Невозможно получить погоду с сайта.";
-                        await _vkApi.Messages.SendErrorToUserIds(msg, ids);
-                    }
-                    catch(Exception ex)
-                    {
-                        Log.Fatal(ex, "Ошибка при получении погоды");
-                        var msg = "Непредвиденная ошибка при получении погоды.";
-                        await _vkApi.Messages.SendErrorToUserIds(msg, ids);
                     }
 
                     await Task.Delay(Defaults.ExtraDelay);

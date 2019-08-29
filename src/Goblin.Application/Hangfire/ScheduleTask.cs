@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Application.Extensions;
+using Goblin.Application.Results.Failed;
+using Goblin.Application.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Narfu;
 using Microsoft.EntityFrameworkCore;
@@ -35,26 +37,19 @@ namespace Goblin.Application.Hangfire
                 foreach(var chunk in group.Chunk(Defaults.ChunkLimit))
                 {
                     var ids = chunk.Select(x => x.VkId);
-                    try
+                    var weather = await _narfuApi.Students.GetScheduleAtDateWithResult(group.Key, DateTime.Today);
+                    if(weather is FailedResult failed)
                     {
-                        var schedule = await _narfuApi.Students.GetScheduleAtDate(group.Key, DateTime.Today);
+                        await _vkApi.Messages.SendErrorToUserIds(failed.Error, ids);
+                    }
+                    else
+                    {
+                        var success = weather as SuccessfulResult;
                         await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
                         {
-                            Message = schedule.ToString(),
-                            UserIds = ids
+                            UserIds = ids,
+                            Message = success.Message
                         });
-                    }
-                    catch(FlurlHttpException ex)
-                    {
-                        Log.Error("ruz.narfu.ru недоступен (http code - {0})", ex.Call.HttpStatus);
-                        var msg = $"Невозможно получить расписание с сайта (код ошибки - {ex.Call.HttpStatus}).";
-                        await _vkApi.Messages.SendErrorToUserIds(msg, ids);
-                    }
-                    catch(Exception ex)
-                    {
-                        Log.Fatal(ex, "Ошибка при получении расписания");
-                        var msg = "Непредвиденнная ошибка при получении расписания с сайта.";
-                        await _vkApi.Messages.SendErrorToUserIds(msg, ids);
                     }
 
                     await Task.Delay(Defaults.ExtraDelay);

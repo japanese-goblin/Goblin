@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Extensions;
 using Goblin.Application.Results.Failed;
-using Goblin.Application.Results.Success;
 using Goblin.Domain.Entities;
 using Goblin.OpenWeatherMap;
 using VkNet.Model;
@@ -39,7 +38,7 @@ namespace Goblin.Application.Commands.Merged
             var city = msg.GetCommandParameters().FirstOrDefault();
             if(!string.IsNullOrWhiteSpace(city))
             {
-                return await GetWeather(city);
+                return await _api.GetCurrentWeatherWithResult(city);
             }
 
             if(string.IsNullOrWhiteSpace(user.WeatherCity) && string.IsNullOrWhiteSpace(city))
@@ -49,10 +48,10 @@ namespace Goblin.Application.Commands.Merged
 
             if(!string.IsNullOrWhiteSpace(city))
             {
-                return await GetWeather(city);
+                return await _api.GetCurrentWeatherWithResult(city);
             }
 
-            return await GetWeather(user.WeatherCity);
+            return await _api.GetCurrentWeatherWithResult(user.WeatherCity);
         }
 
         private async Task<IResult> ExecutePayload(BotUser user)
@@ -62,23 +61,7 @@ namespace Goblin.Application.Commands.Merged
                 return new FailedResult("Для получения погоды сначала необходимо установить город.");
             }
 
-            return await GetWeather(user.WeatherCity);
-        }
-
-        private async Task<IResult> GetWeather(string city)
-        {
-            try
-            {
-                var weather = await _api.GetCurrentWeather(city);
-                return new SuccessfulResult
-                {
-                    Message = weather.ToString()
-                };
-            }
-            catch
-            {
-                return new FailedResult("Невозможно получить погоду с внешнего сайта. Попробуйте позже.");
-            }
+            return await _api.GetCurrentWeatherWithResult(user.WeatherCity);
         }
     }
 }

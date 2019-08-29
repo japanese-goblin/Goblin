@@ -2,6 +2,8 @@ using System;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Application.Extensions;
+using Goblin.Application.Results.Failed;
+using Goblin.Application.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Narfu;
 using Goblin.OpenWeatherMap;
@@ -36,53 +38,39 @@ namespace Goblin.Application.Hangfire
 
             if(!string.IsNullOrWhiteSpace(city) && await _weatherApi.IsCityExists(city))
             {
-                try
+                Log.Information("Отправка погоды в беседу {0}", id);
+                var weather = await _weatherApi.GetDailyWeatherWithResult(city, DateTime.Today);
+                if(weather is FailedResult failed)
                 {
-                    Log.Information("Отправка погоды в беседу {0}", id);
-                    var weather = await _weatherApi.GetDailyWeatherAt(city, DateTime.Today);
+                    await _vkApi.Messages.SendError(failed.Error, id);
+                }
+                else
+                {
+                    var success = weather as SuccessfulResult;
                     await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                     {
                         PeerId = id,
-                        Message = $"Погода в городе {city} на сегодня ({DateTime.Now:dddd, dd.MM.yyyy}):\n{weather}"
+                        Message = success.Message
                     });
-                }
-                catch(FlurlHttpException ex)
-                {
-                    Log.Error("openweathermap API недоступен (http code - {0})", ex.Call.HttpStatus);
-                    var msg = "Невозможно получить погоду с сайта.";
-                    await _vkApi.Messages.SendError(msg, id);
-                }
-                catch(Exception ex)
-                {
-                    Log.Fatal(ex, "Ошибка при получении погоды");
-                    var msg = "Непредвиденная ошибка при получении погоды.";
-                    await _vkApi.Messages.SendError(msg, id);
                 }
             }
 
             if(_narfuApi.Students.IsCorrectGroup(group))
             {
-                try
+                Log.Information("Отправка расписания в беседу {0}", id);
+                var schedule = await _narfuApi.Students.GetScheduleAtDateWithResult(group, DateTime.Now);
+                if(schedule is FailedResult failed)
                 {
-                    Log.Information("Отправка расписания в беседу {0}", id);
-                    var schedule = await _narfuApi.Students.GetScheduleAtDate(group, DateTime.Now);
+                    await _vkApi.Messages.SendError(failed.Error, id);
+                }
+                else
+                {
+                    var success = schedule as SuccessfulResult;
                     await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                     {
                         PeerId = id,
-                        Message = schedule.ToString()
+                        Message = success.Message
                     });
-                }
-                catch(FlurlHttpException ex)
-                {
-                    Log.Error("ruz.narfu.ru недоступен (http code - {0})", ex.Call.HttpStatus);
-                    var msg = $"Невозможно получить расписание с сайта (код ошибки - {ex.Call.HttpStatus}).";
-                    await _vkApi.Messages.SendError(msg, id);
-                }
-                catch(Exception ex)
-                {
-                    Log.Fatal(ex, "Ошибка при получении расписания");
-                    var msg = "Непредвиденнная ошибка при получении расписания с сайта.";
-                    await _vkApi.Messages.SendError(msg, id);
                 }
             }
         }
