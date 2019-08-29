@@ -45,8 +45,8 @@ namespace Goblin.Narfu.Schedule
                 {
                     Address = adr[1],
                     Auditory = adr[0],
-                    Number = byte.Parse(lessonNode.SelectSingleNode(".//span[contains(@class,'num_para')]")
-                                                  .GetNormalizedInnerText()),
+                    Number = int.Parse(lessonNode.SelectSingleNode(".//span[contains(@class,'num_para')]")
+                                                 .GetNormalizedInnerText()),
                     Groups = lessonNode.SelectSingleNode(".//span[contains(@class,'group')]").GetNormalizedInnerText(),
                     Name = lessonNode.SelectSingleNode(".//span[contains(@class,'discipline')]")
                                      .GetNormalizedInnerText(),

@@ -9,7 +9,7 @@ namespace Goblin.Narfu.Models
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public string StartEndTime { get; set; }
-        public byte Number { get; set; }
+        public int Number { get; set; }
         public string Address { get; set; }
         public string Auditory { get; set; }
         public string Teacher { get; set; }

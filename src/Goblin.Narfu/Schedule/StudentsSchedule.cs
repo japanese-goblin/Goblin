@@ -49,9 +49,9 @@ namespace Goblin.Narfu.Schedule
                 {
                     Address = address[0],
                     Auditory = address[1],
-                    Number = (byte) description[0].ElementAt(0),
+                    Number = description[0].ElementAt(0),
                     Groups = description[1].Substring(3),
-                    Name = description[2],
+                    Name = ev.Summary,
                     Type = description[3],
                     Teacher = description[4],
                     StartTime = ev.DtStart.AsSystemLocal,
@@ -63,12 +63,12 @@ namespace Goblin.Narfu.Schedule
             return lessons;
         }
 
-        public async Task<LessonsViewModel> GetExams(int realGroupId)
+        public async Task<ExamsViewModel> GetExams(int realGroupId)
         {
             var schedule = await GetSchedule(realGroupId);
             var exams = schedule.Where(x => x.Type.ToLower().Contains("экзамен") ||
                                             x.Type.ToLower().Contains("зачет"));
-            return new LessonsViewModel(exams, DateTime.Today);
+            return new ExamsViewModel(exams, DateTime.Today);
         }
 
         public async Task<LessonsViewModel> GetScheduleAtDate(int realGroupId, DateTime date)
