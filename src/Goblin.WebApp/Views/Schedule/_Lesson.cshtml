@@ -1,0 +1,47 @@
+@model Goblin.Narfu.Models.Lesson;
+@{
+    string GetCssStyle()
+    {
+        var type = Model.Type.ToLower();
+        if(type == "лекции")
+        {
+            return "green";
+        }
+        if(type == "лабораторные занятия")
+        {
+             return "blue";
+        }
+        if(type == "практические занятия")
+        {
+            return "yellow";
+        }
+        if(type == "консультация")
+        {
+            return "orange";
+        }
+        if(type.Contains("экзамен") || type.Contains("зачет"))
+        {
+            return "red";
+        }
+
+        return "transparent";
+    }
+}
+
+<div class='timetable_sheet @GetCssStyle()'>
+    <span class='time_para'>
+        @Model.StartEndTime
+    </span>
+    <span class='kindOfWork'>
+        @Model.Type
+    </span>
+    <span class='discipline'>
+        @Model.Name (@Model.Teacher)
+    </span>
+    <span class='group'>
+        @Model.Groups
+    </span>
+    <span class='auditorium'>
+        <b>ауд. @Model.Auditory</b> @Model.Address
+    </span>
+</div>

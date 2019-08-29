@@ -25,7 +25,7 @@
                         <div class="dayofweek">@days.First().StartTime.ToString("dddd, dd.MM.yyyy")</div>
                         @foreach(var lesson in days)
                         {
-                            <lesson lesson="lesson"></lesson>
+                            Html.RenderPartial("_Lesson", lesson);
                         }
                     </div>
                 }
