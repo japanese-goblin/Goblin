@@ -5,7 +5,6 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using VkNet.Abstractions;
 using VkNet.Model;
-using VkNet.Model.Keyboard;
 using VkNet.Model.RequestParams;
 
 namespace Goblin.Application.Extensions
@@ -19,8 +18,7 @@ namespace Goblin.Application.Extensions
             return await msgCategory.SendWithRandomId(new MessagesSendParams
             {
                 PeerId = peerId,
-                Message = $"❌ Ошибка: {error}",
-                Keyboard = DefaultKeyboards.GetDefaultKeyboard()
+                Message = $"❌ Ошибка: {error}"
             });
         }
 
@@ -39,8 +37,7 @@ namespace Goblin.Application.Extensions
             return await msgCategory.SendToUserIdsWithRandomId(new MessagesSendParams
             {
                 UserIds = userIds,
-                Message = $"❌ Ошибка: {error}",
-                Keyboard = DefaultKeyboards.GetDefaultKeyboard()
+                Message = $"❌ Ошибка: {error}"
             });
         }
 
@@ -52,7 +49,7 @@ namespace Goblin.Application.Extensions
             @params.RandomId = GetRandomId();
             return await msgCategory.SendToUserIdsAsync(@params);
         }
-        
+
         private static void AddKeyboard(MessagesSendParams @params)
         {
             const int conversationsStartId = 2000000000;
