@@ -65,14 +65,16 @@ namespace Goblin.Narfu.Schedule
 
         public async Task<LessonsViewModel> GetExams(int realGroupId)
         {
-            var exams = (await GetSchedule(realGroupId)).Where(x => x.Type.ToLower().Contains("экзамен") ||
-                                                                    x.Type.ToLower().Contains("зачет"));
+            var schedule = await GetSchedule(realGroupId);
+            var exams = schedule.Where(x => x.Type.ToLower().Contains("экзамен") ||
+                                            x.Type.ToLower().Contains("зачет"));
             return new LessonsViewModel(exams, DateTime.Today);
         }
 
         public async Task<LessonsViewModel> GetScheduleAtDate(int realGroupId, DateTime date)
         {
-            var lessons = (await GetSchedule(realGroupId)).Where(x => x.StartTime.DayOfYear == date.DayOfYear);
+            var schedule = await GetSchedule(realGroupId);
+            var lessons = schedule.Where(x => x.StartTime.DayOfYear == date.DayOfYear);
             return new LessonsViewModel(lessons, date);
         }
 

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Goblin.Application;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
@@ -32,8 +33,10 @@ namespace Goblin.WebApp.Controllers
                 //TODO:
                 return _config["Vk:ConfirmationCode"];
             }
+            
+            BackgroundJob.Enqueue(() => _handler.Handle(JToken.FromObject(update)));
 
-            return await _handler.Handle(new VkResponse(JToken.FromObject(update)));
+            return "ok";
         }
     }
 }

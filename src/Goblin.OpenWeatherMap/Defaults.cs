@@ -20,11 +20,11 @@ namespace Goblin.OpenWeatherMap
             return EndPoint.SetQueryParam("units", Units)
                            .SetQueryParam("appid", token)
                            .SetQueryParam("lang", Language)
-                           .WithTimeout(3)
+                           .WithTimeout(5)
                            .WithHeaders(new
                            {
                                Accept = "application/json",
-                               User_Agent = "Japanese Goblin 1.0"
+                               User_Agent = "Japanese Goblin 2.0"
                            })
                            .AllowAnyHttpStatus();
         }

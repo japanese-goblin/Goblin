@@ -67,9 +67,9 @@ namespace Goblin.Application.Commands.Merged
                     Message = $"Погода в городе {user.WeatherCity} на {day:dd.MM (dddd)}:\n{weather}"
                 };
             }
-            catch
+            catch(Exception ex)
             {
-                return new FailedResult("Невозможно получить погоду с внешнего сайта. Попробуйте позже.");
+                return new FailedResult($"Невозможно получить погоду с внешнего сайта ({ex.Message}). Попробуйте позже.");
             }
         }
     }

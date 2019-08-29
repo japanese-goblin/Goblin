@@ -11,7 +11,7 @@ namespace Goblin.Narfu
 
         internal static IFlurlRequest BuildRequest()
         {
-            return EndPoint.WithTimeout(3)
+            return EndPoint.WithTimeout(5)
                            .WithHeaders(new
                            {
                                User_Agent = UserAgent

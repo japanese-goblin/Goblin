@@ -6,6 +6,7 @@ using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Entities;
+using Newtonsoft.Json.Linq;
 using Serilog;
 using VkNet.Abstractions;
 using VkNet.Enums.SafetyEnums;
@@ -18,7 +19,6 @@ namespace Goblin.Application
 {
     public class CallbackHandler
     {
-        public const string DefaultResult = "ok";
         private readonly BotDbContext _db;
         private readonly CommandsService _service;
         private readonly IVkApi _vkApi;
@@ -30,10 +30,13 @@ namespace Goblin.Application
             _vkApi = vkApi;
         }
 
-        public async Task<string> Handle(VkResponse response)
+        public async Task Handle(JToken token)
         {
+            var response = new VkResponse(token);
             var upd = GroupUpdate.FromJson(response);
+            
             Log.Information("Обработка события с типом {0}", upd.Type);
+            
             if(upd.Type == GroupUpdateType.MessageNew)
             {
                 await MessageNew(upd.Message);
@@ -51,8 +54,6 @@ namespace Goblin.Application
                 Log.Fatal("Обработчик для события {0} не найден", upd.Type);
                 throw new ArgumentOutOfRangeException(nameof(upd.Type), "Отсутствует обработчик события");
             }
-
-            return DefaultResult;
         }
 
         private async Task MessageNew(Message msg)
