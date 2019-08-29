@@ -22,7 +22,7 @@ namespace Goblin.Narfu.Schedule
 
         public async Task<Lesson[]> GetSchedule(int realGroupId)
         {
-            var siteGroupId = GetGroupByRealId(realGroupId);
+            var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
             var response = await Defaults.BuildRequest()
                                          .SetQueryParam("icalendar")
                                          .SetQueryParam("oid", siteGroupId)
