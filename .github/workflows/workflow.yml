@@ -1,12 +1,16 @@
 name: ASP.NET Core CI
 
-on: [push, pull_request]
+on: 
+  push:
+    paths: # Push events containing matching files
+    - 'src/*'
+  pull_request:
+    paths:
+    - 'src/*'
 
 jobs:
   build:
-
     runs-on: ubuntu-18.04
-    
     steps:
     - uses: actions/checkout@v1
     - name: Setup .NET Core
