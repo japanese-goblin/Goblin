@@ -20,11 +20,13 @@ namespace Goblin.WebApp.Controllers
             _narfuApi = narfuApi;
         }
 
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
         public IActionResult Index()
         {
             return View();
         }
 
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Show(int id)
         {
             if(!_narfuApi.Students.IsCorrectGroup(id))

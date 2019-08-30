@@ -1,11 +1,9 @@
-using System.Threading.Tasks;
 using Goblin.Application;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using Serilog;
-using VkNet.Utils;
 
 namespace Goblin.WebApp.Controllers
 {
@@ -23,7 +21,7 @@ namespace Goblin.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<string> Handle([FromBody] object update)
+        public string Handle([FromBody] object update)
         {
             var temp = update as dynamic; //TODO: пофиксить в следующей версии VkNet
             if(temp["type"] == "confirmation")
@@ -33,7 +31,7 @@ namespace Goblin.WebApp.Controllers
                 //TODO:
                 return _config["Vk:ConfirmationCode"];
             }
-            
+
             BackgroundJob.Enqueue(() => _handler.Handle(JToken.FromObject(update)));
 
             return "ok";

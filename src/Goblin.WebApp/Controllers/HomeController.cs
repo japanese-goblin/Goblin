@@ -6,6 +6,7 @@ namespace Goblin.WebApp.Controllers
 {
     public class HomeController : Controller
     {
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
         public IActionResult Index()
         {
             return View();

@@ -48,6 +48,7 @@ namespace Goblin.WebApp
 
             services.AddAuth(Configuration);
 
+            services.AddResponseCaching();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -73,6 +74,7 @@ namespace Goblin.WebApp
             app.UseDashboard();
             app.AddHangfireJobs();
 
+            app.UseResponseCaching();
             app.UseMvcWithDefaultRoute();
         }
     }
