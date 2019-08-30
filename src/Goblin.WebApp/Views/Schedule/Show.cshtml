@@ -5,14 +5,12 @@
 }
 
 <h2>@Model.GroupTitle</h2>
-<ul class="nav nav-tabs" role="tablist">
+<div class="nav nav-pills">
     @foreach(var group in Model.Lessons)
     {
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="pill" href="#d@(group.Value.First().StartTime.DayOfYear)">@group.Key</a>
-        </li>
+        <a class="nav-link" data-toggle="pill" href="#d@(group.Value.First().StartTime.DayOfYear)">@group.Key</a>
     }
-</ul>
+</div>
 
 <div class="tab-content">
     @foreach(var group in Model.Lessons)
@@ -22,7 +20,9 @@
                 @foreach(var days in group.Value.GroupBy(x => x.StartTime.DayOfWeek))
                 {
                     <div class="col-md-2">
-                        <div class="dayofweek">@days.First().StartTime.ToString("dddd, dd.MM.yyyy")</div>
+                        <div class="dayofweek">
+                            @days.First().StartTime.ToString("dddd, dd.MM.yyyy")
+                        </div>
                         @foreach(var lesson in days)
                         {
                             await Html.RenderPartialAsync("_Lesson", lesson);

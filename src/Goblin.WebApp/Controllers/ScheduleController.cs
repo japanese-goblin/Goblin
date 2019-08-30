@@ -44,21 +44,26 @@ namespace Goblin.WebApp.Controllers
             try
             {
                 var lessons = await _narfuApi.Students.GetSchedule(group.RealId);
-                var dict = lessons.GroupBy(x => x.StartTime.GetWeekNumber())
-                                  .ToDictionary(x => $"{x.First().StartTime:dd.MM.yyyy} - {x.Last().StartTime:dd.MM.yyyy}",
-                                                x => x.ToArray());
+                var dict = lessons.GroupBy(x => x.StartTime.GetWeekNumber());
+                
                 return View(new LessonsViewModel
                 {
-                    Lessons = dict,
+                    Lessons = dict.ToDictionary(x =>
+                                                {
+                                                    var start = x.First().StartTime.GetStartOfWeek();
+                                                    return
+                                                            $"{start:dd.MM.yyyy} - {start.AddDays(5):dd.MM.yyyy}";
+                                                },
+                                                x => x.ToArray()),
                     GroupTitle = $"{group.RealId} - {group.Name}"
                 });
             }
             catch(FlurlHttpException ex)
             {
-                Log.Error("ruz.narfu.ru недоступен (http code - {0})", ex.Call.HttpStatus);
+                Log.Error(ex, "ruz.narfu.ru недоступен (http code - {0})", ex.Call.HttpStatus);
                 return View("Error", new ErrorViewModel
                 {
-                    Description = $"Сайт с расписанием вернул ошибку ({ex.Call.HttpStatus}). Попробуйте позже."
+                    Description = $"Сайт с расписанием временно недоступен (Код ошибки - {ex.Call.HttpStatus}). Попробуйте позже."
                 });
             }
             catch(Exception ex)
