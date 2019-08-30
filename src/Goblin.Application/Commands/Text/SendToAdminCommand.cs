@@ -28,8 +28,8 @@ namespace Goblin.Application.Commands.Text
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
-            var param = msg.GetCommandParameters();
-            if(param.Length < 2)
+            var param = string.Join(' ', msg.GetCommandParameters());
+            if(string.IsNullOrWhiteSpace(param))
             {
                 return new FailedResult("Введите текст сообщения.");
             }
