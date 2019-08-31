@@ -49,7 +49,7 @@ namespace Goblin.Narfu.Schedule
                 {
                     Address = address[0],
                     Auditory = address[1],
-                    Number = description[0].ElementAt(0),
+                    Number = int.Parse(description[0][0].ToString()),
                     Groups = description[1].Substring(3),
                     Name = ev.Summary,
                     Type = description[3],

@@ -1,13 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Narfu;
+using Goblin.Narfu.Models;
 using Goblin.WebApp.Extensions;
 using Goblin.WebApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using LessonsViewModel = Goblin.WebApp.ViewModels.LessonsViewModel;
 
 namespace Goblin.WebApp.Controllers
 {
@@ -43,9 +46,9 @@ namespace Goblin.WebApp.Controllers
 
             try
             {
-                var lessons = await _narfuApi.Students.GetSchedule(group.RealId);
-                var dict = lessons.GroupBy(x => x.StartTime.GetWeekNumber());
-                
+                var lessons = (await _narfuApi.Students.GetSchedule(group.RealId)).ToList();
+                var dict = MagicWithLessons(lessons);
+
                 return View(new LessonsViewModel
                 {
                     Lessons = dict.ToDictionary(x =>
@@ -71,9 +74,51 @@ namespace Goblin.WebApp.Controllers
                 Log.Fatal(ex, "Ошибка при получении расписания");
                 return View("Error", new ErrorViewModel
                 {
-                    Description = "Непрведиденная ошибка при получении расписания. Попробуйте позже."
+                    Description = "Непредвиденная ошибка при получении расписания. Попробуйте позже."
                 });
             }
+        }
+
+        // какой ужас.... но работает (TODO)
+        [NonAction]
+        private static IEnumerable<IGrouping<DateTime, Lesson>> MagicWithLessons(List<Lesson> lessons)
+        {
+            var first = lessons.First().StartTime.Date;
+            var last = lessons.Last().StartTime.Date;
+            var dif = (last - first).Days;
+            for(var i = 0; i <= dif; i++)
+            {
+                var day = first.AddDays(i);
+                if(day.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    continue;
+                }
+
+                var temp = lessons.Where(x => x.StartTime.Date == day);
+                if(temp.Any())
+                {
+                    for(var j = 1; j <= temp.Max(x => x.Number); j++)
+                    {
+                        if(!temp.Any(x => x.Number == j))
+                        {
+                            lessons.Add(new Lesson
+                            {
+                                StartTime = day,
+                                Number = j
+                            });
+                        }
+                    }
+                }
+
+                lessons.Add(new Lesson
+                {
+                    StartTime = day,
+                    Number = 0
+                });
+            }
+
+            var dict = lessons.OrderBy(x => x.StartTime).GroupBy(x => x.StartTime.GetStartOfWeek());
+            return dict;
         }
     }
 }

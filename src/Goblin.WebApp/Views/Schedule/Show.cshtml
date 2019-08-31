@@ -25,7 +25,10 @@
                         </div>
                         @foreach(var lesson in days)
                         {
-                            await Html.RenderPartialAsync("_Lesson", lesson);
+                            if(lesson.Number != 0)
+                            {
+                                await Html.RenderPartialAsync("_Lesson", lesson);   
+                            }
                         }
                     </div>
                 }

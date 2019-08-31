@@ -2,7 +2,12 @@
 @{
     string GetCssStyle()
     {
-        var type = Model.Type.ToLower();
+        var type = Model.Type?.ToLower();
+        if(string.IsNullOrWhiteSpace(type))
+        {
+            return "transparent d-none d-sm-block";
+        }
+        
         if(type == "лекции")
         {
             return "green";
@@ -24,24 +29,30 @@
             return "red";
         }
 
-        return "transparent";
+        return "transparent d-none d-sm-block";
     }
 }
 
 <div class='timetable_sheet @GetCssStyle()'>
-    <span class='time_para'>
-        @Model.StartEndTime
+    <span class="num_para">
+        @Model.Number
     </span>
-    <span class='kindOfWork'>
-        @Model.Type
-    </span>
-    <span class='discipline'>
-        @Model.Name (@Model.Teacher)
-    </span>
-    <span class='group'>
-        @Model.Groups
-    </span>
-    <span class='auditorium'>
-        <b>ауд. @Model.Auditory</b> @Model.Address
-    </span>
+    @if(!string.IsNullOrEmpty(Model.Type))
+    {
+        <span class='time_para'>
+            @Model.StartEndTime
+        </span>
+        <span class='kindOfWork'>
+            @Model.Type
+        </span>
+        <span class='discipline'>
+            @Model.Name (@Model.Teacher)
+        </span>
+        <span class='group'>
+            @Model.Groups
+        </span>
+        <span class='auditorium'>
+            <b>ауд. @Model.Auditory</b> @Model.Address
+        </span>
+    }
 </div>
