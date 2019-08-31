@@ -16,16 +16,29 @@ namespace Goblin.Application.Commands.Keyboard
 
         public Task<IResult> Execute(Message msg, BotUser user)
         {
-            const string DefaultFormat = "dd.MM.yyyy";
-            var date = DateTime.Now;
+            const string defaultFormat = "dd.MM.yyyy";
+            var startDate = DateTime.Now;
 
             var kb = new KeyboardBuilder(true);
-            kb.AddButton("На сегодня", date.ToString(DefaultFormat),
+            kb.AddButton($"На сегодня ({startDate:dd.MM - dddd})", startDate.ToString(defaultFormat),
                          KeyboardButtonColor.Primary, "schedule");
             kb.AddLine();
-            kb.AddButton("На завтра", date.AddDays(1).ToString(DefaultFormat),
+            kb.AddButton($"На завтра ({startDate.AddDays(1):dd.MM - dddd})", startDate.AddDays(1).ToString(defaultFormat),
                          KeyboardButtonColor.Primary, "schedule");
-            kb.AddReturnToMenuButton();
+            kb.AddLine();
+
+            startDate = startDate.AddDays(2);
+            for(var i = 1; i < 7; i++)
+            {
+                var date = startDate.AddDays(i);
+                kb.AddButton($"На {date:dd.MM (dddd)}", date.ToString(defaultFormat),
+                             KeyboardButtonColor.Primary, "schedule");
+                if(i % 2 == 0)
+                {
+                    kb.AddLine();
+                }
+            }
+            kb.AddReturnToMenuButton(false);
 
             return Task.FromResult<IResult>(new SuccessfulResult
             {
