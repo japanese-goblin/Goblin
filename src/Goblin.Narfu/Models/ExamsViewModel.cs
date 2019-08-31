@@ -19,16 +19,23 @@ namespace Goblin.Narfu.Models
             }
 
             var strBuilder = new StringBuilder();
+            var grouped = Lessons.Where(x => x.StartTime.DayOfYear >= _date.DayOfYear)
+                                 .GroupBy(x => x.StartTime.Date);
 
-            foreach(var lesson in Lessons.Where(x => x.StartTime.DayOfYear >= _date.DayOfYear))
+            foreach(var group in grouped)
             {
-                strBuilder.AppendFormat("{0} - {1} [{2}] ({3})",
-                                        lesson.StartEndTime, lesson.Name, lesson.Type, lesson.Teacher)
-                          .AppendLine()
-                          .AppendFormat("У группы {0}", lesson.Groups).AppendLine()
-                          .AppendFormat("В аудитории {0} ({1})", lesson.Auditory, lesson.Address).AppendLine()
-                          .AppendLine()
-                          .AppendLine();
+                strBuilder.AppendFormat("{0:D}:", group.Key).AppendLine();
+                foreach(var lesson in group)
+                {
+                    strBuilder.AppendFormat("{0} - {1} [{2}] ({3})",
+                                            lesson.StartEndTime, lesson.Name, lesson.Type, lesson.Teacher)
+                              .AppendLine()
+                              .AppendFormat("У группы {0}", lesson.Groups).AppendLine()
+                              .AppendFormat("В аудитории {0} ({1})", lesson.Auditory, lesson.Address).AppendLine()
+                              .AppendLine();
+                }
+
+                strBuilder.AppendLine();
             }
 
             return strBuilder.ToString();
