@@ -2,10 +2,12 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Extensions;
+using Goblin.Application.Options;
 using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Entities;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using VkNet.Abstractions;
@@ -22,18 +24,26 @@ namespace Goblin.Application
         private readonly BotDbContext _db;
         private readonly CommandsService _service;
         private readonly IVkApi _vkApi;
+        private readonly IOptions<VkOptions> _options;
 
-        public CallbackHandler(CommandsService service, BotDbContext db, IVkApi vkApi)
+        public CallbackHandler(CommandsService service, BotDbContext db, IVkApi vkApi, IOptions<VkOptions> options)
         {
             _service = service;
             _db = db;
             _vkApi = vkApi;
+            _options = options;
         }
 
         public async Task Handle(JToken token)
         {
             var response = new VkResponse(token);
             var upd = GroupUpdate.FromJson(response);
+
+            if(upd.Secret != _options.Value.SecretKey)
+            {
+                Log.Warning("Пришло событие с неправильным секретным ключом ({0})", upd.Secret);
+                return;
+            }
             
             Log.Information("Обработка события с типом {0}", upd.Type);
             

@@ -33,6 +33,7 @@ namespace Goblin.WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContexts(Configuration);
+            services.AddOptions(Configuration);
 
             services.AddHangfire(config => { config.UseMemoryStorage(); });
 

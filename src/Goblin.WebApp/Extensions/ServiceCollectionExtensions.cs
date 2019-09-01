@@ -3,6 +3,7 @@ using Goblin.Application.Abstractions;
 using Goblin.Application.Commands.Keyboard;
 using Goblin.Application.Commands.Merged;
 using Goblin.Application.Commands.Text;
+using Goblin.Application.Options;
 using Goblin.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -96,15 +97,11 @@ namespace Goblin.WebApp.Extensions
                     });
         }
 
-        public static void AddHttpsRedirect(this IServiceCollection services)
+        public static void AddOptions(this IServiceCollection services, IConfiguration config)
         {
-            services.AddHttpsRedirection(options => { options.HttpsPort = 443; });
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.KnownNetworks.Clear();
-                options.KnownProxies.Clear();
-                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            });
+            services.Configure<VkOptions>(config.GetSection("Vk"));
+            services.Configure<VkAuthOptions>(config.GetSection("VkAuth"));
+            services.Configure<OpenWeatherMapOptions>(config.GetSection("OWM"));
         }
     }
 }
