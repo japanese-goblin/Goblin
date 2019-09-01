@@ -47,23 +47,16 @@ namespace Goblin.WebApp.Controllers
             try
             {
                 var lessons = (await _narfuApi.Students.GetSchedule(group.RealId)).ToList();
-                var dict = MagicWithLessons(lessons);
 
                 return View(new LessonsViewModel
                 {
-                    Lessons = dict.ToDictionary(x =>
-                                                {
-                                                    var start = x.First().StartTime.GetStartOfWeek();
-                                                    return
-                                                            $"{start:dd.MM.yyyy} - {start.AddDays(5):dd.MM.yyyy}";
-                                                },
-                                                x => x.ToArray()),
+                    Lessons = MagicWithLessons(lessons),
                     GroupTitle = $"{group.RealId} - {group.Name}"
                 });
             }
             catch(FlurlHttpException ex)
             {
-                Log.Error(ex, "ruz.narfu.ru недоступен (http code - {0})", ex.Call.HttpStatus);
+                Log.Error("ruz.narfu.ru недоступен ({0} -> {1})", nameof(ex), ex.Message);
                 return View("Error", new ErrorViewModel
                 {
                     Description = $"Сайт с расписанием временно недоступен (Код ошибки - {ex.Call.HttpStatus}). Попробуйте позже."
@@ -71,7 +64,7 @@ namespace Goblin.WebApp.Controllers
             }
             catch(Exception ex)
             {
-                Log.Fatal(ex, "Ошибка при получении расписания");
+                Log.Fatal("Непредвиденная ошибка при получении экзаменов ({0} -> {1})", nameof(ex), ex.Message);
                 return View("Error", new ErrorViewModel
                 {
                     Description = "Непредвиденная ошибка при получении расписания. Попробуйте позже."
@@ -81,7 +74,7 @@ namespace Goblin.WebApp.Controllers
 
         // какой ужас.... но работает (TODO)
         [NonAction]
-        private static IEnumerable<IGrouping<DateTime, Lesson>> MagicWithLessons(List<Lesson> lessons)
+        private static Dictionary<string, Lesson[]> MagicWithLessons(List<Lesson> lessons)
         {
             var first = lessons.First().StartTime.Date;
             var last = lessons.Last().StartTime.Date;
@@ -118,7 +111,13 @@ namespace Goblin.WebApp.Controllers
             }
 
             var dict = lessons.OrderBy(x => x.StartTime).GroupBy(x => x.StartTime.GetStartOfWeek());
-            return dict;
+            return dict.ToDictionary(x =>
+                                     {
+                                         var start = x.First().StartTime.GetStartOfWeek();
+                                         return
+                                                 $"{start:dd.MM.yyyy} - {start.AddDays(5):dd.MM.yyyy}";
+                                     },
+                                     x => x.ToArray());
         }
     }
 }
