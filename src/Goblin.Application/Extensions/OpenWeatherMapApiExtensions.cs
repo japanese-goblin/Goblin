@@ -23,7 +23,7 @@ namespace Goblin.Application.Extensions
             }
             catch(FlurlHttpException ex)
             {
-                Log.Error(ex, "OpenWeatherMap API недоступен");
+                Log.Error("OpenWeatherMap API недоступен ({0} -> {1})", nameof(ex), ex.Message);
                 return new FailedResult("Невозможно получить погоду с сайта.");
             }
             catch(Exception ex)
@@ -58,12 +58,12 @@ namespace Goblin.Application.Extensions
             }
             catch(FlurlHttpException ex)
             {
-                Log.Error(ex, "OpenWeatherMap API недоступен");
+                Log.Error("OpenWeatherMap API недоступен ({0} -> {1})", nameof(ex), ex.Message);
                 return new FailedResult($"Невозможно получить погоду с внешнего сайта (Код ошибки - {ex.Call.HttpStatus}).");
             }
             catch(Exception ex)
             {
-                Log.Fatal(ex, "Непредвиденная ошибка при получении погоды");
+                Log.Fatal("Непредвиденная ошибка при получении погоды ({0} -> {1})", nameof(ex), ex.Message);
                 return new FailedResult($"Непредвиденная ошибка при получении погоды ({ex.Message}). Попробуйте позже.");
             }
         }
