@@ -27,7 +27,7 @@ namespace Goblin.Application.Commands.Keyboard
                          KeyboardButtonColor.Primary, "schedule");
             kb.AddLine();
 
-            startDate = startDate.AddDays(2);
+            startDate = startDate.AddDays(1);
             for(var i = 1; i < 7; i++)
             {
                 var date = startDate.AddDays(i);
