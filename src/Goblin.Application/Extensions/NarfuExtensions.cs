@@ -23,13 +23,13 @@ namespace Goblin.Application.Extensions
             }
             catch(FlurlHttpException ex)
             {
-                Log.Error("ruz.narfu.ru недоступен ({0} -> {1})", nameof(ex), ex.Message);
+                Log.Error("ruz.narfu.ru недоступен ({0} -> {1})", ex.GetType(), ex.Message);
                 return new FailedResult($"Невозможно получить экзамены с сайта. Попробуйте позже." +
                                         $" (Код ошибки - {ex.Call.HttpStatus})");
             }
             catch(Exception ex)
             {
-                Log.Fatal("Непредвиденная ошибка при получении экзаменов ({0} -> {1})", nameof(ex), ex.Message);
+                Log.Fatal("Непредвиденная ошибка при получении экзаменов ({0} -> {1})", ex.GetType(), ex.Message);
                 return new FailedResult($"Непредвиденная ошибка получения экзаменов с сайта ({ex.Message}). Попробуйте позже.");
             }
         }

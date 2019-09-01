@@ -23,7 +23,7 @@ namespace Goblin.Application.Extensions
             }
             catch(FlurlHttpException ex)
             {
-                Log.Error("OpenWeatherMap API недоступен ({0} -> {1})", nameof(ex), ex.Message);
+                Log.Error("OpenWeatherMap API недоступен ({0} -> {1})", ex.GetType(), ex.Message);
                 return new FailedResult("Невозможно получить погоду с сайта.");
             }
             catch(Exception ex)
@@ -38,32 +38,34 @@ namespace Goblin.Application.Extensions
             try
             {
                 var weather = await api.GetDailyWeatherAt(city, date);
-                string formatedDate;
+                
+                string formattedDate;
                 if(date.Date == DateTime.Today)
                 {
-                    formatedDate = $"сегодня ({date:dd.MM (dddd)})";
+                    formattedDate = $"сегодня ({date:dd.MM (dddd)})";
                 }
                 else if(date.Date == DateTime.Today.AddDays(1))
                 {
-                    formatedDate = $"завтра ({date:dd.MM (dddd)})";
+                    formattedDate = $"завтра ({date:dd.MM (dddd)})";
                 }
                 else
                 {
-                    formatedDate = $"({date:dd.MM (dddd)})";
+                    formattedDate = $"({date:dd.MM (dddd)})";
                 }
+                
                 return new SuccessfulResult
                 {
-                    Message = $"Погода в городе {city} на {formatedDate}:\n{weather}"
+                    Message = $"Погода в городе {city} на {formattedDate}:\n{weather}"
                 };
             }
             catch(FlurlHttpException ex)
             {
-                Log.Error("OpenWeatherMap API недоступен ({0} -> {1})", nameof(ex), ex.Message);
+                Log.Error("OpenWeatherMap API недоступен ({0} -> {1})", ex.GetType(), ex.Message);
                 return new FailedResult($"Невозможно получить погоду с внешнего сайта (Код ошибки - {ex.Call.HttpStatus}).");
             }
             catch(Exception ex)
             {
-                Log.Fatal("Непредвиденная ошибка при получении погоды ({0} -> {1})", nameof(ex), ex.Message);
+                Log.Fatal("Непредвиденная ошибка при получении погоды ({0} -> {1})", ex.GetType(), ex.Message);
                 return new FailedResult($"Непредвиденная ошибка при получении погоды ({ex.Message}). Попробуйте позже.");
             }
         }

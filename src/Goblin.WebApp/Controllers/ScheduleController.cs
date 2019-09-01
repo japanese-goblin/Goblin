@@ -56,7 +56,7 @@ namespace Goblin.WebApp.Controllers
             }
             catch(FlurlHttpException ex)
             {
-                Log.Error("ruz.narfu.ru недоступен ({0} -> {1})", nameof(ex), ex.Message);
+                Log.Error("ruz.narfu.ru недоступен ({0} -> {1})", ex.GetType(), ex.Message);
                 return View("Error", new ErrorViewModel
                 {
                     Description = $"Сайт с расписанием временно недоступен (Код ошибки - {ex.Call.HttpStatus}). Попробуйте позже."
@@ -64,7 +64,7 @@ namespace Goblin.WebApp.Controllers
             }
             catch(Exception ex)
             {
-                Log.Fatal("Непредвиденная ошибка при получении экзаменов ({0} -> {1})", nameof(ex), ex.Message);
+                Log.Fatal("Непредвиденная ошибка при получении экзаменов ({0} -> {1})", ex.GetType(), ex.Message);
                 return View("Error", new ErrorViewModel
                 {
                     Description = "Непредвиденная ошибка при получении расписания. Попробуйте позже."
