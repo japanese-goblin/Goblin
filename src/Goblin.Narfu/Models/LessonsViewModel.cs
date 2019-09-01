@@ -24,6 +24,7 @@ namespace Goblin.Narfu.Models
             }
             
             var strBuilder = new StringBuilder();
+            strBuilder.AppendFormat("Расписание на {0:dd.MM (dddd)}:", _date).AppendLine();
 
             foreach(var lesson in Lessons.Where(x => x.StartTime.DayOfYear == _date.DayOfYear))
             {
