@@ -70,11 +70,13 @@ namespace Goblin.Application.Commands.Text
                     return new FailedResult($"Группа с номером {intGroup} не найдена.");
                 }
 
+                var groupName = _narfu.Students.GetGroupByRealId(intGroup).Name;
+
                 user.SetNarfuGroup(intGroup);
                 _db.SaveChanges();
                 return new SuccessfulResult
                 {
-                    Message = $"Группа успешно установлена на {group}"
+                    Message = $"Группа успешно установлена на {intGroup} ({groupName})"
                 };
             }
 
