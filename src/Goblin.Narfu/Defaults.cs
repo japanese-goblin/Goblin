@@ -2,7 +2,7 @@ using Flurl.Http;
 
 namespace Goblin.Narfu
 {
-    public class Defaults
+    public static class Defaults
     {
         public const string EndPoint = "https://ruz.narfu.ru/";
 
@@ -12,10 +12,7 @@ namespace Goblin.Narfu
         internal static IFlurlRequest BuildRequest()
         {
             return EndPoint.WithTimeout(5)
-                           .WithHeaders(new
-                           {
-                               User_Agent = UserAgent
-                           });
+                           .WithHeader("User-Agent", UserAgent);
         }
     }
 }

@@ -28,9 +28,9 @@ namespace Goblin.Narfu.Schedule
                                          .SetQueryParam("oid", siteGroupId)
                                          .SetQueryParam("cod", realGroupId)
                                          .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
-                                         .GetAsync();
+                                         .GetStreamAsync();
 
-            var calendar = Calendar.Load(await response.Content.ReadAsStreamAsync());
+            var calendar = Calendar.Load(response);
             var events = calendar.Events
                                  .Distinct()
                                  .OrderBy(x => x.DtStart.Value)

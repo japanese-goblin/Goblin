@@ -29,7 +29,7 @@ namespace Goblin.WebApp.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Client)]
         public async Task<IActionResult> Show(int id)
         {
             if(!_narfuApi.Students.IsCorrectGroup(id))

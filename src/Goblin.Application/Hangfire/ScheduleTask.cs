@@ -37,14 +37,14 @@ namespace Goblin.Application.Hangfire
                 foreach(var chunk in group.Chunk(Defaults.ChunkLimit))
                 {
                     var ids = chunk.Select(x => x.VkId);
-                    var weather = await _narfuApi.Students.GetScheduleAtDateWithResult(group.Key, DateTime.Today);
-                    if(weather is FailedResult failed)
+                    var schedule = await _narfuApi.Students.GetScheduleAtDateWithResult(group.Key, DateTime.Today);
+                    if(schedule is FailedResult failed)
                     {
                         await _vkApi.Messages.SendErrorToUserIds(failed.Error, ids);
                     }
                     else
                     {
-                        var success = weather as SuccessfulResult;
+                        var success = schedule as SuccessfulResult;
                         await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
                         {
                             UserIds = ids,
