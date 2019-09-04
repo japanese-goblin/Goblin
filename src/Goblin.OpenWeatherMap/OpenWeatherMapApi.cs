@@ -46,7 +46,7 @@ namespace Goblin.OpenWeatherMap
                                          .SetQueryParam("q", city)
                                          .SetQueryParam("cnt", count)
                                          .GetJsonAsync<DailyWeather>();
-            var weather = response.List.SingleOrDefault(x => Defaults.UnixToDateTime(x.UnixTime).Date == date.Date);
+            var weather = response.List.FirstOrDefault(x => Defaults.UnixToDateTime(x.UnixTime).Date == date.Date);
             if(weather is null)
             {
                 throw new ArgumentException("Погода на указанную дату не найдена.");
