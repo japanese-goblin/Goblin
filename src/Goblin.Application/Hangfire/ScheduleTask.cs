@@ -52,7 +52,7 @@ namespace Goblin.Application.Hangfire
                         });
                     }
 
-                    await Task.Delay(Defaults.ExtraDelay);
+                    await Task.Delay(TimeSpan.FromSeconds(1.5));
                 }
             }
         }
