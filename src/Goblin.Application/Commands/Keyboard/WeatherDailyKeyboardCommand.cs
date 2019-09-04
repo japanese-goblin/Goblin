@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Extensions;
+using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.Domain.Entities;
 using VkNet.Enums.SafetyEnums;
@@ -16,6 +17,12 @@ namespace Goblin.Application.Commands.Keyboard
 
         public Task<IResult> Execute(Message msg, BotUser user)
         {
+            if(string.IsNullOrWhiteSpace(user.WeatherCity))
+            {
+                var text = "Для получения погоды установите город (например - 'установить город').";
+                return Task.FromResult<IResult>(new FailedResult(text));
+            }
+            
             const string DefaultFormat = "dd.MM.yyyy";
             var date = DateTime.Now;
             var kb = new KeyboardBuilder(true);

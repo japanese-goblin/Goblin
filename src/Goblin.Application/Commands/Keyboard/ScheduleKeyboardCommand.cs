@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Extensions;
+using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.Domain.Entities;
 using VkNet.Enums.SafetyEnums;
@@ -16,6 +17,12 @@ namespace Goblin.Application.Commands.Keyboard
 
         public Task<IResult> Execute(Message msg, BotUser user)
         {
+            if(user.NarfuGroup == 0)
+            {
+                var text = "Для получения расписания установите группу (например - 'установить группу 351919').";
+                return Task.FromResult<IResult>(new FailedResult(text));
+            }
+            
             const string defaultFormat = "dd.MM.yyyy";
             var startDate = DateTime.Now;
 

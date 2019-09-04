@@ -28,7 +28,8 @@ namespace Goblin.Application.Commands.Keyboard
         {
             if(user.NarfuGroup == 0)
             {
-                return new FailedResult("Для получения расписания сначала необходимо установить группу.");
+                var text = "Для получения расписания установите группу (например - 'установить группу 351919').";
+                return new FailedResult(text);
             }
 
             var date = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)["schedule"];
