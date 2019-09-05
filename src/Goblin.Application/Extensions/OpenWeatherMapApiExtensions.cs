@@ -5,7 +5,6 @@ using Goblin.Application.Abstractions;
 using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.OpenWeatherMap;
-using Serilog;
 
 namespace Goblin.Application.Extensions
 {
@@ -23,8 +22,7 @@ namespace Goblin.Application.Extensions
             }
             catch(FlurlHttpException ex)
             {
-                Log.Error("OpenWeatherMap API недоступен ({0} -> {1})", ex.GetType(), ex.Message);
-                return new FailedResult("Невозможно получить погоду с сайта.");
+                return new FailedResult($"Невозможно получить погоду с сайта (код ошибки - {ex.Call.HttpStatus}/{ex.GetType()}.");
             }
             catch(Exception ex)
             {
@@ -60,12 +58,10 @@ namespace Goblin.Application.Extensions
             }
             catch(FlurlHttpException ex)
             {
-                Log.Error("OpenWeatherMap API недоступен ({0} -> {1})", ex.GetType(), ex.Message);
-                return new FailedResult($"Невозможно получить погоду с внешнего сайта (Код ошибки - {ex.Call.HttpStatus}).");
+                return new FailedResult($"Невозможно получить погоду с внешнего сайта (Код ошибки - {ex.Call.HttpStatus}/{ex.GetType()}).");
             }
             catch(Exception ex)
             {
-                Log.Fatal("Непредвиденная ошибка при получении погоды ({0} -> {1})", ex.GetType(), ex.Message);
                 return new FailedResult($"Непредвиденная ошибка при получении погоды ({ex.Message}). Попробуйте позже.");
             }
         }

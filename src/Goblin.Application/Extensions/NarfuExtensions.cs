@@ -5,7 +5,6 @@ using Goblin.Application.Abstractions;
 using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.Narfu.Schedule;
-using Serilog;
 
 namespace Goblin.Application.Extensions
 {
@@ -23,13 +22,11 @@ namespace Goblin.Application.Extensions
             }
             catch(FlurlHttpException ex)
             {
-                Log.Error("ruz.narfu.ru недоступен ({0} -> {1})", ex.GetType(), ex.Message);
                 return new FailedResult($"Невозможно получить экзамены с сайта. Попробуйте позже." +
                                         $" (Код ошибки - {ex.Call.HttpStatus})");
             }
             catch(Exception ex)
             {
-                Log.Fatal("Непредвиденная ошибка при получении экзаменов ({0} -> {1})", ex.GetType(), ex.Message);
                 return new FailedResult($"Непредвиденная ошибка получения экзаменов с сайта ({ex.Message}). Попробуйте позже.");
             }
         }
@@ -46,13 +43,11 @@ namespace Goblin.Application.Extensions
             }
             catch(FlurlHttpException ex)
             {
-                Log.Error("ruz.narfu.ru недоступен ({0} -> {1})", nameof(ex), ex.Message);
                 return new FailedResult($"Невозможно получить расписание с сайта. Попробуйте позже." +
                                         $" (Код ошибки - {ex.Call.HttpStatus})");
             }
             catch(Exception ex)
             {
-                Log.Fatal("Непредвиденная ошибка при получении расписания ({0} -> {1})", nameof(ex), ex.Message);
                 return new FailedResult($"Непредвиденная ошибка получения расписания с сайта ({ex.Message}). Попробуйте позже.");
             }
         }

@@ -23,6 +23,7 @@ namespace Goblin.Application
         private readonly CommandsService _service;
         private readonly IVkApi _vkApi;
         private readonly IOptions<VkOptions> _options;
+        private readonly ILogger _logger;
 
         public CallbackHandler(CommandsService service, BotDbContext db, IVkApi vkApi, IOptions<VkOptions> options)
         {
@@ -30,17 +31,18 @@ namespace Goblin.Application
             _db = db;
             _vkApi = vkApi;
             _options = options;
+            _logger = Log.ForContext<CallbackHandler>();
         }
 
         public async Task Handle(GroupUpdate upd)
         {
             if(upd.Secret != _options.Value.SecretKey)
             {
-                Log.Warning("Пришло событие с неправильным секретным ключом ({0})", upd.Secret);
+                _logger.Warning("Пришло событие с неправильным секретным ключом ({0})", upd.Secret);
                 return;
             }
             
-            Log.Information("Обработка события с типом {0}", upd.Type);
+            _logger.Debug("Обработка события с типом {0}", upd.Type);
             
             if(upd.Type == GroupUpdateType.MessageNew)
             {
@@ -56,7 +58,7 @@ namespace Goblin.Application
             }
             else
             {
-                Log.Fatal("Обработчик для события {0} не найден", upd.Type);
+                _logger.Fatal("Обработчик для события {0} не найден", upd.Type);
                 throw new ArgumentOutOfRangeException(nameof(upd.Type), "Отсутствует обработчик события");
             }
         }
@@ -66,16 +68,16 @@ namespace Goblin.Application
             var user = _db.BotUsers.Find(msg.FromId);
             if(user is null)
             {
-                Log.Information("Пользователь с id {0} не найден. Создание записи.", msg.FromId);
+                _logger.Debug("Пользователь с id {0} не найден. Создание записи.", msg.FromId);
                 user = _db.BotUsers.Add(new BotUser(msg.FromId.Value)).Entity;
                 _db.Subscribes.Add(new Subscribe(msg.FromId.Value, false, false));
                 await _db.SaveChangesAsync();
-                Log.Information("Пользователь создан");
+                _logger.Debug("Пользователь создан");
             }
 
-            Log.Information("Обработка сообщения");
+            _logger.Debug("Обработка сообщения");
             var result = await _service.ExecuteCommand(msg, user);
-            Log.Information("Сообщение обработано");
+            _logger.Debug("Сообщение обработано");
 
             if(result is FailedResult failed)
             {
@@ -102,7 +104,7 @@ namespace Goblin.Application
 
         public async Task GroupLeave(GroupLeave leave)
         {
-            Log.Information("Пользователь id{0} покинул группу", leave.UserId);
+            _logger.Information("Пользователь id{0} покинул группу", leave.UserId);
             var admins = _db.BotUsers.Where(x => x.IsAdmin).Select(x => x.VkId);
             var vkUser = (await _vkApi.Users.GetAsync(new[] { leave.UserId.Value })).First();
             var userName = $"{vkUser.FirstName} {vkUser.LastName}";
@@ -115,7 +117,7 @@ namespace Goblin.Application
 
         public async Task GroupJoin(GroupJoin join)
         {
-            Log.Information("Пользователь id{0} вступил в группу", join.UserId);
+            _logger.Information("Пользователь id{0} вступил в группу", join.UserId);
             var admins = _db.BotUsers.Where(x => x.IsAdmin).Select(x => x.VkId);
             var vkUser = (await _vkApi.Users.GetAsync(new[] { join.UserId.Value })).First();
             var userName = $"{vkUser.FirstName} {vkUser.LastName}";

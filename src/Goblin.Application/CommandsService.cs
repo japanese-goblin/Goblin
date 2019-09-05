@@ -16,28 +16,29 @@ namespace Goblin.Application
     {
         private readonly IEnumerable<IKeyboardCommand> _keyboardCommands;
         private readonly IEnumerable<ITextCommand> _textCommands;
+        private readonly ILogger _logger;
 
         public CommandsService(IEnumerable<ITextCommand> textCommands,
                                IEnumerable<IKeyboardCommand> keyboardCommands)
         {
             _textCommands = textCommands;
             _keyboardCommands = keyboardCommands;
+            _logger = Log.ForContext<CommandsService>();
         }
 
         public async Task<IResult> ExecuteCommand(Message msg, BotUser user)
         {
             if(!string.IsNullOrWhiteSpace(msg.Payload))
             {
-                Log.Information("Обработка команды с клавиатуры");
                 return await ExecuteKeyboardCommand(msg, user);
             }
-
-            Log.Information("Обработка текстовой команды");
+            
             return await ExecuteTextCommand(msg, user);
         }
 
         private async Task<IResult> ExecuteTextCommand(Message msg, BotUser user)
         {
+            _logger.Debug("Обработка текстовой команды");
             var cmdName = msg.GetCommand();
 
             foreach(var command in _textCommands)
@@ -51,12 +52,15 @@ namespace Goblin.Application
                 {
                     continue;
                 }
-
+                
+                _logger.Debug("Выполнение команды {0}", command.GetType());
                 var result = await command.Execute(msg, user);
                 if(result is FailedResult failedExecuteResult)
                 {
+                    _logger.Debug("Команда вернула {0} результат", failedExecuteResult.GetType());
                     return failedExecuteResult;
                 }
+                _logger.Debug("Команда выполнена успешно");
 
                 return result as SuccessfulResult;
             }
@@ -66,11 +70,13 @@ namespace Goblin.Application
 
         private async Task<IResult> ExecuteKeyboardCommand(Message msg, BotUser user)
         {
+            _logger.Debug("Обработка команды с клавиатуры");
             var record = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload).FirstOrDefault();
             foreach(var command in _keyboardCommands)
             {
                 if(record.Key.Contains(command.Trigger))
                 {
+                    _logger.Debug("Выполнение команды с клавиатуры {0}", command.GetType());
                     return await command.Execute(msg, user);
                 }
             }
