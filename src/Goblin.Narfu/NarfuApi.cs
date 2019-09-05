@@ -27,8 +27,7 @@ namespace Goblin.Narfu
             client.Settings.BeforeCall = call => _logger.Debug("Запрос [{0}] {1}",
                                                                call.Request.Method, call.Request.RequestUri);
             client.Settings.AfterCall = call => _logger.Debug("Запрос выполнен за {0}", call.Duration);
-            client.Settings.OnError = call => _logger.Error(call.Exception, "Ошибка при выполнении запроса {2}",
-                                                            call.Request.RequestUri);
+            client.Settings.OnError = call => _logger.Error(call.Exception, "Ошибка при выполнении запроса");
             
             Teachers = new TeachersSchedule(client);
             Students = new StudentsSchedule(client);
