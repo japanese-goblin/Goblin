@@ -3,6 +3,7 @@ using Goblin.DataAccess;
 using Goblin.WebApp.Extensions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace Goblin.WebApp
@@ -22,6 +23,10 @@ namespace Goblin.WebApp
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
+                          .ConfigureLogging(config =>
+                          {
+                              config.ClearProviders();
+                          })
                           .UseSerilog((hostingContext, loggerConfiguration) =>
                           {
                               loggerConfiguration
