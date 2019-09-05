@@ -14,7 +14,7 @@
     <ItemGroup>
       <PackageReference Include="Hangfire" Version="1.7.6" />
       <PackageReference Include="Serilog" Version="2.8.0" />
-      <PackageReference Include="VkNet" Version="1.45.0" />
+      <PackageReference Include="VkNet" Version="1.46.0" />
     </ItemGroup>
 
 </Project>
