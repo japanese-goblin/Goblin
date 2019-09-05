@@ -7,21 +7,25 @@ using Flurl.Http;
 using Goblin.Narfu.Models;
 using Ical.Net;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Goblin.Narfu.Schedule
 {
     public class StudentsSchedule
     {
         public Group[] Groups { get; }
+        private readonly ILogger _logger;
 
         public StudentsSchedule()
         {
             var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(StudentsSchedule)).Location);
             Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText($"{path}/Data/Groups.json"));
+            _logger = Log.ForContext<StudentsSchedule>();
         }
 
         public async Task<Lesson[]> GetSchedule(int realGroupId)
         {
+            _logger.Debug("Получение расписания для группы {0}", realGroupId);
             var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
             var response = await Defaults.BuildRequest()
                                          .SetQueryParam("icalendar")
@@ -29,7 +33,8 @@ namespace Goblin.Narfu.Schedule
                                          .SetQueryParam("cod", realGroupId)
                                          .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
                                          .GetStreamAsync();
-
+            _logger.Debug("Расписание получено");
+            
             var calendar = Calendar.Load(response);
             var events = calendar.Events
                                  .Distinct()
@@ -38,6 +43,7 @@ namespace Goblin.Narfu.Schedule
 
             if(!events.Any())
             {
+                _logger.Debug("Список пар пуст");
                 return new Lesson[] { };
             }
 
@@ -65,14 +71,18 @@ namespace Goblin.Narfu.Schedule
 
         public async Task<ExamsViewModel> GetExams(int realGroupId)
         {
+            _logger.Debug("Получение списка экзаменов для группы {0}", realGroupId);
             var schedule = await GetSchedule(realGroupId);
             var exams = schedule.Where(x => x.Type.ToLower().Contains("экзамен") ||
                                             x.Type.ToLower().Contains("зачет"));
+            _logger.Debug("Список экзаменов получен");
+            
             return new ExamsViewModel(exams, DateTime.Today);
         }
 
         public async Task<LessonsViewModel> GetScheduleAtDate(int realGroupId, DateTime date)
         {
+            _logger.Debug("Получение расписания для группы {0} на {1:dd.MM.yyyy}", realGroupId, date);
             var schedule = await GetSchedule(realGroupId);
             var lessons = schedule.Where(x => x.StartTime.DayOfYear == date.DayOfYear);
             return new LessonsViewModel(lessons, date);
