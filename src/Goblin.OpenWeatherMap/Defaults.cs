@@ -7,27 +7,14 @@ namespace Goblin.OpenWeatherMap
     internal static class Defaults
     {
         public const string EndPoint = "https://api.openweathermap.org/data/2.5/";
+        public const string UserAgent = "Japanese Goblin 2.0";
 
-        private const string Language = "ru";
-        private const string Units = "metric";
+        internal const string Language = "ru";
+        internal const string Units = "metric";
 
         internal const double PressureConvert = 0.75006375541921;
 
         internal const int MaxDailyWeatherDifference = 16;
-
-        internal static IFlurlRequest BuildRequest(string token)
-        {
-            return EndPoint.SetQueryParam("units", Units)
-                           .SetQueryParam("appid", token)
-                           .SetQueryParam("lang", Language)
-                           .WithTimeout(5)
-                           .WithHeaders(new
-                           {
-                               Accept = "application/json",
-                               User_Agent = "Japanese Goblin 2.0"
-                           })
-                           .AllowAnyHttpStatus();
-        }
 
         internal static DateTime UnixToDateTime(double unixTimeStamp)
         {

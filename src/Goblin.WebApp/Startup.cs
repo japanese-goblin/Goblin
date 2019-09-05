@@ -1,4 +1,6 @@
-﻿using Goblin.Narfu;
+﻿using Flurl.Http;
+using Flurl.Http.Configuration;
+using Goblin.Narfu;
 using Goblin.OpenWeatherMap;
 using Goblin.WebApp.Extensions;
 using Hangfire;
@@ -36,13 +38,14 @@ namespace Goblin.WebApp
             services.AddOptions(Configuration);
 
             services.AddHangfire(config => { config.UseMemoryStorage(); });
+            
+            services.AddSingleton<IFlurlClientFactory>(new PerBaseUrlFlurlClientFactory());
 
             services.AddVkApi(Configuration);
-            services.AddSingleton(x =>
-            {
-                var api = new OpenWeatherMapApi(Configuration["OWM:AccessToken"]);
-                return api;
-            });
+            
+            OpenWeatherMapApi.SetToken(Configuration["OWM:AccessToken"]);
+            services.AddSingleton<OpenWeatherMapApi>();
+            
             services.AddSingleton<NarfuApi>();
 
             services.AddBotFeatures();
