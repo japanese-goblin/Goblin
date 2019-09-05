@@ -1,9 +1,12 @@
 using Goblin.Application;
+using Goblin.Application.Options;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
-using Serilog;
+using VkNet.Enums.SafetyEnums;
+using VkNet.Model.GroupUpdate;
+using VkNet.Utils;
 
 namespace Goblin.WebApp.Controllers
 {
@@ -11,28 +14,25 @@ namespace Goblin.WebApp.Controllers
     [Route("/api/callback")]
     public class VkCallbackController : ControllerBase
     {
-        private readonly IConfiguration _config;
+        private readonly IOptions<VkOptions> _vkOptions;
         private readonly CallbackHandler _handler;
 
-        public VkCallbackController(CallbackHandler handler, IConfiguration config)
+        public VkCallbackController(CallbackHandler handler, IOptions<VkOptions> vkOptions)
         {
             _handler = handler;
-            _config = config;
+            _vkOptions = vkOptions;
         }
 
         [HttpPost]
         public string Handle([FromBody] object update)
         {
-            var temp = update as dynamic; //TODO: пофиксить в следующей версии VkNet
-            if(temp["type"] == "confirmation")
+            var response = GroupUpdate.FromJson(new VkResponse(JToken.FromObject(update)));
+            if(response.Type == GroupUpdateType.Confirmation)
             {
-                Log.Information("Запрошено подтверждение сервера");
-
-                //TODO:
-                return _config["Vk:ConfirmationCode"];
+                return _vkOptions.Value.ConfirmationCode;
             }
-
-            BackgroundJob.Enqueue(() => _handler.Handle(JToken.FromObject(update)));
+            
+            BackgroundJob.Enqueue(() => _handler.Handle(response));
 
             return "ok";
         }

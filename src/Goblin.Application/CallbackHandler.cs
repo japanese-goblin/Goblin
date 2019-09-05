@@ -8,14 +8,12 @@ using Goblin.Application.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Entities;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
 using Serilog;
 using VkNet.Abstractions;
 using VkNet.Enums.SafetyEnums;
 using VkNet.Model;
 using VkNet.Model.GroupUpdate;
 using VkNet.Model.RequestParams;
-using VkNet.Utils;
 
 namespace Goblin.Application
 {
@@ -34,11 +32,8 @@ namespace Goblin.Application
             _options = options;
         }
 
-        public async Task Handle(JToken token)
+        public async Task Handle(GroupUpdate upd)
         {
-            var response = new VkResponse(token);
-            var upd = GroupUpdate.FromJson(response);
-
             if(upd.Secret != _options.Value.SecretKey)
             {
                 Log.Warning("Пришло событие с неправильным секретным ключом ({0})", upd.Secret);
