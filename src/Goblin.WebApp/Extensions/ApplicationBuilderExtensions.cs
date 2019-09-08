@@ -28,7 +28,7 @@ namespace Goblin.WebApp.Extensions
             RecurringJob.AddOrUpdate<SendRemindTask>("SendRemind", x => x.SendRemind(), Cron.Minutely,
                                                      TimeZoneInfo.Local);
             RecurringJob.AddOrUpdate<ScheduleTask>("SendDailySchedule", x => x.SendSchedule(),
-                                                   "05 6 * * *", TimeZoneInfo.Local);
+                                                   "05 6 * * 1-6", TimeZoneInfo.Local);
             RecurringJob.AddOrUpdate<WeatherTask>("SendDailyWeather", x => x.SendDailyWeather(),
                                                   "25 5 * * *", TimeZoneInfo.Local);
         }
