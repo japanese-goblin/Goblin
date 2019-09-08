@@ -33,12 +33,9 @@ namespace Goblin.Application.Hangfire
 
         public async Task SendToConv(long id, int group = 0, string city = "")
         {
-            const int convId = 2000000000;
-            id = convId + id;
-
             if(!string.IsNullOrWhiteSpace(city) && await _weatherApi.IsCityExists(city))
             {
-                Log.Information("Отправка погоды в беседу {0}", id);
+                Log.Information("Отправка погоды в {0}", id);
                 var weather = await _weatherApi.GetDailyWeatherWithResult(city, DateTime.Today);
                 if(weather is FailedResult failed)
                 {
@@ -57,7 +54,7 @@ namespace Goblin.Application.Hangfire
 
             if(_narfuApi.Students.IsCorrectGroup(group))
             {
-                Log.Information("Отправка расписания в беседу {0}", id);
+                Log.Information("Отправка расписания в {0}", id);
                 var schedule = await _narfuApi.Students.GetScheduleAtDateWithResult(group, DateTime.Now);
                 if(schedule is FailedResult failed)
                 {
