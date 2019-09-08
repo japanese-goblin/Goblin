@@ -65,7 +65,7 @@ namespace Goblin.WebApp.Controllers
             {
                 return View("Error", new ErrorViewModel
                 {
-                    Description = "Непредвиденная ошибка при получении расписания. Попробуйте позже."
+                    Description = $"Непредвиденная ошибка при получении расписания ({ex.Message}). Попробуйте позже."
                 });
             }
         }

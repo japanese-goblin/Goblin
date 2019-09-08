@@ -31,7 +31,8 @@ namespace Goblin.Application.Hangfire
         {
             var grouped = _db.BotUsers.Include(x => x.SubscribeInfo)
                              .Where(x => x.SubscribeInfo.IsSchedule)
-                             .GroupBy(x => x.NarfuGroup);
+                             .GroupBy(x => x.NarfuGroup)
+                             .AsNoTracking();
             foreach(var group in grouped)
             {
                 foreach(var chunk in group.Chunk(Defaults.ChunkLimit))

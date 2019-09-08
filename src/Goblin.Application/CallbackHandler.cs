@@ -7,6 +7,7 @@ using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
 using VkNet.Abstractions;
@@ -65,7 +66,7 @@ namespace Goblin.Application
 
         private async Task MessageNew(Message msg)
         {
-            var user = _db.BotUsers.Find(msg.FromId);
+            var user = _db.BotUsers.AsNoTracking().FirstOrDefault(x => x.VkId == msg.FromId);
             if(user is null)
             {
                 _logger.Debug("Пользователь с id {0} не найден. Создание записи.", msg.FromId);
