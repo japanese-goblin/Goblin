@@ -66,11 +66,7 @@ namespace Goblin.Application
 
         private async Task MessageNew(Message msg)
         {
-            var user = _db.BotUsers
-                          .AsNoTracking()
-                          .Include(x => x.Reminds)
-                          .Include(x => x.SubscribeInfo)
-                          .FirstOrDefault(x => x.VkId == msg.FromId);
+            var user = _db.BotUsers.Find(msg.FromId);
             if(user is null)
             {
                 _logger.Debug("Пользователь с id {0} не найден. Создание записи.", msg.FromId);
