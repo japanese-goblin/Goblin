@@ -16,14 +16,14 @@ namespace Goblin.OpenWeatherMap
         public OpenWeatherMapApi(string token)
         {
             _logger = Log.ForContext<OpenWeatherMapApi>();
-            
+
             _logger.Debug("Инициализация {0}", nameof(OpenWeatherMapApi));
             if(string.IsNullOrWhiteSpace(token))
             {
                 _logger.Fatal("Токен пуст", nameof(OpenWeatherMapApi));
                 throw new ArgumentException("Токен пуст");
             }
-            
+
             _token = token;
         }
 
@@ -35,7 +35,7 @@ namespace Goblin.OpenWeatherMap
                                          .SetQueryParam("q", city)
                                          .GetJsonAsync<CurrentWeather>();
             _logger.Debug("Погода получена");
-            
+
             return response;
         }
 
@@ -47,7 +47,7 @@ namespace Goblin.OpenWeatherMap
             {
                 var msg = $"Погоду можно получить максимум на {Defaults.MaxDailyWeatherDifference} дней";
                 _logger.Error(msg);
-                throw new ArgumentException(msg );
+                throw new ArgumentException(msg);
             }
 
             var count = dif.Days + 1;
@@ -60,10 +60,11 @@ namespace Goblin.OpenWeatherMap
             var weather = response.List.FirstOrDefault(x => Defaults.UnixToDateTime(x.UnixTime).Date == date.Date);
             if(weather is null)
             {
-                var msg = $"Погода на {date:dd.MM.yyyy} не найдена.";
+                var msg = $"Погода на {date:dd.MM.yyyy} в городе {city} не найдена.";
                 _logger.Error(msg);
                 throw new ArgumentException(msg);
             }
+
             _logger.Debug("Погода получена");
 
             return weather;
@@ -73,6 +74,7 @@ namespace Goblin.OpenWeatherMap
         {
             _logger.Debug("Проверка на существование города {0}", city);
             var response = await Defaults.BuildRequest(_token)
+                                         .AllowAnyHttpStatus()
                                          .AppendPathSegment("weather")
                                          .SetQueryParam("q", city)
                                          .HeadAsync();
