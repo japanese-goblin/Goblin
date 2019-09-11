@@ -22,7 +22,7 @@ namespace Goblin.Narfu.Schedule
             _client = client;
         }
 
-        public async Task<Lesson[]> GetSchedule(int teacherId)
+        public async Task<IEnumerable<Lesson>> GetSchedule(int teacherId)
         {
             _logger.Debug("Получение списка пар у преподавателя {0}", teacherId);
             var response = await _client.Request()
@@ -72,8 +72,8 @@ namespace Goblin.Narfu.Schedule
                                              .GetNormalizedInnerText()
                 });
             }
-
-            return lessons.Distinct().ToArray();
+            
+            return lessons.Distinct();
         }
 
         public async Task<TeacherLessonsViewModel> GetLimitedSchedule(int teacherId, int limit = 10)

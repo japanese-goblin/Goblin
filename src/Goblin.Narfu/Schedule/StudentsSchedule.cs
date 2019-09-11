@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -25,7 +26,7 @@ namespace Goblin.Narfu.Schedule
             _client = client;
         }
 
-        public async Task<Lesson[]> GetSchedule(int realGroupId)
+        public async Task<IEnumerable<Lesson>> GetSchedule(int realGroupId)
         {
             _logger.Debug("Получение расписания для группы {0}", realGroupId);
             var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
@@ -66,7 +67,7 @@ namespace Goblin.Narfu.Schedule
                     EndTime = ev.DtEnd.AsSystemLocal,
                     StartEndTime = description[0].Replace(")", "").Replace("(", "").Replace("п", ")")
                 };
-            }).ToArray();
+            });
 
             return lessons;
         }
