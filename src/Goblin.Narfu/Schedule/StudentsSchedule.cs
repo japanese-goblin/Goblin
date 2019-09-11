@@ -16,28 +16,26 @@ namespace Goblin.Narfu.Schedule
     {
         public Group[] Groups { get; }
         private readonly ILogger _logger;
-        private readonly IFlurlClient _client;
 
-        public StudentsSchedule(IFlurlClient client)
+        public StudentsSchedule()
         {
             var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(StudentsSchedule)).Location);
             Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText($"{path}/Data/Groups.json"));
             _logger = Log.ForContext<StudentsSchedule>();
-            _client = client;
         }
 
         public async Task<IEnumerable<Lesson>> GetSchedule(int realGroupId)
         {
             _logger.Debug("Получение расписания для группы {0}", realGroupId);
             var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
-            var response = await _client.Request()
-                                        .SetQueryParam("icalendar")
-                                        .SetQueryParam("oid", siteGroupId)
-                                        .SetQueryParam("cod", realGroupId)
-                                        .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
-                                        .GetStreamAsync();
+            var response = await Defaults.BuildRequest()
+                                         .SetQueryParam("icalendar")
+                                         .SetQueryParam("oid", siteGroupId)
+                                         .SetQueryParam("cod", realGroupId)
+                                         .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
+                                         .GetStreamAsync();
             _logger.Debug("Расписание получено");
-
+            
             var calendar = Calendar.Load(response);
             var events = calendar.Events
                                  .Distinct()
@@ -79,7 +77,7 @@ namespace Goblin.Narfu.Schedule
             var exams = schedule.Where(x => x.Type.ToLower().Contains("экзамен") ||
                                             x.Type.ToLower().Contains("зачет"));
             _logger.Debug("Список экзаменов получен");
-
+            
             return new ExamsViewModel(exams, DateTime.Today);
         }
 

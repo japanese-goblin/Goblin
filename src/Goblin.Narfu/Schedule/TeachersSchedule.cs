@@ -14,25 +14,23 @@ namespace Goblin.Narfu.Schedule
     public class TeachersSchedule
     {
         private readonly ILogger _logger;
-        private readonly IFlurlClient _client;
 
-        public TeachersSchedule(IFlurlClient client)
+        public TeachersSchedule()
         {
             _logger = Log.ForContext<StudentsSchedule>();
-            _client = client;
         }
-
-        public async Task<IEnumerable<Lesson>> GetSchedule(int teacherId)
+        
+        public async Task<Lesson[]> GetSchedule(int teacherId)
         {
             _logger.Debug("Получение списка пар у преподавателя {0}", teacherId);
-            var response = await _client.Request()
-                                        .SetQueryParam("timetable")
-                                        .SetQueryParam("lecturer", teacherId)
-                                        .GetStreamAsync();
+            var response = await Defaults.BuildRequest()
+                                         .SetQueryParam("timetable")
+                                         .SetQueryParam("lecturer", teacherId)
+                                         .GetStreamAsync();
             var doc = new HtmlDocument();
             doc.Load(response);
             _logger.Debug("Список получен");
-
+            
             var lessonItems = doc.DocumentNode.SelectNodes("//div[contains(@class, 'timetable_sheet')]");
 
             var lessons = new List<Lesson>();
@@ -72,8 +70,8 @@ namespace Goblin.Narfu.Schedule
                                              .GetNormalizedInnerText()
                 });
             }
-            
-            return lessons.Distinct();
+
+            return lessons.Distinct().ToArray();
         }
 
         public async Task<TeacherLessonsViewModel> GetLimitedSchedule(int teacherId, int limit = 10)
@@ -85,12 +83,12 @@ namespace Goblin.Narfu.Schedule
         public async Task<Teacher[]> FindByName(string name)
         {
             _logger.Debug("Поиск преподавателя {0}", name);
-            var teachers = await _client.Request()
-                                        .AppendPathSegments("i", "ac.php")
-                                        .SetQueryParam("term", name)
-                                        .GetJsonAsync<Teacher[]>();
+            var teachers = await Defaults.BuildRequest()
+                                         .AppendPathSegments("i", "ac.php")
+                                         .SetQueryParam("term", name)
+                                         .GetJsonAsync<Teacher[]>();
             _logger.Debug("Поиск завершен");
-
+            
             return teachers;
         }
 
@@ -98,13 +96,13 @@ namespace Goblin.Narfu.Schedule
         {
             _logger.Debug("Поиск преподавателя по ID {0}", teacherId);
             const string NotFound = "Данные о расписании на эту неделю отсутствуют в системе.";
-            var response = await _client.Request()
-                                        .SetQueryParam("timetable")
-                                        .SetQueryParam("lecturer", teacherId)
-                                        .AllowAnyHttpStatus()
-                                        .GetStringAsync();
+            var response = await Defaults.BuildRequest()
+                                         .SetQueryParam("timetable")
+                                         .SetQueryParam("lecturer", teacherId)
+                                         .AllowAnyHttpStatus()
+                                         .GetStringAsync();
             _logger.Debug("Поиск завершен");
-
+            
             return !response.Contains(NotFound);
         }
     }
