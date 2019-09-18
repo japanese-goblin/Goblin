@@ -40,7 +40,8 @@ namespace Goblin.Application.Commands.Merged
         {
             if(string.IsNullOrWhiteSpace(user.WeatherCity))
             {
-                return new FailedResult("Для получения погоды сначала необходимо установить город.");
+                var text = "Для получения погоды установите город (например - 'установить город Архангельск').";
+                return new FailedResult(text);
             }
 
             return await _api.GetDailyWeatherWithResult(user.WeatherCity, DateTime.Today.AddDays(1));

@@ -43,7 +43,8 @@ namespace Goblin.Application.Commands.Merged
 
             if(string.IsNullOrWhiteSpace(user.WeatherCity) && string.IsNullOrWhiteSpace(city))
             {
-                return new FailedResult("Для получения погоды сначала необходимо установить город.");
+                var text = "Для получения погоды установите город (например - 'установить город Архангельск').";
+                return new FailedResult(text);
             }
 
             if(!string.IsNullOrWhiteSpace(city))
