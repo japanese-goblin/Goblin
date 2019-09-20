@@ -37,18 +37,12 @@ namespace Goblin.Narfu.Schedule
             _logger.Debug("Расписание получено");
             
             var calendar = Calendar.Load(response);
+
             var events = calendar.Events
                                  .Distinct()
-                                 .OrderBy(x => x.DtStart.Value)
-                                 .ToArray();
+                                 .OrderBy(x => x.DtStart.Value);
 
-            if(!events.Any())
-            {
-                _logger.Debug("Список пар пуст");
-                return new Lesson[] { };
-            }
-
-            var lessons = events.Select(ev =>
+            return events.Select(ev =>
             {
                 var description = ev.Description.Split('\n');
                 var address = ev.Location.Split('/');
@@ -66,8 +60,6 @@ namespace Goblin.Narfu.Schedule
                     StartEndTime = description[0].Replace(")", "").Replace("(", "").Replace("п", ")")
                 };
             });
-
-            return lessons;
         }
 
         public async Task<ExamsViewModel> GetExams(int realGroupId)
