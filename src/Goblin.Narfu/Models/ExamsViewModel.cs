@@ -13,14 +13,14 @@ namespace Goblin.Narfu.Models
 
         public override string ToString()
         {
-            if(!Lessons.Any())
+            var exams = Lessons.Where(x => x.StartTime.DayOfYear >= _date.DayOfYear).ToArray();
+            if(!exams.Any())
             {
                 return "На данный момент список экзаменов отсутствует";
             }
 
             var strBuilder = new StringBuilder();
-            var grouped = Lessons.Where(x => x.StartTime.DayOfYear >= _date.DayOfYear)
-                                 .GroupBy(x => x.StartTime.Date);
+            var grouped = exams.GroupBy(x => x.StartTime.Date);
 
             foreach(var group in grouped)
             {
@@ -31,8 +31,7 @@ namespace Goblin.Narfu.Models
                                             lesson.StartEndTime, lesson.Name, lesson.Type, lesson.Teacher)
                               .AppendLine()
                               .AppendFormat("У группы {0}", lesson.Groups).AppendLine()
-                              .AppendFormat("В аудитории {0} ({1})", lesson.Auditory, lesson.Address).AppendLine()
-                              .AppendLine();
+                              .AppendFormat("В аудитории {0} ({1})", lesson.Auditory, lesson.Address).AppendLine();
                 }
 
                 strBuilder.AppendLine();
