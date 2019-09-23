@@ -24,7 +24,7 @@ namespace Goblin.Narfu.Schedule
             _logger = Log.ForContext<StudentsSchedule>();
         }
 
-        public async Task<IEnumerable<Lesson>> GetSchedule(int realGroupId, DateTime date = default)
+        public async Task<IEnumerable<Lesson>> GetSchedule(int realGroupId)
         {
             _logger.Debug("Получение расписания для группы {0}", realGroupId);
             var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
@@ -39,16 +39,11 @@ namespace Goblin.Narfu.Schedule
             var calendar = Calendar.Load(response);
 
             var events = calendar.Events
-                                 .Distinct();
-
-            if(date != default)
-            {
-                events = events.Where(x => x.DtStart.Value.DayOfYear == date.DayOfYear);
-            }
-
-            events = events.OrderBy(x => x.DtStart.Value).ToArray();
+                                 .Distinct()
+                                 .OrderBy(x => x.DtStart.Value);
             
-            calendar.Dispose();
+            calendar.Dispose(); //TODO: ???
+            calendar = null;
             
             return events.Select(ev =>
             {
@@ -84,9 +79,15 @@ namespace Goblin.Narfu.Schedule
         public async Task<LessonsViewModel> GetScheduleAtDate(int realGroupId, DateTime date)
         {
             _logger.Debug("Получение расписания для группы {0} на {1:dd.MM.yyyy}", realGroupId, date);
-            var schedule = await GetSchedule(realGroupId, date);
+            var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
+            var response = await Defaults.BuildRequest()
+                                         .SetQueryParam("timetable")
+                                         .SetQueryParam("group", siteGroupId)
+                                         .GetStreamAsync();
+            var schedule = HtmlParser.GetAllLessonsFromHtml(response);
+            
             var lessons = schedule.Where(x => x.StartTime.DayOfYear == date.DayOfYear);
-            return new LessonsViewModel(lessons, date);
+            return new LessonsViewModel(lessons.ToArray(), date);
         }
 
         public bool IsCorrectGroup(int realGroupId)

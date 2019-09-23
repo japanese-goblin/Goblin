@@ -28,12 +28,16 @@ namespace Goblin.Narfu.Models
 
             foreach(var lesson in Lessons.Where(x => x.StartTime.DayOfYear == _date.DayOfYear))
             {
-                strBuilder.AppendFormat("{0} - {1} [{2}] ({3})",
-                                        lesson.StartEndTime, lesson.Name, lesson.Type, lesson.Teacher)
-                          .AppendLine()
-                          .AppendFormat("У группы {0}", lesson.Groups).AppendLine()
-                          .AppendFormat("В аудитории {0} ({1})", lesson.Auditory, lesson.Address).AppendLine()
-                          .AppendLine()
+                strBuilder.AppendFormat("{0}) {1} - {2} [{3}]", lesson.Number,
+                                        lesson.StartEndTime, lesson.Name, lesson.Type)
+                          .AppendLine();
+                
+                if(lesson.Groups != null)
+                {
+                    strBuilder.AppendFormat("У группы {0}", lesson.Groups).AppendLine();
+                }
+                
+                strBuilder.AppendFormat("В аудитории {0} ({1})", lesson.Auditory, lesson.Address).AppendLine()
                           .AppendLine();
             }
 

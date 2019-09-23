@@ -20,58 +20,16 @@ namespace Goblin.Narfu.Schedule
             _logger = Log.ForContext<StudentsSchedule>();
         }
         
-        public async Task<Lesson[]> GetSchedule(int teacherId)
+        public async Task<IEnumerable<Lesson>> GetSchedule(int teacherId)
         {
             _logger.Debug("Получение списка пар у преподавателя {0}", teacherId);
             var response = await Defaults.BuildRequest()
                                          .SetQueryParam("timetable")
                                          .SetQueryParam("lecturer", teacherId)
                                          .GetStreamAsync();
-            var doc = new HtmlDocument();
-            doc.Load(response);
             _logger.Debug("Список получен");
-            
-            var lessonItems = doc.DocumentNode.SelectNodes("//div[contains(@class, 'timetable_sheet')]");
 
-            var lessons = new List<Lesson>();
-
-            foreach(var lessonNode in lessonItems.Where(x => x.ChildNodes.Count > 3))
-            {
-                var date = lessonNode.ParentNode.SelectSingleNode(".//div[contains(@class,'dayofweek')]")
-                                     .GetNormalizedInnerText()
-                                     .Split(',', 2)[1]
-                                     .Trim();
-
-                var adr = lessonNode.SelectSingleNode(".//span[contains(@class,'auditorium')]")
-                                    .GetNormalizedInnerText()
-                                    .Split(',', 2)
-                                    .Select(x => x.Trim())
-                                    .ToArray();
-
-                var time = lessonNode.SelectSingleNode(".//span[contains(@class,'time_para')]")
-                                     .GetNormalizedInnerText()
-                                     .Split('–', 2);
-
-                lessons.Add(new Lesson
-                {
-                    Address = adr[1],
-                    Auditory = adr[0],
-                    Number = int.Parse(lessonNode.SelectSingleNode(".//span[contains(@class,'num_para')]")
-                                                 .GetNormalizedInnerText()),
-                    Groups = lessonNode.SelectSingleNode(".//span[contains(@class,'group')]").GetNormalizedInnerText(),
-                    Name = lessonNode.SelectSingleNode(".//span[contains(@class,'discipline')]")
-                                     .GetNormalizedInnerText(),
-                    Type = lessonNode.SelectSingleNode(".//span[contains(@class,'kindOfWork')]")
-                                     .GetNormalizedInnerText(),
-                    Teacher = "",
-                    StartTime = DateTime.ParseExact($"{date} {time[0]}", "dd.MM.yyyy HH:mm", null, DateTimeStyles.None),
-                    EndTime = DateTime.ParseExact($"{date} {time[1]}", "dd.MM.yyyy HH:mm", null, DateTimeStyles.None),
-                    StartEndTime = lessonNode.SelectSingleNode(".//span[contains(@class,'time_para')]")
-                                             .GetNormalizedInnerText()
-                });
-            }
-
-            return lessons.Distinct().ToArray();
+            return HtmlParser.GetAllLessonsFromHtml(response);
         }
 
         public async Task<TeacherLessonsViewModel> GetLimitedSchedule(int teacherId, int limit = 10)
