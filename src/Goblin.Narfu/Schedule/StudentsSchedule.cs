@@ -40,7 +40,8 @@ namespace Goblin.Narfu.Schedule
 
             var events = calendar.Events
                                  .Distinct()
-                                 .OrderBy(x => x.DtStart.Value);
+                                 .OrderBy(x => x.DtStart.Value)
+                                 .ToArray();
             
             calendar.Dispose(); //TODO: ???
             calendar = null;
