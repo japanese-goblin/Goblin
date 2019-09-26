@@ -5,10 +5,7 @@ using Goblin.Application.Commands.Merged;
 using Goblin.Application.Commands.Text;
 using Goblin.Application.Options;
 using Goblin.DataAccess;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -83,9 +80,9 @@ namespace Goblin.WebApp.Extensions
 
         public static void AddAuth(this IServiceCollection services, IConfiguration config)
         {
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                    .AddDefaultUI(UIFramework.Bootstrap4)
-                    .AddEntityFrameworkStores<IdentityUsersDbContext>();
+            services.AddDefaultIdentity<IdentityUser>()
+                    .AddEntityFrameworkStores<IdentityUsersDbContext>()
+                    .AddDefaultUI();
 
             services.AddAuthentication()
                     .AddVkontakte(options =>

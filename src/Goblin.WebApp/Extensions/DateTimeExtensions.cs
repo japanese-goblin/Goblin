@@ -12,7 +12,7 @@ namespace Goblin.WebApp.Extensions
                                                         CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek);
             return weekNum;
         }
-        
+
         public static DateTime GetStartOfWeek(this DateTime dt)
         {
             var startOfWeek = DayOfWeek.Monday;
