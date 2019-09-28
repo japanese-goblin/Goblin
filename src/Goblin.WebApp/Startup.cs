@@ -1,3 +1,5 @@
+using System;
+using Goblin.Application.Hangfire;
 using Goblin.Narfu;
 using Goblin.OpenWeatherMap;
 using Goblin.WebApp.Extensions;
@@ -16,6 +18,7 @@ namespace Goblin.WebApp
     public class Startup
     {
         private IConfiguration Configuration { get; }
+
         public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -31,11 +34,10 @@ namespace Goblin.WebApp
             Configuration = builder.Build();
         }
 
-        
-
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHostedService<MigrationHostedService>();
+            services.AddHostedService<CreateDefaultRolesHostedService>();
 
             services.AddDbContexts(Configuration);
             services.AddOptions(Configuration);
@@ -53,8 +55,6 @@ namespace Goblin.WebApp
             services.AddBotFeatures();
 
             services.AddAuth(Configuration);
-
-            services.AddResponseCaching();
 
             services.AddControllersWithViews()
                     .AddNewtonsoftJson();
@@ -97,6 +97,19 @@ namespace Goblin.WebApp
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapRazorPages();
             });
+
+            ConfigureHangfireJobs();
+        }
+
+        private void ConfigureHangfireJobs()
+        {
+            BackgroundJob.Enqueue<SendToConversationTasks>(x => x.Dummy());
+            RecurringJob.AddOrUpdate<SendRemindTask>("SendRemind", x => x.SendRemind(),
+                                                     Cron.Minutely, TimeZoneInfo.Local);
+            RecurringJob.AddOrUpdate<ScheduleTask>("SendDailySchedule", x => x.SendSchedule(),
+                                                   "05 6 * * 1-6", TimeZoneInfo.Local);
+            RecurringJob.AddOrUpdate<WeatherTask>("SendDailyWeather", x => x.SendDailyWeather(),
+                                                  "30 6 * * *", TimeZoneInfo.Local);
         }
     }
 }

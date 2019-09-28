@@ -80,7 +80,7 @@ namespace Goblin.WebApp.Extensions
 
         public static void AddAuth(this IServiceCollection services, IConfiguration config)
         {
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddIdentity<IdentityUser, IdentityRole>()
                     .AddEntityFrameworkStores<IdentityUsersDbContext>()
                     .AddDefaultUI();
 
