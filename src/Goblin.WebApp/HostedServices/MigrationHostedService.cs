@@ -16,22 +16,23 @@ namespace Goblin.WebApp.HostedServices
         {
             _serviceProvider = serviceProvider;
         }
-
+        
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            using var scope = _serviceProvider.CreateScope();
-
-            var identityContext = scope.ServiceProvider.GetRequiredService<IdentityUsersDbContext>();
-            await identityContext.Database.MigrateAsync(cancellationToken);
-
-
-            var botContext = scope.ServiceProvider.GetRequiredService<BotDbContext>();
-            await botContext.Database.MigrateAsync(cancellationToken);
+            await Migrate<IdentityUsersDbContext>(cancellationToken);
+            await Migrate<BotDbContext>(cancellationToken);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
+        }
+
+        private async Task Migrate<T>(CancellationToken cancellationToken) where T : DbContext
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<T>();
+            await dbContext.Database.MigrateAsync(cancellationToken);
         }
     }
 }
