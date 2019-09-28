@@ -13,3 +13,5 @@ jobs:
         dotnet-version: 3.0.100
     - name: Build with dotnet
       run: dotnet build src/Goblin.sln --configuration Release
+    - name: Run tests
+      run: dotnet test src/Goblin.sln 
