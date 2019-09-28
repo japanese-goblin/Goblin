@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -9,7 +10,17 @@ namespace Goblin.WebApp
     {
         public static void Main(string[] args)
         {
+            SetDefaultLocale();
             CreateHostBuilder(args).Build().Run();
+        }
+
+        private static void SetDefaultLocale()
+        {
+            var culture = new CultureInfo("ru-RU");
+            CultureInfo.CurrentCulture = culture;
+            CultureInfo.CurrentUICulture = culture;
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
