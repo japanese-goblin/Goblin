@@ -6,7 +6,7 @@ namespace Goblin.OpenWeatherMap.Models.Current
     public class CurrentWeather
     {
         [JsonProperty("coord")]
-        private Coord Coord { get; set; }
+        public Coord Coord { get; set; }
 
         [JsonProperty("weather")]
         public Weather[] Info { get; set; }
