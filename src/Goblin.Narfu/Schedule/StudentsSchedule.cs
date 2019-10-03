@@ -28,24 +28,24 @@ namespace Goblin.Narfu.Schedule
         {
             _logger.Debug("Получение расписания для группы {0}", realGroupId);
             var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
-            var response = await Defaults.BuildRequest()
-                                         .SetQueryParam("icalendar")
-                                         .SetQueryParam("oid", siteGroupId)
-                                         .SetQueryParam("cod", realGroupId)
-                                         .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
-                                         .GetStreamAsync();
+            var response = await RequestBuilder.Create()
+                                               .SetQueryParam("icalendar")
+                                               .SetQueryParam("oid", siteGroupId)
+                                               .SetQueryParam("cod", realGroupId)
+                                               .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
+                                               .GetStreamAsync();
             _logger.Debug("Расписание получено");
-            
+
             var calendar = Calendar.Load(response);
 
             var events = calendar.Events
                                  .Distinct()
                                  .OrderBy(x => x.DtStart.Value)
                                  .ToArray();
-            
+
             calendar.Dispose(); //TODO: ???
             calendar = null;
-            
+
             return events.Select(ev =>
             {
                 var description = ev.Description.Split('\n');
@@ -73,7 +73,7 @@ namespace Goblin.Narfu.Schedule
             var exams = schedule.Where(x => x.Type.ToLower().Contains("экзамен") ||
                                             x.Type.ToLower().Contains("зачет"));
             _logger.Debug("Список экзаменов получен");
-            
+
             return new ExamsViewModel(exams, DateTime.Today);
         }
 
@@ -81,12 +81,12 @@ namespace Goblin.Narfu.Schedule
         {
             _logger.Debug("Получение расписания для группы {0} на {1:dd.MM.yyyy}", realGroupId, date);
             var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
-            var response = await Defaults.BuildRequest()
-                                         .SetQueryParam("timetable")
-                                         .SetQueryParam("group", siteGroupId)
-                                         .GetStreamAsync();
+            var response = await RequestBuilder.Create()
+                                               .SetQueryParam("timetable")
+                                               .SetQueryParam("group", siteGroupId)
+                                               .GetStreamAsync();
             var schedule = HtmlParser.GetAllLessonsFromHtml(response);
-            
+
             var lessons = schedule.Where(x => x.StartTime.DayOfYear == date.DayOfYear);
             return new LessonsViewModel(lessons.ToArray(), date);
         }
