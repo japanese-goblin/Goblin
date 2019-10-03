@@ -12,9 +12,6 @@ namespace Goblin.OpenWeatherMap.Tests
         protected const string CorrectCity = "Moscow";
         protected const string IncorrectCity = "City17";
         
-        protected OpenWeatherMap.OpenWeatherMapApi GetApi()
-        {
-            return new OpenWeatherMap.OpenWeatherMapApi("test_token");
-        }
+        protected OpenWeatherMap.OpenWeatherMapApi Api => new OpenWeatherMap.OpenWeatherMapApi("test_token");
     }
 }

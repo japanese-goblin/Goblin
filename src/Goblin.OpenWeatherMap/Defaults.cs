@@ -13,8 +13,6 @@ namespace Goblin.OpenWeatherMap
 
         internal const double PressureConvert = 0.75006375541921;
 
-        internal const int MaxDailyWeatherDifference = 16;
-
         private static IFlurlClient _client;
         private static ILogger _logger;
 

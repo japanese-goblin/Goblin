@@ -11,11 +11,10 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         [Fact]
         public async Task GetCurrentWeather_CorrectCity_ReturnsModel()
         {
-            var api = GetApi();
             using(var http = new HttpTest())
             {
                 http.RespondWith(File.ReadAllText(CurrentWeatherPath));
-                var weather = await api.GetCurrentWeather(CorrectCity);   
+                var weather = await Api.GetCurrentWeather(CorrectCity);   
                 
                 Assert.NotNull(weather);
                 Assert.NotNull(weather.Coord);
@@ -34,11 +33,10 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         [Fact]
         public async Task GetCurrentWeather_IncorrectCity_ThrowsException()
         {
-            var api = GetApi();
             using(var http = new HttpTest())
             {
                 http.RespondWith(string.Empty, 404);
-                await Assert.ThrowsAsync<FlurlHttpException>(async () => await api.GetCurrentWeather(IncorrectCity));
+                await Assert.ThrowsAsync<FlurlHttpException>(async () => await Api.GetCurrentWeather(IncorrectCity));
             }
         }
     }

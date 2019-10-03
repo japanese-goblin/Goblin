@@ -9,14 +9,15 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
 {
     public class GetDailyWeatherAtTests : TestBase
     {
+        private readonly DateTime _date = new DateTime(2019, 09, 28);
+        
         [Fact]
         public async Task GetDailyWeatherAt_CorrectCityAndDate_ReturnsModel()
         {
-            var api = GetApi();
             using(var http = new HttpTest())
             {
                 http.RespondWith(File.ReadAllText(DailyWeatherPath));
-                var weather = await api.GetDailyWeatherAt(CorrectCity, DateTime.Today);
+                var weather = await Api.GetDailyWeatherAt(CorrectCity, _date);
                 
                 Assert.NotNull(weather);
                 Assert.True(weather.UnixTime >= 0);
@@ -34,24 +35,22 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         [Fact]
         public async Task GetDailyWeatherAt_IncorrectCity_ThrowsException()
         {
-            var api = GetApi();
             using(var http = new HttpTest())
             {
                 http.RespondWith(string.Empty, 404);
                 await Assert.ThrowsAsync<FlurlHttpException>(async () =>
-                                                                     await api.GetDailyWeatherAt(IncorrectCity, DateTime.Today));
+                                                                     await Api.GetDailyWeatherAt(IncorrectCity, _date));
             }
         }
         
         [Fact]
         public async Task GetDailyWeatherAt_IncorrectDate_ThrowsException()
         {
-            var api = GetApi();
             using(var http = new HttpTest())
             {
-                http.RespondWith(string.Empty);
+                http.RespondWith(File.ReadAllText(DailyWeatherPath));
                 await Assert.ThrowsAsync<ArgumentException>(async () =>
-                                                                     await api.GetDailyWeatherAt(CorrectCity, DateTime.Today.AddDays(17)));
+                                                                     await Api.GetDailyWeatherAt(CorrectCity, _date.AddDays(17)));
             }
         }
     }

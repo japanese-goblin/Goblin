@@ -9,11 +9,10 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         [Fact]
         public async Task IsCityExists_CorrectCity_ReturnsTrue()
         {
-            var api = GetApi();
             using(var http = new HttpTest())
             {
                 http.RespondWith(string.Empty);
-                var isExists = await api.IsCityExists(CorrectCity);
+                var isExists = await Api.IsCityExists(CorrectCity);
                 
                 Assert.True(isExists);
             }
@@ -22,11 +21,10 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         [Fact]
         public async Task IsCityExists_IncorrectCity_ReturnsTrue()
         {
-            var api = GetApi();
             using(var http = new HttpTest())
             {
                 http.RespondWith(string.Empty, 404);
-                var isExists = await api.IsCityExists(IncorrectCity);
+                var isExists = await Api.IsCityExists(IncorrectCity);
                 
                 Assert.False(isExists);
             }
