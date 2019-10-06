@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Application.Abstractions;
@@ -35,13 +34,6 @@ namespace Goblin.Application.Commands.Keyboard
             try
             {
                 var schedule = await _narfuApi.Teachers.GetLimitedSchedule(id);
-                if(!schedule.Lessons.Any())
-                {
-                    return new SuccessfulResult
-                    {
-                        Message = "На данный момент у выбранного преподавателя нет пар."
-                    };
-                }
 
                 return new SuccessfulResult
                 {

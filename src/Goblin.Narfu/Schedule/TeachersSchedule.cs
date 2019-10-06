@@ -32,7 +32,9 @@ namespace Goblin.Narfu.Schedule
         public async Task<TeacherLessonsViewModel> GetLimitedSchedule(int teacherId, int limit = 10)
         {
             var lessons = await GetSchedule(teacherId);
-            return new TeacherLessonsViewModel(lessons.Take(10), DateTime.Now);
+            var selected = lessons.ToArray()
+                                  .Where(x => x.StartTime.DayOfYear >= DateTime.Today.DayOfYear).Take(10);
+            return new TeacherLessonsViewModel(selected, DateTime.Now);
         }
 
         public async Task<Teacher[]> FindByName(string name)
