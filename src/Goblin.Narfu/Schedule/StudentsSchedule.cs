@@ -21,6 +21,7 @@ namespace Goblin.Narfu.Schedule
         {
             var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(StudentsSchedule)).Location);
             Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText($"{path}/Data/Groups.json"));
+            
             _logger = Log.ForContext<StudentsSchedule>();
         }
 
@@ -43,15 +44,13 @@ namespace Goblin.Narfu.Schedule
                                  .OrderBy(x => x.DtStart.Value)
                                  .ToArray();
 
-            calendar.Dispose(); //TODO: ???
-            calendar = null;
-
             return events.Select(ev =>
             {
                 var description = ev.Description.Split('\n');
                 var address = ev.Location.Split('/');
                 return new Lesson
                 {
+                    Id = ev.Uid,
                     Address = address[0],
                     Auditory = address[1],
                     Number = int.Parse(description[0][0].ToString()),
@@ -61,7 +60,9 @@ namespace Goblin.Narfu.Schedule
                     Teacher = description[4],
                     StartTime = ev.DtStart.AsSystemLocal,
                     EndTime = ev.DtEnd.AsSystemLocal,
-                    StartEndTime = description[0].Replace(")", "").Replace("(", "").Replace("п", ")")
+                    StartEndTime = description[0].Replace(")", "")
+                                                 .Replace("(", "")
+                                                 .Replace("п", ")")
                 };
             });
         }
@@ -70,8 +71,7 @@ namespace Goblin.Narfu.Schedule
         {
             _logger.Debug("Получение списка экзаменов для группы {0}", realGroupId);
             var schedule = await GetSchedule(realGroupId);
-            var exams = schedule.Where(x => x.Type.ToLower().Contains("экзамен") ||
-                                            x.Type.ToLower().Contains("зачет"));
+            var exams = schedule.Where(x => x.IsExam());
             _logger.Debug("Список экзаменов получен");
 
             return new ExamsViewModel(exams, DateTime.Today);
