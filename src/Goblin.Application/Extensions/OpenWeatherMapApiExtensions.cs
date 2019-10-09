@@ -5,11 +5,14 @@ using Goblin.Application.Abstractions;
 using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.OpenWeatherMap;
+using Serilog;
 
 namespace Goblin.Application.Extensions
 {
     public static class OpenWeatherMapApiExtensions
     {
+        private const string SiteIsUnavailable = "Сайт с погодой временно недоступен. Попробуйте позже.";
+        
         public static async Task<IResult> GetCurrentWeatherWithResult(this OpenWeatherMapApi api, string city)
         {
             try
@@ -20,13 +23,14 @@ namespace Goblin.Application.Extensions
                     Message = weather.ToString()
                 };
             }
-            catch(FlurlHttpException ex)
+            catch(FlurlHttpException)
             {
-                return new FailedResult($"Невозможно получить погоду с сайта (код ошибки - {ex.Call.HttpStatus}/{ex.GetType()}.");
+                return new FailedResult(SiteIsUnavailable);
             }
             catch(Exception ex)
             {
-                return new FailedResult($"Невозможно получить погоду с внешнего сайта ({ex.Message}). Попробуйте позже.");
+                Log.ForContext<OpenWeatherMapApi>().Fatal(ex, "Ошибка при получении погоды на текущий момент");
+                return new FailedResult("Непредвиденная ошибка при получении погоды. Попробуйте позже.");
             }
         }
 
@@ -56,13 +60,14 @@ namespace Goblin.Application.Extensions
                     Message = $"Погода в городе {city} на {formattedDate}:\n{weather}"
                 };
             }
-            catch(FlurlHttpException ex)
+            catch(FlurlHttpException)
             {
-                return new FailedResult($"Невозможно получить погоду с внешнего сайта (Код ошибки - {ex.Call.HttpStatus}/{ex.GetType()}).");
+                return new FailedResult(SiteIsUnavailable);
             }
             catch(Exception ex)
             {
-                return new FailedResult($"Непредвиденная ошибка при получении погоды ({ex.Message}). Попробуйте позже.");
+                Log.ForContext<OpenWeatherMapApi>().Fatal(ex, "Ошибка при получении погоды на день");
+                return new FailedResult("Непредвиденная ошибка при получении погоды. Попробуйте позже.");
             }
         }
     }
