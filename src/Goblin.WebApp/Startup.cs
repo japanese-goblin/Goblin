@@ -1,12 +1,11 @@
 using System;
+using Goblin.Application;
 using Goblin.Application.Hangfire;
-using Goblin.Narfu;
-using Goblin.OpenWeatherMap;
+using Goblin.DataAccess;
 using Goblin.WebApp.Extensions;
 using Goblin.WebApp.Filters;
 using Goblin.WebApp.HostedServices;
 using Hangfire;
-using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -39,20 +38,8 @@ namespace Goblin.WebApp
             services.AddHostedService<MigrationHostedService>();
             services.AddHostedService<CreateDefaultRolesHostedService>();
 
-            services.AddDbContexts(Configuration);
-            services.AddOptions(Configuration);
-
-            services.AddHangfire(config => { config.UseMemoryStorage(); });
-
-            services.AddVkApi(Configuration);
-            services.AddSingleton(x =>
-            {
-                var api = new OpenWeatherMapApi(Configuration["OWM:AccessToken"]);
-                return api;
-            });
-            services.AddSingleton<NarfuApi>();
-
-            services.AddBotFeatures();
+            services.AddDataAccessLayer(Configuration);
+            services.AddApplication(Configuration);
 
             services.AddAuth(Configuration);
 
@@ -82,8 +69,7 @@ namespace Goblin.WebApp
             app.UseAuthentication();
             app.UseAuthorization();
 
-            var options = new BackgroundJobServerOptions { WorkerCount = 4 };
-            app.UseHangfireServer(options);
+            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 4 });
             app.UseHangfireDashboard("/Admin/HangFire", new DashboardOptions
             {
                 Authorization = new[] { new AuthFilter() },
