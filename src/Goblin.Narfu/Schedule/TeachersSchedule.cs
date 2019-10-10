@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Narfu.Models;
+using Goblin.Narfu.ViewModels;
 using Serilog;
 
 namespace Goblin.Narfu.Schedule

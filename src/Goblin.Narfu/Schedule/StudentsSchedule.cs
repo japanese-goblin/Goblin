@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Narfu.Models;
+using Goblin.Narfu.ViewModels;
 using Ical.Net;
 using Newtonsoft.Json;
 using Serilog;

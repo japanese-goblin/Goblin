@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Goblin.Narfu.Models;
 
-namespace Goblin.Narfu.Models
+namespace Goblin.Narfu.ViewModels
 {
     public class TeacherLessonsViewModel : LessonsViewModel
     {
