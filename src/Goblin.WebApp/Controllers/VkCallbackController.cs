@@ -31,7 +31,7 @@ namespace Goblin.WebApp.Controllers
             {
                 return _vkOptions.Value.ConfirmationCode;
             }
-            
+
             BackgroundJob.Enqueue(() => _handler.Handle(response));
 
             return "ok";

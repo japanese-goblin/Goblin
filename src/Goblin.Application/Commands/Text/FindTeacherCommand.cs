@@ -8,6 +8,7 @@ using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.Domain.Entities;
 using Goblin.Narfu;
+using Serilog;
 using VkNet.Enums.SafetyEnums;
 using VkNet.Model;
 using VkNet.Model.Keyboard;
@@ -39,7 +40,7 @@ namespace Goblin.Application.Commands.Text
                 var findResult = await _narfuApi.Teachers.FindByName(teacherName);
                 if(!findResult.Any())
                 {
-                    return new FailedResult("Преподаватель с такими данным не найден.");
+                    return new FailedResult("Преподаватель с такими данными не найден.");
                 }
 
                 if(findResult.Length > 9)
@@ -61,13 +62,13 @@ namespace Goblin.Application.Commands.Text
                     Keyboard = kb.Build()
                 };
             }
-            catch(FlurlHttpException ex)
+            catch(FlurlHttpException)
             {
-                return new
-                        FailedResult($"Сайт с расписанием недоступен (код ошибки - {ex.Call.HttpStatus}). Попробуйте позже.");
+                return new FailedResult("Сайт с расписанием временно недоступен. Попробуйте позже.");
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                Log.ForContext<FindTeacherCommand>().Fatal(ex, "Ошибка при поиске преподавателя");
                 return new FailedResult("Непредвиденная ошибка получения списка преподавателей. Попробуйте позже.");
             }
         }

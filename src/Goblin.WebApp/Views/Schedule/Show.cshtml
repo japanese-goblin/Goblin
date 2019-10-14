@@ -1,4 +1,4 @@
-@model Goblin.WebApp.ViewModels.LessonsViewModel
+@model LessonsViewModel
 
 @{
     ViewData["Title"] = "Расписание";
@@ -27,7 +27,7 @@
                         {
                             if(lesson.Number != 0)
                             {
-                                await Html.RenderPartialAsync("_Lesson", lesson);   
+                                await Html.RenderPartialAsync("_Lesson", lesson);
                             }
                         }
                     </div>

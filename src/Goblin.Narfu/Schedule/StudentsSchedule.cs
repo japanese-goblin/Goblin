@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Narfu.Models;
+using Goblin.Narfu.ViewModels;
 using Ical.Net;
 using Newtonsoft.Json;
 using Serilog;
@@ -21,6 +22,7 @@ namespace Goblin.Narfu.Schedule
         {
             var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(StudentsSchedule)).Location);
             Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText($"{path}/Data/Groups.json"));
+            
             _logger = Log.ForContext<StudentsSchedule>();
         }
 
@@ -28,30 +30,28 @@ namespace Goblin.Narfu.Schedule
         {
             _logger.Debug("Получение расписания для группы {0}", realGroupId);
             var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
-            var response = await Defaults.BuildRequest()
-                                         .SetQueryParam("icalendar")
-                                         .SetQueryParam("oid", siteGroupId)
-                                         .SetQueryParam("cod", realGroupId)
-                                         .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
-                                         .GetStreamAsync();
+            var response = await RequestBuilder.Create()
+                                               .SetQueryParam("icalendar")
+                                               .SetQueryParam("oid", siteGroupId)
+                                               .SetQueryParam("cod", realGroupId)
+                                               .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
+                                               .GetStreamAsync();
             _logger.Debug("Расписание получено");
-            
+
             var calendar = Calendar.Load(response);
 
             var events = calendar.Events
                                  .Distinct()
                                  .OrderBy(x => x.DtStart.Value)
                                  .ToArray();
-            
-            calendar.Dispose(); //TODO: ???
-            calendar = null;
-            
+
             return events.Select(ev =>
             {
                 var description = ev.Description.Split('\n');
                 var address = ev.Location.Split('/');
                 return new Lesson
                 {
+                    Id = ev.Uid,
                     Address = address[0],
                     Auditory = address[1],
                     Number = int.Parse(description[0][0].ToString()),
@@ -61,7 +61,9 @@ namespace Goblin.Narfu.Schedule
                     Teacher = description[4],
                     StartTime = ev.DtStart.AsSystemLocal,
                     EndTime = ev.DtEnd.AsSystemLocal,
-                    StartEndTime = description[0].Replace(")", "").Replace("(", "").Replace("п", ")")
+                    StartEndTime = description[0].Replace(")", "")
+                                                 .Replace("(", "")
+                                                 .Replace("п", ")")
                 };
             });
         }
@@ -70,10 +72,9 @@ namespace Goblin.Narfu.Schedule
         {
             _logger.Debug("Получение списка экзаменов для группы {0}", realGroupId);
             var schedule = await GetSchedule(realGroupId);
-            var exams = schedule.Where(x => x.Type.ToLower().Contains("экзамен") ||
-                                            x.Type.ToLower().Contains("зачет"));
+            var exams = schedule.Where(x => x.IsExam());
             _logger.Debug("Список экзаменов получен");
-            
+
             return new ExamsViewModel(exams, DateTime.Today);
         }
 
@@ -81,12 +82,12 @@ namespace Goblin.Narfu.Schedule
         {
             _logger.Debug("Получение расписания для группы {0} на {1:dd.MM.yyyy}", realGroupId, date);
             var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
-            var response = await Defaults.BuildRequest()
-                                         .SetQueryParam("timetable")
-                                         .SetQueryParam("group", siteGroupId)
-                                         .GetStreamAsync();
+            var response = await RequestBuilder.Create()
+                                               .SetQueryParam("timetable")
+                                               .SetQueryParam("group", siteGroupId)
+                                               .GetStreamAsync();
             var schedule = HtmlParser.GetAllLessonsFromHtml(response);
-            
+
             var lessons = schedule.Where(x => x.StartTime.DayOfYear == date.DayOfYear);
             return new LessonsViewModel(lessons.ToArray(), date);
         }

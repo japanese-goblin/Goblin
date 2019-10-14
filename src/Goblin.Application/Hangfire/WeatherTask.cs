@@ -31,8 +31,8 @@ namespace Goblin.Application.Hangfire
         {
             var grouped = _db.BotUsers.Include(x => x.SubscribeInfo)
                              .Where(x => x.SubscribeInfo.IsWeather)
-                             .GroupBy(x => x.WeatherCity)
-                             .AsNoTracking();
+                             .ToArray()
+                             .GroupBy(x => x.WeatherCity);
             foreach(var group in grouped)
             {
                 foreach(var chunk in group.Chunk(Defaults.ChunkLimit))

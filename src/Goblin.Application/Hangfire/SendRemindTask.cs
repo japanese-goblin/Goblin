@@ -23,9 +23,10 @@ namespace Goblin.Application.Hangfire
         {
             var reminds =
                     _db.Reminds
-                       .ToArray()
+                       .AsEnumerable()
                        .Where(x => x.Date.ToString("dd.MM.yyyy HH:mm") ==
-                                   DateTime.Now.ToString("dd.MM.yyyy HH:mm")); //TODO: fix it
+                                   DateTime.Now.ToString("dd.MM.yyyy HH:mm"))
+                       .ToArray(); //TODO: fix it
 
             if(!reminds.Any())
             {

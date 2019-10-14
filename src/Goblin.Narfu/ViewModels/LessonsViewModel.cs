@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Goblin.Narfu.Models;
 
-namespace Goblin.Narfu.Models
+namespace Goblin.Narfu.ViewModels
 {
     public class LessonsViewModel
     {
@@ -34,10 +35,10 @@ namespace Goblin.Narfu.Models
                 
                 if(lesson.Groups != null)
                 {
-                    strBuilder.AppendFormat("У группы {0}", lesson.Groups).AppendLine();
+                    strBuilder.AppendFormat("У {0}", lesson.Groups).AppendLine();
                 }
                 
-                strBuilder.AppendFormat("В аудитории {0} ({1})", lesson.Auditory, lesson.Address).AppendLine()
+                strBuilder.AppendFormat("В {0} ({1})", lesson.Auditory, lesson.Address).AppendLine()
                           .AppendLine();
             }
 

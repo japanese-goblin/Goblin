@@ -1,5 +1,6 @@
 @model Goblin.Narfu.Models.Lesson;
 @{
+
     string GetCssStyle()
     {
         var type = Model.Type?.ToLower();
@@ -7,14 +8,14 @@
         {
             return "transparent d-none d-sm-block";
         }
-        
+
         if(type == "лекции")
         {
             return "green";
         }
         if(type == "лабораторные занятия")
         {
-             return "blue";
+            return "blue";
         }
         if(type == "практические занятия")
         {
@@ -31,9 +32,10 @@
 
         return "transparent d-none d-sm-block";
     }
+
 }
 
-<div class='timetable_sheet @GetCssStyle()'>
+<div class="timetable_sheet @GetCssStyle()">
     <span class="num_para">
         @Model.Number
     </span>

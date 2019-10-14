@@ -1,4 +1,4 @@
-﻿@model Goblin.WebApp.ViewModels.ErrorViewModel
+﻿@model ErrorViewModel
 @{
     ViewData["Title"] = "Ошибка";
 }
@@ -10,6 +10,6 @@
 @if(Model.ShowRequestId)
 {
     <p>
-        <strong>ID запроса:</strong> <code>@Model.RequestId</code>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
     </p>
 }

@@ -4,6 +4,8 @@ namespace Goblin.Narfu.Models
 {
     public class Lesson : IEquatable<Lesson>
     {
+        public string Id { get; set; }
+        
         public string Type { get; set; }
         public string Name { get; set; }
         public DateTime StartTime { get; set; }
@@ -17,12 +19,18 @@ namespace Goblin.Narfu.Models
 
         public bool Equals(Lesson other)
         {
-            return StartTime == other.StartTime && Name == other.Name;
+            return Id == other?.Id;
         }
 
         public override int GetHashCode()
         {
-            return Type.GetHashCode() ^ StartTime.GetHashCode();
+            return Id.GetHashCode();
+        }
+
+        public bool IsExam()
+        {
+            return Type.Equals("экзамен", StringComparison.OrdinalIgnoreCase) ||
+                   Type.Equals("зачет", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

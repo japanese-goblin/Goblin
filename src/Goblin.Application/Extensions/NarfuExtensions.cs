@@ -4,12 +4,16 @@ using Flurl.Http;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
+using Goblin.Narfu;
 using Goblin.Narfu.Schedule;
+using Serilog;
 
 namespace Goblin.Application.Extensions
 {
     public static class NarfuExtensions
     {
+        private const string SiteIsUnavailable = "Сайт с расписанием временно недоступен. Попробуйте позже.";
+        
         public static async Task<IResult> GetExamsWithResult(this StudentsSchedule students, int group)
         {
             try
@@ -20,14 +24,14 @@ namespace Goblin.Application.Extensions
                     Message = lessons.ToString()
                 };
             }
-            catch(FlurlHttpException ex)
+            catch(FlurlHttpException)
             {
-                return new FailedResult($"Невозможно получить экзамены с сайта. Попробуйте позже." +
-                                        $" (Код ошибки - {ex.Call.HttpStatus})");
+                return new FailedResult(SiteIsUnavailable);
             }
             catch(Exception ex)
             {
-                return new FailedResult($"Непредвиденная ошибка получения экзаменов с сайта ({ex.Message}). Попробуйте позже.");
+                Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении экзаменов");
+                return new FailedResult($"Непредвиденная ошибка получения экзаменов с сайта. Попробуйте позже.");
             }
         }
 
@@ -41,14 +45,14 @@ namespace Goblin.Application.Extensions
                     Message = schedule.ToString()
                 };
             }
-            catch(FlurlHttpException ex)
+            catch(FlurlHttpException)
             {
-                return new FailedResult($"Невозможно получить расписание с сайта. Попробуйте позже." +
-                                        $" (Код ошибки - {ex.Call.HttpStatus})");
+                return new FailedResult(SiteIsUnavailable);
             }
             catch(Exception ex)
             {
-                return new FailedResult($"Непредвиденная ошибка получения расписания с сайта ({ex.Message}). Попробуйте позже.");
+                Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении расписания на день");
+                return new FailedResult($"Непредвиденная ошибка получения расписания с сайта. Попробуйте позже.");
             }
         }
     }

@@ -21,10 +21,10 @@ namespace Goblin.OpenWeatherMap.Models.Daily
         public Weather[] Weather { get; set; }
 
         [JsonProperty("speed")]
-        public double Speed { get; set; }
+        public double WindSpeed { get; set; }
 
         [JsonProperty("deg")]
-        public long Deg { get; set; }
+        public long WindDeg { get; set; }
 
         [JsonProperty("clouds")]
         public long Cloudiness { get; set; }
@@ -48,7 +48,7 @@ namespace Goblin.OpenWeatherMap.Models.Daily
             strBuilder.AppendLine();
             strBuilder.AppendFormat("Описание погоды: {0}", Weather[0].State).AppendLine();
             strBuilder.AppendFormat("Влажность: {0}%", Humidity).AppendLine();
-            strBuilder.AppendFormat("Ветер: {0:N0} м/с", Speed).AppendLine();
+            strBuilder.AppendFormat("Ветер: {0:N0} м/с", WindSpeed).AppendLine();
             strBuilder.AppendFormat("Давление: {0:N0} мм.рт.ст", Pressure * Defaults.PressureConvert).AppendLine();
             strBuilder.AppendFormat("Облачность: {0}%", Cloudiness).AppendLine();
 
