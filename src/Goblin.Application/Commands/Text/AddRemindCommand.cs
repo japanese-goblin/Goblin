@@ -17,6 +17,8 @@ namespace Goblin.Application.Commands.Text
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "напомни" };
 
+        private const int MaxRemindsCount = 8;
+
         public AddRemindCommand(BotDbContext db)
         {
             _db = db;
@@ -26,6 +28,11 @@ namespace Goblin.Application.Commands.Text
         {
             var param = string.Join(' ', msg.GetCommandParameters());
             var all = param.Split(' ', 3);
+
+            if(!user.IsAdmin || user.Reminds.Count == MaxRemindsCount)
+            {
+                return new FailedResult($"Вы уже достигли максимального количества напоминаний ({MaxRemindsCount})");
+            }
 
             if(all.Length != 3)
             {
