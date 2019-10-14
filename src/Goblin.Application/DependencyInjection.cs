@@ -84,9 +84,9 @@ namespace Goblin.Application
         
         private static void AddOptions(this IServiceCollection services, IConfiguration config)
         {
-            services.Configure<VkOptions>(x => config.GetSection("Vk"));
-            services.Configure<VkAuthOptions>(x => config.GetSection("VkAuth"));
-            services.Configure<OpenWeatherMapOptions>(x => config.GetSection("OWM"));
+            services.Configure<VkOptions>(config.GetSection("Vk"));
+            services.Configure<VkAuthOptions>(config.GetSection("VkAuth"));
+            services.Configure<OpenWeatherMapOptions>(config.GetSection("OWM"));
         }
     }
 }
