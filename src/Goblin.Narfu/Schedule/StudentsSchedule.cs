@@ -88,7 +88,7 @@ namespace Goblin.Narfu.Schedule
                                                .GetStreamAsync();
             var schedule = HtmlParser.GetAllLessonsFromHtml(response);
 
-            var lessons = schedule.Where(x => x.StartTime.DayOfYear == date.DayOfYear);
+            var lessons = schedule.Where(x => x.StartTime.Date == date.Date);
             return new LessonsViewModel(lessons.ToArray(), date);
         }
 

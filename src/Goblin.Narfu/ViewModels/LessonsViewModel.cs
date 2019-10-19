@@ -27,7 +27,7 @@ namespace Goblin.Narfu.ViewModels
             var strBuilder = new StringBuilder();
             strBuilder.AppendFormat("Расписание на {0:dd.MM (dddd)}:", _date).AppendLine();
 
-            foreach(var lesson in Lessons.Where(x => x.StartTime.DayOfYear == _date.DayOfYear))
+            foreach(var lesson in Lessons.Where(x => x.StartTime.Date == _date.Date))
             {
                 strBuilder.AppendFormat("{0}) {1} - {2} [{3}]", lesson.Number,
                                         lesson.StartEndTime, lesson.Name, lesson.Type)

@@ -14,7 +14,7 @@ namespace Goblin.Narfu.ViewModels
 
         public override string ToString()
         {
-            var exams = Lessons.Where(x => x.StartTime.DayOfYear >= _date.DayOfYear).ToArray();
+            var exams = Lessons.Where(x => x.StartTime.Date > _date.Date).ToArray();
             if(!exams.Any())
             {
                 return "На данный момент список экзаменов отсутствует";

@@ -34,7 +34,7 @@ namespace Goblin.Narfu.Schedule
         {
             var lessons = await GetSchedule(teacherId);
             var selected = lessons.ToArray()
-                                  .Where(x => x.StartTime.DayOfYear >= DateTime.Today.DayOfYear).Take(10);
+                                  .Where(x => x.StartTime.Date >= DateTime.Today).Take(10);
             return new TeacherLessonsViewModel(selected, DateTime.Now);
         }
 
