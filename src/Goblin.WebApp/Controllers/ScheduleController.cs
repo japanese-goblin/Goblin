@@ -108,7 +108,7 @@ namespace Goblin.WebApp.Controllers
                 });
             }
 
-            var dict = lessons.OrderBy(x => x.StartTime).GroupBy(x => x.StartTime.GetStartOfWeek());
+            var dict = lessons.OrderBy(x => x.StartTime.Date).ThenBy(x => x.Number).GroupBy(x => x.StartTime.GetStartOfWeek());
             return dict.ToDictionary(x =>
                                      {
                                          var start = x.First().StartTime.GetStartOfWeek();
