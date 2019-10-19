@@ -5,12 +5,11 @@ using Goblin.Application.Results.Success;
 using Goblin.Domain.Entities;
 using VkNet.Model;
 
-namespace Goblin.Application.Commands.Merged
+namespace Goblin.Application.Commands.Keyboard
 {
-    public class GetRemindsCommand : IKeyboardCommand, ITextCommand
+    public class GetRemindsCommand : IKeyboardCommand
     {
         public bool IsAdminCommand => false;
-        public string[] Aliases => new[] { "напоминания" };
 
         public string Trigger => "reminds";
 
