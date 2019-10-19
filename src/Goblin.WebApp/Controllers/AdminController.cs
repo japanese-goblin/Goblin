@@ -24,7 +24,9 @@ namespace Goblin.WebApp.Controllers
 
         public IActionResult Index()
         {
-            return View(_db.BotUsers.Include(x => x.SubscribeInfo).ToArray());
+            var data = _db.BotUsers.Include(x => x.SubscribeInfo).AsNoTracking();
+            ViewData["count"] = data.Count();
+            return View(data.AsEnumerable().GroupBy(x => x.NarfuGroup));
         }
 
         public IActionResult Messages()
