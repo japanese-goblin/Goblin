@@ -11,10 +11,10 @@ namespace Goblin.Application.Commands.Merged
 {
     public class WeatherNowCommand : IKeyboardCommand, ITextCommand
     {
-        public string Trigger => "weatherNow";
-
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "погода" };
+        
+        public string Trigger => "weatherNow";
 
         private readonly OpenWeatherMapApi _api;
 

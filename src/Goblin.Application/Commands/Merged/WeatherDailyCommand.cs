@@ -14,10 +14,10 @@ namespace Goblin.Application.Commands.Merged
 {
     public class WeatherDailyCommand : IKeyboardCommand, ITextCommand
     {
-        public string Trigger => "weatherDaily";
-
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "погодаз" };
+        
+        public string Trigger => "weatherDaily";
 
         private readonly OpenWeatherMapApi _api;
 

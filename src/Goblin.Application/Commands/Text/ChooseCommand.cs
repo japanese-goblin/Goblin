@@ -21,9 +21,8 @@ namespace Goblin.Application.Commands.Text
 
             if(split.Length < 2)
             {
-                return
-                        Task.FromResult<IResult>(new
-                                                         FailedResult("Введите два или более предложений, разделенных следующими символами: ',' и 'или'"));
+                var text = "Введите два или более предложений, разделенных следующими символами: ',' и 'или'";
+                return Task.FromResult<IResult>(new FailedResult(text));
             }
 
             var random = GetRandom(0, split.Length);

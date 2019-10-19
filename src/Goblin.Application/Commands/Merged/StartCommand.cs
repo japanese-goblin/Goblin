@@ -8,10 +8,10 @@ namespace Goblin.Application.Commands.Merged
 {
     public class StartCommand : IKeyboardCommand, ITextCommand
     {
-        public string Trigger => "command";
-
         public bool IsAdminCommand => false;
-        public string[] Aliases => new[] { "старт" };
+        public string[] Aliases => new[] { "старт", "начать" };
+        
+        public string Trigger => "command";
 
         public Task<IResult> Execute(Message msg, BotUser user)
         {
