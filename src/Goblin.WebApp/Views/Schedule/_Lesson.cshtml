@@ -25,7 +25,7 @@
         {
             return "orange";
         }
-        if(type.Contains("экзамен") || type.Contains("зачет"))
+        if(Model.IsExam())
         {
             return "red";
         }
