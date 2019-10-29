@@ -22,7 +22,7 @@ namespace Goblin.Narfu.Schedule
         {
             var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(StudentsSchedule)).Location);
             Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText($"{path}/Data/Groups.json"));
-            
+
             _logger = Log.ForContext<StudentsSchedule>();
         }
 
@@ -81,17 +81,7 @@ namespace Goblin.Narfu.Schedule
         {
             _logger.Debug("Получение расписания для группы {0} на {1:dd.MM.yyyy}", realGroupId, date);
             var lessons = await GetSchedule(realGroupId);
-            return new LessonsViewModel(lessons.Where(x => x.StartTime.Date == date.Date),
-                                        date);
-            //var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
-            //var response = await RequestBuilder.Create()
-            //                                   .SetQueryParam("timetable")
-            //                                   .SetQueryParam("group", siteGroupId)
-            //                                   .GetStreamAsync();
-            //var schedule = HtmlParser.GetAllLessonsFromHtml(response);
-
-            //var lessons = schedule.Where(x => x.StartTime.Date == date.Date);
-            //return new LessonsViewModel(lessons.ToArray(), date);
+            return new LessonsViewModel(lessons.Where(x => x.StartTime.Date == date.Date), date);
         }
 
         public bool IsCorrectGroup(int realGroupId)
