@@ -29,7 +29,7 @@ namespace Goblin.Application.Commands.Text
             var param = string.Join(' ', msg.GetCommandParameters());
             var all = param.Split(' ', 3);
 
-            if(!user.IsAdmin || user.Reminds.Count == MaxRemindsCount)
+            if(!user.IsAdmin && user.Reminds.Count == MaxRemindsCount)
             {
                 return new FailedResult($"Вы уже достигли максимального количества напоминаний ({MaxRemindsCount})");
             }
