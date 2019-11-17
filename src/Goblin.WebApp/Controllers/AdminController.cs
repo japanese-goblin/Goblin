@@ -1,12 +1,8 @@
 using System.Linq;
-using System.Threading.Tasks;
-using Goblin.Application.Extensions;
 using Goblin.DataAccess;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using VkNet.Abstractions;
-using VkNet.Model.RequestParams;
 
 namespace Goblin.WebApp.Controllers
 {
@@ -14,12 +10,10 @@ namespace Goblin.WebApp.Controllers
     public class AdminController : Controller
     {
         private readonly BotDbContext _db;
-        private readonly IVkApi _vkApi;
 
-        public AdminController(BotDbContext db, IVkApi vkApi)
+        public AdminController(BotDbContext db)
         {
             _db = db;
-            _vkApi = vkApi;
         }
 
         public IActionResult Index()
@@ -34,33 +28,16 @@ namespace Goblin.WebApp.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SendToAll(string msg, string[] attachs)
+        public IActionResult Reminds()
         {
-            var chunks = _db.BotUsers.AsNoTracking().Select(x => x.VkId)
-                        .AsEnumerable().Chunk(100);
-            
-            foreach(var chunk in chunks)
-            {
-                await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
-                {
-                    Message = msg,
-                    UserIds = chunk
-                });
-            }
-            
-            return RedirectToAction("Messages", "Admin");
+            var data = _db.Reminds.ToArray();
+            ViewData["count"] = data.Count();
+            return View(data);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SendToId(long peerId, string msg, string[] attachs)
+        public IActionResult AddRemind()
         {
-            await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
-            {
-                PeerId = peerId,
-                Message = msg
-            });
-            return RedirectToAction("Messages", "Admin");
+            return View();
         }
     }
 }
