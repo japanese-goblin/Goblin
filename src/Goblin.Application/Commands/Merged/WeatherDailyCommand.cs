@@ -40,7 +40,7 @@ namespace Goblin.Application.Commands.Merged
         {
             if(string.IsNullOrWhiteSpace(user.WeatherCity))
             {
-                var text = "Для получения погоды установите город (например - 'установить город Архангельск').";
+                var text = "Для получения погоды установите город (нужно написать следующее - установить город Москва).";
                 return new FailedResult(text);
             }
 
@@ -51,7 +51,7 @@ namespace Goblin.Application.Commands.Merged
         {
             if(string.IsNullOrWhiteSpace(user.WeatherCity))
             {
-                return new FailedResult("Для получения погоды сначала необходимо установить город.");
+                return new FailedResult("Для получения погоды установите город (нужно написать следующее - установить город Москва).");
             }
 
             var day = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];

@@ -28,7 +28,7 @@ namespace Goblin.Application.Commands.Merged
         {
             if(user.NarfuGroup == 0)
             {
-                return new FailedResult("Для получения экзаменов сначала необходимо установить группу (например - 'установить группу 351919')..");
+                return new FailedResult("Для получения экзаменов установите группу (нужно написать следующее - установить группу 123456).");
             }
 
             return await _api.Students.GetExamsWithResult(user.NarfuGroup);

@@ -28,7 +28,7 @@ namespace Goblin.Application.Commands.Keyboard
         {
             if(user.NarfuGroup == 0)
             {
-                var text = "Для получения расписания установите группу (например - 'установить группу 351919').";
+                var text = "Для получения расписания установите группу (нужно написать следующее - установить группу 123456).";
                 return new FailedResult(text);
             }
 

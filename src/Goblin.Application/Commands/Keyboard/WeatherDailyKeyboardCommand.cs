@@ -19,7 +19,7 @@ namespace Goblin.Application.Commands.Keyboard
         {
             if(string.IsNullOrWhiteSpace(user.WeatherCity))
             {
-                var text = "Для получения погоды установите город (например - 'установить город Архангельск').";
+                var text = "Для получения погоды установите город (нужно написать следующее - установить город Москва).";
                 return Task.FromResult<IResult>(new FailedResult(text));
             }
             
