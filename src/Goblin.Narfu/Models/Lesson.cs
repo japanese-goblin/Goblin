@@ -29,8 +29,8 @@ namespace Goblin.Narfu.Models
 
         public bool IsExam()
         {
-            return Type.Equals("экзамен", StringComparison.OrdinalIgnoreCase) ||
-                   Type.Equals("зачет", StringComparison.OrdinalIgnoreCase);
+            return Type.Contains("экзамен", StringComparison.OrdinalIgnoreCase) ||
+                   Type.Contains("зачет", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
