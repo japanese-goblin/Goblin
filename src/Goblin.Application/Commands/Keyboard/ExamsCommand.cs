@@ -1,20 +1,15 @@
 using System.Threading.Tasks;
-using Flurl.Http;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Extensions;
 using Goblin.Application.Results.Failed;
-using Goblin.Application.Results.Success;
 using Goblin.Domain.Entities;
 using Goblin.Narfu;
 using VkNet.Model;
 
-namespace Goblin.Application.Commands.Merged
+namespace Goblin.Application.Commands.Keyboard
 {
-    public class ExamsCommand : IKeyboardCommand, ITextCommand
+    public class ExamsCommand : IKeyboardCommand
     {
-        public bool IsAdminCommand => false;
-        public string[] Aliases => new[] { "экзамены", "экзы" };
-
         public string Trigger => "exams";
 
         private readonly NarfuApi _api;
