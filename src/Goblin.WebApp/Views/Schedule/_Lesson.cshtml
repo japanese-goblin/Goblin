@@ -1,27 +1,27 @@
 @model Goblin.Narfu.Models.Lesson;
 @{
-
     string GetCssStyle()
     {
-        var type = Model.Type?.ToLower();
+        const string transparent = "transparent d-none d-sm-block";
+        var type = Model.Type;
         if(string.IsNullOrWhiteSpace(type))
         {
-            return "transparent d-none d-sm-block";
+            return transparent;
         }
 
-        if(type == "лекции")
+        if(type.Equals("лекции", StringComparison.CurrentCultureIgnoreCase))
         {
             return "green";
         }
-        if(type == "лабораторные занятия")
+        if(type.Equals("лабораторные занятия", StringComparison.CurrentCultureIgnoreCase))
         {
             return "blue";
         }
-        if(type == "практические занятия")
+        if(type.Equals("практические занятия", StringComparison.CurrentCultureIgnoreCase))
         {
             return "yellow";
         }
-        if(type == "консультация")
+        if(type.Equals("консультация", StringComparison.CurrentCultureIgnoreCase))
         {
             return "orange";
         }
@@ -30,7 +30,7 @@
             return "red";
         }
 
-        return "transparent d-none d-sm-block";
+        return transparent;
     }
 
 }
