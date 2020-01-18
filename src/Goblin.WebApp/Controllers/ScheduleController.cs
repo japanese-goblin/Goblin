@@ -58,14 +58,14 @@ namespace Goblin.WebApp.Controllers
             {
                 return View("Error", new ErrorViewModel
                 {
-                    Description = $"Сайт с расписанием временно недоступен (Код ошибки - {ex.Call.HttpStatus}). Попробуйте позже."
+                    Description = $"Сайт с расписанием временно недоступен. Попробуйте позже."
                 });
             }
             catch(Exception ex)
             {
                 return View("Error", new ErrorViewModel
                 {
-                    Description = $"Непредвиденная ошибка при получении расписания ({ex.Message}). Попробуйте позже."
+                    Description = $"Непредвиденная ошибка при получении расписания. Попробуйте позже."
                 });
             }
         }
@@ -85,12 +85,12 @@ namespace Goblin.WebApp.Controllers
                     continue;
                 }
 
-                var temp = lessons.Where(x => x.StartTime.Date == day);
+                var temp = lessons.Where(x => x.StartTime.Date == day).ToArray();
                 if(temp.Any())
                 {
                     for(var j = 1; j <= temp.Max(x => x.Number); j++)
                     {
-                        if(!temp.Any(x => x.Number == j))
+                        if(temp.All(x => x.Number != j))
                         {
                             lessons.Add(new Lesson
                             {
