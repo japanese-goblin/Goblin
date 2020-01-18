@@ -16,7 +16,7 @@
     @foreach(var group in Model.Lessons)
     {
         <div id="d@(group.Value.First().StartTime.DayOfYear)" class="tab-pane fade">
-            <div class="row">
+            <div class="row no-gutters">
                 @foreach(var days in group.Value.GroupBy(x => x.StartTime.DayOfWeek))
                 {
                     <div class="col-md-2">
