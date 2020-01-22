@@ -54,14 +54,14 @@ namespace Goblin.WebApp.Controllers
                     GroupTitle = $"{group.RealId} - {group.Name}"
                 });
             }
-            catch(FlurlHttpException ex)
+            catch(FlurlHttpException)
             {
                 return View("Error", new ErrorViewModel
                 {
                     Description = $"Сайт с расписанием временно недоступен. Попробуйте позже."
                 });
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 return View("Error", new ErrorViewModel
                 {
