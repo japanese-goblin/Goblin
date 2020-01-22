@@ -32,8 +32,8 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
                 Assert.Equal("271901, 271902, 271903, 271905, 271909", first.Groups);
                 Assert.Equal(5, first.Number);
                 Assert.Equal("5) 16:15-17:50", first.StartEndTime);
-                Assert.Equal(new DateTime(2020, 01, 23, 16, 15, 0), first.StartTime);
-                Assert.Equal(new DateTime(2020, 01, 23, 17, 50, 0), first.EndTime);
+                Assert.Equal(new DateTime(2020, 01, 23, 13, 15, 0), first.StartTime.ToUniversalTime());
+                Assert.Equal(new DateTime(2020, 01, 23, 14, 50, 0), first.EndTime.ToUniversalTime());
             }
         }
 
