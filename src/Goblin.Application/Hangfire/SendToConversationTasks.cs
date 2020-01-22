@@ -31,7 +31,7 @@ namespace Goblin.Application.Hangfire
             InitJobs();
         }
 
-        private async Task SendToConv(long id, int group = 0, string city = "")
+        public async Task SendToConv(long id, int group = 0, string city = "")
         {
             if(!string.IsNullOrWhiteSpace(city) && await _weatherApi.IsCityExists(city))
             {
