@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
@@ -25,7 +26,7 @@ namespace Goblin.Application.Commands.Keyboard
 
             var strBuilder = new StringBuilder();
             strBuilder.AppendLine("Список напоминаний:");
-            foreach(var userRemind in user.Reminds)
+            foreach(var userRemind in user.Reminds.OrderBy(x => x.Date))
             {
                 strBuilder.AppendFormat("{0:dd.MM.yyyy HH:mm} - {1}", userRemind.Date, userRemind.Text)
                           .AppendLine();
