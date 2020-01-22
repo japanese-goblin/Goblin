@@ -19,7 +19,7 @@ namespace Goblin.Application.Hangfire
             _vkApi = vkApi;
         }
 
-        public async Task Execute()
+        public async Task SendOldReminds()
         {
             var reminds = _db.Reminds.Where(x => x.Date < DateTime.Now);
 
@@ -30,7 +30,11 @@ namespace Goblin.Application.Hangfire
                     PeerId = remind.BotUserId,
                     Message = $"Напоминаю:\n{remind.Text}"
                 });
+
+                _db.Reminds.Remove(remind);
             }
+
+            await _db.SaveChangesAsync();
         }
     }
 }
