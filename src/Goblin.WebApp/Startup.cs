@@ -96,6 +96,8 @@ namespace Goblin.WebApp
                                                    "05 6 * * 1-6", TimeZoneInfo.Local);
             RecurringJob.AddOrUpdate<WeatherTask>("SendDailyWeather", x => x.SendDailyWeather(),
                                                   "30 6 * * *", TimeZoneInfo.Local);
+
+            BackgroundJob.Enqueue<StartupTasks>(x => x.Execute());
         }
     }
 }
