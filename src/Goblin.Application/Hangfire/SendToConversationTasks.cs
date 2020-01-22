@@ -31,7 +31,7 @@ namespace Goblin.Application.Hangfire
             InitJobs();
         }
 
-        public async Task SendToConv(long id, int group = 0, string city = "")
+        private async Task SendToConv(long id, int group = 0, string city = "")
         {
             if(!string.IsNullOrWhiteSpace(city) && await _weatherApi.IsCityExists(city))
             {
@@ -52,7 +52,7 @@ namespace Goblin.Application.Hangfire
                 }
             }
 
-            if(_narfuApi.Students.IsCorrectGroup(group))
+            if(_narfuApi.Students.IsCorrectGroup(group) && DateTime.Today.DayOfWeek != DayOfWeek.Saturday)
             {
                 Log.Information("Отправка расписания в {0}", id);
                 var schedule = await _narfuApi.Students.GetScheduleAtDateWithResult(group, DateTime.Now);
@@ -80,7 +80,7 @@ namespace Goblin.Application.Hangfire
                                                                   $"DAILY__{job.Name}",
                                                                   x => x.SendToConv(job.VkId, job.NarfuGroup,
                                                                                     job.WeatherCity),
-                                                                  $"{job.Minutes} {job.Hours} * * 1-6",
+                                                                  $"{job.Minutes} {job.Hours} * * *",
                                                                   TimeZoneInfo.Local
                                                                  );
             }
