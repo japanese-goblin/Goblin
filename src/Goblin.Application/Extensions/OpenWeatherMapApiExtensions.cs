@@ -12,6 +12,7 @@ namespace Goblin.Application.Extensions
     public static class OpenWeatherMapApiExtensions
     {
         private const string SiteIsUnavailable = "Сайт с погодой временно недоступен. Попробуйте позже.";
+        private const string UnexpectedError = "Непредвиденная ошибка при получении погоды. Попробуйте позже.";
 
         public static async Task<IResult> GetCurrentWeatherWithResult(this OpenWeatherMapApi api, string city)
         {
@@ -30,7 +31,7 @@ namespace Goblin.Application.Extensions
             catch(Exception ex)
             {
                 Log.ForContext<OpenWeatherMapApi>().Fatal(ex, "Ошибка при получении погоды на текущий момент");
-                return new FailedResult("Непредвиденная ошибка при получении погоды. Попробуйте позже.");
+                return new FailedResult(UnexpectedError);
             }
         }
 
@@ -44,11 +45,11 @@ namespace Goblin.Application.Extensions
                 string formattedDate;
                 if(date.Date == DateTime.Today)
                 {
-                    formattedDate = $"сегодня ({date:dd.MM (dddd)})";
+                    formattedDate = $"сегодня ({date:dd.MM, dddd})";
                 }
                 else if(date.Date == DateTime.Today.AddDays(1))
                 {
-                    formattedDate = $"завтра ({date:dd.MM (dddd)})";
+                    formattedDate = $"завтра ({date:dd.MM, dddd})";
                 }
                 else
                 {
@@ -67,7 +68,7 @@ namespace Goblin.Application.Extensions
             catch(Exception ex)
             {
                 Log.ForContext<OpenWeatherMapApi>().Fatal(ex, "Ошибка при получении погоды на день");
-                return new FailedResult("Непредвиденная ошибка при получении погоды. Попробуйте позже.");
+                return new FailedResult(UnexpectedError);
             }
         }
     }
