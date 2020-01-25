@@ -10,7 +10,6 @@ using Goblin.WebApp.Extensions;
 using Goblin.WebApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
-using LessonsViewModel = Goblin.WebApp.ViewModels.LessonsViewModel;
 
 namespace Goblin.WebApp.Controllers
 {
@@ -58,14 +57,14 @@ namespace Goblin.WebApp.Controllers
             {
                 return View("Error", new ErrorViewModel
                 {
-                    Description = $"Сайт с расписанием временно недоступен. Попробуйте позже."
+                    Description = "Сайт с расписанием временно недоступен. Попробуйте позже."
                 });
             }
             catch(Exception)
             {
                 return View("Error", new ErrorViewModel
                 {
-                    Description = $"Непредвиденная ошибка при получении расписания. Попробуйте позже."
+                    Description = "Непредвиденная ошибка при получении расписания. Попробуйте позже."
                 });
             }
         }

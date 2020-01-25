@@ -11,47 +11,47 @@
 </h2>
 <table class="table table-striped table-bordered">
     <thead class="thead-dark">
-        <tr>
-            <th>Vk ID</th>
-            <th>Admin?</th>
-            <th>Schedule?</th>
-            <th>Weather?</th>
-            <th>City</th>
-        </tr>
+    <tr>
+        <th>Vk ID</th>
+        <th>Admin?</th>
+        <th>Schedule?</th>
+        <th>Weather?</th>
+        <th>City</th>
+    </tr>
     </thead>
     <tbody>
-        @foreach(var group in Model)
+    @foreach(var group in Model)
+    {
+        var gr = NarfuApi.Students.GetGroupByRealId(group.Key);
+        var narfuGroup = gr?.SiteId ?? 0;
+        var groupName = gr is null ? "" : gr.Name;
+        <tr class="table-info">
+            <td colspan="6">
+                @if(narfuGroup != 0)
+                {
+                    <a href="https://ruz.narfu.ru/?timetable&group=@gr.SiteId" target="_blank">
+                        <b>@gr.RealId</b> - @groupName
+                    </a>
+                }
+                else
+                {
+                    <p>Группа не установлена</p>
+                }
+            </td>
+        </tr>
+        foreach(var user in group)
         {
-            var gr = NarfuApi.Students.GetGroupByRealId(group.Key);
-            var narfuGroup = gr?.SiteId ?? 0;
-            var groupName = gr is null ? "" : gr.Name;
-            <tr class="table-info">
-                <td colspan="6">
-                   @if(narfuGroup != 0)
-                   {
-                       <a href="https://ruz.narfu.ru/?timetable&group=@gr.SiteId" target="_blank">
-                           <b>@gr.RealId</b> - @groupName
-                       </a>
-                   }
-                   else
-                   {
-                       <p>Группа не установлена</p>
-                   } 
+            var url = $"https://vk.com/id{user.VkId}";
+            <tr>
+                <td>
+                    <a href="@url" target="_blank">@user.VkId</a>
                 </td>
+                <td>@user.IsAdmin</td>
+                <td>@user.SubscribeInfo.IsSchedule</td>
+                <td>@user.SubscribeInfo.IsWeather</td>
+                <td>@user.WeatherCity</td>
             </tr>
-            foreach(var user in group)
-            {
-                var url = $"https://vk.com/id{user.VkId}";
-                <tr>
-                    <td>
-                        <a href="@url" target="_blank">@user.VkId</a>
-                    </td>
-                    <td>@user.IsAdmin</td>
-                    <td>@user.SubscribeInfo.IsSchedule</td>
-                    <td>@user.SubscribeInfo.IsWeather</td>
-                    <td>@user.WeatherCity</td>
-                </tr>
-            }
+        }
     }
     </tbody>
 </table>

@@ -5,7 +5,7 @@ namespace Goblin.Narfu.Models
     public class Lesson : IEquatable<Lesson>
     {
         public string Id { get; set; }
-        
+
         public string Type { get; set; }
         public string Name { get; set; }
         public DateTime StartTime { get; set; }

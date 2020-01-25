@@ -52,7 +52,7 @@ namespace Goblin.Narfu
 
                 var startEnd = lessonNode.SelectSingleNode(".//span[contains(@class,'time_para')]")
                                          .GetNormalizedInnerText();
-                
+
                 var lesson = new Lesson
                 {
                     Address = adr[1],

@@ -22,7 +22,7 @@ namespace Goblin.Application.Commands.Keyboard
                 var text = "Для получения расписания установите группу (нужно написать следующее - установить группу 123456).";
                 return Task.FromResult<IResult>(new FailedResult(text));
             }
-            
+
             const string defaultFormat = "dd.MM.yyyy";
             var startDate = DateTime.Now;
 
@@ -45,6 +45,7 @@ namespace Goblin.Application.Commands.Keyboard
                     kb.AddLine();
                 }
             }
+
             kb.AddReturnToMenuButton(false);
 
             return Task.FromResult<IResult>(new SuccessfulResult

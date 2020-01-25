@@ -14,16 +14,16 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
         [Fact]
         public async Task GetSchedule_CorrectGroup_ReturnsLessons()
         {
-            using (var http = new HttpTest())
+            using(var http = new HttpTest())
             {
                 http.RespondWith(File.ReadAllText(StudentsSchedulePath));
 
                 var lessons = (await Api.Students.GetSchedule(CorrectGroup)).ToArray();
                 var first = lessons.First();
-                
+
                 Assert.NotEmpty(lessons);
                 Assert.Equal(5, lessons.Length);
-                
+
                 Assert.Equal("Инженерная графика", first.Name);
                 Assert.Equal("Консультация", first.Type);
                 Assert.Equal("Пономарева Наталья Геннадьевна", first.Teacher);
@@ -40,9 +40,9 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
         [Fact]
         public async Task GetSchedule_SiteIsDown_ThrowsException()
         {
-            using (var http = new HttpTest())
+            using(var http = new HttpTest())
             {
-                http.RespondWith(string.Empty, (int)HttpStatusCode.NotFound);
+                http.RespondWith(string.Empty, (int) HttpStatusCode.NotFound);
 
                 await Assert.ThrowsAsync<FlurlHttpException>(async () => await Api.Students.GetSchedule(CorrectGroup));
             }

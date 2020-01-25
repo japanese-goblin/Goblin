@@ -16,12 +16,12 @@ namespace Goblin.WebApp.HostedServices
         {
             _serviceProvider = serviceProvider;
         }
-        
+
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             using var scope = _serviceProvider.CreateScope();
             var manager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            
+
             const string roleName = "Admin";
             if(await manager.RoleExistsAsync(roleName))
             {

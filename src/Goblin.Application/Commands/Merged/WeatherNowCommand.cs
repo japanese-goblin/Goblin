@@ -13,7 +13,7 @@ namespace Goblin.Application.Commands.Merged
     {
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "погода" };
-        
+
         public string Trigger => "weatherNow";
 
         private readonly OpenWeatherMapApi _api;

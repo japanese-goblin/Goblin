@@ -13,7 +13,7 @@ namespace Goblin.Application.Extensions
     public static class NarfuExtensions
     {
         private const string SiteIsUnavailable = "Сайт с расписанием временно недоступен. Попробуйте позже.";
-        
+
         public static async Task<IResult> GetExamsWithResult(this StudentsSchedule students, int group)
         {
             try
@@ -31,7 +31,7 @@ namespace Goblin.Application.Extensions
             catch(Exception ex)
             {
                 Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении экзаменов");
-                return new FailedResult($"Непредвиденная ошибка получения экзаменов с сайта. Попробуйте позже.");
+                return new FailedResult("Непредвиденная ошибка получения экзаменов с сайта. Попробуйте позже.");
             }
         }
 
@@ -52,7 +52,7 @@ namespace Goblin.Application.Extensions
             catch(Exception ex)
             {
                 Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении расписания на день");
-                return new FailedResult($"Непредвиденная ошибка получения расписания с сайта. Попробуйте позже.");
+                return new FailedResult("Непредвиденная ошибка получения расписания с сайта. Попробуйте позже.");
             }
         }
     }

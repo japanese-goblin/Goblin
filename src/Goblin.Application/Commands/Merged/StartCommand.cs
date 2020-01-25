@@ -10,7 +10,7 @@ namespace Goblin.Application.Commands.Merged
     {
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "старт", "начать" };
-        
+
         public string Trigger => "command";
 
         public Task<IResult> Execute(Message msg, BotUser user)

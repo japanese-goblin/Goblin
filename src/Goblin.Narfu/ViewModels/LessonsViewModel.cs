@@ -23,7 +23,7 @@ namespace Goblin.Narfu.ViewModels
             {
                 return $"На {_date:dd.MM (dddd)} расписание отсутствует!";
             }
-            
+
             var strBuilder = new StringBuilder();
             strBuilder.AppendFormat("Расписание на {0:dd.MM (dddd)}:", _date).AppendLine();
 
@@ -32,12 +32,12 @@ namespace Goblin.Narfu.ViewModels
                 strBuilder.AppendFormat("{1} - {2} ({3}) [{4}]", lesson.Number,
                                         lesson.StartEndTime, lesson.Name, lesson.Teacher, lesson.Type)
                           .AppendLine();
-                
+
                 if(lesson.Groups != null)
                 {
                     strBuilder.AppendFormat("У группы {0}", lesson.Groups).AppendLine();
                 }
-                
+
                 strBuilder.AppendFormat("В ауд. {0} ({1})", lesson.Auditory, lesson.Address).AppendLine()
                           .AppendLine();
             }

@@ -22,7 +22,7 @@ namespace Goblin.Application.Commands.Keyboard
                 var text = "Для получения погоды установите город (нужно написать следующее - установить город Москва).";
                 return Task.FromResult<IResult>(new FailedResult(text));
             }
-            
+
             const string DefaultFormat = "dd.MM.yyyy";
             var date = DateTime.Now;
             var kb = new KeyboardBuilder(true);

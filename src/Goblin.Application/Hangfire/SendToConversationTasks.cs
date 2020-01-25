@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Flurl.Http;
 using Goblin.Application.Extensions;
 using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;

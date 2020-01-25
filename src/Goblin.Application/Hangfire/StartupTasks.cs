@@ -23,7 +23,7 @@ namespace Goblin.Application.Hangfire
         {
             var reminds = _db.Reminds.Where(x => x.Date < DateTime.Now);
 
-            foreach (var remind in reminds)
+            foreach(var remind in reminds)
             {
                 await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                 {

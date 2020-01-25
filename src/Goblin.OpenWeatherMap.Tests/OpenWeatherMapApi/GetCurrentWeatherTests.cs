@@ -14,8 +14,8 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
             using(var http = new HttpTest())
             {
                 http.RespondWith(File.ReadAllText(CurrentWeatherPath));
-                var weather = await Api.GetCurrentWeather(CorrectCity);   
-                
+                var weather = await Api.GetCurrentWeather(CorrectCity);
+
                 Assert.NotNull(weather);
                 Assert.NotNull(weather.Coord);
                 Assert.NotEmpty(weather.Info);

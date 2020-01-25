@@ -11,7 +11,7 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
         [Fact]
         public async Task GetScheduleAtDate_CorrectGroupAndDate_ReturnsLessons()
         {
-            using (var http = new HttpTest())
+            using(var http = new HttpTest())
             {
                 http.RespondWith(File.ReadAllText(StudentsSchedulePath));
 
@@ -23,11 +23,11 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
                 Assert.Contains("Инженерная графика", str);
             }
         }
-        
+
         [Fact]
         public async Task GetScheduleAtDate_IncorrectDate_ReturnsLessons()
         {
-            using (var http = new HttpTest())
+            using(var http = new HttpTest())
             {
                 http.RespondWith(File.ReadAllText(StudentsSchedulePath));
 

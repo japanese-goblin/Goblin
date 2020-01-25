@@ -11,7 +11,7 @@ namespace Goblin.Application.Commands.Text
     {
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "куб" };
-        
+
         public Task<IResult> Execute(Message msg, BotUser user)
         {
             var kb = new KeyboardBuilder();

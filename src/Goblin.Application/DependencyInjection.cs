@@ -22,17 +22,17 @@ namespace Goblin.Application
             services.AddVkApi(configuration);
             services.AddBotFeatures();
             services.AddOptions(configuration);
-            
+
             services.AddHangfire(config => { config.UseMemoryStorage(); });
-            
+
             services.AddSingleton(x =>
             {
                 var api = new OpenWeatherMapApi(configuration["OWM:AccessToken"]);
                 return api;
             });
             services.AddSingleton<NarfuApi>();
-
         }
+
         private static void AddVkApi(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IVkApi, VkApi>(x =>
@@ -79,7 +79,7 @@ namespace Goblin.Application
             services.AddScoped<CommandsService>();
             services.AddScoped<CallbackHandler>();
         }
-        
+
         private static void AddOptions(this IServiceCollection services, IConfiguration config)
         {
             services.Configure<VkOptions>(config.GetSection("Vk"));

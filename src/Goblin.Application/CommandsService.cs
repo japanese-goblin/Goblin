@@ -32,7 +32,7 @@ namespace Goblin.Application
             {
                 return await ExecuteKeyboardCommand(msg, user);
             }
-            
+
             return await ExecuteTextCommand(msg, user);
         }
 
@@ -52,7 +52,7 @@ namespace Goblin.Application
                 {
                     continue;
                 }
-                
+
                 _logger.Debug("Выполнение команды {0}", command.GetType());
                 var result = await command.Execute(msg, user);
                 if(result is FailedResult failedExecuteResult)
@@ -60,6 +60,7 @@ namespace Goblin.Application
                     _logger.Debug("Команда вернула {0} результат", failedExecuteResult.GetType());
                     return failedExecuteResult;
                 }
+
                 _logger.Debug("Команда выполнена успешно");
 
                 return result as SuccessfulResult;

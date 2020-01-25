@@ -12,7 +12,7 @@ namespace Goblin.Application.Extensions
     public static class OpenWeatherMapApiExtensions
     {
         private const string SiteIsUnavailable = "Сайт с погодой временно недоступен. Попробуйте позже.";
-        
+
         public static async Task<IResult> GetCurrentWeatherWithResult(this OpenWeatherMapApi api, string city)
         {
             try
@@ -40,7 +40,7 @@ namespace Goblin.Application.Extensions
             try
             {
                 var weather = await api.GetDailyWeatherAt(city, date);
-                
+
                 string formattedDate;
                 if(date.Date == DateTime.Today)
                 {
@@ -54,7 +54,7 @@ namespace Goblin.Application.Extensions
                 {
                     formattedDate = $"({date:dd.MM (dddd)})";
                 }
-                
+
                 return new SuccessfulResult
                 {
                     Message = $"Погода в городе {city} на {formattedDate}:\n{weather}"

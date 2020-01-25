@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Extensions;
 using Goblin.Application.Results.Failed;
-using Goblin.Application.Results.Success;
 using Goblin.Domain.Entities;
 using Goblin.OpenWeatherMap;
 using Newtonsoft.Json;
@@ -16,7 +15,7 @@ namespace Goblin.Application.Commands.Merged
     {
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "погодаз" };
-        
+
         public string Trigger => "weatherDaily";
 
         private readonly OpenWeatherMapApi _api;

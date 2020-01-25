@@ -10,7 +10,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
     public class GetDailyWeatherAtTests : TestBase
     {
         private readonly DateTime _date = new DateTime(2019, 09, 28);
-        
+
         [Fact]
         public async Task GetDailyWeatherAt_CorrectCityAndDate_ReturnsModel()
         {
@@ -18,7 +18,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
             {
                 http.RespondWith(File.ReadAllText(DailyWeatherPath));
                 var weather = await Api.GetDailyWeatherAt(CorrectCity, _date);
-                
+
                 Assert.NotNull(weather);
                 Assert.True(weather.UnixTime >= 0);
                 Assert.NotNull(weather.Temp);
@@ -42,7 +42,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
                                                                      await Api.GetDailyWeatherAt(IncorrectCity, _date));
             }
         }
-        
+
         [Fact]
         public async Task GetDailyWeatherAt_IncorrectDate_ThrowsException()
         {
@@ -50,7 +50,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
             {
                 http.RespondWith(File.ReadAllText(DailyWeatherPath));
                 await Assert.ThrowsAsync<ArgumentException>(async () =>
-                                                                     await Api.GetDailyWeatherAt(CorrectCity, _date.AddDays(17)));
+                                                                    await Api.GetDailyWeatherAt(CorrectCity, _date.AddDays(17)));
             }
         }
     }

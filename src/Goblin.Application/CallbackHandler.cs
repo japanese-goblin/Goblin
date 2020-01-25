@@ -7,7 +7,6 @@ using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
 using VkNet.Abstractions;
@@ -43,9 +42,9 @@ namespace Goblin.Application
                 _logger.Warning("Пришло событие с неправильным секретным ключом ({0})", upd.Secret);
                 return;
             }
-            
+
             _logger.Debug("Обработка события с типом {0}", upd.Type);
-            
+
             if(upd.Type == GroupUpdateType.MessageNew)
             {
                 await MessageNew(upd.Message);
@@ -133,7 +132,6 @@ namespace Goblin.Application
                     // ignored
                 }
             }
-            
         }
 
         public async Task GroupJoin(GroupJoin join)

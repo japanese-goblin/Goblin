@@ -13,7 +13,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         {
             Assert.Throws<ArgumentException>(() => new OpenWeatherMap.OpenWeatherMapApi(token));
         }
-        
+
         [Fact]
         public void Constructor_CorrectToken_CreatesInstance()
         {

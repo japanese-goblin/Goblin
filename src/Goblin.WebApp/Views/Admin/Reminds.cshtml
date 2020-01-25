@@ -19,14 +19,14 @@
     </tr>
     </thead>
     <tbody>
-        @foreach(var remind in Model)
-        {
-            <tr>
-                <td>@remind.Id</td>
-                <td>@remind.BotUserId</td>
-                <td>@remind.Text</td>
-                <td>@remind.Date.ToString("G")</td>
-            </tr>
-        }
+    @foreach(var remind in Model)
+    {
+        <tr>
+            <td>@remind.Id</td>
+            <td>@remind.BotUserId</td>
+            <td>@remind.Text</td>
+            <td>@remind.Date.ToString("G")</td>
+        </tr>
+    }
     </tbody>
 </table>

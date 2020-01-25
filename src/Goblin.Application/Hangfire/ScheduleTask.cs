@@ -1,14 +1,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Flurl.Http;
 using Goblin.Application.Extensions;
 using Goblin.Application.Results.Failed;
 using Goblin.Application.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Narfu;
 using Microsoft.EntityFrameworkCore;
-using Serilog;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 

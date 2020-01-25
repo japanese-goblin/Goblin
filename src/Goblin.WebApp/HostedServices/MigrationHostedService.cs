@@ -16,7 +16,7 @@ namespace Goblin.WebApp.HostedServices
         {
             _serviceProvider = serviceProvider;
         }
-        
+
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             await Migrate<IdentityUsersDbContext>(cancellationToken);
