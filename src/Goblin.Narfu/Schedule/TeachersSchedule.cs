@@ -49,19 +49,5 @@ namespace Goblin.Narfu.Schedule
 
             return teachers;
         }
-
-        public async Task<bool> FindById(int teacherId)
-        {
-            _logger.Debug("Поиск преподавателя по ID {0}", teacherId);
-            const string NotFound = "Данные о расписании на эту неделю отсутствуют в системе.";
-            var response = await RequestBuilder.Create()
-                                               .SetQueryParam("timetable")
-                                               .SetQueryParam("lecturer", teacherId)
-                                               .AllowAnyHttpStatus()
-                                               .GetStringAsync();
-            _logger.Debug("Поиск завершен");
-
-            return !response.Contains(NotFound);
-        }
     }
 }

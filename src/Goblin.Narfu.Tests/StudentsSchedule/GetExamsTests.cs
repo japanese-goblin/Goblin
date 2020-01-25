@@ -11,15 +11,13 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
         [Fact]
         public async Task GetExams_CorrectGroup_ReturnsLessons()
         {
-            using(var http = new HttpTest())
-            {
-                http.RespondWith(File.ReadAllText(StudentsSchedulePath));
+            using var http = new HttpTest();
+            http.RespondWith(File.ReadAllText(StudentsSchedulePath));
 
-                var exams = (await Api.Students.GetExams(CorrectGroup)).Lessons.ToArray();
+            var exams = (await Api.Students.GetExams(CorrectGroup)).Lessons.ToArray();
 
-                Assert.NotEmpty(exams);
-                Assert.Equal(3, exams.Length);
-            }
+            Assert.NotEmpty(exams);
+            Assert.Equal(3, exams.Length);
         }
     }
 }

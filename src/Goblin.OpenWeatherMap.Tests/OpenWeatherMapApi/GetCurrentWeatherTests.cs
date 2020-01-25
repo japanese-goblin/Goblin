@@ -11,33 +11,29 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         [Fact]
         public async Task GetCurrentWeather_CorrectCity_ReturnsModel()
         {
-            using(var http = new HttpTest())
-            {
-                http.RespondWith(File.ReadAllText(CurrentWeatherPath));
-                var weather = await Api.GetCurrentWeather(CorrectCity);
+            using var http = new HttpTest();
+            http.RespondWith(File.ReadAllText(CurrentWeatherPath));
+            var weather = await Api.GetCurrentWeather(CorrectCity);
 
-                Assert.NotNull(weather);
-                Assert.NotNull(weather.Coord);
-                Assert.NotEmpty(weather.Info);
-                Assert.NotNull(weather.Weather);
-                Assert.True(weather.Visibility >= 0);
-                Assert.NotNull(weather.Wind);
-                Assert.NotNull(weather.Clouds);
-                Assert.NotNull(weather.OtherInfo);
-                Assert.True(weather.CityName == "Moscow");
-                Assert.True(weather.ResponseCode == 200);
-                Assert.NotEmpty(weather.ToString());
-            }
+            Assert.NotNull(weather);
+            Assert.NotNull(weather.Coord);
+            Assert.NotEmpty(weather.Info);
+            Assert.NotNull(weather.Weather);
+            Assert.True(weather.Visibility >= 0);
+            Assert.NotNull(weather.Wind);
+            Assert.NotNull(weather.Clouds);
+            Assert.NotNull(weather.OtherInfo);
+            Assert.True(weather.CityName == "Moscow");
+            Assert.True(weather.ResponseCode == 200);
+            Assert.NotEmpty(weather.ToString());
         }
 
         [Fact]
         public async Task GetCurrentWeather_IncorrectCity_ThrowsException()
         {
-            using(var http = new HttpTest())
-            {
-                http.RespondWith(string.Empty, 404);
-                await Assert.ThrowsAsync<FlurlHttpException>(async () => await Api.GetCurrentWeather(IncorrectCity));
-            }
+            using var http = new HttpTest();
+            http.RespondWith(string.Empty, 404);
+            await Assert.ThrowsAsync<FlurlHttpException>(async () => await Api.GetCurrentWeather(IncorrectCity));
         }
     }
 }

@@ -5,7 +5,7 @@ namespace Goblin.Narfu.Tests
 {
     public class TestBase
     {
-        protected const string DefaultPath = "TestData";
+        private const string DefaultPath = "TestData";
 
         protected string StudentsSchedulePath => Path.Combine(DefaultPath, "StudentsSchedule.ics");
         protected string TeachersSchedulePath => Path.Combine(DefaultPath, "TeachersSchedule.html");
@@ -18,7 +18,6 @@ namespace Goblin.Narfu.Tests
         protected DateTime IncorrectDate = new DateTime(2010, 01, 23, 16, 15, 0);
 
         protected const int CorrectTeacherId = 12345;
-        protected const int IncorrectTeacherId = 0;
 
         protected NarfuApi Api => new NarfuApi();
     }

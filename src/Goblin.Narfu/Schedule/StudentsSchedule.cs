@@ -15,7 +15,7 @@ namespace Goblin.Narfu.Schedule
 {
     public class StudentsSchedule
     {
-        public Group[] Groups { get; }
+        private Group[] Groups { get; }
         private readonly ILogger _logger;
 
         public StudentsSchedule()
@@ -92,11 +92,6 @@ namespace Goblin.Narfu.Schedule
         public Group GetGroupByRealId(int realGroupId)
         {
             return Groups.FirstOrDefault(x => x.RealId == realGroupId);
-        }
-
-        public Group GetGroupBySiteId(short siteGroupId)
-        {
-            return Groups.FirstOrDefault(x => x.SiteId == siteGroupId);
         }
     }
 }

@@ -6,18 +6,18 @@
 
 <h2>@Model.GroupTitle</h2>
 <div class="nav nav-pills">
-    @foreach(var group in Model.Lessons)
+    @foreach(var (key, value) in Model.Lessons)
     {
-        <a class="nav-link" data-toggle="pill" href="#d@(group.Value.First().StartTime.DayOfYear)">@group.Key</a>
+        <a class="nav-link" data-toggle="pill" href="#d@(value.First().StartTime.DayOfYear)">@key</a>
     }
 </div>
 
 <div class="tab-content">
-    @foreach(var group in Model.Lessons)
+    @foreach(var (_, value) in Model.Lessons)
     {
-        <div id="d@(group.Value.First().StartTime.DayOfYear)" class="tab-pane fade">
+        <div id="d@(value.First().StartTime.DayOfYear)" class="tab-pane fade">
             <div class="row no-gutters">
-                @foreach(var days in group.Value.GroupBy(x => x.StartTime.DayOfWeek))
+                @foreach(var days in value.GroupBy(x => x.StartTime.DayOfWeek))
                 {
                     <div class="col-md-2">
                         <div class="dayofweek">

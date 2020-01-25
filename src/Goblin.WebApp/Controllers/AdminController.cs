@@ -31,7 +31,7 @@ namespace Goblin.WebApp.Controllers
         public IActionResult Reminds()
         {
             var data = _db.Reminds.ToArray();
-            ViewData["count"] = data.Count();
+            ViewData["count"] = data.Length;
             return View(data);
         }
 

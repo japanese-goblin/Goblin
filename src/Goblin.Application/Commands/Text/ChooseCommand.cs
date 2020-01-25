@@ -21,7 +21,7 @@ namespace Goblin.Application.Commands.Text
 
             if(split.Length < 2)
             {
-                var text = "Введите два или более предложений, разделенных следующими символами: ',' и 'или'";
+                const string text = "Введите два или более предложений, разделенных следующими символами: ',' и 'или'";
                 return Task.FromResult<IResult>(new FailedResult(text));
             }
 
