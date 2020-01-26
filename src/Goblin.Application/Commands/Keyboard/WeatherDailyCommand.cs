@@ -11,19 +11,16 @@ using VkNet.Model;
 
 namespace Goblin.Application.Commands.Merged
 {
-    public class WeatherDailyCommand : IKeyboardCommand, ITextCommand
+    public class WeatherDailyCommand : IKeyboardCommand
     {
-        public bool IsAdminCommand => false;
-        public string[] Aliases => new[] { "погодаз" };
-
-        public string Trigger => "weatherDaily";
-
         private readonly OpenWeatherMapApi _api;
 
         public WeatherDailyCommand(OpenWeatherMapApi api)
         {
             _api = api;
         }
+
+        public string Trigger => "weatherDaily";
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
