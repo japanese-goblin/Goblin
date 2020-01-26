@@ -13,16 +13,16 @@ namespace Goblin.Application.Commands.Text
 {
     public class AddRemindCommand : ITextCommand
     {
-        private readonly BotDbContext _db;
-        public bool IsAdminCommand => false;
-        public string[] Aliases => new[] { "напомни" };
-
         private const int MaxRemindsCount = 8;
+        private readonly BotDbContext _db;
 
         public AddRemindCommand(BotDbContext db)
         {
             _db = db;
         }
+
+        public bool IsAdminCommand => false;
+        public string[] Aliases => new[] { "напомни" };
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
@@ -39,12 +39,12 @@ namespace Goblin.Application.Commands.Text
                 return new FailedResult("Укажите дату, время и текст напоминания (11.11.2011 11:11 текст)");
             }
 
-            if(all[0] == "завтра")
+            if(all[0].Equals("завтра", StringComparison.CurrentCultureIgnoreCase))
             {
                 var d = DateTime.Now.AddDays(1);
                 all[0] = $"{d.Day}.{d.Month}.{d.Year}";
             }
-            else if(all[0] == "сегодня")
+            else if(all[0].Equals("сегодня", StringComparison.CurrentCultureIgnoreCase))
             {
                 var d = DateTime.Now;
                 all[0] = $"{d.Day}.{d.Month}.{d.Year}";

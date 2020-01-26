@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
 using Goblin.Application.Extensions;
@@ -13,13 +14,9 @@ namespace Goblin.Application.Commands.Text
 {
     public class SetDataCommand : ITextCommand
     {
-        public bool IsAdminCommand => false;
-
-        public string[] Aliases => new[] { "установить" };
-
         private readonly BotDbContext _db;
-        private readonly OpenWeatherMapApi _weather;
         private readonly NarfuApi _narfu;
+        private readonly OpenWeatherMapApi _weather;
 
         public SetDataCommand(BotDbContext db, OpenWeatherMapApi weather, NarfuApi narfu)
         {
@@ -27,6 +24,10 @@ namespace Goblin.Application.Commands.Text
             _weather = weather;
             _narfu = narfu;
         }
+
+        public bool IsAdminCommand => false;
+
+        public string[] Aliases => new[] { "установить" };
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
@@ -55,7 +56,8 @@ namespace Goblin.Application.Commands.Text
                 };
             }
 
-            if(prms[1] == "группу" || prms[1] == "группа")
+            if(prms[1].Equals("группу", StringComparison.CurrentCultureIgnoreCase) ||
+               prms[1].Equals("группа", StringComparison.CurrentCultureIgnoreCase))
             {
                 var group = prms[2];
                 if(!int.TryParse(group, out var intGroup))
@@ -72,7 +74,7 @@ namespace Goblin.Application.Commands.Text
                 var groupName = _narfu.Students.GetGroupByRealId(intGroup).Name;
 
                 user.SetNarfuGroup(intGroup);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return new SuccessfulResult
                 {
                     Message = $"Группа успешно установлена на {intGroup} ({groupName})"

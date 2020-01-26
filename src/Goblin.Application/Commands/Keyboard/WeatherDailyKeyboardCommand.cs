@@ -19,17 +19,16 @@ namespace Goblin.Application.Commands.Keyboard
         {
             if(string.IsNullOrWhiteSpace(user.WeatherCity))
             {
-                const string text = "Для получения погоды установите город (нужно написать следующее - установить город Москва).";
-                return Task.FromResult<IResult>(new FailedResult(text));
+                return Task.FromResult<IResult>(new FailedResult(DefaultErrors.CityNotSet));
             }
 
-            const string DefaultFormat = "dd.MM.yyyy";
+            const string defaultFormat = "dd.MM.yyyy";
             var date = DateTime.Now;
             var kb = new KeyboardBuilder(true);
-            kb.AddButton("На сегодня", date.ToString(DefaultFormat),
+            kb.AddButton("На сегодня", date.ToString(defaultFormat),
                          KeyboardButtonColor.Primary, "weatherDaily");
             kb.AddLine();
-            kb.AddButton("На завтра", date.AddDays(1).ToString(DefaultFormat),
+            kb.AddButton("На завтра", date.AddDays(1).ToString(defaultFormat),
                          KeyboardButtonColor.Primary, "weatherDaily");
             kb.AddReturnToMenuButton();
 

@@ -19,8 +19,7 @@ namespace Goblin.Application.Commands.Keyboard
         {
             if(user.NarfuGroup == 0)
             {
-                const string text = "Для получения расписания установите группу (нужно написать следующее - установить группу 123456).";
-                return Task.FromResult<IResult>(new FailedResult(text));
+                return Task.FromResult<IResult>(new FailedResult(DefaultErrors.GroupNotSet));
             }
 
             const string defaultFormat = "dd.MM.yyyy";
@@ -30,11 +29,12 @@ namespace Goblin.Application.Commands.Keyboard
             kb.AddButton($"На сегодня ({startDate:dd.MM - dddd})", startDate.ToString(defaultFormat),
                          KeyboardButtonColor.Primary, "schedule");
             kb.AddLine();
+
+            startDate = startDate.AddDays(1);
             kb.AddButton($"На завтра ({startDate.AddDays(1):dd.MM - dddd})", startDate.AddDays(1).ToString(defaultFormat),
                          KeyboardButtonColor.Primary, "schedule");
             kb.AddLine();
 
-            startDate = startDate.AddDays(1);
             for(var i = 1; i < 7; i++)
             {
                 var date = startDate.AddDays(i);

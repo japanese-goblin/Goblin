@@ -10,8 +10,6 @@ namespace Goblin.Application.Commands.Keyboard
 {
     public class ExamsCommand : IKeyboardCommand
     {
-        public string Trigger => "exams";
-
         private readonly NarfuApi _api;
 
         public ExamsCommand(NarfuApi api)
@@ -19,11 +17,13 @@ namespace Goblin.Application.Commands.Keyboard
             _api = api;
         }
 
+        public string Trigger => "exams";
+
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
             if(user.NarfuGroup == 0)
             {
-                return new FailedResult("Для получения экзаменов установите группу (нужно написать следующее - установить группу 123456).");
+                return new FailedResult(DefaultErrors.GroupNotSet);
             }
 
             return await _api.Students.GetExamsWithResult(user.NarfuGroup);

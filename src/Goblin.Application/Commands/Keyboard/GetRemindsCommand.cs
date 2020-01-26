@@ -10,8 +10,6 @@ namespace Goblin.Application.Commands.Keyboard
 {
     public class GetRemindsCommand : IKeyboardCommand
     {
-        public bool IsAdminCommand => false;
-
         public string Trigger => "reminds";
 
         public Task<IResult> Execute(Message msg, BotUser user)

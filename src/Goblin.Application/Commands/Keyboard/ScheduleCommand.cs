@@ -13,8 +13,6 @@ namespace Goblin.Application.Commands.Keyboard
 {
     public class ScheduleCommand : IKeyboardCommand
     {
-        public string Trigger => "schedule";
-
         private readonly NarfuApi _api;
 
         public ScheduleCommand(NarfuApi api)
@@ -22,15 +20,16 @@ namespace Goblin.Application.Commands.Keyboard
             _api = api;
         }
 
+        public string Trigger => "schedule";
+
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
             if(user.NarfuGroup == 0)
             {
-                const string text = "Для получения расписания установите группу (нужно написать следующее - установить группу 123456).";
-                return new FailedResult(text);
+                return new FailedResult(DefaultErrors.GroupNotSet);
             }
 
-            var date = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)["schedule"];
+            var date = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
 
             return await _api.Students.GetScheduleAtDateWithResult(user.NarfuGroup, DateTime.Parse(date));
         }

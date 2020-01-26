@@ -14,14 +14,14 @@ namespace Goblin.Application.Commands.Keyboard
 {
     public class TeacherScheduleCommand : IKeyboardCommand
     {
-        public string Trigger => "teacherSchedule";
-
         private readonly NarfuApi _narfuApi;
 
         public TeacherScheduleCommand(NarfuApi narfuApi)
         {
             _narfuApi = narfuApi;
         }
+
+        public string Trigger => "teacherSchedule";
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
@@ -40,14 +40,13 @@ namespace Goblin.Application.Commands.Keyboard
                     Message = schedule.ToString()
                 };
             }
-            catch(FlurlHttpException ex)
+            catch(FlurlHttpException)
             {
-                return new
-                        FailedResult($"Сайт с расписанием недоступен (код ошибки - {ex.Call.HttpStatus}). Попробуйте позже.");
+                return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
             }
             catch(Exception)
             {
-                return new FailedResult("Непредвиденная ошибка получения расписания. Попробуйте позже.");
+                return new FailedResult(DefaultErrors.NarfuUnexpectedError);
             }
         }
     }

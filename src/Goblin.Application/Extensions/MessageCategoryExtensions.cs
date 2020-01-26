@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using VkNet.Abstractions;
-using VkNet.Model;
 using VkNet.Model.RequestParams;
 
 namespace Goblin.Application.Extensions
@@ -13,41 +11,41 @@ namespace Goblin.Application.Extensions
     {
         private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
 
-        public static async Task<long> SendError(this IMessagesCategory msgCategory, string error, long peerId)
+        public static async Task SendError(this IMessagesCategory msgCategory, string error, long peerId)
         {
-            return await msgCategory.SendWithRandomId(new MessagesSendParams
+            await msgCategory.SendWithRandomId(new MessagesSendParams
             {
                 PeerId = peerId,
                 Message = $"❌ Ошибка: {error}"
             });
         }
 
-        public static async Task<long> SendWithRandomId(this IMessagesCategory msgCategory, MessagesSendParams @params)
+        public static async Task SendWithRandomId(this IMessagesCategory msgCategory, MessagesSendParams @params)
         {
             AddKeyboard(@params);
 
             @params.RandomId = GetRandomId();
-            return await msgCategory.SendAsync(@params);
+            await msgCategory.SendAsync(@params);
         }
 
-        public static async Task<ReadOnlyCollection<MessagesSendResult>> SendErrorToUserIds(
+        public static async Task SendErrorToUserIds(
                 this IMessagesCategory msgCategory,
                 string error, IEnumerable<long> userIds)
         {
-            return await msgCategory.SendToUserIdsWithRandomId(new MessagesSendParams
+            await msgCategory.SendToUserIdsWithRandomId(new MessagesSendParams
             {
                 UserIds = userIds,
                 Message = $"❌ Ошибка: {error}"
             });
         }
 
-        public static async Task<ReadOnlyCollection<MessagesSendResult>> SendToUserIdsWithRandomId(
+        public static async Task SendToUserIdsWithRandomId(
                 this IMessagesCategory msgCategory, MessagesSendParams @params)
         {
             AddKeyboard(@params);
 
             @params.RandomId = GetRandomId();
-            return await msgCategory.SendToUserIdsAsync(@params);
+            await msgCategory.SendToUserIdsAsync(@params);
         }
 
         private static void AddKeyboard(MessagesSendParams @params)

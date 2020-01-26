@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Application.Abstractions;
@@ -13,25 +14,25 @@ namespace Goblin.Application.Commands.Keyboard
     public class MailingCommand : IKeyboardCommand
     {
         private readonly BotDbContext _db;
-        public string Trigger => "mailing";
 
         public MailingCommand(BotDbContext db)
         {
             _db = db;
         }
 
+        public string Trigger => "mailing";
+
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
             user = _db.BotUsers.Find(user.VkId);
-            var choose = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)["mailing"];
+            var choose = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
             var isSchedule = user.SubscribeInfo.IsSchedule;
             var isWeather = user.SubscribeInfo.IsWeather;
-            if(choose == "weather")
+            if(choose.Equals("weather", StringComparison.CurrentCultureIgnoreCase))
             {
                 if(string.IsNullOrWhiteSpace(user.WeatherCity))
                 {
-                    return new FailedResult("Для подписки на рассылку погоды необходимо установить город " +
-                                            "(например - установить город Москва)");
+                    return new FailedResult(DefaultErrors.CityNotSet);
                 }
 
                 user.SubscribeInfo.SetIsWeather(!isWeather);
@@ -42,12 +43,11 @@ namespace Goblin.Application.Commands.Keyboard
                 };
             }
 
-            if(choose == "schedule")
+            if(choose.Equals("schedule", StringComparison.CurrentCultureIgnoreCase))
             {
                 if(user.NarfuGroup == 0)
                 {
-                    return new FailedResult("Для подписки на рассылку расписания необходимо установить группу " +
-                                            "(например - установить группу 351633)");
+                    return new FailedResult(DefaultErrors.GroupNotSet);
                 }
 
                 user.SubscribeInfo.SetIsSchedule(!isSchedule);
