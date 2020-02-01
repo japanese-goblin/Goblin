@@ -1,3 +1,5 @@
+using System.Net;
+using System.Threading.Tasks;
 using Flurl.Http;
 using Serilog;
 
@@ -24,8 +26,22 @@ namespace Goblin.OpenWeatherMap
                 _client.Settings.BeforeCall = call => _logger.Debug("Запрос [{0}] {1}",
                                                                     call.Request.Method, call.Request.RequestUri);
                 _client.Settings.AfterCall = call => _logger.Debug("Запрос выполнен за {0}", call.Duration);
-                _client.Settings.OnError = call => _logger.Error(call.Exception, "Ошибка при выполнении запроса",
-                                                                 call.Request.RequestUri);
+#if DEBUG
+                _client.Settings.OnError = call => _logger.Error(call.Exception, "Ошибка при выполнении запроса");
+#else
+                _client.Settings.OnError = call =>
+                {
+                    if(call.Exception is FlurlHttpException || call.Exception is TaskCanceledException)
+                    {
+                        _logger.Error("{0} [{1}] - {2}", call.Request.RequestUri, call.Request.Method,
+                                      call.HttpStatus ?? HttpStatusCode.GatewayTimeout);
+                    }
+                    else
+                    {
+                        _logger.Error(call.Exception, "Ошибка при выполнении запроса");
+                    }
+                };
+#endif
             }
 
             return _client.Request()
