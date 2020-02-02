@@ -51,7 +51,7 @@ namespace Goblin.Application.Hangfire
                 }
             }
 
-            if(_narfuApi.Students.IsCorrectGroup(group) && DateTime.Today.DayOfWeek != DayOfWeek.Saturday)
+            if(_narfuApi.Students.IsCorrectGroup(group) && DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
             {
                 Log.Information("Отправка расписания в {0}", id);
                 var schedule = await _narfuApi.Students.GetScheduleAtDateWithResult(group, DateTime.Now);
