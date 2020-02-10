@@ -7,7 +7,7 @@
 
 <div class="row">
     <div class="col-md-3">
-        <form method="post" asp-area="" asp-controller="AdminApi" asp-action="SendToAll">
+        <form method="post" asp-area="Admin" asp-controller="Messages" asp-action="SendToAll">
             <h3>Рассылка всем</h3>
             <div class="form-group">
                 <label>Сообщение</label>
@@ -23,19 +23,10 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group attachments-all">
-                <label>Прикрепления</label>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">1</span>
-                    </div>
-                    <input type="text" class="form-control attach-all" name="attachs[]" placholder="attach">
-                </div>
-            </div>
         </form>
     </div>
     <div class="col-md-3 offset-md-2">
-        <form method="post" asp-area="" asp-controller="AdminApi" asp-action="SendToId">
+        <form method="post" asp-area="Admin" asp-controller="Messages" asp-action="SendToId">
             <h3>Письмо одному</h3>
             <div class="form-group">
                 <label>ID (2000000001 для бесед)</label>
@@ -53,15 +44,6 @@
                     <div class="btn-group mr-2">
                         <button type="submit" class="btn btn-warning">Отправить</button>
                     </div>
-                </div>
-            </div>
-            <div class="form-group attachments-one">
-                <label>Прикрепления</label>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">1</span>
-                    </div>
-                    <input type="text" class="form-control attach-one" name="attachs[]">
                 </div>
             </div>
         </form>

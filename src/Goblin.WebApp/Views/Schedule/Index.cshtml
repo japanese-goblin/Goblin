@@ -4,7 +4,7 @@
 
 <h2>Расписание САФУ</h2>
 <div class="col-md-3">
-    <form class="form" action="/Schedule/Show" method="get">
+    <form class="form" method="get" asp-area="" asp-controller="Schedule" asp-action="Show">
         <div class="form-group">
             <input type="number" class="form-control" name="id" placeholder="Номер группы" required="" autofocus="">
         </div>

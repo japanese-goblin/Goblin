@@ -1,13 +1,12 @@
 @{
     ViewData["Title"] = "Добавление напоминания";
-    Layout = "_Layout";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <div class="row">
     <div class="col-md-3">
-        <form method="post" asp-area="" asp-controller="AdminApi" asp-action="AddRemind">
+        <form method="post" asp-area="Admin" asp-controller="Reminds" asp-action="AddRemind">
             <div class="form-group">
                 <label>ID</label>
                 <input type="number" class="form-control" name="peerId" placeholder="ID" required="">
