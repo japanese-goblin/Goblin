@@ -15,7 +15,7 @@ namespace Goblin.Narfu.Schedule
 
         public TeachersSchedule()
         {
-            _logger = Log.ForContext<StudentsSchedule>();
+            _logger = Log.ForContext<TeachersSchedule>();
         }
 
         public async Task<IEnumerable<Lesson>> GetSchedule(int teacherId)

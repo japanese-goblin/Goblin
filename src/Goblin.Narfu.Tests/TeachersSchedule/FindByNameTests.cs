@@ -19,7 +19,7 @@ namespace Goblin.Narfu.Tests.TeachersSchedule
 
             Assert.NotEmpty(teachers);
             Assert.Equal("Кафедра информационных систем и технологий", first.Depart);
-            Assert.Equal(31257, first.Id);
+            Assert.Equal(31261, first.Id);
             Assert.Equal("Абрамова Любовь Валерьевна", first.Name);
         }
     }
