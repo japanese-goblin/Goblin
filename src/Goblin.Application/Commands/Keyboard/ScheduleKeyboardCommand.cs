@@ -31,7 +31,7 @@ namespace Goblin.Application.Commands.Keyboard
             kb.AddLine();
 
             startDate = startDate.AddDays(1);
-            kb.AddButton($"На завтра ({startDate.AddDays(1):dd.MM - dddd})", startDate.AddDays(1).ToString(defaultFormat),
+            kb.AddButton($"На завтра ({startDate:dd.MM - dddd})", startDate.ToString(defaultFormat),
                          KeyboardButtonColor.Primary, "schedule");
             kb.AddLine();
 
