@@ -5,6 +5,19 @@
 }
 
 <h2>@Model.GroupTitle</h2>
+
+<div class="dropdown pb-2">
+    <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+        Дополнительно
+    </button>
+    <div class="dropdown-menu">
+        <a class="dropdown-item" href="@Model.ScheduleLink">Скачать файл (.ics)</a>
+        <a class="dropdown-item" href="@Model.WebcalLink">Добавить в календарь</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#">А больше пока ничего нет...</a>
+    </div>
+</div>
+
 <div class="nav nav-pills">
     @foreach(var (key, value) in Model.Lessons)
     {

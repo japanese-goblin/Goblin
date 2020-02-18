@@ -47,10 +47,15 @@ namespace Goblin.WebApp.Controllers
             {
                 var lessons = (await _narfuApi.Students.GetSchedule(group.RealId)).ToList();
 
+                var scheduleLink = _narfuApi.Students.GenerateScheduleLink(group.RealId);
+                var webcalLink = _narfuApi.Students.GenerateScheduleLink(group.RealId, true);
+
                 return View(new LessonsViewModel
                 {
                     Lessons = MagicWithLessons(lessons),
-                    GroupTitle = $"{group.RealId} - {group.Name}"
+                    GroupTitle = $"{group.RealId} - {group.Name}",
+                    ScheduleLink = scheduleLink,
+                    WebcalLink = webcalLink
                 });
             }
             catch(FlurlHttpException)

@@ -93,5 +93,18 @@ namespace Goblin.Narfu.Schedule
         {
             return Groups.FirstOrDefault(x => x.RealId == realGroupId);
         }
+
+        public string GenerateScheduleLink(int realGroupId, bool isWebCal = false)
+        {
+            const string url = "ruz.narfu.ru/?icalendar";
+
+            var protocol = isWebCal ? "webcal" : "https";
+
+            var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
+
+            var todayDate = DateTime.Today.ToString("dd.MM.yyyy");
+
+            return $"{protocol}://{url}&oid={siteGroupId}&cod={realGroupId}&from={todayDate}";
+        }
     }
 }
