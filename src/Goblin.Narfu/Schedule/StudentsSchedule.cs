@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
-using Ical.Net;
+using ICalParser.Models;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -35,14 +35,14 @@ namespace Goblin.Narfu.Schedule
                                                .SetQueryParam("oid", siteGroupId)
                                                .SetQueryParam("cod", realGroupId)
                                                .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
-                                               .GetStreamAsync();
+                                               .GetStringAsync();
             _logger.Debug("Расписание получено");
 
-            var calendar = Calendar.Load(response);
+            var calendar = new vCalendar(response);
 
             var events = calendar.Events
                                  .Distinct()
-                                 .OrderBy(x => x.DtStart.Value);
+                                 .OrderBy(x => x.DtStart);
 
             return events.Select(ev =>
             {
@@ -58,8 +58,8 @@ namespace Goblin.Narfu.Schedule
                     Name = ev.Summary,
                     Type = description[3],
                     Teacher = description[4],
-                    StartTime = ev.DtStart.AsSystemLocal,
-                    EndTime = ev.DtEnd.AsSystemLocal,
+                    StartTime = ev.DtStart,
+                    EndTime = ev.DtEnd,
                     StartEndTime = description[0].Replace(")", "")
                                                  .Replace("(", "")
                                                  .Replace("п", ")")

@@ -1,0 +1,31 @@
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
+
+namespace ICalParser.Models
+{
+    public class vCalendar
+    {
+        private const string CalendarParameterPattern = "BEGIN:VCALENDAR\\r\\n(.+?)\\r\\nBEGIN:VEVENT";
+        private const RegexOptions CalendarParameterRegexOptions = RegexOptions.Singleline;
+
+        public const string vEventPattern = "(BEGIN:VEVENT.+?END:VEVENT)";
+        public const RegexOptions vEventRegexOptions = RegexOptions.Singleline;
+
+        public string Source { get; set; }
+        public CalendarParameters Parameters { get; set; }
+        public List<vEvent> Events { get; set; } = new List<vEvent>();
+
+        public vCalendar(string source)
+        {
+            Source = source;
+            var parameterMatch = Regex.Match(source, CalendarParameterPattern, CalendarParameterRegexOptions);
+            var parameterString = parameterMatch.Groups[1].ToString();
+            Parameters = new CalendarParameters(parameterString);
+            foreach(Match vEventMatch in Regex.Matches(source, vEventPattern, vEventRegexOptions))
+            {
+                var vEventString = vEventMatch.Groups[1].ToString();
+                Events.Add(new vEvent(vEventString));
+            }
+        }
+    }
+}
