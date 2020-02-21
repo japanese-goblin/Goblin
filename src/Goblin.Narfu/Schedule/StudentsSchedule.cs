@@ -38,7 +38,7 @@ namespace Goblin.Narfu.Schedule
                                                .GetStringAsync();
             _logger.Debug("Расписание получено");
 
-            var calendar = new vCalendar(response);
+            var calendar = new Calendar(response);
 
             var events = calendar.Events
                                  .Distinct()

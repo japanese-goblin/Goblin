@@ -8,11 +8,13 @@ namespace ICalParser.Models
         private const string NameValuePattern = "(.+?)=(.+)";
         private const string ValueListPattern = "([^,]+)(?=,|$)";
 
-        public string Name { get; set; }
-        public List<string> Values { get; set; } = new List<string>();
+        public string Name { get; }
+        public List<string> Values { get; }
 
         public ContentLineParameter(string source)
         {
+            Values = new List<string>();
+
             var match = Regex.Match(source, NameValuePattern);
             Name = match.Groups[1].ToString().Trim();
             var valueString = match.Groups[2].ToString();

@@ -5,10 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace ICalParser.Models
 {
-    public class vEvent : IEquatable<vEvent>
+    public class CalendarEvent : IEquatable<CalendarEvent>
     {
-        private const string vEventContentPattern = "BEGIN:VEVENT\\r\\n(.+)\\r\\nEND:VEVENT";
-        private const RegexOptions vEventContentRegexOptions = RegexOptions.Singleline;
+        private const string EventContentPattern = "BEGIN:VEVENT\\r\\n(.+)\\r\\nEND:VEVENT";
+        private const RegexOptions EventContentRegexOptions = RegexOptions.Singleline;
         private const string ContentLinePattern = "(.+?):(.+?)(?=\\r\\n[A-Z]|$)";
         private const RegexOptions ContentLineTRegexOptions = RegexOptions.Singleline;
 
@@ -23,11 +23,12 @@ namespace ICalParser.Models
 
         public string Summary { get; }
 
-        public vEvent(string source)
+        public CalendarEvent(string source)
         {
-            var contentMatch = Regex.Match(source, vEventContentPattern, vEventContentRegexOptions);
+            var contentMatch = Regex.Match(source, EventContentPattern, EventContentRegexOptions);
             var content = contentMatch.Groups[1].ToString();
             var matches = Regex.Matches(content, ContentLinePattern, ContentLineTRegexOptions);
+
             ContentLines = new Dictionary<string, ContentLine>();
             foreach(Match match in matches)
             {
@@ -48,7 +49,7 @@ namespace ICalParser.Models
             Summary = ContentLines["SUMMARY"].Value;
         }
 
-        public bool Equals(vEvent other)
+        public bool Equals(CalendarEvent other)
         {
             if(ReferenceEquals(null, other))
             {
@@ -60,7 +61,8 @@ namespace ICalParser.Models
                 return true;
             }
 
-            return DtStart.Equals(other.DtStart) && Description == other.Description && Location == other.Location && Summary == other.Summary;
+            return DtStart.Equals(other.DtStart) && Description == other.Description && Location == other.Location &&
+                   Summary == other.Summary;
         }
 
         public override int GetHashCode()

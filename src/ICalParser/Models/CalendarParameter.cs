@@ -6,8 +6,8 @@ namespace ICalParser.Models
     {
         private const string NameValuePattern = "(.+?):(.+)";
 
-        public string Name { get; set; }
-        public string Value { get; set; }
+        public string Name { get; }
+        public string Value { get; }
 
         public CalendarParameter(string source)
         {

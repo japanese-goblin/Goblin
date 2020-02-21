@@ -6,11 +6,11 @@ namespace ICalParser.Models
     public class CalendarParameters : Dictionary<string, CalendarParameter>
     {
         private const string ParameterPattern = "(.+?):(.+?)(?=\\r\\n[A-Z]|$)";
-        private const RegexOptions ParameteRegexOptions = RegexOptions.Singleline;
+        private const RegexOptions ParameterRegexOptions = RegexOptions.Singleline;
 
         public CalendarParameters(string source)
         {
-            var parameterMatches = Regex.Matches(source, ParameterPattern, ParameteRegexOptions);
+            var parameterMatches = Regex.Matches(source, ParameterPattern, ParameterRegexOptions);
             foreach(Match parameterMatch in parameterMatches)
             {
                 var parameterString = parameterMatch.Groups[0].ToString();

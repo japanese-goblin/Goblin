@@ -3,28 +3,30 @@ using System.Text.RegularExpressions;
 
 namespace ICalParser.Models
 {
-    public class vCalendar
+    public class Calendar
     {
         private const string CalendarParameterPattern = "BEGIN:VCALENDAR\\r\\n(.+?)\\r\\nBEGIN:VEVENT";
         private const RegexOptions CalendarParameterRegexOptions = RegexOptions.Singleline;
 
-        public const string vEventPattern = "(BEGIN:VEVENT.+?END:VEVENT)";
-        public const RegexOptions vEventRegexOptions = RegexOptions.Singleline;
+        private const string EventPattern = "(BEGIN:VEVENT.+?END:VEVENT)";
+        private const RegexOptions EventRegexOptions = RegexOptions.Singleline;
 
-        public string Source { get; set; }
-        public CalendarParameters Parameters { get; set; }
-        public List<vEvent> Events { get; set; } = new List<vEvent>();
+        public string Source { get; }
+        public CalendarParameters Parameters { get; }
+        public List<CalendarEvent> Events { get; } = new List<CalendarEvent>();
 
-        public vCalendar(string source)
+        public Calendar(string source)
         {
             Source = source;
+
             var parameterMatch = Regex.Match(source, CalendarParameterPattern, CalendarParameterRegexOptions);
             var parameterString = parameterMatch.Groups[1].ToString();
             Parameters = new CalendarParameters(parameterString);
-            foreach(Match vEventMatch in Regex.Matches(source, vEventPattern, vEventRegexOptions))
+
+            foreach(Match vEventMatch in Regex.Matches(source, EventPattern, EventRegexOptions))
             {
                 var vEventString = vEventMatch.Groups[1].ToString();
-                Events.Add(new vEvent(vEventString));
+                Events.Add(new CalendarEvent(vEventString));
             }
         }
     }

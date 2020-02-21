@@ -7,9 +7,9 @@ namespace ICalParser.Models
         private const string ContentLineContentPattern = "(.+?)((;.+?)*):(.+)";
         private const RegexOptions ContentLineContentRegexOptions = RegexOptions.Singleline;
 
-        public string Name { get; set; }
-        public string Value { get; set; }
-        public ContentLineParameters Parameters { get; set; }
+        public string Name { get; }
+        public string Value { get; }
+        public ContentLineParameters Parameters { get; }
 
         public ContentLine(string source)
         {
