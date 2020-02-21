@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace ICalParser.Models
 {
-    public class vEvent
+    public class vEvent : IEquatable<vEvent>
     {
         private const string vEventContentPattern = "BEGIN:VEVENT\\r\\n(.+)\\r\\nEND:VEVENT";
         private const RegexOptions vEventContentRegexOptions = RegexOptions.Singleline;
@@ -42,9 +42,30 @@ namespace ICalParser.Models
             DtStart = DateTime.ParseExact(ContentLines["DTSTART"].Value, "yyyyMMddTHHmmssZ", CultureInfo.CurrentCulture);
             DtEnd = DateTime.ParseExact(ContentLines["DTEND"].Value, "yyyyMMddTHHmmssZ", CultureInfo.CurrentCulture);
             Description = ContentLines["DESCRIPTION"].Value
+                                                     .Replace("\r\n\tn", "\n")
                                                      .Replace("\r\n\t", string.Empty);
             Location = ContentLines["LOCATION"].Value;
             Summary = ContentLines["SUMMARY"].Value;
+        }
+
+        public bool Equals(vEvent other)
+        {
+            if(ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if(ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return DtStart.Equals(other.DtStart) && Description == other.Description && Location == other.Location && Summary == other.Summary;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(DtStart, Description, Location, Summary);
         }
     }
 }

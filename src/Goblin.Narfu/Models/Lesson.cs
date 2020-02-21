@@ -2,7 +2,7 @@ using System;
 
 namespace Goblin.Narfu.Models
 {
-    public class Lesson : IEquatable<Lesson>
+    public class Lesson
     {
         public string Id { get; set; }
 
@@ -16,16 +16,6 @@ namespace Goblin.Narfu.Models
         public string Auditory { get; set; }
         public string Teacher { get; set; }
         public string Groups { get; set; }
-
-        public bool Equals(Lesson other)
-        {
-            return Id == other?.Id;
-        }
-
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }
 
         public bool IsExam()
         {
