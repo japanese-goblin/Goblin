@@ -16,10 +16,12 @@ namespace Goblin.WebApp
 {
     public class Startup
     {
+        private readonly IWebHostEnvironment _env;
         private IConfiguration Configuration { get; }
 
         public Startup(IWebHostEnvironment env)
         {
+            _env = env;
             var builder = new ConfigurationBuilder()
                           .SetBasePath(env.ContentRootPath)
                           .AddJsonFile("appsettings.json", false, true)
@@ -42,9 +44,19 @@ namespace Goblin.WebApp
             services.AddApplication(Configuration);
 
             services.AddAuth(Configuration);
-
-            services.AddControllersWithViews()
-                    .AddNewtonsoftJson();
+            
+            if(_env.IsDevelopment())
+            {
+                services.AddControllersWithViews()
+                        .AddRazorRuntimeCompilation()
+                        .AddNewtonsoftJson();
+            }
+            else
+            {
+                services.AddControllersWithViews()
+                        .AddNewtonsoftJson();
+            }
+            
             services.AddRazorPages();
         }
 
