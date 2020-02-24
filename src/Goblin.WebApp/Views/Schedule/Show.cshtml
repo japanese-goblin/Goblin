@@ -18,12 +18,14 @@
     </div>
 </div>
 
-<div class="nav nav-pills">
+<ul class="nav nav-pills">
     @foreach(var (key, value) in Model.Lessons)
     {
-        <a class="nav-link" data-toggle="pill" href="#d@(value.First().StartTime.DayOfYear)">@key</a>
+        <li>
+            <a class="nav-link" data-toggle="pill" href="#d@(value.First().StartTime.DayOfYear)">@key</a>
+        </li>
     }
-</div>
+</ul>
 
 <div class="tab-content">
     @foreach(var (_, value) in Model.Lessons)
