@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Flurl.Http;
 using Flurl.Http.Testing;
 using Xunit;
@@ -14,25 +15,28 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
         [Fact]
         public async Task GetSchedule_CorrectGroup_ReturnsLessons()
         {
+            var correctEndDate = new DateTime(2020, 01, 23, 14, 50, 0);
+            var correctStartDate = new DateTime(2020, 01, 23, 13, 15, 0);
             using var http = new HttpTest();
             http.RespondWith(File.ReadAllText(StudentsSchedulePath));
 
-            var lessons = (await Api.Students.GetSchedule(CorrectGroup)).ToArray();
+            var lessons = await Api.Students.GetSchedule(CorrectGroup);
             var first = lessons.First();
 
-            Assert.NotEmpty(lessons);
-            Assert.Equal(5, lessons.Length);
-
-            Assert.Equal("Инженерная графика", first.Name);
-            Assert.Equal("Консультация", first.Type);
-            Assert.Equal("Пономарева Наталья Геннадьевна", first.Teacher);
-            Assert.Equal("А-НСД22", first.Address);
-            Assert.Equal("2212 ЦДЗ", first.Auditory);
-            Assert.Equal("271901, 271902, 271903, 271905, 271909", first.Groups);
-            Assert.Equal(5, first.Number);
-            Assert.Equal("5) 16:15-17:50", first.StartEndTime);
-            Assert.Equal(new DateTime(2020, 01, 23, 13, 15, 0), first.StartTime.ToUniversalTime());
-            Assert.Equal(new DateTime(2020, 01, 23, 14, 50, 0), first.EndTime.ToUniversalTime());
+            lessons.Should()
+                   .NotBeNullOrEmpty().And
+                   .HaveCount(5);
+            first.Address.Should().Be("А-НСД22");
+            first.Auditory.Should().Be("2212 ЦДЗ");
+            first.Groups.Should().Be("271901, 271902, 271903, 271905, 271909");
+            first.Id.Should().Be("eb1f309b-6ccc-43d9-9cbc-fb98a85997d2");
+            first.Name.Should().Be("Инженерная графика");
+            first.Number.Should().Be(5);
+            first.Teacher.Should().Be("Пономарева Наталья Геннадьевна");
+            first.Type.Should().Be("Консультация");
+            first.EndTime.ToUniversalTime().Should().Be(correctEndDate);
+            first.StartTime.ToUniversalTime().Should().Be(correctStartDate);
+            first.StartEndTime.Should().Be("5) 16:15-17:50");
         }
 
         [Fact]
@@ -41,7 +45,9 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
             using var http = new HttpTest();
             http.RespondWith(string.Empty, (int) HttpStatusCode.NotFound);
 
-            await Assert.ThrowsAsync<FlurlHttpException>(async () => await Api.Students.GetSchedule(CorrectGroup));
+            Func<Task> func = async () => await Api.Students.GetSchedule(CorrectGroup);
+
+            await func.Should().ThrowAsync<FlurlHttpException>();
         }
     }
 }

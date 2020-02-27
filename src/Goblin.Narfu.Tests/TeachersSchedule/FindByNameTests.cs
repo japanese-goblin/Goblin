@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Flurl.Http.Testing;
 using Xunit;
 
@@ -17,10 +18,12 @@ namespace Goblin.Narfu.Tests.TeachersSchedule
             var teachers = await Api.Teachers.FindByName("Абрамова");
             var first = teachers.First();
 
-            Assert.NotEmpty(teachers);
-            Assert.Equal("Кафедра информационных систем и технологий", first.Depart);
-            Assert.Equal(31261, first.Id);
-            Assert.Equal("Абрамова Любовь Валерьевна", first.Name);
+            teachers.Should()
+                    .NotBeNullOrEmpty().And
+                    .HaveCount(1);
+            first.Depart.Should().Be("Кафедра информационных систем и технологий");
+            first.Id.Should().Be(31261);
+            first.Name.Should().Be("Абрамова Любовь Валерьевна");
         }
     }
 }

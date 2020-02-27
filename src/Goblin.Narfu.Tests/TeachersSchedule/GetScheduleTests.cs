@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Flurl.Http;
 using Flurl.Http.Testing;
 using Xunit;
@@ -16,10 +18,11 @@ namespace Goblin.Narfu.Tests.TeachersSchedule
             using var http = new HttpTest();
             http.RespondWith(File.ReadAllText(TeachersSchedulePath));
 
-            var lessons = (await Api.Teachers.GetSchedule(CorrectTeacherId)).ToArray();
+            var lessons = await Api.Teachers.GetSchedule(CorrectTeacherId);
 
-            Assert.NotEmpty(lessons);
-            Assert.Equal(27, lessons.Length);
+            lessons.ToArray().Should()
+                   .NotBeNullOrEmpty().And
+                   .HaveCount(27);
         }
 
         [Fact]
@@ -28,7 +31,9 @@ namespace Goblin.Narfu.Tests.TeachersSchedule
             using var http = new HttpTest();
             http.RespondWith(string.Empty, (int) HttpStatusCode.NotFound);
 
-            await Assert.ThrowsAsync<FlurlHttpException>(async () => await Api.Teachers.GetSchedule(CorrectTeacherId));
+            Func<Task> func = async () => await Api.Teachers.GetSchedule(CorrectTeacherId);
+
+            await func.Should().ThrowAsync<FlurlHttpException>();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using FluentAssertions;
+using Xunit;
 
 namespace Goblin.Narfu.Tests.StudentsSchedule
 {
@@ -7,17 +8,17 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
         [Fact]
         public void IsCorrectGroup_CorrectGroup_ReturnsTrue()
         {
-            var correct = Api.Students.IsCorrectGroup(CorrectGroup);
+            var result = Api.Students.IsCorrectGroup(CorrectGroup);
 
-            Assert.True(correct);
+            result.Should().BeTrue();
         }
 
         [Fact]
         public void IsCorrectGroup_IncorrectGroup_ReturnsTrue()
         {
-            var incorrect = Api.Students.IsCorrectGroup(IncorrectGroup);
+            var result = Api.Students.IsCorrectGroup(IncorrectGroup);
 
-            Assert.False(incorrect);
+            result.Should().BeFalse();
         }
     }
 }

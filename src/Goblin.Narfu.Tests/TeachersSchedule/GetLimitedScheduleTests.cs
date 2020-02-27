@@ -1,6 +1,6 @@
 ﻿using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Flurl.Http.Testing;
 using Xunit;
 
@@ -15,9 +15,13 @@ namespace Goblin.Narfu.Tests.TeachersSchedule
             http.RespondWith(File.ReadAllText(TeachersSchedulePath));
 
             var lessons = await Api.Teachers.GetLimitedSchedule(CorrectGroup, 12);
+            var str = lessons.ToString();
 
-            Assert.NotEmpty(lessons.Lessons);
-            Assert.Equal(12, lessons.Lessons.Count());
+            lessons.Should().NotBeNull();
+            lessons.Lessons.Should()
+                   .NotBeNullOrEmpty().And
+                   .HaveCount(12);
+            str.Should().NotBeEmpty();
         }
     }
 }

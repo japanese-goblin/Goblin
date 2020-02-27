@@ -1,6 +1,6 @@
 ﻿using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Flurl.Http.Testing;
 using Xunit;
 
@@ -17,9 +17,12 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
             var lessons = await Api.Students.GetScheduleAtDate(CorrectGroup, CorrectDate);
             var str = lessons.ToString();
 
-            Assert.NotEmpty(lessons.Lessons);
-            Assert.Single(lessons.Lessons);
-            Assert.Contains("Инженерная графика", str);
+            lessons.Should().NotBeNull();
+            lessons.Lessons.Should()
+                   .NotBeNull().And
+                   .HaveCount(1);
+            str.Should().NotBeEmpty();
+            str.Should().Contain("Инженерная графика");
         }
 
         [Fact]
@@ -31,8 +34,9 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
             var lessons = await Api.Students.GetScheduleAtDate(CorrectGroup, IncorrectDate);
             var str = lessons.ToString();
 
-            Assert.Empty(lessons.Lessons.ToArray());
-            Assert.Contains("отсутствует", str);
+            lessons.Should().NotBeNull();
+            lessons.Lessons.Should().BeEmpty();
+            str.Should().Contain("отсутствует");
         }
     }
 }
