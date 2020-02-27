@@ -8,9 +8,7 @@ namespace ICalParser.Models
     public class CalendarEvent : IEquatable<CalendarEvent>
     {
         private const string EventContentPattern = "BEGIN:VEVENT\\r\\n(.+)\\r\\nEND:VEVENT";
-        private const RegexOptions EventContentRegexOptions = RegexOptions.Singleline;
         private const string ContentLinePattern = "(.+?):(.+?)(?=\\r\\n[A-Z]|$)";
-        private const RegexOptions ContentLineTRegexOptions = RegexOptions.Singleline;
 
         private Dictionary<string, ContentLine> ContentLines { get; }
 
@@ -25,9 +23,9 @@ namespace ICalParser.Models
 
         public CalendarEvent(string source)
         {
-            var contentMatch = Regex.Match(source, EventContentPattern, EventContentRegexOptions);
+            var contentMatch = Regex.Match(source, EventContentPattern, RegexOptions.Singleline);
             var content = contentMatch.Groups[1].ToString();
-            var matches = Regex.Matches(content, ContentLinePattern, ContentLineTRegexOptions);
+            var matches = Regex.Matches(content, ContentLinePattern, RegexOptions.Singleline);
 
             ContentLines = new Dictionary<string, ContentLine>();
             foreach(Match match in matches)
@@ -37,8 +35,6 @@ namespace ICalParser.Models
                 ContentLines[contentLine.Name] = contentLine;
             }
 
-            // 20200303T113000Z
-            // 2020 03 03 T 11 30 00 Z
             Uid = ContentLines["UID"].Value;
             DtStart = DateTime.ParseExact(ContentLines["DTSTART"].Value, "yyyyMMddTHHmmssZ", CultureInfo.CurrentCulture);
             DtEnd = DateTime.ParseExact(ContentLines["DTEND"].Value, "yyyyMMddTHHmmssZ", CultureInfo.CurrentCulture);
