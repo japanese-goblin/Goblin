@@ -2,7 +2,7 @@
 
 namespace Goblin.OpenWeatherMap.Models.Daily
 {
-    public class Temp
+    public class Temperature
     {
         [JsonProperty("day")]
         public double Day { get; set; }

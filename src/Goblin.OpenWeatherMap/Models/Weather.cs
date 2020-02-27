@@ -8,7 +8,7 @@ namespace Goblin.OpenWeatherMap.Models
         public int Id { get; set; }
 
         [JsonProperty("main")]
-        private string Main { get; set; }
+        public string Main { get; set; }
 
         [JsonProperty("description")]
         public string State { get; set; }

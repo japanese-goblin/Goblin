@@ -11,7 +11,7 @@ namespace Goblin.OpenWeatherMap.Models.Daily
         public string Name { get; set; }
 
         [JsonProperty("coord")]
-        public Coord Coord { get; set; }
+        public Coordinates Coordinates { get; set; }
 
         [JsonProperty("country")]
         public string Country { get; set; }

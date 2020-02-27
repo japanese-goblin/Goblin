@@ -8,13 +8,13 @@ namespace Goblin.OpenWeatherMap.Models.Daily
         public City City { get; set; }
 
         [JsonProperty("cod")]
-        public string Cod { get; set; } //INT
+        public int Code { get; set; }
 
         [JsonProperty("message")]
         public double Message { get; set; }
 
         [JsonProperty("cnt")]
-        public long Cnt { get; set; }
+        public long Count { get; set; }
 
         [JsonProperty("list")]
         public DailyWeatherListItem[] List { get; set; }

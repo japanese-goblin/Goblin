@@ -6,13 +6,13 @@ namespace Goblin.OpenWeatherMap.Models.Current
     public class CurrentWeather
     {
         [JsonProperty("coord")]
-        public Coord Coord { get; set; }
+        public Coordinates Coordinates { get; set; }
 
         [JsonProperty("weather")]
         public Weather[] Info { get; set; }
 
         [JsonProperty("base")]
-        public string BaseInfo { get; set; }
+        public string Base { get; set; }
 
         [JsonProperty("main")]
         public Main Weather { get; set; }
@@ -33,7 +33,7 @@ namespace Goblin.OpenWeatherMap.Models.Current
         public Sys OtherInfo { get; set; }
 
         [JsonProperty("id")]
-        private int Id { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("name")]
         public string CityName { get; set; }

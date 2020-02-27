@@ -1,4 +1,5 @@
 using System;
+using FluentAssertions;
 using Xunit;
 
 namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
@@ -11,13 +12,17 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         [InlineData("  ")]
         public void Constructor_IncorrectToken_ThrowsException(string token)
         {
-            Assert.Throws<ArgumentException>(() => new OpenWeatherMap.OpenWeatherMapApi(token));
+            Func<object> func = () => new OpenWeatherMap.OpenWeatherMapApi(token);
+            
+            func.Should().Throw<ArgumentException>();
         }
 
         [Fact]
         public void Constructor_CorrectToken_CreatesInstance()
         {
-            _ = new OpenWeatherMap.OpenWeatherMapApi("test_token");
+            Func<object> func = () => new OpenWeatherMap.OpenWeatherMapApi("test_token");
+            
+            func.Should().NotThrow();
         }
     }
 }

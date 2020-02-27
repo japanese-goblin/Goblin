@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Flurl.Http;
 using Flurl.Http.Testing;
 using Xunit;
@@ -16,18 +17,31 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         {
             using var http = new HttpTest();
             http.RespondWith(File.ReadAllText(DailyWeatherPath));
+            
             var weather = await Api.GetDailyWeatherAt(CorrectCity, _date);
 
-            Assert.NotNull(weather);
-            Assert.True(weather.UnixTime >= 0);
-            Assert.NotNull(weather.Temp);
-            Assert.True(weather.Pressure >= 0);
-            Assert.True(weather.Humidity >= 0);
-            Assert.NotEmpty(weather.Weather);
-            Assert.True(weather.WindSpeed >= 0);
-            Assert.True(weather.WindDeg >= 0 && weather.WindDeg <= 360);
-            Assert.True(weather.Cloudiness >= 0 && weather.Cloudiness <= 100);
-            Assert.NotEmpty(weather.ToString());
+            weather.Should().NotBeNull();
+            weather.Cloudiness.Should().Be(69);
+            weather.Humidity.Should().Be(73);
+            weather.Pressure.Should().BeApproximately(1018.89, 0.01F);
+            weather.Rain.Should().BeNull();
+            weather.Snow.Should().BeNull();
+            weather.Temperature.Should().NotBeNull();
+            weather.Temperature.Day.Should().BeApproximately(10.75F, 0.01F);
+            weather.Temperature.Evening.Should().BeApproximately(10.22F, 0.01F);
+            weather.Temperature.Max.Should().BeApproximately(11.74F, 0.01F);
+            weather.Temperature.Min.Should().BeApproximately(8.16F, 0.01F);
+            weather.Temperature.Morning.Should().BeApproximately(10.75F, 0.01F);
+            weather.Temperature.Night.Should().BeApproximately(8.16F, 0.01F);
+            weather.UnixTime.Should().Be(1569661200);
+            weather.Weather.Should().HaveCount(1);
+            weather.Weather[0].Icon.Should().Be("04d");
+            weather.Weather[0].Id.Should().Be(803);
+            weather.Weather[0].Main.Should().Be("Clouds");
+            weather.Weather[0].State.Should().Be("пасмурно");
+            weather.WindDeg.Should().Be(246);
+            weather.WindSpeed.Should().BeApproximately(1.99F, 0.01F);
+            weather.ToString().Should().NotBeEmpty();
         }
 
         [Fact]
@@ -35,8 +49,10 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         {
             using var http = new HttpTest();
             http.RespondWith(string.Empty, 404);
-            await Assert.ThrowsAsync<FlurlHttpException>(async () =>
-                                                                 await Api.GetDailyWeatherAt(IncorrectCity, _date));
+
+            Func<Task> func = async () => await Api.GetDailyWeatherAt(IncorrectCity, _date);
+
+            await func.Should().ThrowAsync<FlurlHttpException>();
         }
 
         [Fact]
@@ -44,8 +60,10 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         {
             using var http = new HttpTest();
             http.RespondWith(File.ReadAllText(DailyWeatherPath));
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
-                                                                await Api.GetDailyWeatherAt(CorrectCity, _date.AddDays(17)));
+
+            Func<Task> func = async () => await Api.GetDailyWeatherAt(IncorrectCity, _date.AddDays(17));
+
+            await func.Should().ThrowAsync<ArgumentException>();
         }
     }
 }

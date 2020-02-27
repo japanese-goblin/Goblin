@@ -2,7 +2,7 @@
 
 namespace Goblin.OpenWeatherMap.Models
 {
-    public class Coord
+    public class Coordinates
     {
         [JsonProperty("lon")]
         public double Longitude { get; set; }

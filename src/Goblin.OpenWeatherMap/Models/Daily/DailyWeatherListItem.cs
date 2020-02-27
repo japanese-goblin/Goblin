@@ -9,7 +9,7 @@ namespace Goblin.OpenWeatherMap.Models.Daily
         public long UnixTime { get; set; }
 
         [JsonProperty("temp")]
-        public Temp Temp { get; set; }
+        public Temperature Temperature { get; set; }
 
         [JsonProperty("pressure")]
         public double Pressure { get; set; }
@@ -39,12 +39,12 @@ namespace Goblin.OpenWeatherMap.Models.Daily
         {
             var strBuilder = new StringBuilder();
 
-            strBuilder.AppendFormat("Температура: от {0:+#;-#;0}°С до {1:+#;-#;0}°С", Temp.Min,
-                                    Temp.Max).AppendLine();
-            strBuilder.AppendFormat("Температура утром: {0:+#;-#;0}", Temp.Morning).AppendLine();
-            strBuilder.AppendFormat("Температура днем: {0:+#;-#;0}", Temp.Day).AppendLine();
-            strBuilder.AppendFormat("Температура вечером: {0:+#;-#;0}", Temp.Evening).AppendLine();
-            strBuilder.AppendFormat("Температура ночью: {0:+#;-#;0}", Temp.Night).AppendLine();
+            strBuilder.AppendFormat("Температура: от {0:+#;-#;0}°С до {1:+#;-#;0}°С", Temperature.Min,
+                                    Temperature.Max).AppendLine();
+            strBuilder.AppendFormat("Температура утром: {0:+#;-#;0}", Temperature.Morning).AppendLine();
+            strBuilder.AppendFormat("Температура днем: {0:+#;-#;0}", Temperature.Day).AppendLine();
+            strBuilder.AppendFormat("Температура вечером: {0:+#;-#;0}", Temperature.Evening).AppendLine();
+            strBuilder.AppendFormat("Температура ночью: {0:+#;-#;0}", Temperature.Night).AppendLine();
             strBuilder.AppendLine();
             strBuilder.AppendFormat("Описание погоды: {0}", Weather[0].State).AppendLine();
             strBuilder.AppendFormat("Влажность: {0}%", Humidity).AppendLine();
