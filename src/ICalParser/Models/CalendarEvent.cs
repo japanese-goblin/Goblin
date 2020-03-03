@@ -38,9 +38,7 @@ namespace ICalParser.Models
             Uid = ContentLines["UID"].Value;
             DtStart = DateTime.ParseExact(ContentLines["DTSTART"].Value, "yyyyMMddTHHmmssZ", CultureInfo.CurrentCulture);
             DtEnd = DateTime.ParseExact(ContentLines["DTEND"].Value, "yyyyMMddTHHmmssZ", CultureInfo.CurrentCulture);
-            Description = ContentLines["DESCRIPTION"].Value
-                                                     .Replace("\r\n\tn", "\n")
-                                                     .Replace("\r\n\t", string.Empty);
+            Description = ContentLines["DESCRIPTION"].Value;
             Location = ContentLines["LOCATION"].Value;
             Summary = ContentLines["SUMMARY"].Value;
         }

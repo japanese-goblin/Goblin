@@ -19,11 +19,13 @@ namespace ICalParser.Models
             Value = data[1];
         }
 
-        public static string UnfoldAndUnescape(string s)
+        private static string UnfoldAndUnescape(string s)
         {
-            var unfold = Regex.Replace(s, "(\\r\\n )", "");
+            var unfold = Regex.Replace(s, "(\\r\\n)", "");
             var unescaped = Regex.Unescape(unfold);
-            return unescaped;
+            
+            return unescaped.Replace("\tn", "\n")
+                            .Replace("\t", string.Empty);
         }
     }
 }
