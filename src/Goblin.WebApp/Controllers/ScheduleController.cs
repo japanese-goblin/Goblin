@@ -84,27 +84,29 @@ namespace Goblin.WebApp.Controllers
             for(var i = 0; i <= dif; i++)
             {
                 var day = first.AddDays(i);
-                if(day.DayOfWeek == DayOfWeek.Sunday)
+                if(day.DayOfWeek == DayOfWeek.Sunday) // по воскресениям пар нет
                 {
                     continue;
                 }
-
-                var temp = lessons.Where(x => x.StartTime.Date == day).ToArray();
-                if(temp.Any())
+            
+                var lessonsAtDay = lessons.Where(x => x.StartTime.Date == day).ToArray();
+                if(lessonsAtDay.Any())
                 {
-                    for(var j = 1; j <= temp.Max(x => x.Number); j++)
+                    var max = lessonsAtDay.Max(x => x.Number); // количество пар в этот день
+                    for(var lessonNumber = 1; lessonNumber <= max; lessonNumber++)
                     {
-                        if(temp.All(x => x.Number != j))
+                        if(!lessonsAtDay.Any(x => x.Number == lessonNumber)) // если нет пары под этим номером 
                         {
                             lessons.Add(new Lesson
                             {
                                 StartTime = day,
-                                Number = j
+                                Number = lessonNumber
                             });
                         }
                     }
                 }
-
+            
+                // добавление пустого дня в расписании
                 lessons.Add(new Lesson
                 {
                     StartTime = day,
@@ -112,7 +114,9 @@ namespace Goblin.WebApp.Controllers
                 });
             }
 
-            var dict = lessons.OrderBy(x => x.StartTime.Date).ThenBy(x => x.Number).GroupBy(x => x.StartTime.GetStartOfWeek());
+            var dict = lessons.OrderBy(x => x.StartTime.Date)
+                              .ThenBy(x => x.Number)
+                              .GroupBy(x => x.StartTime.GetStartOfWeek());
             return dict.ToDictionary(x =>
                                      {
                                          var start = x.First().StartTime.GetStartOfWeek();
