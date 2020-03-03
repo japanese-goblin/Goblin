@@ -21,19 +21,20 @@ namespace Goblin.Narfu.ViewModels
             }
 
             var strBuilder = new StringBuilder();
-            var grouped = exams.GroupBy(x => x.StartTime.Date);
+            var grouped = exams.GroupBy(x => x.Name);
 
             foreach(var group in grouped)
             {
-                strBuilder.AppendFormat("{0:D}:", group.Key).AppendLine();
-                foreach(var lesson in group)
-                {
-                    strBuilder.AppendFormat("{0} - {1} [{2}] ({3})",
-                                            lesson.StartEndTime, lesson.Name, lesson.Type, lesson.Teacher)
-                              .AppendLine()
-                              .AppendFormat("У группы {0}", lesson.Groups).AppendLine()
-                              .AppendFormat("В аудитории {0} ({1})", lesson.Auditory, lesson.Address).AppendLine();
-                }
+                var first = group.First();
+                var last = group.Last();
+                
+                strBuilder.AppendFormat("{0:D}:", first.StartTime).AppendLine();
+                
+                strBuilder.AppendFormat("{0:HH:mm}-{1:HH:mm} - {2} [{3}] ({4})",
+                                        first.StartTime, last.EndTime, first.Name, first.Type, first.Teacher)
+                          .AppendLine()
+                          .AppendFormat("У группы {0}", first.Groups).AppendLine()
+                          .AppendFormat("В аудитории {0} ({1})", first.Auditory, first.Address).AppendLine();
 
                 strBuilder.AppendLine();
             }
