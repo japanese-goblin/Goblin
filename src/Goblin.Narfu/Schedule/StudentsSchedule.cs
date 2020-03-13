@@ -48,12 +48,18 @@ namespace Goblin.Narfu.Schedule
             {
                 var description = ev.Description.Split('\n');
                 var address = ev.Location.Split('/');
+                
+                if(!int.TryParse(description[0][0].ToString(), out var number))
+                {
+                    number = 1; //в расписании бывают пары, у которых нет номера: п (11:46-11:59)
+                }
+                
                 return new Lesson
                 {
                     Id = ev.Uid,
                     Address = address[0],
                     Auditory = address[1],
-                    Number = int.Parse(description[0][0].ToString()),
+                    Number = number,
                     Groups = description[1].Substring(3),
                     Name = ev.Summary,
                     Type = description[3],
