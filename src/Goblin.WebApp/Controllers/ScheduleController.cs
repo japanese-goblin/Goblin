@@ -29,7 +29,7 @@ namespace Goblin.WebApp.Controllers
         }
 
         [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Client)]
-        public async Task<IActionResult> Show(int id)
+        public async Task<IActionResult> Show(int id, DateTime date)
         {
             if(!_narfuApi.Students.IsCorrectGroup(id))
             {
@@ -45,7 +45,7 @@ namespace Goblin.WebApp.Controllers
 
             try
             {
-                var lessons = (await _narfuApi.Students.GetSchedule(group.RealId)).ToList();
+                var lessons = (await _narfuApi.Students.GetSchedule(group.RealId, date)).ToList();
 
                 var scheduleLink = _narfuApi.Students.GenerateScheduleLink(group.RealId);
                 var webcalLink = _narfuApi.Students.GenerateScheduleLink(group.RealId, true);

@@ -26,15 +26,19 @@ namespace Goblin.Narfu.Schedule
             _logger = Log.ForContext<StudentsSchedule>();
         }
 
-        public async Task<IEnumerable<Lesson>> GetSchedule(int realGroupId)
+        public async Task<IEnumerable<Lesson>> GetSchedule(int realGroupId, DateTime date = default)
         {
+            if(date == default)
+            {
+                date = DateTime.Today;
+            }
             _logger.Debug("Получение расписания для группы {0}", realGroupId);
             var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
             var response = await RequestBuilder.Create()
                                                .SetQueryParam("icalendar")
                                                .SetQueryParam("oid", siteGroupId)
                                                .SetQueryParam("cod", realGroupId)
-                                               .SetQueryParam("from", DateTime.Today.ToString("dd.MM.yyyy"))
+                                               .SetQueryParam("from", date.ToString("dd.MM.yyyy"))
                                                .GetStringAsync();
             _logger.Debug("Расписание получено");
 
