@@ -12,7 +12,7 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
         public async Task GetExams_CorrectGroup_ReturnsLessons()
         {
             using var http = new HttpTest();
-            http.RespondWith(File.ReadAllText(StudentsSchedulePath));
+            http.RespondWith(await File.ReadAllTextAsync(StudentsSchedulePath));
 
             var exams = await Api.Students.GetExams(CorrectGroup);
             var str = exams.ToString();

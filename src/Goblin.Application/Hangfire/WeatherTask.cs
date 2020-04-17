@@ -18,7 +18,7 @@ namespace Goblin.Application.Hangfire
         private readonly BotDbContext _db;
         private readonly IVkApi _vkApi;
         private readonly OpenWeatherMapApi _weatherApi;
-        private ILogger _logger;
+        private readonly ILogger _logger;
 
         public WeatherTask(OpenWeatherMapApi weatherApi, BotDbContext db, IVkApi vkApi)
         {

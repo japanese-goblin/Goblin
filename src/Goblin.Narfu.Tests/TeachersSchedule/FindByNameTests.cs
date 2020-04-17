@@ -13,7 +13,7 @@ namespace Goblin.Narfu.Tests.TeachersSchedule
         public async Task FindByName_CorrectName_ReturnsTeachers()
         {
             using var http = new HttpTest();
-            http.RespondWith(File.ReadAllText(FindByNamePath));
+            http.RespondWith(await File.ReadAllTextAsync(FindByNamePath));
 
             var teachers = await Api.Teachers.FindByName("Абрамова");
             var first = teachers.First();

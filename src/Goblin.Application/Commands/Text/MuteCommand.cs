@@ -20,7 +20,7 @@ namespace Goblin.Application.Commands.Text
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
-            user = _db.BotUsers.Find(user.VkId);
+            user = await _db.BotUsers.FindAsync(user.VkId);
             user.SetErrorNotification(!user.IsErrorsEnabled);
             await _db.SaveChangesAsync();
             return new SuccessfulResult

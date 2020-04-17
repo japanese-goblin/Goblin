@@ -9,7 +9,7 @@ using Goblin.OpenWeatherMap;
 using Newtonsoft.Json;
 using VkNet.Model;
 
-namespace Goblin.Application.Commands.Merged
+namespace Goblin.Application.Commands.Keyboard
 {
     public class WeatherDailyCommand : IKeyboardCommand
     {

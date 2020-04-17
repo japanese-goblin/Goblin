@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Goblin.DataAccess.Migrations
+namespace Goblin.DataAccess.Migrations.BotDb
 {
     public partial class InitBot : Migration
     {

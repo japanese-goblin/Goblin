@@ -1,29 +1,29 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.DataAccess", "Goblin.DataAccess\Goblin.DataAccess.csproj", "{E5A01996-2EEC-4E2E-9E44-0084FD8D71CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.DataAccess", "Goblin.DataAccess\Goblin.DataAccess.csproj", "{E5A01996-2EEC-4E2E-9E44-0084FD8D71CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Domain", "Goblin.Domain\Goblin.Domain.csproj", "{AFED1A53-812F-420F-9223-2ED4FCEBD938}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.Domain", "Goblin.Domain\Goblin.Domain.csproj", "{AFED1A53-812F-420F-9223-2ED4FCEBD938}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Application", "Goblin.Application\Goblin.Application.csproj", "{3E9EC0CA-31BC-4636-9C16-DBBFA1F5B097}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.Application", "Goblin.Application\Goblin.Application.csproj", "{3E9EC0CA-31BC-4636-9C16-DBBFA1F5B097}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.OpenWeatherMap", "Goblin.OpenWeatherMap\Goblin.OpenWeatherMap.csproj", "{B2FDC55D-A919-44FC-A21A-F5C408BABA11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.OpenWeatherMap", "Goblin.OpenWeatherMap\Goblin.OpenWeatherMap.csproj", "{B2FDC55D-A919-44FC-A21A-F5C408BABA11}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Additions", "Additions", "{4FA84E51-26A7-47AB-A2AD-61EDE5C73555}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Narfu", "Goblin.Narfu\Goblin.Narfu.csproj", "{13BE5267-23FF-480F-98E6-B1A02EFE7B1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.Narfu", "Goblin.Narfu\Goblin.Narfu.csproj", "{13BE5267-23FF-480F-98E6-B1A02EFE7B1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.WebApp", "Goblin.WebApp\Goblin.WebApp.csproj", "{163F2A98-C35A-46BC-A769-6C9DD9822D4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.WebApp", "Goblin.WebApp\Goblin.WebApp.csproj", "{163F2A98-C35A-46BC-A769-6C9DD9822D4C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8C4DF9AB-BF9E-4534-A4F9-F8F38BF091AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.OpenWeatherMap.Tests", "Goblin.OpenWeatherMap.Tests\Goblin.OpenWeatherMap.Tests.csproj", "{C9232304-1BBB-4111-820D-7ED64D27A0B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.OpenWeatherMap.Tests", "Goblin.OpenWeatherMap.Tests\Goblin.OpenWeatherMap.Tests.csproj", "{C9232304-1BBB-4111-820D-7ED64D27A0B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Narfu.Tests", "Goblin.Narfu.Tests\Goblin.Narfu.Tests.csproj", "{5C112060-BC34-4C11-B338-D4F203EA2404}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.Narfu.Tests", "Goblin.Narfu.Tests\Goblin.Narfu.Tests.csproj", "{5C112060-BC34-4C11-B338-D4F203EA2404}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICalParser", "ICalParser\ICalParser.csproj", "{DBFB5FF6-F550-4A85-A0C3-0B632DF77907}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ICalParser", "ICalParser\ICalParser.csproj", "{DBFB5FF6-F550-4A85-A0C3-0B632DF77907}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +33,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E5A01996-2EEC-4E2E-9E44-0084FD8D71CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -147,11 +144,17 @@ Global
 		{DBFB5FF6-F550-4A85-A0C3-0B632DF77907}.Release|x86.ActiveCfg = Release|Any CPU
 		{DBFB5FF6-F550-4A85-A0C3-0B632DF77907}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B2FDC55D-A919-44FC-A21A-F5C408BABA11} = {4FA84E51-26A7-47AB-A2AD-61EDE5C73555}
 		{13BE5267-23FF-480F-98E6-B1A02EFE7B1E} = {4FA84E51-26A7-47AB-A2AD-61EDE5C73555}
 		{C9232304-1BBB-4111-820D-7ED64D27A0B1} = {8C4DF9AB-BF9E-4534-A4F9-F8F38BF091AE}
 		{5C112060-BC34-4C11-B338-D4F203EA2404} = {8C4DF9AB-BF9E-4534-A4F9-F8F38BF091AE}
 		{DBFB5FF6-F550-4A85-A0C3-0B632DF77907} = {4FA84E51-26A7-47AB-A2AD-61EDE5C73555}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D5B195CC-EFC0-44B0-84D1-1E7B5D0FBF5A}
 	EndGlobalSection
 EndGlobal

@@ -14,7 +14,7 @@ namespace Goblin.Narfu.Tests
         protected const int CorrectGroup = 271901;
         protected const int IncorrectGroup = 111111;
 
-        protected DateTime CorrectDate = new DateTime(2020, 01, 23, 16, 15, 0);
+        protected DateTime CorrectDate = new DateTime(2040, 01, 23, 16, 15, 0);
         protected DateTime IncorrectDate = new DateTime(2010, 01, 23, 16, 15, 0);
 
         protected const int CorrectTeacherId = 12345;

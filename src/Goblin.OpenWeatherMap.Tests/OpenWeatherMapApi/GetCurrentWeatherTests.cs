@@ -14,7 +14,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         public async Task GetCurrentWeather_CorrectCity_ReturnsModel()
         {
             using var http = new HttpTest();
-            http.RespondWith(File.ReadAllText(CurrentWeatherPath));
+            http.RespondWith(await File.ReadAllTextAsync(CurrentWeatherPath));
             
             var weather = await Api.GetCurrentWeather(CorrectCity);
 

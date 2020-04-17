@@ -61,7 +61,7 @@ namespace Goblin.Application.Commands.Text
                 return new FailedResult("Дата напоминания меньше текущей");
             }
 
-            _db.Reminds.Add(new Remind(user.VkId, all[2], dateTime));
+            await _db.Reminds.AddAsync(new Remind(user.VkId, all[2], dateTime));
             await _db.SaveChangesAsync();
 
             return new SuccessfulResult
@@ -70,7 +70,7 @@ namespace Goblin.Application.Commands.Text
             };
         }
 
-        private bool ParseTime(string date, string time, out DateTime dateTime)
+        private static bool ParseTime(string date, string time, out DateTime dateTime)
         {
             var isCorrect = DateTime.TryParseExact($"{date} {time}",
                                                    new[]

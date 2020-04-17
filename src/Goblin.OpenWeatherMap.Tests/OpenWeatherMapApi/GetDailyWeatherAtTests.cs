@@ -16,7 +16,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         public async Task GetDailyWeatherAt_CorrectCityAndDate_ReturnsModel()
         {
             using var http = new HttpTest();
-            http.RespondWith(File.ReadAllText(DailyWeatherPath));
+            http.RespondWith(await File.ReadAllTextAsync(DailyWeatherPath));
             
             var weather = await Api.GetDailyWeatherAt(CorrectCity, _date);
 
@@ -59,7 +59,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         public async Task GetDailyWeatherAt_IncorrectDate_ThrowsException()
         {
             using var http = new HttpTest();
-            http.RespondWith(File.ReadAllText(DailyWeatherPath));
+            http.RespondWith(await File.ReadAllTextAsync(DailyWeatherPath));
 
             Func<Task> func = async () => await Api.GetDailyWeatherAt(IncorrectCity, _date.AddDays(17));
 

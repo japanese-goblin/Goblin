@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Goblin.DataAccess.Migrations
+namespace Goblin.DataAccess.Migrations.BotDb
 {
     [DbContext(typeof(BotDbContext))]
     internal class BotDbContextModelSnapshot : ModelSnapshot

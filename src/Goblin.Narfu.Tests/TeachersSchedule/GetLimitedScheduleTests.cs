@@ -12,7 +12,7 @@ namespace Goblin.Narfu.Tests.TeachersSchedule
         public async Task GetLimitedSchedule_CorrectTeacherId_ReturnsLessons()
         {
             using var http = new HttpTest();
-            http.RespondWith(File.ReadAllText(TeachersSchedulePath));
+            http.RespondWith(await File.ReadAllTextAsync(TeachersSchedulePath));
 
             var lessons = await Api.Teachers.GetLimitedSchedule(CorrectGroup, 12);
             var str = lessons.ToString();

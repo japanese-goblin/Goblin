@@ -38,7 +38,7 @@ namespace Goblin.WebApp.Areas.Admin.Controllers
             var date = DateTime.Parse($"{dateStr} {time}");
             try
             {
-                _db.Reminds.Add(new Remind(peerId, text, date));
+                await _db.Reminds.AddAsync(new Remind(peerId, text, date));
                 await _db.SaveChangesAsync();
             }
             catch(Exception ex)

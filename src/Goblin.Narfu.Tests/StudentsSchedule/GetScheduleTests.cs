@@ -15,10 +15,10 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
         [Fact]
         public async Task GetSchedule_CorrectGroup_ReturnsLessons()
         {
-            var correctEndDate = new DateTime(2020, 01, 23, 14, 50, 0);
-            var correctStartDate = new DateTime(2020, 01, 23, 13, 15, 0);
+            var correctEndDate = new DateTime(2040, 01, 23, 14, 50, 0);
+            var correctStartDate = new DateTime(2040, 01, 23, 13, 15, 0);
             using var http = new HttpTest();
-            http.RespondWith(File.ReadAllText(StudentsSchedulePath));
+            http.RespondWith(await File.ReadAllTextAsync(StudentsSchedulePath));
 
             var lessons = await Api.Students.GetSchedule(CorrectGroup);
             var first = lessons.First();

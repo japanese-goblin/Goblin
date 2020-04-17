@@ -66,12 +66,12 @@ namespace Goblin.Application
 
         private async Task MessageNew(Message msg)
         {
-            var user = _db.BotUsers.Find(msg.FromId);
+            var user = await _db.BotUsers.FindAsync(msg.FromId);
             if(user is null)
             {
                 _logger.Debug("Пользователь с id {0} не найден. Создание записи.", msg.FromId);
-                user = _db.BotUsers.Add(new BotUser(msg.FromId.Value)).Entity;
-                _db.Subscribes.Add(new Subscribe(msg.FromId.Value, false, false));
+                user = (await _db.BotUsers.AddAsync(new BotUser(msg.FromId.Value))).Entity;
+                await _db.Subscribes.AddAsync(new Subscribe(msg.FromId.Value, false, false));
                 await _db.SaveChangesAsync();
                 _logger.Debug("Пользователь создан");
             }
@@ -84,7 +84,7 @@ namespace Goblin.Application
             {
                 if(result is CommandNotFoundResult && !user.IsErrorsEnabled)
                 {
-                    // если команда не найдена, и у юзера отключены ошибки
+                    // если команда не найдена, и у пользователя отключены ошибки
                     return;
                 }
 

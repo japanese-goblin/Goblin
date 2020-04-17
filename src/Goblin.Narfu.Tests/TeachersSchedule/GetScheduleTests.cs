@@ -16,7 +16,7 @@ namespace Goblin.Narfu.Tests.TeachersSchedule
         public async Task GetSchedule_CorrectId_ReturnsLessons()
         {
             using var http = new HttpTest();
-            http.RespondWith(File.ReadAllText(TeachersSchedulePath));
+            http.RespondWith(await File.ReadAllTextAsync(TeachersSchedulePath));
 
             var lessons = await Api.Teachers.GetSchedule(CorrectTeacherId);
 

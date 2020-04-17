@@ -33,12 +33,12 @@ namespace Goblin.Application.Commands.Text
             });
         }
 
-        private int GetRandom(int start, int end)
+        private static int GetRandom(int start, int end)
         {
             return new Random(DateTime.Now.Millisecond).Next(start, end);
         }
 
-        private string[] Split(string str)
+        private static string[] Split(string str)
         {
             return str.Split(new[] { ",", ", ", " или " }, StringSplitOptions.None);
         }

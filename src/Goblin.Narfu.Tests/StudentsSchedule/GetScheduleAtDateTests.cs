@@ -12,7 +12,7 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
         public async Task GetScheduleAtDate_CorrectGroupAndDate_ReturnsLessons()
         {
             using var http = new HttpTest();
-            http.RespondWith(File.ReadAllText(StudentsSchedulePath));
+            http.RespondWith(await File.ReadAllTextAsync(StudentsSchedulePath));
 
             var lessons = await Api.Students.GetScheduleAtDate(CorrectGroup, CorrectDate);
             var str = lessons.ToString();
@@ -29,7 +29,7 @@ namespace Goblin.Narfu.Tests.StudentsSchedule
         public async Task GetScheduleAtDate_IncorrectDate_ReturnsLessons()
         {
             using var http = new HttpTest();
-            http.RespondWith(File.ReadAllText(StudentsSchedulePath));
+            http.RespondWith(await File.ReadAllTextAsync(StudentsSchedulePath));
 
             var lessons = await Api.Students.GetScheduleAtDate(CorrectGroup, IncorrectDate);
             var str = lessons.ToString();

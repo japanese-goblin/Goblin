@@ -8,12 +8,12 @@ namespace Goblin.Narfu.ViewModels
 {
     public class LessonsViewModel
     {
-        protected readonly DateTime _date;
+        protected readonly DateTime Date;
         public IEnumerable<Lesson> Lessons { get; }
 
         public LessonsViewModel(IEnumerable<Lesson> lessons, DateTime date)
         {
-            _date = date;
+            Date = date;
             Lessons = lessons;
         }
 
@@ -21,13 +21,13 @@ namespace Goblin.Narfu.ViewModels
         {
             if(!Lessons.Any())
             {
-                return $"На {_date:dd.MM (dddd)} расписание отсутствует!";
+                return $"На {Date:dd.MM (dddd)} расписание отсутствует!";
             }
 
             var strBuilder = new StringBuilder();
-            strBuilder.AppendFormat("Расписание на {0:dd.MM (dddd)}:", _date).AppendLine();
+            strBuilder.AppendFormat("Расписание на {0:dd.MM (dddd)}:", Date).AppendLine();
 
-            foreach(var lesson in Lessons.Where(x => x.StartTime.Date == _date.Date))
+            foreach(var lesson in Lessons.Where(x => x.StartTime.Date == Date.Date))
             {
                 strBuilder.AppendFormat("{0} - {1} ({2}) [{3}]", lesson.StartEndTime, lesson.Name, lesson.Teacher, lesson.Type)
                           .AppendLine();

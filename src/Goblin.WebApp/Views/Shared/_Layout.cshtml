@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="~/css/site.min.css"/>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
     </environment>
-    @RenderSection("NarfuStyles", false)
+    @await RenderSectionAsync("NarfuStyles", false)
 </head>
 <body>
 <header>
@@ -61,6 +61,6 @@
         gtag('config', 'UA-138253436-2');
     </script>
 </environment>
-@RenderSection("Scripts", false)
+@await RenderSectionAsync("Scripts", false)
 </body>
 </html>
