@@ -1,4 +1,3 @@
-using System;
 using Goblin.Application;
 using Goblin.Application.Hangfire;
 using Goblin.DataAccess;
@@ -99,20 +98,7 @@ namespace Goblin.WebApp
                 endpoints.MapRazorPages();
             });
 
-            ConfigureHangfireJobs();
-        }
-
-        private void ConfigureHangfireJobs()
-        {
-            BackgroundJob.Enqueue<SendToConversationTasks>(x => x.Dummy());
-            RecurringJob.AddOrUpdate<SendRemindTask>("SendRemind", x => x.SendRemind(),
-                                                     Cron.Minutely, TimeZoneInfo.Local);
-            RecurringJob.AddOrUpdate<ScheduleTask>("SendDailySchedule", x => x.SendSchedule(),
-                                                   "05 6 * * 1-6", TimeZoneInfo.Local);
-            RecurringJob.AddOrUpdate<WeatherTask>("SendDailyWeather", x => x.SendDailyWeather(),
-                                                  "30 6 * * *", TimeZoneInfo.Local);
-
-            BackgroundJob.Enqueue<StartupTasks>(x => x.SendOldReminds());
+            BackgroundJob.Enqueue<StartupTasks>(x => x.ConfigureHangfire());
         }
     }
 }

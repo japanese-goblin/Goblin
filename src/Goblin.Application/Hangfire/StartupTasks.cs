@@ -2,7 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Extensions;
+using Goblin.Application.Options;
 using Goblin.DataAccess;
+using Hangfire;
+using Microsoft.Extensions.Options;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
@@ -12,11 +15,44 @@ namespace Goblin.Application.Hangfire
     {
         private readonly BotDbContext _db;
         private readonly IVkApi _vkApi;
+        private readonly IOptions<MailingOptions> _options;
 
-        public StartupTasks(BotDbContext db, IVkApi vkApi)
+        public StartupTasks(BotDbContext db, IVkApi vkApi, IOptions<MailingOptions> options)
         {
             _db = db;
             _vkApi = vkApi;
+            _options = options;
+        }
+
+        public void ConfigureHangfire()
+        {
+            ConfigureMailing();
+            
+            BackgroundJob.Enqueue<StartupTasks>(x => x.SendOldReminds());
+
+            BackgroundJob.Enqueue<SendToConversationTasks>(x => x.Dummy());
+            RecurringJob.AddOrUpdate<SendRemindTask>("SendRemind", x => x.SendRemind(),
+                                                     Cron.Minutely, TimeZoneInfo.Local);
+        }
+
+        private void ConfigureMailing()
+        {
+            var scheduleSettings = _options.Value.Schedule;
+            var weatherSettings = _options.Value.Weather;
+
+            if(scheduleSettings.IsEnabled)
+            {
+                var scheduleTime = $"{scheduleSettings.Minute} {scheduleSettings.Hour} * * 1-6";
+                RecurringJob.AddOrUpdate<ScheduleTask>("SendDailySchedule", x => x.SendSchedule(),
+                                                       scheduleTime, TimeZoneInfo.Local);
+            }
+
+            if(weatherSettings.IsEnabled)
+            {
+                var weatherTime = $"{weatherSettings.Minute} {weatherSettings.Hour} * * *";
+                RecurringJob.AddOrUpdate<WeatherTask>("SendDailyWeather", x => x.SendDailyWeather(),
+                                                      weatherTime, TimeZoneInfo.Local);
+            }
         }
 
         public async Task SendOldReminds()
