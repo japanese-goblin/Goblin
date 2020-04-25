@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace ICalParser.Models
 {
     public class CalendarEvent : IEquatable<CalendarEvent>
     {
-        private const string EventContentPattern = "BEGIN:VEVENT\\r\\n(.+)\\r\\nEND:VEVENT";
-        private const string ContentLinePattern = "(.+?):(.+?)(?=\\r\\n[A-Z]|$)";
-
-        private Dictionary<string, ContentLine> ContentLines { get; }
-
         public string Uid { get; }
         public DateTime DtStart { get; }
         public DateTime DtEnd { get; }
@@ -21,26 +13,18 @@ namespace ICalParser.Models
 
         public string Summary { get; }
 
-        public CalendarEvent(string source)
+        public CalendarEvent(string uid, DateTime start, DateTime end, string description, string location, string summary)
         {
-            var contentMatch = Regex.Match(source, EventContentPattern, RegexOptions.Singleline);
-            var content = contentMatch.Groups[1].ToString();
-            var matches = Regex.Matches(content, ContentLinePattern, RegexOptions.Singleline);
-
-            ContentLines = new Dictionary<string, ContentLine>();
-            foreach(Match match in matches)
-            {
-                var contentLineString = match.Groups[0].ToString();
-                var contentLine = new ContentLine(contentLineString);
-                ContentLines[contentLine.Name] = contentLine;
-            }
-
-            Uid = ContentLines["UID"].Value;
-            DtStart = DateTime.ParseExact(ContentLines["DTSTART"].Value, "yyyyMMddTHHmmssZ", CultureInfo.CurrentCulture);
-            DtEnd = DateTime.ParseExact(ContentLines["DTEND"].Value, "yyyyMMddTHHmmssZ", CultureInfo.CurrentCulture);
-            Description = ContentLines["DESCRIPTION"].Value;
-            Location = ContentLines["LOCATION"].Value;
-            Summary = ContentLines["SUMMARY"].Value;
+            Uid = uid;
+            DtStart = start;
+            DtEnd = end;
+            Description = description
+                          .Replace(Environment.NewLine, "\n")
+                          .Replace("\r\n", "\n")
+                          .Replace("\n\tn", "\n")
+                          .Replace("\n\t", string.Empty);
+            Location = location;
+            Summary = summary;
         }
 
         public bool Equals(CalendarEvent other)
