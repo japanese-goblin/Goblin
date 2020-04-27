@@ -17,10 +17,14 @@ namespace ICalParser.Models
 
         private static IDictionary<string, string> ParseVEventFields(string source)
         {
-            const string contentLinePattern = @"(?<field>.+?):(?<value>.+?)(?=\s[A-Z]|$)";
+            const string contentLinePattern = @"(?<field>.+?):(?<value>.+?)(?=\s[A-Z-]{3,}:|$)";
             const RegexOptions contentLineTRegexOptions = RegexOptions.Singleline;
 
-            source = Regex.Unescape(source);
+            source = Regex.Unescape(source)
+                          .Replace(Environment.NewLine, "\n")
+                          .Replace("\r\n", "\n")
+                          .Replace("\n\tn", "\n")
+                          .Replace("\n\t", string.Empty);
 
             var matches = Regex.Matches(source, contentLinePattern, contentLineTRegexOptions);
 
@@ -47,7 +51,6 @@ namespace ICalParser.Models
                 
                 var startDate = DateTime.ParseExact(field["DTSTART"], "yyyyMMddTHHmmssZ", CultureInfo.CurrentCulture);
                 var endDate = DateTime.ParseExact(field["DTEND"], "yyyyMMddTHHmmssZ", CultureInfo.CurrentCulture);
-                
                 yield return new CalendarEvent(field["UID"], startDate, endDate, field["DESCRIPTION"],
                                                field["LOCATION"], field["SUMMARY"]);
             }

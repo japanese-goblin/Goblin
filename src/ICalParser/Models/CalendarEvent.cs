@@ -18,11 +18,7 @@ namespace ICalParser.Models
             Uid = uid;
             DtStart = start;
             DtEnd = end;
-            Description = description
-                          .Replace(Environment.NewLine, "\n")
-                          .Replace("\r\n", "\n")
-                          .Replace("\n\tn", "\n")
-                          .Replace("\n\t", string.Empty);
+            Description = description;
             Location = location;
             Summary = summary;
         }
