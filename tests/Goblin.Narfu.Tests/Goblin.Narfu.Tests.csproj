@@ -15,10 +15,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Goblin.Narfu\Goblin.Narfu.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="TestData\StudentsSchedule.ics">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
@@ -28,6 +24,10 @@
       <None Update="TestData\FindTeacher.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Goblin.Narfu\Goblin.Narfu.csproj" />
     </ItemGroup>
 
 </Project>
