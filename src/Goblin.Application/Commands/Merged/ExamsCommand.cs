@@ -6,18 +6,21 @@ using Goblin.Domain.Entities;
 using Goblin.Narfu;
 using VkNet.Model;
 
-namespace Goblin.Application.Commands.Keyboard
+namespace Goblin.Application.Commands.Merged
 {
-    public class ExamsCommand : IKeyboardCommand
+    public class ExamsCommand : IKeyboardCommand, ITextCommand
     {
+        public string Trigger => "exams";
+
+        public bool IsAdminCommand => false;
+        public string[] Aliases => new[] { "экзамены", "экзы" };
+
         private readonly NarfuApi _api;
 
         public ExamsCommand(NarfuApi api)
         {
             _api = api;
         }
-
-        public string Trigger => "exams";
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {

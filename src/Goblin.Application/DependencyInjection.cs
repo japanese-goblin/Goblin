@@ -65,7 +65,6 @@ namespace Goblin.Application
             services.AddScoped<IKeyboardCommand, MailingCommand>();
             services.AddScoped<IKeyboardCommand, TeacherScheduleCommand>();
             services.AddScoped<IKeyboardCommand, GetRemindsCommand>();
-            services.AddScoped<IKeyboardCommand, ExamsCommand>();
             services.AddScoped<IKeyboardCommand, WeatherDailyCommand>();
 
             services.AddScoped<IKeyboardCommand, HelpCommand>();
@@ -74,6 +73,8 @@ namespace Goblin.Application
             services.AddScoped<ITextCommand, WeatherNowCommand>();
             services.AddScoped<IKeyboardCommand, StartCommand>();
             services.AddScoped<ITextCommand, StartCommand>();
+            services.AddScoped<IKeyboardCommand, ExamsCommand>();
+            services.AddScoped<ITextCommand, ExamsCommand>();
 
             services.AddScoped<CommandsService>();
             services.AddScoped<CallbackHandler>();
