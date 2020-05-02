@@ -13,6 +13,7 @@ namespace Goblin.Application.Commands.Keyboard
 {
     public class MailingCommand : IKeyboardCommand
     {
+        public string Trigger => "mailing";
         private readonly BotDbContext _db;
 
         public MailingCommand(BotDbContext db)
@@ -20,10 +21,10 @@ namespace Goblin.Application.Commands.Keyboard
             _db = db;
         }
 
-        public string Trigger => "mailing";
-
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
+            const string success = "Успешно.";
+            
             user = await _db.BotUsers.FindAsync(user.VkId);
             var choose = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
             var isSchedule = user.SubscribeInfo.IsSchedule;
@@ -39,7 +40,7 @@ namespace Goblin.Application.Commands.Keyboard
                 await _db.SaveChangesAsync();
                 return new SuccessfulResult
                 {
-                    Message = "Успешно."
+                    Message = success
                 };
             }
 
@@ -54,7 +55,7 @@ namespace Goblin.Application.Commands.Keyboard
                 await _db.SaveChangesAsync();
                 return new SuccessfulResult
                 {
-                    Message = "Успешно."
+                    Message = success
                 };
             }
 

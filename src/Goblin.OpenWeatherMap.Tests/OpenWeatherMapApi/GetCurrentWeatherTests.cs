@@ -15,7 +15,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         {
             using var http = new HttpTest();
             http.RespondWith(await File.ReadAllTextAsync(CurrentWeatherPath));
-            
+
             var weather = await Api.GetCurrentWeather(CorrectCity);
 
             weather.Should().NotBeNull();
@@ -58,7 +58,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         {
             using var http = new HttpTest();
             http.RespondWith(string.Empty, 404);
-            
+
             Func<Task> func = async () => await Api.GetCurrentWeather(IncorrectCity);
 
             await func.Should().ThrowAsync<FlurlHttpException>();

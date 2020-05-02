@@ -27,9 +27,9 @@ namespace Goblin.Narfu.ViewModels
             {
                 var first = group.First();
                 var last = group.Last();
-                
+
                 strBuilder.AppendFormat("{0:D}:", first.StartTime).AppendLine();
-                
+
                 strBuilder.AppendFormat("{0:HH:mm}-{1:HH:mm} - {2} [{3}] ({4})",
                                         first.StartTime, last.EndTime, first.Name, first.Type, first.Teacher)
                           .AppendLine()

@@ -17,7 +17,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         {
             using var http = new HttpTest();
             http.RespondWith(await File.ReadAllTextAsync(DailyWeatherPath));
-            
+
             var weather = await Api.GetDailyWeatherAt(CorrectCity, _date);
 
             weather.Should().NotBeNull();

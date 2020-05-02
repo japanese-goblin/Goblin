@@ -14,6 +14,9 @@ namespace Goblin.Application.Commands.Text
 {
     public class SetDataCommand : ITextCommand
     {
+        public bool IsAdminCommand => false;
+
+        public string[] Aliases => new[] { "установить" };
         private readonly BotDbContext _db;
         private readonly NarfuApi _narfu;
         private readonly OpenWeatherMapApi _weather;
@@ -24,10 +27,6 @@ namespace Goblin.Application.Commands.Text
             _weather = weather;
             _narfu = narfu;
         }
-
-        public bool IsAdminCommand => false;
-
-        public string[] Aliases => new[] { "установить" };
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {

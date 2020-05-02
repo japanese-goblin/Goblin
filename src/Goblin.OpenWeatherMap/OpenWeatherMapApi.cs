@@ -10,8 +10,8 @@ namespace Goblin.OpenWeatherMap
 {
     public class OpenWeatherMapApi
     {
-        private readonly string _token;
         private readonly ILogger _logger;
+        private readonly string _token;
 
         public OpenWeatherMapApi(string token)
         {

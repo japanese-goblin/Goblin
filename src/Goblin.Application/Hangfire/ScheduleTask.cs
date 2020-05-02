@@ -16,9 +16,9 @@ namespace Goblin.Application.Hangfire
     public class ScheduleTask
     {
         private readonly BotDbContext _db;
+        private readonly ILogger _logger;
         private readonly NarfuApi _narfuApi;
         private readonly IVkApi _vkApi;
-        private readonly ILogger _logger;
 
         public ScheduleTask(NarfuApi narfuApi, BotDbContext db, IVkApi vkApi)
         {

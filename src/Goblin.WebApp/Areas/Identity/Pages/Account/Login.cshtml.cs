@@ -12,19 +12,19 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-
-        public LoginModel(SignInManager<IdentityUser> signInManager)
-        {
-            _signInManager = signInManager;
-        }
-
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
         public string ReturnUrl { get; set; }
 
         [TempData]
         public string ErrorMessage { get; set; }
+
+        private readonly SignInManager<IdentityUser> _signInManager;
+
+        public LoginModel(SignInManager<IdentityUser> signInManager)
+        {
+            _signInManager = signInManager;
+        }
 
         public async Task OnGetAsync(string returnUrl = null)
         {

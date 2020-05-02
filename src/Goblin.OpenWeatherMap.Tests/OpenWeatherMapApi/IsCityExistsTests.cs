@@ -12,7 +12,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         {
             using var http = new HttpTest();
             http.RespondWith(string.Empty);
-            
+
             var isExists = await Api.IsCityExists(CorrectCity);
 
             isExists.Should().BeTrue();
@@ -23,7 +23,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         {
             using var http = new HttpTest();
             http.RespondWith(string.Empty, 404);
-            
+
             var isExists = await Api.IsCityExists(IncorrectCity);
 
             isExists.Should().BeFalse();

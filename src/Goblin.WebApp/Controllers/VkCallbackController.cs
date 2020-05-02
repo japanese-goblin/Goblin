@@ -14,13 +14,13 @@ namespace Goblin.WebApp.Controllers
     [Route("/api/callback")]
     public class VkCallbackController : ControllerBase
     {
-        private readonly IOptions<VkOptions> _vkOptions;
         private readonly CallbackHandler _handler;
+        private readonly VkOptions _vkOptions;
 
         public VkCallbackController(CallbackHandler handler, IOptions<VkOptions> vkOptions)
         {
             _handler = handler;
-            _vkOptions = vkOptions;
+            _vkOptions = vkOptions.Value;
         }
 
         [HttpPost]
@@ -29,7 +29,7 @@ namespace Goblin.WebApp.Controllers
             var response = GroupUpdate.FromJson(new VkResponse(JToken.FromObject(update)));
             if(response.Type == GroupUpdateType.Confirmation)
             {
-                return _vkOptions.Value.ConfirmationCode;
+                return _vkOptions.ConfirmationCode;
             }
 
             BackgroundJob.Enqueue(() => _handler.Handle(response));

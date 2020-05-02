@@ -21,23 +21,23 @@ namespace Goblin.Application
     public class CallbackHandler
     {
         private readonly BotDbContext _db;
+        private readonly ILogger _logger;
+        private readonly VkOptions _options;
         private readonly CommandsService _service;
         private readonly IVkApi _vkApi;
-        private readonly IOptions<VkOptions> _options;
-        private readonly ILogger _logger;
 
         public CallbackHandler(CommandsService service, BotDbContext db, IVkApi vkApi, IOptions<VkOptions> options)
         {
             _service = service;
             _db = db;
             _vkApi = vkApi;
-            _options = options;
+            _options = options.Value;
             _logger = Log.ForContext<CallbackHandler>();
         }
 
         public async Task Handle(GroupUpdate upd)
         {
-            if(upd.Secret != _options.Value.SecretKey)
+            if(upd.Secret != _options.SecretKey)
             {
                 _logger.Warning("Пришло событие с неправильным секретным ключом ({0})", upd.Secret);
                 return;
@@ -62,6 +62,7 @@ namespace Goblin.Application
                 _logger.Fatal("Обработчик для события {0} не найден", upd.Type);
                 throw new ArgumentOutOfRangeException(nameof(upd.Type), "Отсутствует обработчик события");
             }
+            _logger.Information("Обработка события {0} завершена", upd.Type);
         }
 
         private async Task MessageNew(Message msg)
@@ -78,7 +79,8 @@ namespace Goblin.Application
 
             _logger.Debug("Обработка сообщения");
             var result = await _service.ExecuteCommand(msg, user);
-            _logger.Debug("Сообщение обработано");
+            _logger.Information("Обработка сообщения завершена");
+            _logger.Debug("Отправка сообщения");
 
             if(result is FailedResult failed)
             {
@@ -101,10 +103,15 @@ namespace Goblin.Application
                     PeerId = msg.PeerId.Value
                 });
             }
+            _logger.Information("Отправка сообщения завершена");
         }
 
         public async Task GroupLeave(GroupLeave leave)
         {
+            const string groupLeaveMessage = "Очень жаль, что ты решил отписаться от группы 😢\n" +
+                                             "Если тебе что-то не понравилось или ты не разобрался с ботом, то всегда можешь написать " +
+                                             "администрации об этом через команду 'админ *сообщение*' (подробнее смотри в справке).";
+            
             _logger.Information("Пользователь id{0} покинул группу", leave.UserId);
             var admins = _db.BotUsers.Where(x => x.IsAdmin).Select(x => x.VkId);
             var vkUser = (await _vkApi.Users.GetAsync(new[] { leave.UserId.Value })).First();
@@ -121,9 +128,7 @@ namespace Goblin.Application
                 {
                     await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                     {
-                        Message = "Очень жаль, что ты решил отписаться от группы 😢\n" +
-                                  "Если тебе что-то не понравилось или ты не разобрался с ботом, то всегда можешь написать " +
-                                  "администрации об этом через команду 'админ *сообщение*' (подробнее смотри в справке).",
+                        Message = groupLeaveMessage,
                         PeerId = leave.UserId.Value
                     });
                 }
@@ -136,6 +141,10 @@ namespace Goblin.Application
 
         public async Task GroupJoin(GroupJoin join)
         {
+            const string groupJoinMessage = "Спасибо за подписку! ❤\n" +
+                                            "Если у тебя возникнут вопросы, то ты всегда можешь связаться с администрацией бота " +
+                                            "при помощи команды 'админ *сообщение*' (подробнее смотри в справке)";
+            
             _logger.Information("Пользователь id{0} вступил в группу", join.UserId);
             var admins = _db.BotUsers.Where(x => x.IsAdmin).Select(x => x.VkId);
             var vkUser = (await _vkApi.Users.GetAsync(new[] { join.UserId.Value })).First();
@@ -152,9 +161,7 @@ namespace Goblin.Application
                 {
                     await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                     {
-                        Message = "Спасибо за подписку! ❤\n" +
-                                  "Если у тебя возникнут вопросы, то ты всегда можешь связаться с администрацией бота " +
-                                  "при помощи команды 'админ *сообщение*' (подробнее смотри в справке)",
+                        Message = groupJoinMessage,
                         PeerId = join.UserId.Value
                     });
                 }

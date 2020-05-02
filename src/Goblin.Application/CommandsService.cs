@@ -15,8 +15,8 @@ namespace Goblin.Application
     public class CommandsService
     {
         private readonly IEnumerable<IKeyboardCommand> _keyboardCommands;
-        private readonly IEnumerable<ITextCommand> _textCommands;
         private readonly ILogger _logger;
+        private readonly IEnumerable<ITextCommand> _textCommands;
 
         public CommandsService(IEnumerable<ITextCommand> textCommands,
                                IEnumerable<IKeyboardCommand> keyboardCommands)

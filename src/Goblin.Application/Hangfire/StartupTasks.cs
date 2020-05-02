@@ -14,20 +14,20 @@ namespace Goblin.Application.Hangfire
     public class StartupTasks
     {
         private readonly BotDbContext _db;
+        private readonly MailingOptions _options;
         private readonly IVkApi _vkApi;
-        private readonly IOptions<MailingOptions> _options;
 
         public StartupTasks(BotDbContext db, IVkApi vkApi, IOptions<MailingOptions> options)
         {
             _db = db;
             _vkApi = vkApi;
-            _options = options;
+            _options = options.Value;
         }
 
         public void ConfigureHangfire()
         {
             ConfigureMailing();
-            
+
             BackgroundJob.Enqueue<StartupTasks>(x => x.SendOldReminds());
 
             BackgroundJob.Enqueue<SendToConversationTasks>(x => x.Dummy());
@@ -37,8 +37,8 @@ namespace Goblin.Application.Hangfire
 
         private void ConfigureMailing()
         {
-            var scheduleSettings = _options.Value.Schedule;
-            var weatherSettings = _options.Value.Weather;
+            var scheduleSettings = _options.Schedule;
+            var weatherSettings = _options.Weather;
 
             if(scheduleSettings.IsEnabled)
             {

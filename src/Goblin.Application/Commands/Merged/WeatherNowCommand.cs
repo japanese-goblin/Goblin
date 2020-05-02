@@ -43,8 +43,7 @@ namespace Goblin.Application.Commands.Merged
 
             if(string.IsNullOrWhiteSpace(user.WeatherCity) && string.IsNullOrWhiteSpace(city))
             {
-                const string text = "Для получения погоды установите город (нужно написать следующее - установить город Москва).";
-                return new FailedResult(text);
+                return new FailedResult(DefaultErrors.CityNotSet);
             }
 
             if(!string.IsNullOrWhiteSpace(city))
@@ -59,7 +58,7 @@ namespace Goblin.Application.Commands.Merged
         {
             if(string.IsNullOrWhiteSpace(user.WeatherCity))
             {
-                return new FailedResult("Для получения погоды установите город (нужно написать следующее - установить город Москва).");
+                return new FailedResult(DefaultErrors.CityNotSet);
             }
 
             return await _api.GetCurrentWeatherWithResult(user.WeatherCity);

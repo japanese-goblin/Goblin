@@ -14,15 +14,15 @@ namespace Goblin.Application.Commands.Text
     public class AddRemindCommand : ITextCommand
     {
         private const int MaxRemindsCount = 8;
+
+        public bool IsAdminCommand => false;
+        public string[] Aliases => new[] { "напомни" };
         private readonly BotDbContext _db;
 
         public AddRemindCommand(BotDbContext db)
         {
             _db = db;
         }
-
-        public bool IsAdminCommand => false;
-        public string[] Aliases => new[] { "напомни" };
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {

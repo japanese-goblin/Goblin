@@ -48,7 +48,7 @@ namespace ICalParser.Models
             foreach(Match match in contentMatch)
             {
                 var field = ParseVEventFields(match.Groups["vevent"].ToString());
-                
+
                 var startDate = DateTime.ParseExact(field["DTSTART"], "yyyyMMddTHHmmssZ", CultureInfo.CurrentCulture);
                 var endDate = DateTime.ParseExact(field["DTEND"], "yyyyMMddTHHmmssZ", CultureInfo.CurrentCulture);
                 yield return new CalendarEvent(field["UID"], startDate, endDate, field["DESCRIPTION"],

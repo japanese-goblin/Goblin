@@ -15,8 +15,8 @@ namespace Goblin.WebApp
 {
     public class Startup
     {
-        private readonly IWebHostEnvironment _env;
         private IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment _env;
 
         public Startup(IWebHostEnvironment env)
         {
@@ -43,7 +43,7 @@ namespace Goblin.WebApp
             services.AddApplication(Configuration);
 
             services.AddAuth(Configuration);
-            
+
             if(_env.IsDevelopment())
             {
                 services.AddControllersWithViews()
@@ -55,7 +55,7 @@ namespace Goblin.WebApp
                 services.AddControllersWithViews()
                         .AddNewtonsoftJson();
             }
-            
+
             services.AddRazorPages();
         }
 

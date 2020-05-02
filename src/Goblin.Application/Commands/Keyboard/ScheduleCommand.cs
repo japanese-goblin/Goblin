@@ -13,14 +13,13 @@ namespace Goblin.Application.Commands.Keyboard
 {
     public class ScheduleCommand : IKeyboardCommand
     {
+        public string Trigger => "schedule";
         private readonly NarfuApi _api;
 
         public ScheduleCommand(NarfuApi api)
         {
             _api = api;
         }
-
-        public string Trigger => "schedule";
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {

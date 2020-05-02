@@ -10,8 +10,8 @@ namespace Goblin.Application.Hangfire
 {
     public class SendRemindTask
     {
-        private readonly IVkApi _vkApi;
         private readonly BotDbContext _db;
+        private readonly IVkApi _vkApi;
 
         public SendRemindTask(IVkApi vkApi, BotDbContext db)
         {

@@ -8,8 +8,8 @@ namespace Goblin.Narfu.ViewModels
 {
     public class LessonsViewModel
     {
-        protected readonly DateTime Date;
         public IEnumerable<Lesson> Lessons { get; }
+        protected readonly DateTime Date;
 
         public LessonsViewModel(IEnumerable<Lesson> lessons, DateTime date)
         {

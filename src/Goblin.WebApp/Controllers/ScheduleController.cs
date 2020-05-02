@@ -88,7 +88,7 @@ namespace Goblin.WebApp.Controllers
                 {
                     continue;
                 }
-            
+
                 var lessonsAtDay = lessons.Where(x => x.StartTime.Date == day).ToArray();
                 if(lessonsAtDay.Any())
                 {
@@ -105,7 +105,7 @@ namespace Goblin.WebApp.Controllers
                         }
                     }
                 }
-            
+
                 // добавление пустого дня в расписании
                 lessons.Add(new Lesson
                 {

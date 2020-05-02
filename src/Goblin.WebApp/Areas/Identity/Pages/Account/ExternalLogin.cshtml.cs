@@ -5,27 +5,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Goblin.WebApp.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly ILogger<ExternalLoginModel> _logger;
-
-        public ExternalLoginModel(
-                SignInManager<IdentityUser> signInManager,
-                UserManager<IdentityUser> userManager,
-                ILogger<ExternalLoginModel> logger)
-        {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _logger = logger;
-        }
-
         [BindProperty]
         public InputModel Input { get; set; }
 
@@ -36,11 +22,17 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account
         [TempData]
         public string ErrorMessage { get; set; }
 
-        public class InputModel
+        private readonly ILogger _logger;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public ExternalLoginModel(
+                SignInManager<IdentityUser> signInManager,
+                UserManager<IdentityUser> userManager)
         {
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _logger = Log.ForContext<ExternalLoginModel>();
         }
 
         public IActionResult OnGetAsync()
@@ -77,7 +69,7 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account
                     await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false, true);
             if(result.Succeeded)
             {
-                _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name,
+                _logger.Information("{0} logged in with {1} provider.", info.Principal.Identity.Name,
                                        info.LoginProvider);
                 return LocalRedirect(returnUrl);
             }
@@ -99,7 +91,7 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account
                     if(loginResult.Succeeded)
                     {
                         await _signInManager.SignInAsync(user, false);
-                        _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                        _logger.Information("User created an account using {0} provider.", info.LoginProvider);
                         return LocalRedirect(returnUrl);
                     }
                 }
@@ -130,7 +122,7 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account
                     if(result.Succeeded)
                     {
                         await _signInManager.SignInAsync(user, false);
-                        _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                        _logger.Information("User created an account using {0} provider.", info.LoginProvider);
                         return LocalRedirect(returnUrl);
                     }
                 }
@@ -144,6 +136,13 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account
             LoginProvider = info.LoginProvider;
             ReturnUrl = returnUrl;
             return Page();
+        }
+
+        public class InputModel
+        {
+            [Required]
+            [EmailAddress]
+            public string Email { get; set; }
         }
     }
 }

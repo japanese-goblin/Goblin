@@ -9,9 +9,9 @@ namespace Goblin.Application.Commands.Text
 {
     public class MuteCommand : ITextCommand
     {
-        private readonly BotDbContext _db;
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "мут" };
+        private readonly BotDbContext _db;
 
         public MuteCommand(BotDbContext db)
         {

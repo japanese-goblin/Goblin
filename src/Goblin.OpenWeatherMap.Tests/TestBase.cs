@@ -6,11 +6,11 @@ namespace Goblin.OpenWeatherMap.Tests
     {
         private const string DefaultPath = "TestData";
 
-        protected string CurrentWeatherPath => Path.Combine(DefaultPath, "current_weather.json");
-        protected string DailyWeatherPath => Path.Combine(DefaultPath, "daily_weather.json");
-
         protected const string CorrectCity = "Moscow";
         protected const string IncorrectCity = "City17";
+
+        protected string CurrentWeatherPath => Path.Combine(DefaultPath, "current_weather.json");
+        protected string DailyWeatherPath => Path.Combine(DefaultPath, "daily_weather.json");
 
         protected OpenWeatherMap.OpenWeatherMapApi Api => new OpenWeatherMap.OpenWeatherMapApi("test_token");
     }

@@ -9,17 +9,6 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
-
-        public IndexModel(
-                UserManager<IdentityUser> userManager,
-                SignInManager<IdentityUser> signInManager)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-        }
-
         [Display(Name = "Имя пользователя")]
         public string Username { get; set; }
 
@@ -31,15 +20,15 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account.Manage
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public class InputModel
-        {
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
 
-            [Phone]
-            [Display(Name = "Номер телефона")]
-            public string PhoneNumber { get; set; }
+        public IndexModel(
+                UserManager<IdentityUser> userManager,
+                SignInManager<IdentityUser> signInManager)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -107,6 +96,17 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account.Manage
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Ваш профиль успешно обновлен!";
             return RedirectToPage();
+        }
+
+        public class InputModel
+        {
+            [Required]
+            [EmailAddress]
+            public string Email { get; set; }
+
+            [Phone]
+            [Display(Name = "Номер телефона")]
+            public string PhoneNumber { get; set; }
         }
     }
 }

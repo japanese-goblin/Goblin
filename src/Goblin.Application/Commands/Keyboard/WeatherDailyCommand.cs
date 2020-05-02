@@ -13,14 +13,13 @@ namespace Goblin.Application.Commands.Keyboard
 {
     public class WeatherDailyCommand : IKeyboardCommand
     {
+        public string Trigger => "weatherDaily";
         private readonly OpenWeatherMapApi _api;
 
         public WeatherDailyCommand(OpenWeatherMapApi api)
         {
             _api = api;
         }
-
-        public string Trigger => "weatherDaily";
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
