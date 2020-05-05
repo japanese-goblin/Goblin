@@ -2,7 +2,9 @@ using System.Globalization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Sentry;
 using Serilog;
+using Serilog.Events;
 
 namespace Goblin.WebApp
 {
@@ -30,7 +32,14 @@ namespace Goblin.WebApp
                        .UseSerilog((hostingContext, loggerConfiguration) =>
                        {
                            loggerConfiguration
-                                   .ReadFrom.Configuration(hostingContext.Configuration);
+                                   .ReadFrom.Configuration(hostingContext.Configuration)
+                                   .WriteTo.Sentry(o =>
+                                   {
+                                       o.MinimumBreadcrumbLevel = LogEventLevel.Information;
+                                       o.MinimumEventLevel = LogEventLevel.Warning;
+                                       o.Dsn = new Dsn(hostingContext.Configuration["Sentry:Dsn"]);
+                                       o.Environment = hostingContext.HostingEnvironment.EnvironmentName;
+                                   });
                        })
                        .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
         }
