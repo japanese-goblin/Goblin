@@ -75,11 +75,13 @@ namespace Goblin.Application
             var record = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload).FirstOrDefault();
             foreach(var command in _keyboardCommands)
             {
-                if(record.Key.Contains(command.Trigger))
+                if(!record.Key.Contains(command.Trigger))
                 {
-                    _logger.Debug("Выполнение команды с клавиатуры {0}", command.GetType());
-                    return await command.Execute(msg, user);
+                    continue;
                 }
+
+                _logger.Debug("Выполнение команды с клавиатуры {0}", command.GetType());
+                return await command.Execute(msg, user);
             }
 
             return new CommandNotFoundResult();

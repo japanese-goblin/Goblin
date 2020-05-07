@@ -19,12 +19,16 @@ namespace Goblin.Application
     {
         public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddVkApi(configuration);
-            services.AddBotFeatures();
-            services.AddOptions(configuration);
+            AddVkApi(services, configuration);
+            AddBotFeatures(services);
+            AddOptions(services, configuration);
+            AddAdditions(services, configuration);
 
             services.AddHangfire(config => { config.UseMemoryStorage(); });
+        }
 
+        private static void AddAdditions(IServiceCollection services, IConfiguration configuration)
+        {
             services.AddSingleton(x =>
             {
                 var api = new OpenWeatherMapApi(configuration["OWM:AccessToken"]);
@@ -33,7 +37,7 @@ namespace Goblin.Application
             services.AddSingleton<NarfuApi>();
         }
 
-        private static void AddVkApi(this IServiceCollection services, IConfiguration configuration)
+        private static void AddVkApi(IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IVkApi, VkApi>(x =>
             {
@@ -47,7 +51,7 @@ namespace Goblin.Application
             });
         }
 
-        private static void AddBotFeatures(this IServiceCollection services)
+        private static void AddBotFeatures(IServiceCollection services)
         {
             services.AddScoped<ITextCommand, DebugCommand>();
             services.AddScoped<ITextCommand, SetDataCommand>();
@@ -80,7 +84,7 @@ namespace Goblin.Application
             services.AddScoped<CallbackHandler>();
         }
 
-        private static void AddOptions(this IServiceCollection services, IConfiguration config)
+        private static void AddOptions(IServiceCollection services, IConfiguration config)
         {
             services.Configure<VkOptions>(config.GetSection("Vk"));
             services.Configure<VkAuthOptions>(config.GetSection("VkAuth"));

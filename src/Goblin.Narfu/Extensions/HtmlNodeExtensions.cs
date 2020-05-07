@@ -9,7 +9,7 @@ namespace Goblin.Narfu.Extensions
         {
             return WebUtility.HtmlDecode(node.InnerText
                                              .Trim()
-                                             .Replace("\n", ""));
+                                             .Replace("\n", string.Empty));
         }
     }
 }

@@ -22,13 +22,13 @@ namespace Goblin.WebApp.Controllers
             _narfuApi = narfuApi;
         }
 
-        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client)]
+        [ResponseCache(Duration = 60 * 60, Location = ResponseCacheLocation.Client)]
         public IActionResult Index()
         {
             return View();
         }
 
-        [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Client)]
+        [ResponseCache(Duration = 60 * 10, Location = ResponseCacheLocation.Client)]
         public async Task<IActionResult> Show(int id, DateTime date)
         {
             if(!_narfuApi.Students.IsCorrectGroup(id))
@@ -45,14 +45,14 @@ namespace Goblin.WebApp.Controllers
 
             try
             {
-                var lessons = (await _narfuApi.Students.GetSchedule(group.RealId, date)).ToList();
+                var lessons = await _narfuApi.Students.GetSchedule(group.RealId, date);
 
                 var scheduleLink = _narfuApi.Students.GenerateScheduleLink(group.RealId);
                 var webcalLink = _narfuApi.Students.GenerateScheduleLink(group.RealId, true);
 
                 return View(new LessonsViewModel
                 {
-                    Lessons = MagicWithLessons(lessons),
+                    Lessons = MagicWithLessons(lessons.ToList()),
                     GroupTitle = $"{group.RealId} - {group.Name}",
                     ScheduleLink = scheduleLink,
                     WebcalLink = webcalLink
@@ -95,7 +95,7 @@ namespace Goblin.WebApp.Controllers
                     var max = lessonsAtDay.Max(x => x.Number); // количество пар в этот день
                     for(var lessonNumber = 1; lessonNumber <= max; lessonNumber++)
                     {
-                        if(!lessonsAtDay.Any(x => x.Number == lessonNumber)) // если нет пары под этим номером 
+                        if(lessonsAtDay.All(x => x.Number != lessonNumber)) // если нет пары под этим номером 
                         {
                             lessons.Add(new Lesson
                             {
