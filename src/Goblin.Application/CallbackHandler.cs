@@ -47,7 +47,7 @@ namespace Goblin.Application
 
             if(upd.Type == GroupUpdateType.MessageNew)
             {
-                await MessageNew(upd.Message);
+                await MessageNew(upd.MessageNew);
             }
             else if(upd.Type == GroupUpdateType.GroupLeave)
             {
@@ -65,8 +65,9 @@ namespace Goblin.Application
             _logger.Information("Обработка события {0} завершена", upd.Type);
         }
 
-        private async Task MessageNew(Message msg)
+        private async Task MessageNew(MessageNew messageNew)
         {
+            var msg = messageNew.Message;
             var user = await _db.BotUsers.FindAsync(msg.FromId);
             if(user is null)
             {
