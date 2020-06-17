@@ -21,15 +21,19 @@
             </li>
         }
         <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
+                  asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button type="submit" class="nav-link btn btn-link">Выход</button>
             </form>
         </li>
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Вход</a>
-        </li>
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/ExternalLogin"
+              method="post" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button type="submit" class="btn btn-link nav-link" name="provider" value="Vkontakte" title="Вход через Vkontakte">
+                Вход
+            </button>
+        </form>
     }
 </ul>
