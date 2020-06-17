@@ -1,6 +1,6 @@
 # Goblin - бот для ВКонтакте
 
-Сайт - https://equus-cs.herokuapp.com (или https://japanese-goblin.tk)
+Сайт - https://equus-cs.herokuapp.com (или https://japanese-goblin.site)
 
 Группа ВК - https://vk.com/club146048760
 
