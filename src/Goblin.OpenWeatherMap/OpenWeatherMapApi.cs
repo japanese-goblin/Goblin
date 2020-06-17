@@ -44,7 +44,7 @@ namespace Goblin.OpenWeatherMap
             _logger.Debug("Получение погоды на день в городе {0} на дату {1:dd.MM.yyyy}", city, date);
 
             var response = await RequestBuilder.Create(_token)
-                                               .AppendPathSegment("forecast/daily")
+                                               .AppendPathSegments("forecast", "daily")
                                                .SetQueryParam("q", city)
                                                .SetQueryParam("cnt", 4)
                                                .GetJsonAsync<DailyWeather>();
