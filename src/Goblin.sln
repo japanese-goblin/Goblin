@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.DataAccess", "Goblin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.Domain", "Goblin.Domain\Goblin.Domain.csproj", "{AFED1A53-812F-420F-9223-2ED4FCEBD938}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.Application", "Goblin.Application\Goblin.Application.csproj", "{3E9EC0CA-31BC-4636-9C16-DBBFA1F5B097}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.Application.Core", "Goblin.Application.Core\Goblin.Application.Core.csproj", "{3E9EC0CA-31BC-4636-9C16-DBBFA1F5B097}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.OpenWeatherMap", "Goblin.OpenWeatherMap\Goblin.OpenWeatherMap.csproj", "{B2FDC55D-A919-44FC-A21A-F5C408BABA11}"
 EndProject
@@ -24,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Narfu.Tests", "..\tests\Goblin.Narfu.Tests\Goblin.Narfu.Tests.csproj", "{563FB6B0-8CF8-433C-B7CC-EB260BDEEA8E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.OpenWeatherMap.Tests", "..\tests\Goblin.OpenWeatherMap.Tests\Goblin.OpenWeatherMap.Tests.csproj", "{71CBDF0C-7229-46FF-8495-042FDC46FD7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Application.Vk", "Goblin.Application.Vk\Goblin.Application.Vk.csproj", "{084F4413-181C-4471-B3A1-5260768739D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -143,6 +145,18 @@ Global
 		{71CBDF0C-7229-46FF-8495-042FDC46FD7A}.Release|x64.Build.0 = Release|Any CPU
 		{71CBDF0C-7229-46FF-8495-042FDC46FD7A}.Release|x86.ActiveCfg = Release|Any CPU
 		{71CBDF0C-7229-46FF-8495-042FDC46FD7A}.Release|x86.Build.0 = Release|Any CPU
+		{084F4413-181C-4471-B3A1-5260768739D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{084F4413-181C-4471-B3A1-5260768739D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{084F4413-181C-4471-B3A1-5260768739D6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{084F4413-181C-4471-B3A1-5260768739D6}.Debug|x64.Build.0 = Debug|Any CPU
+		{084F4413-181C-4471-B3A1-5260768739D6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{084F4413-181C-4471-B3A1-5260768739D6}.Debug|x86.Build.0 = Debug|Any CPU
+		{084F4413-181C-4471-B3A1-5260768739D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{084F4413-181C-4471-B3A1-5260768739D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{084F4413-181C-4471-B3A1-5260768739D6}.Release|x64.ActiveCfg = Release|Any CPU
+		{084F4413-181C-4471-B3A1-5260768739D6}.Release|x64.Build.0 = Release|Any CPU
+		{084F4413-181C-4471-B3A1-5260768739D6}.Release|x86.ActiveCfg = Release|Any CPU
+		{084F4413-181C-4471-B3A1-5260768739D6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

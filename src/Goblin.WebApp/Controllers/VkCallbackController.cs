@@ -1,5 +1,5 @@
-using Goblin.Application;
-using Goblin.Application.Options;
+using Goblin.Application.Core.Options;
+using Goblin.Application.Vk;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

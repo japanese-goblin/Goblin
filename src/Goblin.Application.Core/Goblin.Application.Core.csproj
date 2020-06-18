@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Goblin.DataAccess\Goblin.DataAccess.csproj" />
+      <ProjectReference Include="..\Goblin.Domain\Goblin.Domain.csproj" />
+      <ProjectReference Include="..\Goblin.Narfu\Goblin.Narfu.csproj" />
+      <ProjectReference Include="..\Goblin.OpenWeatherMap\Goblin.OpenWeatherMap.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Hangfire" Version="1.7.11" />
+      <PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0" />
+      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.5" />
+      <PackageReference Include="Serilog" Version="2.9.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.5" />
+    </ItemGroup>
+
+</Project>

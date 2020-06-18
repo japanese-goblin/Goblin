@@ -1,5 +1,6 @@
-using Goblin.Application;
-using Goblin.Application.Hangfire;
+using Goblin.Application.Core;
+using Goblin.Application.Vk;
+using Goblin.Application.Vk.Hangfire;
 using Goblin.DataAccess;
 using Goblin.WebApp.Extensions;
 using Goblin.WebApp.Filters;
@@ -41,6 +42,7 @@ namespace Goblin.WebApp
 
             services.AddDataAccessLayer(Configuration);
             services.AddApplication(Configuration);
+            services.AddVkLayer(Configuration);
 
             services.AddAuth(Configuration);
 
