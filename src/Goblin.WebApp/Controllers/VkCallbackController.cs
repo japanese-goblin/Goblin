@@ -1,5 +1,5 @@
-using Goblin.Application.Core.Options;
 using Goblin.Application.Vk;
+using Goblin.Application.Vk.Options;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -11,7 +11,7 @@ using VkNet.Utils;
 namespace Goblin.WebApp.Controllers
 {
     [ApiController]
-    [Route("/api/callback")]
+    [Route("/api/callback/vk")]
     public class VkCallbackController : ControllerBase
     {
         private readonly CallbackHandler _handler;

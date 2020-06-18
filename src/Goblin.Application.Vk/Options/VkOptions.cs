@@ -1,4 +1,4 @@
-namespace Goblin.Application.Core.Options
+namespace Goblin.Application.Vk.Options
 {
     public class VkOptions
     {

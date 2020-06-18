@@ -8,6 +8,7 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Application.Vk.Extensions;
 using Goblin.Application.Vk.Models;
+using Goblin.Application.Vk.Options;
 using Goblin.DataAccess;
 using Goblin.Domain.Entities;
 using Microsoft.Extensions.Options;

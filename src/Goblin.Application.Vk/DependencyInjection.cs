@@ -1,7 +1,6 @@
 using AutoMapper;
 using Goblin.Application.Core.Options;
-using Hangfire;
-using Hangfire.MemoryStorage;
+using Goblin.Application.Vk.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VkNet;
@@ -18,7 +17,6 @@ namespace Goblin.Application.Vk
             AddAutoMapper();
             AddVkOptions();
 
-            services.AddHangfire(config => { config.UseMemoryStorage(); });
             services.AddScoped<CallbackHandler>();
 
             void AddVkNet()

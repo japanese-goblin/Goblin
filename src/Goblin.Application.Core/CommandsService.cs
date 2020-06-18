@@ -41,12 +41,8 @@ namespace Goblin.Application.Core
 
             foreach(var command in _textCommands)
             {
-                if(!command.Aliases.Contains(cmdName))
-                {
-                    continue;
-                }
-
-                if(command.IsAdminCommand && !user.IsAdmin)
+                var isAllowed = command.IsAdminCommand && user.IsAdmin;
+                if(!command.Aliases.Contains(cmdName) && !isAllowed)
                 {
                     continue;
                 }

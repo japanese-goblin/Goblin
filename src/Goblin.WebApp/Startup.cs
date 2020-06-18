@@ -1,4 +1,5 @@
 using Goblin.Application.Core;
+using Goblin.Application.Telegram;
 using Goblin.Application.Vk;
 using Goblin.Application.Vk.Hangfire;
 using Goblin.DataAccess;
@@ -6,6 +7,7 @@ using Goblin.WebApp.Extensions;
 using Goblin.WebApp.Filters;
 using Goblin.WebApp.HostedServices;
 using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -43,6 +45,8 @@ namespace Goblin.WebApp
             services.AddDataAccessLayer(Configuration);
             services.AddApplication(Configuration);
             services.AddVkLayer(Configuration);
+            services.AddTelegramLayer(Configuration);
+            services.AddHangfire(config => { config.UseMemoryStorage(); });
 
             services.AddAuth(Configuration);
 
