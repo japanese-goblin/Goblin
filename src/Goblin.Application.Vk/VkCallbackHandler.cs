@@ -79,8 +79,8 @@ namespace Goblin.Application.Vk
             if(user is null)
             {
                 _logger.Debug("Пользователь с id {0} не найден. Создание записи.", msg.FromId);
-                user = (await _db.BotUsers.AddAsync(new BotUser(msg.FromUserId))).Entity;
-                await _db.Subscribes.AddAsync(new Subscribe(msg.FromUserId, false, false));
+                user = (await _db.BotUsers.AddAsync(new BotUser(msg.MessageUserId))).Entity;
+                await _db.Subscribes.AddAsync(new Subscribe(msg.MessageUserId, false, false));
                 await _db.SaveChangesAsync();
                 _logger.Debug("Пользователь создан");
             }
@@ -98,7 +98,7 @@ namespace Goblin.Application.Vk
                     return;
                 }
 
-                await _vkApi.Messages.SendError(failed.ToString(), msg.FromUserId);
+                await _vkApi.Messages.SendError(failed.ToString(), msg.MessageChatId);
             }
             else
             {
@@ -107,7 +107,7 @@ namespace Goblin.Application.Vk
                 {
                     Message = success.Message,
                     Keyboard = (MessageKeyboard)success.Keyboard,
-                    PeerId = msg.FromUserId
+                    PeerId = msg.MessageChatId
                 });
             }
             _logger.Information("Отправка сообщения завершена");

@@ -48,12 +48,12 @@ namespace Goblin.Application.Telegram
                     return;
                 }
 
-                await _botClient.SendTextMessageAsync(msg.FromUserId, failed.ToString());
+                await _botClient.SendTextMessageAsync(msg.MessageChatId, failed.ToString());
             }
             else
             {
                 var success = result as SuccessfulResult;
-                await _botClient.SendTextMessageAsync(msg.FromUserId, success.Message);
+                await _botClient.SendTextMessageAsync(msg.MessageChatId, success.Message);
             }
         }
     }

@@ -6,7 +6,7 @@ namespace Goblin.Application.Vk.Models
 {
     public class VkMessage : Message, IMessage
     {
-        public long FromUserId => FromId ?? throw new ArgumentException();
-        public long ToUserId => PeerId ?? throw new ArgumentException();
+        public long MessageUserId => FromId ?? throw new ArgumentException();
+        public long MessageChatId => PeerId ?? throw new ArgumentException();
     }
 }

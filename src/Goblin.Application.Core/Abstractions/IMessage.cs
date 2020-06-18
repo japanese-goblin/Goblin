@@ -4,8 +4,8 @@ namespace Goblin.Application.Core.Abstractions
 {
     public interface IMessage
     {
-        public long FromUserId { get; }
-        public long ToUserId { get; }
+        public long MessageUserId { get; }
+        public long MessageChatId { get; }
         public string Text { get; set; }
         public string Payload { get; set; }
 
