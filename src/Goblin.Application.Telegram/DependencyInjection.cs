@@ -12,6 +12,7 @@ namespace Goblin.Application.Telegram
             AddTelegramOptions();
             
             services.AddSingleton(new TelegramBotClient(configuration["Telegram:AccessToken"]));
+            services.AddScoped<TelegramCallbackHandler>();
             
             void AddTelegramOptions()
             {

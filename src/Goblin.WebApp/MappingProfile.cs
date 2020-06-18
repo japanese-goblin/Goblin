@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
+using Goblin.Application.Telegram.Models;
 using Goblin.Application.Vk.Models;
 using VkNet.Model;
 
-namespace Goblin.Application.Vk
+namespace Goblin.WebApp
 {
     public class MappingProfile : Profile
     {
@@ -10,6 +11,9 @@ namespace Goblin.Application.Vk
         {
             CreateMap<VkMessage, Message>();
             CreateMap<Message, VkMessage>();
+
+            CreateMap<TelegramMessage, Telegram.Bot.Types.Message>();
+            CreateMap<Telegram.Bot.Types.Message, TelegramMessage>();
         }
     }
 }

@@ -14,10 +14,9 @@ namespace Goblin.Application.Vk
         public static void AddVkLayer(this IServiceCollection services, IConfiguration configuration)
         {
             AddVkNet();
-            AddAutoMapper();
             AddVkOptions();
 
-            services.AddScoped<CallbackHandler>();
+            services.AddScoped<VkCallbackHandler>();
 
             void AddVkNet()
             {
@@ -31,14 +30,6 @@ namespace Goblin.Application.Vk
                     });
                     return api;
                 });
-            }
-
-            void AddAutoMapper()
-            {
-                var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProfile()); });
-
-                var mapper = mappingConfig.CreateMapper();
-                services.AddSingleton(mapper);
             }
 
             void AddVkOptions()

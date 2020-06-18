@@ -1,3 +1,4 @@
+using AutoMapper;
 using Goblin.Application.Core;
 using Goblin.Application.Telegram;
 using Goblin.Application.Vk;
@@ -47,8 +48,12 @@ namespace Goblin.WebApp
             services.AddVkLayer(Configuration);
             services.AddTelegramLayer(Configuration);
             services.AddHangfire(config => { config.UseMemoryStorage(); });
+            
+            var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProfile()); });
+            var mapper = mappingConfig.CreateMapper();
+                services.AddSingleton(mapper);
 
-            services.AddAuth(Configuration);
+                services.AddAuth(Configuration);
 
             if(_env.IsDevelopment())
             {

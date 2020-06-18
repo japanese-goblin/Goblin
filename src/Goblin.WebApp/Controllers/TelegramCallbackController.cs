@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using Goblin.Application.Telegram;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace Goblin.WebApp.Controllers
@@ -9,22 +9,17 @@ namespace Goblin.WebApp.Controllers
     [Route("/api/callback/tg")]
     public class TelegramCallbackController : ControllerBase
     {
-        private readonly TelegramBotClient _botClient;
+        private readonly TelegramCallbackHandler _handler;
 
-        public TelegramCallbackController(TelegramBotClient botClient)
+        public TelegramCallbackController(TelegramCallbackHandler handler)
         {
-            _botClient = botClient;
+            _handler = handler;
         }
         
-        // GET
-        public async Task<IActionResult> Index([FromBody] Update update)
+        [HttpPost]
+        public IActionResult Index([FromBody] Update update)
         {
-            var message = update.Message;
-            var userId = message.Chat.Id;
-            var text = message.Text;
-
-            await _botClient.SendTextMessageAsync(userId, text);
-
+            BackgroundJob.Enqueue(() => _handler.Handle(update));
             return Ok();
         }
     }

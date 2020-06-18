@@ -14,10 +14,10 @@ namespace Goblin.WebApp.Controllers
     [Route("/api/callback/vk")]
     public class VkCallbackController : ControllerBase
     {
-        private readonly CallbackHandler _handler;
+        private readonly VkCallbackHandler _handler;
         private readonly VkOptions _vkOptions;
 
-        public VkCallbackController(CallbackHandler handler, IOptions<VkOptions> vkOptions)
+        public VkCallbackController(VkCallbackHandler handler, IOptions<VkOptions> vkOptions)
         {
             _handler = handler;
             _vkOptions = vkOptions.Value;

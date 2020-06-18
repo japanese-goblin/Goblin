@@ -22,7 +22,7 @@ using VkNet.Model.RequestParams;
 
 namespace Goblin.Application.Vk
 {
-    public class CallbackHandler
+    public class VkCallbackHandler
     {
         private readonly BotDbContext _db;
         private readonly ILogger _logger;
@@ -31,7 +31,7 @@ namespace Goblin.Application.Vk
         private readonly IVkApi _vkApi;
         private readonly IMapper _mapper;
 
-        public CallbackHandler(CommandsService commandsService, BotDbContext db, IVkApi vkApi, IOptions<VkOptions> options,
+        public VkCallbackHandler(CommandsService commandsService, BotDbContext db, IVkApi vkApi, IOptions<VkOptions> options,
                                IMapper mapper)
         {
             _commandsService = commandsService;
@@ -39,7 +39,7 @@ namespace Goblin.Application.Vk
             _vkApi = vkApi;
             _mapper = mapper;
             _options = options.Value;
-            _logger = Log.ForContext<CallbackHandler>();
+            _logger = Log.ForContext<VkCallbackHandler>();
         }
 
         public async Task Handle(GroupUpdate upd)
