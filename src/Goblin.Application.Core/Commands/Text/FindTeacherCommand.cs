@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Entities;
@@ -43,20 +44,18 @@ namespace Goblin.Application.Core.Commands.Text
                     return new FailedResult("Найдено слишком много преподавателей. Укажите более точные данные.");
                 }
 
-                //TODO: keyboard
-                // var kb = new KeyboardBuilder(true);
-                // foreach(var teacher in findResult)
-                // {
-                //     kb.AddButton(teacher.Name, teacher.Id.ToString(), KeyboardButtonColor.Primary, "teacherSchedule");
-                //     kb.AddLine();
-                // }
+                var keyboard = new CoreKeyboard();
+                foreach(var teacher in findResult)
+                {
+                    keyboard.AddButton(teacher.Name, CoreKeyboardButtonColor.Primary, "teacherSchedule", teacher.Id.ToString());
+                    keyboard.AddLine();
+                }
 
-                // kb.AddReturnToMenuButton(false);
+                keyboard.AddReturnToMenuButton(false);
                 return new SuccessfulResult
                 {
                     Message = "Выберите преподавателя из списка:",
-
-                    // Keyboard = kb.Build()
+                    Keyboard = keyboard
                 };
             }
             catch(FlurlHttpException)

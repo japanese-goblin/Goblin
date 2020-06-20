@@ -17,7 +17,7 @@ namespace Goblin.Application.Core.Commands.Merged
             return Task.FromResult<IResult>(new SuccessfulResult
             {
                 Message = "Выберите действие:",
-                Keyboard = DefaultKeyboards.GetDefaultKeyboard() // TODO:
+                Keyboard = DefaultKeyboards.GetDefaultKeyboard()
             });
         }
     }
