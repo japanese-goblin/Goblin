@@ -25,7 +25,7 @@ namespace Goblin.Application.Core.Models
             var button = new CoreKeyboardButton
             {
                 Title = text,
-                Color = color,
+                Color = color
             };
             button.SetPayload(payloadKey, payloadValue);
             lastLine.Add(button);
@@ -42,11 +42,16 @@ namespace Goblin.Application.Core.Models
 
         public CoreKeyboard AddReturnToMenuButton(bool addNewLine = true)
         {
+            if(IsInline)
+            {
+                return this;
+            }
+
             if(addNewLine)
             {
                 AddLine();
             }
-            
+
             var button = new CoreKeyboardButton
             {
                 Title = "Вернуться в главное меню",
