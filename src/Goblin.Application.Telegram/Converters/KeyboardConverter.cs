@@ -50,11 +50,7 @@ namespace Goblin.Application.Telegram.Converters
                 {
                     foreach(var button in line)
                     {
-                        currentLine.Add(new InlineKeyboardButton
-                        {
-                            CallbackData = button.Payload,
-                            Text = button.Title
-                        });
+                        currentLine.Add(InlineKeyboardButton.WithCallbackData(button.Title, button.Payload));
                     }
 
                     tgButtonsList.Add(currentLine);
