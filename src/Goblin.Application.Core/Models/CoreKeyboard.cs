@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Goblin.Application.Core.Models
 {
@@ -7,12 +8,15 @@ namespace Goblin.Application.Core.Models
         public bool IsOneTime { get; set; }
         public bool IsInline { get; set; } //TODO:
         public List<List<CoreKeyboardButton>> Buttons { get; set; }
-        private List<CoreKeyboardButton> _currentLine;
+
+        private List<CoreKeyboardButton> lastLine => Buttons.Last();
 
         public CoreKeyboard(bool isOneTime = true)
         {
-            Buttons = new List<List<CoreKeyboardButton>>();
-            _currentLine = new List<CoreKeyboardButton>();
+            Buttons = new List<List<CoreKeyboardButton>>
+            {
+                new List<CoreKeyboardButton>()
+            };
             IsOneTime = isOneTime;
         }
 
@@ -24,15 +28,14 @@ namespace Goblin.Application.Core.Models
                 Color = color,
             };
             button.SetPayload(payloadKey, payloadValue);
-            _currentLine.Add(button);
+            lastLine.Add(button);
 
             return this;
         }
 
         public CoreKeyboard AddLine()
         {
-            Buttons.Add(_currentLine);
-            _currentLine = new List<CoreKeyboardButton>();
+            Buttons.Add(new List<CoreKeyboardButton>());
 
             return this;
         }
@@ -50,7 +53,7 @@ namespace Goblin.Application.Core.Models
                 Color = CoreKeyboardButtonColor.Default
             };
             button.SetPayload("command", "start");
-            _currentLine.Add(button);
+            lastLine.Add(button);
 
             return this;
         }

@@ -26,12 +26,19 @@ namespace Goblin.Application.Core
 
         public async Task<IResult> ExecuteCommand(IMessage msg, BotUser user)
         {
+            IResult result;
             if(!string.IsNullOrWhiteSpace(msg.Payload))
             {
-                return await ExecuteKeyboardCommand(msg, user);
+                result = await ExecuteKeyboardCommand(msg, user);
+            }
+            else
+            {
+                result = await ExecuteTextCommand(msg, user);
             }
 
-            return await ExecuteTextCommand(msg, user);
+            result.Keyboard ??= DefaultKeyboards.GetDefaultKeyboard();
+
+            return result;
         }
 
         private async Task<IResult> ExecuteTextCommand(IMessage msg, BotUser user)
@@ -42,22 +49,16 @@ namespace Goblin.Application.Core
             foreach(var command in _textCommands)
             {
                 var isAllowed = command.IsAdminCommand && user.IsAdmin;
-                if(!command.Aliases.Contains(cmdName) || !isAllowed)
+                if(!command.Aliases.Contains(cmdName) || isAllowed)
                 {
                     continue;
                 }
 
                 _logger.Debug("Выполнение команды {0}", command.GetType());
                 var result = await command.Execute(msg, user);
-                if(result is FailedResult failedExecuteResult)
-                {
-                    _logger.Debug("Команда вернула {0} результат", failedExecuteResult.GetType());
-                    return failedExecuteResult;
-                }
+                _logger.Debug("Команда вернула {0} результат", result.GetType());
 
-                _logger.Debug("Команда выполнена успешно");
-
-                return result as SuccessfulResult;
+                return result;
             }
 
             return new CommandNotFoundResult();

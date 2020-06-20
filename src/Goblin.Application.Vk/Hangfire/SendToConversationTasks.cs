@@ -38,7 +38,7 @@ namespace Goblin.Application.Vk.Hangfire
                 var weather = await _weatherApi.GetDailyWeatherWithResult(city, DateTime.Today);
                 if(weather is FailedResult failed)
                 {
-                    await _vkApi.Messages.SendError(failed.Error, id);
+                    await _vkApi.Messages.SendError(failed.Message, id);
                 }
                 else
                 {
@@ -57,7 +57,7 @@ namespace Goblin.Application.Vk.Hangfire
                 var schedule = await _narfuApi.Students.GetScheduleAtDateWithResult(group, DateTime.Now);
                 if(schedule is FailedResult failed)
                 {
-                    await _vkApi.Messages.SendError(failed.Error, id);
+                    await _vkApi.Messages.SendError(failed.Message, id);
                 }
                 else
                 {

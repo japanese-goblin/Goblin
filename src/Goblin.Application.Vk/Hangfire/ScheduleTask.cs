@@ -44,7 +44,7 @@ namespace Goblin.Application.Vk.Hangfire
                         var schedule = await _narfuApi.Students.GetScheduleAtDateWithResult(group.Key, DateTime.Today);
                         if(schedule is FailedResult failed)
                         {
-                            await _vkApi.Messages.SendErrorToUserIds(failed.Error, ids);
+                            await _vkApi.Messages.SendErrorToUserIds(failed.Message, ids);
                         }
                         else
                         {

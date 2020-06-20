@@ -1,4 +1,5 @@
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Models;
 
 namespace Goblin.Application.Core.Results.Failed
 {
@@ -6,20 +7,21 @@ namespace Goblin.Application.Core.Results.Failed
     {
         public bool IsSuccessful => false;
 
-        public string Error { get; }
+        public string Message { get; set; }
+        public CoreKeyboard Keyboard { get; set; }
 
         protected FailedResult()
         {
         }
 
-        public FailedResult(string error)
+        public FailedResult(string message)
         {
-            Error = error;
+            Message = message;
         }
 
         public override string ToString()
         {
-            return Error;
+            return Message;
         }
     }
 }

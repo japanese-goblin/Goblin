@@ -44,7 +44,7 @@ namespace Goblin.Application.Vk.Hangfire
                         var weather = await _weatherApi.GetDailyWeatherWithResult(group.Key, DateTime.Today);
                         if(weather is FailedResult failed)
                         {
-                            await _vkApi.Messages.SendErrorToUserIds(failed.Error, ids);
+                            await _vkApi.Messages.SendErrorToUserIds(failed.Message, ids);
                         }
                         else
                         {
