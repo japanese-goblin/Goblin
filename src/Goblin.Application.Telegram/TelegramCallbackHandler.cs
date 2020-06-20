@@ -28,22 +28,18 @@ namespace Goblin.Application.Telegram
         {
             if(update.Type == UpdateType.Message)
             {
-                await HandleMessage(update.Message);
+                await HandleMessageEvent(update.Message);
             }
             else if(update.Type == UpdateType.CallbackQuery)
             {
-                // await HandleKeyboard(update.CallbackQuery);
+                await HandleMessageEvent(update.CallbackQuery);
             }
         }
 
-        // private async Task HandleKeyboard(CallbackQuery callbackQuery)
-        // {
-        // }
-
-        private async Task HandleMessage(Message message)
+        private async Task HandleMessageEvent<T>(T message)
         {
             var msg = _mapper.Map<TelegramMessage>(message);
-            var user = new BotUser(1, "Архангельск", 351917);
+            var user = new BotUser(1, "Архангельск", 351917); //TODO:
             var result = await _commandsService.ExecuteCommand(msg, user);
 
             if(result is FailedResult failed)

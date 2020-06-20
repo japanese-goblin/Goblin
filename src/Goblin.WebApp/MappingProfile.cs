@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Goblin.Application.Telegram.Models;
 using Goblin.Application.Vk.Models;
-using VkNet.Model;
+using Telegram.Bot.Types;
+using Message = VkNet.Model.Message;
 
 namespace Goblin.WebApp
 {
@@ -14,6 +15,9 @@ namespace Goblin.WebApp
 
             CreateMap<TelegramMessage, Telegram.Bot.Types.Message>();
             CreateMap<Telegram.Bot.Types.Message, TelegramMessage>();
+
+            CreateMap<TelegramCallbackMessage, CallbackQuery>();
+            CreateMap<CallbackQuery, TelegramCallbackMessage>();
         }
     }
 }
