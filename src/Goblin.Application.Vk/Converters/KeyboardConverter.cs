@@ -8,14 +8,18 @@ namespace Goblin.Application.Vk.Converters
 {
     public static class KeyboardConverter
     {
-        public static MessageKeyboard FromCoreToVk(CoreKeyboard coreKeyboard)
+        public static MessageKeyboard FromCoreToVk(CoreKeyboard coreKeyboard, bool isInlineKeyboardAllowed = false)
         {
             var kb = new KeyboardBuilder();
-            kb.SetInline(coreKeyboard.IsInline);
-            if(coreKeyboard.IsOneTime)
+            var isInlineKeyboardEnabled = coreKeyboard.IsInline && isInlineKeyboardAllowed;
+            if(!isInlineKeyboardAllowed)
             {
-                kb.SetOneTime();
+                if(coreKeyboard.IsOneTime)
+                {
+                    kb.SetOneTime();
+                }
             }
+            kb.SetInline(isInlineKeyboardEnabled);
 
             foreach(var line in coreKeyboard.Buttons)
             {

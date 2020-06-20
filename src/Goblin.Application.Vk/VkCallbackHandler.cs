@@ -91,7 +91,7 @@ namespace Goblin.Application.Vk
             _logger.Information("Обработка сообщения завершена");
             _logger.Debug("Отправка сообщения");
 
-            if(result is FailedResult failed)
+            if(!result.IsSuccessful)
             {
                 if(result is CommandNotFoundResult && !user.IsErrorsEnabled)
                 {
@@ -99,15 +99,14 @@ namespace Goblin.Application.Vk
                     return;
                 }
 
-                await _vkApi.Messages.SendError(failed.ToString(), msg.MessageChatId);
+                await _vkApi.Messages.SendError(result.Message, msg.MessageChatId);
             }
             else
             {
-                var success = result as SuccessfulResult;
                 await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                 {
-                    Message = success.Message,
-                    Keyboard = KeyboardConverter.FromCoreToVk(success.Keyboard),
+                    Message = result.Message,
+                    Keyboard = KeyboardConverter.FromCoreToVk(result.Keyboard, messageNew.ClientInfo.InlineKeyboard),
                     PeerId = msg.MessageChatId
                 });
             }
