@@ -14,7 +14,7 @@ namespace Goblin.Application.Core
               .AddButton("Погода на день", CoreKeyboardButtonColor.Primary, "weatherDailyKeyboard", string.Empty)
               .AddLine()
               .AddButton("Рассылка", CoreKeyboardButtonColor.Primary, "mailingKeyboard", string.Empty)
-              .AddButton("Напоминания", CoreKeyboardButtonColor.Primary, "reminds", string.Empty)
+              .AddButton("Напоминания", CoreKeyboardButtonColor.Default, "reminds", string.Empty)
               .AddButton("Справка", CoreKeyboardButtonColor.Primary, "help", string.Empty);
 
             return kb;
