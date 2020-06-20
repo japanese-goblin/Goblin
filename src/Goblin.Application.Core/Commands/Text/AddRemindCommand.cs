@@ -82,8 +82,8 @@ namespace Goblin.Application.Core.Commands.Text
                                                        "dd.MM.yyyy H:m", "d.MM.yyyy H:m",
                                                        "dd.M.yyyy H:m", "d.M.yyyy H:m"
                                                    },
-                                                   null, DateTimeStyles.AssumeLocal, out var res);
-            dateTime = res;
+                                                   null, DateTimeStyles.AssumeLocal, out dateTime);
+            
             return isCorrect;
         }
     }

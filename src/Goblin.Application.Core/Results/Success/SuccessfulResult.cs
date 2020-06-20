@@ -1,4 +1,5 @@
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Models;
 
 namespace Goblin.Application.Core.Results.Success
 {
@@ -9,6 +10,6 @@ namespace Goblin.Application.Core.Results.Success
         public string Message { get; set; }
 
         // public MediaAttachment[] Attachments { get; set; } //TODO:
-        public object Keyboard { get; set; } //TODO:
+        public CoreKeyboard Keyboard { get; set; }
     }
 }

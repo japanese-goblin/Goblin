@@ -6,6 +6,7 @@ using Goblin.Application.Core;
 using Goblin.Application.Core.Options;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
+using Goblin.Application.Vk.Converters;
 using Goblin.Application.Vk.Extensions;
 using Goblin.Application.Vk.Models;
 using Goblin.Application.Vk.Options;
@@ -106,7 +107,7 @@ namespace Goblin.Application.Vk
                 await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                 {
                     Message = success.Message,
-                    Keyboard = (MessageKeyboard)success.Keyboard,
+                    Keyboard = KeyboardConverter.FromCoreToVk(success.Keyboard),
                     PeerId = msg.MessageChatId
                 });
             }

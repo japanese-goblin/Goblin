@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Entities;
 
@@ -15,12 +16,12 @@ namespace Goblin.Application.Core.Commands.Keyboard
             var isSchedule = user.SubscribeInfo.IsSchedule;
             var isWeather = user.SubscribeInfo.IsWeather;
 
-            // var scheduleColor = isSchedule
-            //                             ? KeyboardButtonColor.Negative
-            //                             : KeyboardButtonColor.Positive;
-            // var weatherColor = isWeather
-            //                            ? KeyboardButtonColor.Negative
-            //                            : KeyboardButtonColor.Positive;
+            var scheduleColor = isSchedule
+                                        ? CoreKeyboardButtonColor.Negative
+                                        : CoreKeyboardButtonColor.Positive;
+            var weatherColor = isWeather
+                                       ? CoreKeyboardButtonColor.Negative
+                                       : CoreKeyboardButtonColor.Positive;
 
             var scheduleText = isSchedule
                                        ? "Отписаться от рассылки расписания"
@@ -29,17 +30,16 @@ namespace Goblin.Application.Core.Commands.Keyboard
                                       ? "Отписаться от рассылки погоды"
                                       : "Подписаться на рассылку погоды";
 
-            // var kb = new KeyboardBuilder(true);
-            // kb.AddButton(scheduleText, "schedule", scheduleColor, "mailing");
-            // kb.AddLine();
-            // kb.AddButton(weatherText, "weather", weatherColor, "mailing");
-            // kb.AddReturnToMenuButton();
+            var kb = new CoreKeyboard();
+            kb.AddButton(scheduleText, scheduleColor, "schedule", "mailing");
+            kb.AddLine();
+            kb.AddButton(weatherText, weatherColor, "weather", "mailing");
+            kb.AddReturnToMenuButton();
 
             return Task.FromResult<IResult>(new SuccessfulResult
             {
                 Message = "Выберите действие:",
-
-                // Keyboard = kb.Build()
+                Keyboard = kb
             });
         }
     }

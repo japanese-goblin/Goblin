@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Goblin.Application.Core;
+using Goblin.Application.Vk.Converters;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
@@ -53,7 +55,7 @@ namespace Goblin.Application.Vk.Extensions
             const int conversationsStartId = 2000000000;
             if(@params.Keyboard is null && @params.PeerId < conversationsStartId)
             {
-                @params.Keyboard = DefaultKeyboards.GetDefaultKeyboard();
+                @params.Keyboard = KeyboardConverter.FromCoreToVk(DefaultKeyboards.GetDefaultKeyboard());
             }
         }
 
