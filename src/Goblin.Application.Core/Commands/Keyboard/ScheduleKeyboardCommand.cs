@@ -29,7 +29,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
             
             startDate = startDate.AddDays(1);
             keyboard.AddButton($"На завтра ({startDate:dd.MM - dddd})", CoreKeyboardButtonColor.Primary,
-                         startDate.ToString(defaultFormat), "schedule");
+                               "schedule", startDate.ToString(defaultFormat));
             keyboard.AddLine();
             
             for(var i = 1; i < 7; i++)
