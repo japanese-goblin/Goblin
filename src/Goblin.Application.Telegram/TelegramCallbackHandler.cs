@@ -2,7 +2,7 @@
 using AutoMapper;
 using Goblin.Application.Core;
 using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
+using Goblin.Application.Telegram.Converters;
 using Goblin.Application.Telegram.Models;
 using Goblin.Domain.Entities;
 using Telegram.Bot;
@@ -30,9 +30,15 @@ namespace Goblin.Application.Telegram
             {
                 await HandleMessage(update.Message);
             }
-
-            //TODO:
+            else if(update.Type == UpdateType.CallbackQuery)
+            {
+                // await HandleKeyboard(update.CallbackQuery);
+            }
         }
+
+        // private async Task HandleKeyboard(CallbackQuery callbackQuery)
+        // {
+        // }
 
         private async Task HandleMessage(Message message)
         {
@@ -48,12 +54,12 @@ namespace Goblin.Application.Telegram
                     return;
                 }
 
-                await _botClient.SendTextMessageAsync(msg.MessageChatId, failed.ToString());
+                await _botClient.SendTextMessageAsync(msg.MessageChatId, failed.Message);
             }
             else
             {
-                var success = result as SuccessfulResult;
-                await _botClient.SendTextMessageAsync(msg.MessageChatId, success.Message);
+                await _botClient.SendTextMessageAsync(msg.MessageChatId, result.Message,
+                                                      replyMarkup: KeyboardConverter.FromCoreToTg(result.Keyboard));
             }
         }
     }
