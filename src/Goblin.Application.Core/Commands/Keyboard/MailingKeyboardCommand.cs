@@ -12,7 +12,6 @@ namespace Goblin.Application.Core.Commands.Keyboard
 
         public Task<IResult> Execute(IMessage msg, BotUser user)
         {
-            //TODO: here
             var isSchedule = user.SubscribeInfo.IsSchedule;
             var isWeather = user.SubscribeInfo.IsWeather;
 
@@ -31,9 +30,9 @@ namespace Goblin.Application.Core.Commands.Keyboard
                                       : "Подписаться на рассылку погоды";
 
             var kb = new CoreKeyboard();
-            kb.AddButton(scheduleText, scheduleColor, "schedule", "mailing");
+            kb.AddButton(scheduleText, scheduleColor, "mailing", "schedule");
             kb.AddLine();
-            kb.AddButton(weatherText, weatherColor, "weather", "mailing");
+            kb.AddButton(weatherText, weatherColor, "mailing", "weather");
             kb.AddReturnToMenuButton();
 
             return Task.FromResult<IResult>(new SuccessfulResult
