@@ -6,12 +6,15 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Entities;
 
-namespace Goblin.Application.Core.Commands.Keyboard
+namespace Goblin.Application.Core.Commands.Merged
 {
-    public class WeatherDailyKeyboardCommand : IKeyboardCommand
+    public class WeatherDailyKeyboardCommand : IKeyboardCommand, ITextCommand
     {
         public string Trigger => "weatherDailyKeyboard";
-        
+
+        public bool IsAdminCommand => false;
+        public string[] Aliases => new[] { "ежедневная" }; //TODO: lol
+
         public Task<IResult> Execute(IMessage msg, BotUser user)
         {
             if(string.IsNullOrWhiteSpace(user.WeatherCity))
@@ -21,7 +24,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
 
             const string defaultFormat = "dd.MM.yyyy";
             var date = DateTime.Now;
-            var kb = new CoreKeyboard()
+            var kb = new CoreKeyboard
             {
                 IsInline = true
             };

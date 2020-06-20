@@ -5,11 +5,14 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Entities;
 
-namespace Goblin.Application.Core.Commands.Keyboard
+namespace Goblin.Application.Core.Commands.Merged
 {
-    public class GetRemindsCommand : IKeyboardCommand
+    public class GetRemindsCommand : IKeyboardCommand, ITextCommand
     {
         public string Trigger => "reminds";
+
+        public bool IsAdminCommand => false;
+        public string[] Aliases => new[] { "напоминания" };
 
         public Task<IResult> Execute(IMessage msg, BotUser user)
         {

@@ -4,11 +4,14 @@ using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Entities;
 
-namespace Goblin.Application.Core.Commands.Keyboard
+namespace Goblin.Application.Core.Commands.Merged
 {
-    public class MailingKeyboardCommand : IKeyboardCommand
+    public class MailingKeyboardCommand : IKeyboardCommand, ITextCommand
     {
         public string Trigger => "mailingKeyboard";
+
+        public bool IsAdminCommand => false;
+        public string[] Aliases => new[] { "рассылка" };
 
         public Task<IResult> Execute(IMessage msg, BotUser user)
         {
