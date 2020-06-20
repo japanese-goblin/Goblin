@@ -22,7 +22,10 @@ namespace Goblin.Application.Core.Commands.Keyboard
             const string defaultFormat = "dd.MM.yyyy";
             var startDate = DateTime.Now;
 
-            var keyboard = new CoreKeyboard();
+            var keyboard = new CoreKeyboard()
+            {
+                IsInline = true
+            };
             keyboard.AddButton($"На сегодня ({startDate:dd.MM - dddd})", CoreKeyboardButtonColor.Primary,
                          "schedule", startDate.ToString(defaultFormat));
             keyboard.AddLine();

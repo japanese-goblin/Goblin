@@ -21,7 +21,10 @@ namespace Goblin.Application.Core.Commands.Keyboard
 
             const string defaultFormat = "dd.MM.yyyy";
             var date = DateTime.Now;
-            var kb = new CoreKeyboard();
+            var kb = new CoreKeyboard()
+            {
+                IsInline = true
+            };
             kb.AddButton("На сегодня", CoreKeyboardButtonColor.Primary,
                          "weatherDaily", date.ToString(defaultFormat));
             kb.AddLine();

@@ -29,7 +29,10 @@ namespace Goblin.Application.Core.Commands.Keyboard
                                       ? "Отписаться от рассылки погоды"
                                       : "Подписаться на рассылку погоды";
 
-            var kb = new CoreKeyboard();
+            var kb = new CoreKeyboard
+            {
+                IsInline = true
+            };
             kb.AddButton(scheduleText, scheduleColor, "mailing", "schedule");
             kb.AddLine();
             kb.AddButton(weatherText, weatherColor, "mailing", "weather");

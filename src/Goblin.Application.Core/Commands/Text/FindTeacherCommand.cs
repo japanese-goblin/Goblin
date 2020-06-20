@@ -44,7 +44,10 @@ namespace Goblin.Application.Core.Commands.Text
                     return new FailedResult("Найдено слишком много преподавателей. Укажите более точные данные.");
                 }
 
-                var keyboard = new CoreKeyboard();
+                var keyboard = new CoreKeyboard()
+                {
+                    IsInline = true
+                };
                 foreach(var teacher in findResult)
                 {
                     keyboard.AddButton(teacher.Name, CoreKeyboardButtonColor.Primary, "teacherSchedule", teacher.Id.ToString());
