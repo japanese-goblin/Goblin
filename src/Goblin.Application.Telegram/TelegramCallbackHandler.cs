@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using Goblin.Application.Core;
+using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Telegram.Converters;
 using Goblin.Application.Telegram.Models;
@@ -28,17 +29,17 @@ namespace Goblin.Application.Telegram
         {
             if(update.Type == UpdateType.Message)
             {
-                await HandleMessageEvent(update.Message);
+                await HandleMessageEvent<Message, TelegramMessage>(update.Message);
             }
             else if(update.Type == UpdateType.CallbackQuery)
             {
-                await HandleMessageEvent(update.CallbackQuery);
+                await HandleMessageEvent<CallbackQuery, TelegramCallbackMessage>(update.CallbackQuery);
             }
         }
 
-        private async Task HandleMessageEvent<T>(T message)
+        private async Task HandleMessageEvent<TSourcre, TConvert>(TSourcre message) where TConvert : IMessage
         {
-            var msg = _mapper.Map<TelegramMessage>(message);
+            var msg = _mapper.Map<TConvert>(message);
             var user = new BotUser(1, "Архангельск", 351917); //TODO:
             var result = await _commandsService.ExecuteCommand(msg, user);
 
