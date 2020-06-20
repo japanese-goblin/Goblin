@@ -8,27 +8,63 @@ namespace Goblin.Application.Telegram.Converters
     {
         public static IReplyMarkup FromCoreToTg(CoreKeyboard coreKeyboard)
         {
-            var keyboard = new ReplyKeyboardMarkup
+            if(coreKeyboard.IsInline)
             {
-                OneTimeKeyboard = coreKeyboard.IsOneTime,
-                ResizeKeyboard = true
-            };
-            var tgButtonsList = new List<List<KeyboardButton>>();
-            var currentLine = new List<KeyboardButton>();
-            
-            foreach(var line in coreKeyboard.Buttons)
-            {
-                foreach(var button in line)
-                {
-                    currentLine.Add(new KeyboardButton(button.Title));
-                }
-                tgButtonsList.Add(currentLine);
-                currentLine = new List<KeyboardButton>();
+                return GenerateInlineKeyboard();
             }
 
-            keyboard.Keyboard = tgButtonsList;
+            return GenerateReplyKeyboard();
 
-            return keyboard;
+            IReplyMarkup GenerateReplyKeyboard()
+            {
+                var keyboard = new ReplyKeyboardMarkup
+                {
+                    OneTimeKeyboard = coreKeyboard.IsOneTime,
+                    ResizeKeyboard = true
+                };
+                var tgButtonsList = new List<List<KeyboardButton>>();
+                var currentLine = new List<KeyboardButton>();
+
+                foreach(var line in coreKeyboard.Buttons)
+                {
+                    foreach(var button in line)
+                    {
+                        currentLine.Add(new KeyboardButton(button.Title));
+                    }
+
+                    tgButtonsList.Add(currentLine);
+                    currentLine = new List<KeyboardButton>();
+                }
+
+                keyboard.Keyboard = tgButtonsList;
+
+                return keyboard;
+            }
+
+            IReplyMarkup GenerateInlineKeyboard()
+            {
+                var tgButtonsList = new List<List<InlineKeyboardButton>>();
+                var currentLine = new List<InlineKeyboardButton>();
+
+                foreach(var line in coreKeyboard.Buttons)
+                {
+                    foreach(var button in line)
+                    {
+                        currentLine.Add(new InlineKeyboardButton
+                        {
+                            CallbackData = button.Payload,
+                            Text = button.Title
+                        });
+                    }
+
+                    tgButtonsList.Add(currentLine);
+                    currentLine = new List<InlineKeyboardButton>();
+                }
+
+                var keyboard = new InlineKeyboardMarkup(tgButtonsList);
+
+                return keyboard;
+            }
         }
     }
 }
