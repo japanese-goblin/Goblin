@@ -5,7 +5,7 @@ using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Goblin.Domain.Entities;
+using Goblin.Domain.Abstractions;
 using Goblin.Narfu;
 using Newtonsoft.Json;
 using Serilog;
@@ -22,7 +22,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
             _api = api;
         }
 
-        public async Task<IResult> Execute(IMessage msg, BotUser user)
+        public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
             if(user.NarfuGroup == 0)
             {

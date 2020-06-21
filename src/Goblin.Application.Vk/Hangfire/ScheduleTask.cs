@@ -27,7 +27,7 @@ namespace Goblin.Application.Vk.Hangfire
 
         public async Task SendSchedule()
         {
-            var grouped = _db.BotUsers.Where(x => x.HasScheduleSubscription)
+            var grouped = _db.VkBotUsers.Where(x => x.HasScheduleSubscription)
                              .ToArray()
                              .GroupBy(x => x.NarfuGroup);
             foreach(var group in grouped)

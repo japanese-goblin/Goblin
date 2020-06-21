@@ -10,11 +10,7 @@ namespace Goblin.DataAccess
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<BotDbContext>(options =>
-            {
-                options.UseNpgsql(connectionString)
-                       .UseLazyLoadingProxies();
-            });
+            services.AddDbContext<BotDbContext>(options => { options.UseNpgsql(connectionString); });
             services.AddDbContext<IdentityUsersDbContext>(options => options.UseNpgsql(connectionString));
         }
     }

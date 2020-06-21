@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Goblin.Domain.Entities;
+using Goblin.Domain.Abstractions;
 
 namespace Goblin.Application.Core.Commands.Merged
 {
@@ -13,7 +13,7 @@ namespace Goblin.Application.Core.Commands.Merged
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "расписание" };
 
-        public Task<IResult> Execute(IMessage msg, BotUser user)
+        public Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
             if(user.NarfuGroup == 0)
             {

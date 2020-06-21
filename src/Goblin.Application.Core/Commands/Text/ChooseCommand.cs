@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Goblin.Domain.Entities;
+using Goblin.Domain.Abstractions;
 
 namespace Goblin.Application.Core.Commands.Text
 {
@@ -12,7 +12,7 @@ namespace Goblin.Application.Core.Commands.Text
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "выбери", "рандом" };
 
-        public Task<IResult> Execute(IMessage msg, BotUser user)
+        public Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
             var param = string.Join(' ', msg.MessageParams);
             var split = Split(param);

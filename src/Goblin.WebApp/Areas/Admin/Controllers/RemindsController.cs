@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.DataAccess;
+using Goblin.Domain;
 using Goblin.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +39,7 @@ namespace Goblin.WebApp.Areas.Admin.Controllers
             var date = DateTime.Parse($"{dateStr} {time}");
             try
             {
-                await _db.Reminds.AddAsync(new Remind(peerId, text, date));
+                await _db.Reminds.AddAsync(new Remind(peerId, text, date, ConsumerType.Vkontakte));
                 await _db.SaveChangesAsync();
             }
             catch(Exception ex)

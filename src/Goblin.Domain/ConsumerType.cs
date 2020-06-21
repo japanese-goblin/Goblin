@@ -1,6 +1,6 @@
 ﻿namespace Goblin.Domain
 {
-    public enum UserType
+    public enum ConsumerType
     {
         Vkontakte,
         Telegram

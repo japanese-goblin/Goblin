@@ -5,7 +5,7 @@ using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Goblin.Domain.Entities;
+using Goblin.Domain.Abstractions;
 using Goblin.Narfu;
 using Newtonsoft.Json;
 
@@ -21,7 +21,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
             _narfuApi = narfuApi;
         }
 
-        public async Task<IResult> Execute(IMessage msg, BotUser user)
+        public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
             if(string.IsNullOrWhiteSpace(msg.Payload))
             {

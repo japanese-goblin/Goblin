@@ -9,7 +9,6 @@ using Goblin.Application.Vk.Extensions;
 using Goblin.Application.Vk.Models;
 using Goblin.Application.Vk.Options;
 using Goblin.DataAccess;
-using Goblin.Domain;
 using Goblin.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -54,7 +53,7 @@ namespace Goblin.Application.Vk
 
             if(upd.Type == GroupUpdateType.MessageNew)
             {
-                var msg = _mapper.Map<VkMessage>(upd.MessageNew);
+                var msg = _mapper.Map<VkMessage>(upd.MessageNew.Message);
                 await MessageNew(msg, upd.MessageNew.ClientInfo);
             }
             else if(upd.Type == GroupUpdateType.GroupLeave)
@@ -76,17 +75,10 @@ namespace Goblin.Application.Vk
 
         private async Task MessageNew(VkMessage message, ClientInfo clientInfo)
         {
-            var user = await _db.BotUsers.FindAsync(message.MessageUserId);
-            if(user is null)
-            {
-                _logger.Debug("Пользователь с id {0} не найден. Создание записи.", message.MessageUserId);
-                user = (await _db.BotUsers.AddAsync(new BotUser(message.MessageUserId, type: UserType.Vkontakte))).Entity;
-                await _db.SaveChangesAsync();
-                _logger.Debug("Пользователь создан");
-            }
+            var user = await GetBotUser(message);
 
             _logger.Debug("Обработка сообщения");
-            var result = await _commandsService.ExecuteCommand(message, user);
+            var result = await _commandsService.ExecuteCommand<TgBotUser>(message, user);
             _logger.Information("Обработка сообщения завершена");
             _logger.Debug("Отправка сообщения");
 
@@ -117,6 +109,20 @@ namespace Goblin.Application.Vk
             _logger.Information("Отправка сообщения завершена");
         }
 
+        private async Task<VkBotUser> GetBotUser(VkMessage message)
+        {
+            var user = await _db.VkBotUsers.FindAsync(message.MessageUserId);
+            if(user is null)
+            {
+                _logger.Debug("Пользователь с id {0} не найден. Создание записи.", message.MessageUserId);
+                user = (await _db.VkBotUsers.AddAsync(new VkBotUser(message.MessageUserId))).Entity;
+                await _db.SaveChangesAsync();
+                _logger.Debug("Пользователь создан");
+            }
+
+            return user;
+        }
+
         public async Task GroupLeave(GroupLeave leave)
         {
             const string groupLeaveMessage = "Очень жаль, что ты решил отписаться от группы 😢\n" +
@@ -124,7 +130,7 @@ namespace Goblin.Application.Vk
                                              "администрации об этом через команду 'админ *сообщение*' (подробнее смотри в справке).";
 
             _logger.Information("Пользователь id{0} покинул группу", leave.UserId);
-            var admins = _db.BotUsers.Where(x => x.IsAdmin).Select(x => x.Id);
+            var admins = _db.VkBotUsers.Where(x => x.IsAdmin).Select(x => x.Id);
             var vkUser = (await _vkApi.Users.GetAsync(new[] { leave.UserId.Value })).First();
             var userName = $"{vkUser.FirstName} {vkUser.LastName}";
             await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
@@ -157,7 +163,7 @@ namespace Goblin.Application.Vk
                                             "при помощи команды 'админ *сообщение*' (подробнее смотри в справке)";
 
             _logger.Information("Пользователь id{0} вступил в группу", join.UserId);
-            var admins = _db.BotUsers.Where(x => x.IsAdmin).Select(x => x.Id);
+            var admins = _db.VkBotUsers.Where(x => x.IsAdmin).Select(x => x.Id);
             var vkUser = (await _vkApi.Users.GetAsync(new[] { join.UserId.Value })).First();
             var userName = $"{vkUser.FirstName} {vkUser.LastName}";
             await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams

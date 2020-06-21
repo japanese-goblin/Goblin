@@ -6,7 +6,7 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Goblin.Domain.Entities;
+using Goblin.Domain.Abstractions;
 using Goblin.Narfu;
 using Serilog;
 
@@ -23,7 +23,7 @@ namespace Goblin.Application.Core.Commands.Text
             _narfuApi = narfuApi;
         }
 
-        public async Task<IResult> Execute(IMessage msg, BotUser user)
+        public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
             var teacherName = string.Join(' ', msg.MessageParams);
             if(string.IsNullOrWhiteSpace(teacherName))

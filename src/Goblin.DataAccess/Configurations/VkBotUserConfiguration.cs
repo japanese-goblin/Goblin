@@ -1,12 +1,12 @@
-using Goblin.Domain.Entities;
+﻿using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Goblin.DataAccess.Configurations
 {
-    public class TgBotUserConfiguration : IEntityTypeConfiguration<TgBotUser>
+    public class VkBotUserConfiguration : IEntityTypeConfiguration<VkBotUser>
     {
-        public void Configure(EntityTypeBuilder<TgBotUser> builder)
+        public void Configure(EntityTypeBuilder<VkBotUser> builder)
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id)

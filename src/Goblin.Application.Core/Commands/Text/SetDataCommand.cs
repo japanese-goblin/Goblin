@@ -4,7 +4,7 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
-using Goblin.Domain.Entities;
+using Goblin.Domain.Abstractions;
 using Goblin.Narfu;
 using Goblin.OpenWeatherMap;
 
@@ -26,9 +26,9 @@ namespace Goblin.Application.Core.Commands.Text
             _narfu = narfu;
         }
 
-        public async Task<IResult> Execute(IMessage msg, BotUser user)
+        public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
-            var botUser = await _db.BotUsers.FindAsync(user.Id);
+            var botUser = await _db.Set<T>().FindAsync(user.Id);
             var prms = msg.Text.Split(' ', 3);
             if(prms.Length != 3)
             {

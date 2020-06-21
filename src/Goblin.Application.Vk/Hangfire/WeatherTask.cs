@@ -27,7 +27,7 @@ namespace Goblin.Application.Vk.Hangfire
 
         public async Task SendDailyWeather()
         {
-            var grouped = _db.BotUsers.Where(x => x.HasWeatherSubscription)
+            var grouped = _db.VkBotUsers.Where(x => x.HasWeatherSubscription)
                              .ToArray()
                              .GroupBy(x => x.WeatherCity);
             foreach(var group in grouped)

@@ -60,7 +60,7 @@ namespace Goblin.Application.Vk.Hangfire
             {
                 RecurringJob.AddOrUpdate<SendToConversationTasks>(
                                                                   $"DAILY__{job.Name}",
-                                                                  x => x.SendToConv(job.VkId, job.NarfuGroup,
+                                                                  x => x.SendToConv(job.ChatId, job.NarfuGroup,
                                                                                     job.WeatherCity),
                                                                   $"{job.Minutes} {job.Hours} * * *",
                                                                   TimeZoneInfo.Local

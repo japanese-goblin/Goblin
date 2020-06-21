@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Goblin.Application.Core.Options;
-using Goblin.Application.Vk.Extensions;
 using Goblin.DataAccess;
 using Hangfire;
 using Microsoft.Extensions.Options;
 using VkNet.Abstractions;
-using VkNet.Model.RequestParams;
 
 namespace Goblin.Application.Vk.Hangfire
 {
@@ -28,11 +24,12 @@ namespace Goblin.Application.Vk.Hangfire
         {
             ConfigureMailing();
 
-            BackgroundJob.Enqueue<StartupTasks>(x => x.SendOldReminds());
+            // BackgroundJob.Enqueue<StartupTasks>(x => x.SendOldReminds());
 
             BackgroundJob.Enqueue<SendToConversationTasks>(x => x.Dummy());
-            RecurringJob.AddOrUpdate<SendRemindTask>("SendRemind", x => x.SendRemind(),
-                                                     Cron.Minutely, TimeZoneInfo.Local);
+
+            // RecurringJob.AddOrUpdate<SendRemindTask>("SendRemind", x => x.SendRemind(),
+            //                                          Cron.Minutely, TimeZoneInfo.Local);
         }
 
         private void ConfigureMailing()
@@ -55,22 +52,22 @@ namespace Goblin.Application.Vk.Hangfire
             }
         }
 
-        public async Task SendOldReminds()
-        {
-            var reminds = _db.Reminds.Where(x => x.Date < DateTime.Now);
-
-            foreach(var remind in reminds)
-            {
-                await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
-                {
-                    PeerId = remind.BotUserId,
-                    Message = $"Напоминаю:\n{remind.Text}"
-                });
-
-                _db.Reminds.Remove(remind);
-            }
-
-            await _db.SaveChangesAsync();
-        }
+        // public async Task SendOldReminds()
+        // {
+        //     var reminds = _db.Reminds.Where(x => x.Date < DateTime.Now);
+        //
+        //     foreach(var remind in reminds)
+        //     {
+        //         await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
+        //         {
+        //             PeerId = remind.ChatId,
+        //             Message = $"Напоминаю:\n{remind.Text}"
+        //         });
+        //
+        //         _db.Reminds.Remove(remind);
+        //     }
+        //
+        //     await _db.SaveChangesAsync();
+        // }
     }
 }

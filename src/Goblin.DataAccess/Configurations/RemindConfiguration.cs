@@ -1,3 +1,4 @@
+using Goblin.Domain;
 using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,12 +11,13 @@ namespace Goblin.DataAccess.Configurations
         {
             builder.HasKey(x => x.Id);
 
-            builder.HasOne(x => x.BotUser)
-                   .WithMany(x => x.Reminds)
-                   .HasForeignKey(x => x.BotUserId);
-
-            builder.Property(x => x.Text).HasMaxLength(100).IsRequired();
-            builder.Property(x => x.Date).IsRequired();
+            builder.Property(x => x.Text)
+                   .HasMaxLength(100)
+                   .IsRequired();
+            builder.Property(x => x.Date)
+                   .IsRequired();
+            builder.Property(x => x.ConsumerType)
+                   .HasDefaultValue(ConsumerType.Vkontakte);
         }
     }
 }

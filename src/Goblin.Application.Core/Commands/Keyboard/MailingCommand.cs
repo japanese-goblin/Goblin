@@ -5,7 +5,7 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
-using Goblin.Domain.Entities;
+using Goblin.Domain.Abstractions;
 using Newtonsoft.Json;
 
 namespace Goblin.Application.Core.Commands.Keyboard
@@ -20,11 +20,11 @@ namespace Goblin.Application.Core.Commands.Keyboard
             _db = db;
         }
 
-        public async Task<IResult> Execute(IMessage msg, BotUser user)
+        public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
             const string success = "Успешно.";
 
-            user = await _db.BotUsers.FindAsync(user.Id);
+            user = await _db.Set<T>().FindAsync(user.Id);
             var choose = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
             var isSchedule = user.HasScheduleSubscription;
             var isWeather = user.HasWeatherSubscription;

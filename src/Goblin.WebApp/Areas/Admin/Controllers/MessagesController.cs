@@ -31,7 +31,7 @@ namespace Goblin.WebApp.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> SendToAll(string msg)
         {
-            var chunks = _db.BotUsers.AsNoTracking().Select(x => x.Id)
+            var chunks = _db.VkBotUsers.AsNoTracking().Select(x => x.Id)
                             .AsEnumerable().Chunk(100);
 
             foreach(var chunk in chunks)

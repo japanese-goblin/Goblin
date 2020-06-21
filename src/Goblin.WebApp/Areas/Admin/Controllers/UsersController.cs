@@ -19,7 +19,7 @@ namespace Goblin.WebApp.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            var data = _db.BotUsers
+            var data = _db.VkBotUsers
                           .AsNoTracking()
                           .ToArray();
             ViewData["count"] = data.Length;

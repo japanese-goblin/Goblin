@@ -6,7 +6,7 @@ namespace Goblin.Domain.Entities
     {
         public int Id { get; private set; }
         public string Name { get; private set; }
-        public long VkId { get; private set; }
+        public long ChatId { get; private set; }
 
         public int NarfuGroup { get; private set; }
         public string WeatherCity { get; private set; }
@@ -14,18 +14,21 @@ namespace Goblin.Domain.Entities
         public int Hours { get; private set; }
         public int Minutes { get; private set; }
 
+        public ConsumerType ConsumerType { get; private set; }
+
         protected CronJob()
         {
         }
 
-        public CronJob(string name, long vkId, int narfuGroup, string weatherCity, int hours, int minutes)
+        public CronJob(string name, long vkId, int narfuGroup, string weatherCity, int hours, int minutes, ConsumerType type)
         {
             SetName(name);
-            SetVkId(vkId);
+            SetChatId(vkId);
             SetNarfuGroup(narfuGroup);
             SetWeatherCity(weatherCity);
             SetHours(hours);
             SetMinutes(minutes);
+            SetConsumerType(type);
         }
 
         public void SetName(string name)
@@ -38,14 +41,14 @@ namespace Goblin.Domain.Entities
             Name = name;
         }
 
-        public void SetVkId(long vkId)
+        public void SetChatId(long chatId)
         {
-            if(vkId <= 0)
+            if(chatId <= 0)
             {
-                throw new ArgumentException("Параметр должен быть больше 0", nameof(vkId));
+                throw new ArgumentException("Параметр должен быть больше 0", nameof(chatId));
             }
 
-            VkId = vkId;
+            ChatId = chatId;
         }
 
         public void SetNarfuGroup(int group)
@@ -83,6 +86,11 @@ namespace Goblin.Domain.Entities
             }
 
             Minutes = minutes;
+        }
+
+        private void SetConsumerType(ConsumerType type)
+        {
+            ConsumerType = type;
         }
     }
 }

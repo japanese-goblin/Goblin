@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using Goblin.Application.Core;
+using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Telegram.Converters;
 using Goblin.Application.Telegram.Models;
 using Goblin.DataAccess;
-using Goblin.Domain;
 using Goblin.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -44,15 +44,9 @@ namespace Goblin.Application.Telegram
 
         private async Task HandleMessageEvent(TelegramMessage message)
         {
-            var user = await _context.BotUsers.FindAsync(message.MessageUserId);
-            if(user is null)
-            {
-                user = (await _context.BotUsers.AddAsync(new BotUser(message.MessageUserId,
-                                                                     type: UserType.Telegram))).Entity;
-                await _context.SaveChangesAsync();
-            }
+            var user = await GetBotUser(message);
 
-            var result = await _commandsService.ExecuteCommand(message, user);
+            var result = await _commandsService.ExecuteCommand<TgBotUser>(message, user);
 
             if(!result.IsSuccessful)
             {
@@ -71,11 +65,24 @@ namespace Goblin.Application.Telegram
             }
         }
 
+        private async Task<TgBotUser> GetBotUser(IMessage message)
+        {
+            var user = await _context.TgBotUsers
+                                     .FindAsync(message.MessageUserId);
+            if(user is null)
+            {
+                user = (await _context.AddAsync(new TgBotUser(message.MessageUserId))).Entity;
+                await _context.SaveChangesAsync();
+            }
+
+            return user;
+        }
+
         private async Task HandleCallback(CallbackQuery query)
         {
             var msg = _mapper.Map<TelegramCallbackMessage>(query);
-            var user = new BotUser(1, "Архангельск", 351917); //TODO:
-            var result = await _commandsService.ExecuteCommand(msg, user);
+            var user = await GetBotUser(msg);
+            var result = await _commandsService.ExecuteCommand<TgBotUser>(msg, user);
 
             if(result is CommandNotFoundResult && !user.IsErrorsEnabled)
             {

@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Goblin.Domain.Entities;
+using Goblin.Domain.Abstractions;
 
 namespace Goblin.Application.Core.Abstractions
 {
@@ -9,6 +9,6 @@ namespace Goblin.Application.Core.Abstractions
 
         string[] Aliases { get; }
 
-        Task<IResult> Execute(IMessage msg, BotUser user);
+        Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser;
     }
 }

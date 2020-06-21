@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
 
-namespace Goblin.Domain.Entities
+namespace Goblin.Domain.Abstractions
 {
-    public class BotUser
+    public abstract class BotUser
     {
         public long Id { get; private set; }
 
@@ -15,17 +14,13 @@ namespace Goblin.Domain.Entities
 
         public bool HasWeatherSubscription { get; private set; }
         public bool HasScheduleSubscription { get; private set; }
-        public UserType UserType { get; set; }
-
-        public virtual ICollection<Remind> Reminds { get; private set; }
 
         protected BotUser()
         {
         }
 
         public BotUser(long id, string city = "", int group = 0, bool isAdmin = false,
-                       bool isErrorsEnabled = true, bool hasWeather = false, bool hasSchedule = false,
-                       UserType type = UserType.Vkontakte)
+                       bool isErrorsEnabled = true, bool hasWeather = false, bool hasSchedule = false)
         {
             SetId(id);
             SetCity(city);
@@ -34,17 +29,16 @@ namespace Goblin.Domain.Entities
             SetErrorNotification(isErrorsEnabled);
             SetHasWeather(hasWeather);
             SetHasSchedule(hasSchedule);
-            SetUserType(type);
         }
 
-        private void SetId(long vkId)
+        private void SetId(long id)
         {
-            if(vkId <= 0)
+            if(id <= 0)
             {
-                throw new ArgumentException("Параметр должен быть больше 0", nameof(vkId));
+                throw new ArgumentException("Параметр должен быть больше 0", nameof(id));
             }
 
-            Id = vkId;
+            Id = id;
         }
 
         public void SetCity(string city)
@@ -80,11 +74,6 @@ namespace Goblin.Domain.Entities
         public void SetHasSchedule(bool isSchedule)
         {
             HasScheduleSubscription = isSchedule;
-        }
-
-        private void SetUserType(UserType type)
-        {
-            UserType = type;
         }
     }
 }

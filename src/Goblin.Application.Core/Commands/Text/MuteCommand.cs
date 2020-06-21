@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
-using Goblin.Domain.Entities;
+using Goblin.Domain.Abstractions;
 
 namespace Goblin.Application.Core.Commands.Text
 {
@@ -17,9 +17,9 @@ namespace Goblin.Application.Core.Commands.Text
             _db = db;
         }
 
-        public async Task<IResult> Execute(IMessage msg, BotUser user)
+        public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
-            user = await _db.BotUsers.FindAsync(user.Id);
+            user = await _db.Set<T>().FindAsync(user.Id);
             user.SetErrorNotification(!user.IsErrorsEnabled);
             await _db.SaveChangesAsync();
             return new SuccessfulResult

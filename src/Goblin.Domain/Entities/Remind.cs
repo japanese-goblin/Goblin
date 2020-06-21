@@ -5,22 +5,23 @@ namespace Goblin.Domain.Entities
     public class Remind
     {
         public int Id { get; private set; }
-        public long BotUserId { get; private set; }
+        public long ChatId { get; private set; }
 
         public string Text { get; private set; }
         public DateTime Date { get; private set; }
 
-        public virtual BotUser BotUser { get; private set; }
+        public ConsumerType ConsumerType { get; private set; }
 
         protected Remind()
         {
         }
 
-        public Remind(long botUserId, string text, DateTime date)
+        public Remind(long chatId, string text, DateTime date, ConsumerType type)
         {
-            SetBotUserId(botUserId);
+            SetChatId(chatId);
             SetText(text);
             SetDateTime(date);
+            SetConsumerType(type);
         }
 
         private void SetText(string text)
@@ -43,14 +44,19 @@ namespace Goblin.Domain.Entities
             Date = date;
         }
 
-        private void SetBotUserId(long botUserId)
+        private void SetChatId(long botUserId)
         {
             if(botUserId <= 0)
             {
                 throw new ArgumentException("Параметр должен быть больше 0", nameof(botUserId));
             }
 
-            BotUserId = botUserId;
+            ChatId = botUserId;
+        }
+
+        private void SetConsumerType(ConsumerType type)
+        {
+            ConsumerType = type;
         }
     }
 }
