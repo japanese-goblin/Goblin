@@ -5,10 +5,10 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Telegram.Converters;
 using Goblin.Application.Telegram.Models;
 using Goblin.Domain.Entities;
-using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Goblin.Application.Telegram
 {
@@ -16,12 +16,10 @@ namespace Goblin.Application.Telegram
     {
         private readonly TelegramBotClient _botClient;
         private readonly CommandsService _commandsService;
-        private readonly ILogger _log;
         private readonly IMapper _mapper;
 
         public TelegramCallbackHandler(TelegramBotClient botClient, CommandsService commandsService, IMapper mapper)
         {
-            _log = Log.ForContext<TelegramCallbackHandler>();
             _botClient = botClient;
             _commandsService = commandsService;
             _mapper = mapper;
@@ -76,6 +74,11 @@ namespace Goblin.Application.Telegram
 
             await _botClient.AnswerCallbackQueryAsync(query.Id);
             await _botClient.EditMessageTextAsync(new ChatId(query.From.Id), query.Message.MessageId, result.Message);
+            if(result.Keyboard.IsInline)
+            {
+                await _botClient.EditMessageReplyMarkupAsync(new ChatId(query.From.Id), query.Message.MessageId,
+                                                             KeyboardConverter.FromCoreToTg(result.Keyboard) as InlineKeyboardMarkup);
+            }
         }
     }
 }
