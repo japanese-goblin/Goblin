@@ -37,12 +37,12 @@ namespace Goblin.Application.Core.Commands.Text
                 return new FailedResult("Укажите дату, время и текст напоминания (11.11.2011 11:11 текст)");
             }
 
-            if(all[0].Equals("завтра", StringComparison.CurrentCultureIgnoreCase))
+            if(all[0].Equals("завтра", StringComparison.OrdinalIgnoreCase))
             {
                 var d = DateTime.Now.AddDays(1);
                 all[0] = $"{d.Day}.{d.Month}.{d.Year}";
             }
-            else if(all[0].Equals("сегодня", StringComparison.CurrentCultureIgnoreCase))
+            else if(all[0].Equals("сегодня", StringComparison.OrdinalIgnoreCase))
             {
                 var d = DateTime.Now;
                 all[0] = $"{d.Day}.{d.Month}.{d.Year}";
@@ -83,7 +83,7 @@ namespace Goblin.Application.Core.Commands.Text
                                                        "dd.M.yyyy H:m", "d.M.yyyy H:m"
                                                    },
                                                    null, DateTimeStyles.AssumeLocal, out dateTime);
-            
+
             return isCorrect;
         }
     }
