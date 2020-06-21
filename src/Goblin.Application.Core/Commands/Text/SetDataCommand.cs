@@ -28,7 +28,7 @@ namespace Goblin.Application.Core.Commands.Text
 
         public async Task<IResult> Execute(IMessage msg, BotUser user)
         {
-            var botUser = await _db.BotUsers.FindAsync(user.VkId);
+            var botUser = await _db.BotUsers.FindAsync(user.Id);
             var prms = msg.Text.Split(' ', 3);
             if(prms.Length != 3)
             {

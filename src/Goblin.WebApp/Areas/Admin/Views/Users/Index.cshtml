@@ -41,14 +41,14 @@
         </tr>
         foreach(var user in group)
         {
-            var url = $"https://vk.com/id{user.VkId}";
+            var url = $"https://vk.com/id{user.Id}";
             <tr>
                 <td>
-                    <a href="@url" target="_blank">@user.VkId</a>
+                    <a href="@url" target="_blank">@user.Id</a>
                 </td>
                 <td>@user.IsAdmin</td>
-                <td>@user.SubscribeInfo.IsSchedule</td>
-                <td>@user.SubscribeInfo.IsWeather</td>
+                <td>@user.HasScheduleSubscription</td>
+                <td>@user.HasWeatherSubscription</td>
                 <td>@user.WeatherCity</td>
             </tr>
         }

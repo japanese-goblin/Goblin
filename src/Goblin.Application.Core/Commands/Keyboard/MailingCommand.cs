@@ -24,10 +24,10 @@ namespace Goblin.Application.Core.Commands.Keyboard
         {
             const string success = "Успешно.";
 
-            user = await _db.BotUsers.FindAsync(user.VkId);
+            user = await _db.BotUsers.FindAsync(user.Id);
             var choose = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
-            var isSchedule = user.SubscribeInfo.IsSchedule;
-            var isWeather = user.SubscribeInfo.IsWeather;
+            var isSchedule = user.HasScheduleSubscription;
+            var isWeather = user.HasWeatherSubscription;
             if(choose.Equals("weather", StringComparison.OrdinalIgnoreCase))
             {
                 if(string.IsNullOrWhiteSpace(user.WeatherCity))
@@ -35,7 +35,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
                     return new FailedResult(DefaultErrors.CityNotSet);
                 }
 
-                user.SubscribeInfo.SetIsWeather(!isWeather);
+                user.SetHasWeather(!isWeather);
                 await _db.SaveChangesAsync();
                 return new SuccessfulResult
                 {
@@ -51,7 +51,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
                     return new FailedResult(DefaultErrors.GroupNotSet);
                 }
 
-                user.SubscribeInfo.SetIsSchedule(!isSchedule);
+                user.SetHasSchedule(!isSchedule);
                 await _db.SaveChangesAsync();
                 return new SuccessfulResult
                 {

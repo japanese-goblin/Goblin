@@ -5,7 +5,7 @@ namespace Goblin.Domain.Entities
 {
     public class BotUser
     {
-        public long VkId { get; private set; }
+        public long Id { get; private set; }
 
         public string WeatherCity { get; private set; }
         public int NarfuGroup { get; private set; }
@@ -13,30 +13,38 @@ namespace Goblin.Domain.Entities
         public bool IsErrorsEnabled { get; private set; }
         public bool IsAdmin { get; private set; }
 
+        public bool HasWeatherSubscription { get; private set; }
+        public bool HasScheduleSubscription { get; private set; }
+        public UserType UserType { get; set; }
+
         public virtual ICollection<Remind> Reminds { get; private set; }
-        public virtual Subscribe SubscribeInfo { get; private set; }
 
         protected BotUser()
         {
         }
 
-        public BotUser(long vkId, string city = "", int group = 0, bool isAdmin = false, bool isErrorsEnabled = true)
+        public BotUser(long id, string city = "", int group = 0, bool isAdmin = false,
+                       bool isErrorsEnabled = true, bool hasWeather = false, bool hasSchedule = false,
+                       UserType type = UserType.Vkontakte)
         {
-            SetVkId(vkId);
+            SetId(id);
             SetCity(city);
             SetNarfuGroup(group);
             SetAdmin(isAdmin);
             SetErrorNotification(isErrorsEnabled);
+            SetHasWeather(hasWeather);
+            SetHasSchedule(hasSchedule);
+            SetUserType(type);
         }
 
-        private void SetVkId(long vkId)
+        private void SetId(long vkId)
         {
             if(vkId <= 0)
             {
                 throw new ArgumentException("Параметр должен быть больше 0", nameof(vkId));
             }
 
-            VkId = vkId;
+            Id = vkId;
         }
 
         public void SetCity(string city)
@@ -62,6 +70,21 @@ namespace Goblin.Domain.Entities
         public void SetAdmin(bool isAdmin = false)
         {
             IsAdmin = isAdmin;
+        }
+
+        public void SetHasWeather(bool isWeather)
+        {
+            HasWeatherSubscription = isWeather;
+        }
+
+        public void SetHasSchedule(bool isSchedule)
+        {
+            HasScheduleSubscription = isSchedule;
+        }
+
+        private void SetUserType(UserType type)
+        {
+            UserType = type;
         }
     }
 }

@@ -4,6 +4,8 @@ using Goblin.Application.Core;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Telegram.Converters;
 using Goblin.Application.Telegram.Models;
+using Goblin.DataAccess;
+using Goblin.Domain;
 using Goblin.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -16,10 +18,12 @@ namespace Goblin.Application.Telegram
     {
         private readonly TelegramBotClient _botClient;
         private readonly CommandsService _commandsService;
+        private readonly BotDbContext _context;
         private readonly IMapper _mapper;
 
-        public TelegramCallbackHandler(TelegramBotClient botClient, CommandsService commandsService, IMapper mapper)
+        public TelegramCallbackHandler(BotDbContext context, TelegramBotClient botClient, CommandsService commandsService, IMapper mapper)
         {
+            _context = context;
             _botClient = botClient;
             _commandsService = commandsService;
             _mapper = mapper;
@@ -29,7 +33,8 @@ namespace Goblin.Application.Telegram
         {
             if(update.Type == UpdateType.Message)
             {
-                await HandleMessageEvent(update.Message);
+                var msg = _mapper.Map<TelegramMessage>(update.Message);
+                await HandleMessageEvent(msg);
             }
             else if(update.Type == UpdateType.CallbackQuery)
             {
@@ -37,11 +42,17 @@ namespace Goblin.Application.Telegram
             }
         }
 
-        private async Task HandleMessageEvent(Message message)
+        private async Task HandleMessageEvent(TelegramMessage message)
         {
-            var msg = _mapper.Map<TelegramMessage>(message);
-            var user = new BotUser(1, "Архангельск", 351917); //TODO:
-            var result = await _commandsService.ExecuteCommand(msg, user);
+            var user = await _context.BotUsers.FindAsync(message.MessageUserId);
+            if(user is null)
+            {
+                user = (await _context.BotUsers.AddAsync(new BotUser(message.MessageUserId,
+                                                                     type: UserType.Telegram))).Entity;
+                await _context.SaveChangesAsync();
+            }
+
+            var result = await _commandsService.ExecuteCommand(message, user);
 
             if(!result.IsSuccessful)
             {
@@ -51,11 +62,11 @@ namespace Goblin.Application.Telegram
                     return;
                 }
 
-                await _botClient.SendTextMessageAsync(msg.MessageChatId, result.ToString());
+                await _botClient.SendTextMessageAsync(message.MessageChatId, result.ToString());
             }
             else
             {
-                await _botClient.SendTextMessageAsync(msg.MessageChatId, result.Message,
+                await _botClient.SendTextMessageAsync(message.MessageChatId, result.Message,
                                                       replyMarkup: KeyboardConverter.FromCoreToTg(result.Keyboard));
             }
         }

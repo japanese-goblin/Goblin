@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Goblin.Application.Core.Commands.Keyboard;
 using Goblin.Application.Vk.Extensions;
 using Goblin.DataAccess;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
@@ -28,8 +27,7 @@ namespace Goblin.Application.Vk.Hangfire
 
         public async Task SendSchedule()
         {
-            var grouped = _db.BotUsers.Include(x => x.SubscribeInfo)
-                             .Where(x => x.SubscribeInfo.IsSchedule)
+            var grouped = _db.BotUsers.Where(x => x.HasScheduleSubscription)
                              .ToArray()
                              .GroupBy(x => x.NarfuGroup);
             foreach(var group in grouped)
@@ -38,7 +36,7 @@ namespace Goblin.Application.Vk.Hangfire
                 {
                     try
                     {
-                        var ids = chunk.Select(x => x.VkId);
+                        var ids = chunk.Select(x => x.Id);
                         var result = await _command.GetSchedule(group.Key, DateTime.Today);
                         await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
                         {

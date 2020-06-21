@@ -59,7 +59,7 @@ namespace Goblin.Application.Core.Commands.Text
                 return new FailedResult("Дата напоминания меньше текущей");
             }
 
-            await _db.Reminds.AddAsync(new Remind(user.VkId, all[2], dateTime));
+            await _db.Reminds.AddAsync(new Remind(user.Id, all[2], dateTime));
             await _db.SaveChangesAsync();
 
             return new SuccessfulResult

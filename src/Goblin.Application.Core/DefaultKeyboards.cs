@@ -24,8 +24,8 @@ namespace Goblin.Application.Core
 
         public static CoreKeyboard GetMailingKeyboard(BotUser user)
         {
-            var isSchedule = user.SubscribeInfo.IsSchedule;
-            var isWeather = user.SubscribeInfo.IsWeather;
+            var isSchedule = user.HasScheduleSubscription;
+            var isWeather = user.HasWeatherSubscription;
 
             var scheduleColor = isSchedule
                                         ? CoreKeyboardButtonColor.Negative

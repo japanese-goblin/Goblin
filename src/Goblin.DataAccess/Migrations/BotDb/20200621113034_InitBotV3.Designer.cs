@@ -9,39 +9,59 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Goblin.DataAccess.Migrations.BotDb
 {
     [DbContext(typeof(BotDbContext))]
-    [Migration("20190819104144_InitBot")]
-    partial class InitBot
+    [Migration("20200621113034_InitBotV3")]
+    partial class InitBotV3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+                .HasAnnotation("ProductVersion", "3.1.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Goblin.Domain.Entities.BotUser", b =>
                 {
-                    b.Property<long>("VkId");
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("HasScheduleSubscription")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("HasWeatherSubscription")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("IsAdmin")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<bool>("IsErrorsEnabled")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
                     b.Property<int>("NarfuGroup")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("UserType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<string>("WeatherCity")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100)
                         .HasDefaultValue("");
 
-                    b.HasKey("VkId");
+                    b.HasKey("Id");
 
                     b.ToTable("BotUsers");
                 });
@@ -49,23 +69,31 @@ namespace Goblin.DataAccess.Migrations.BotDb
             modelBuilder.Entity("Goblin.Domain.Entities.CronJob", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("Hours");
+                    b.Property<int>("Hours")
+                        .HasColumnType("integer");
 
-                    b.Property<int>("Minutes");
+                    b.Property<int>("Minutes")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("NarfuGroup")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
                         .HasDefaultValue(0);
 
-                    b.Property<long>("VkId");
+                    b.Property<long>("VkId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("WeatherCity")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("text")
                         .HasDefaultValue("");
 
                     b.HasKey("Id");
@@ -76,14 +104,19 @@ namespace Goblin.DataAccess.Migrations.BotDb
             modelBuilder.Entity("Goblin.Domain.Entities.Remind", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<long>("BotUserId");
+                    b.Property<long>("BotUserId")
+                        .HasColumnType("bigint");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Text")
                         .IsRequired()
+                        .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
                     b.HasKey("Id");
@@ -93,43 +126,13 @@ namespace Goblin.DataAccess.Migrations.BotDb
                     b.ToTable("Reminds");
                 });
 
-            modelBuilder.Entity("Goblin.Domain.Entities.Subscribe", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long>("BotUserId");
-
-                    b.Property<bool>("IsSchedule")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("IsWeather")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(false);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BotUserId")
-                        .IsUnique();
-
-                    b.ToTable("Subscribes");
-                });
-
             modelBuilder.Entity("Goblin.Domain.Entities.Remind", b =>
                 {
                     b.HasOne("Goblin.Domain.Entities.BotUser", "BotUser")
                         .WithMany("Reminds")
                         .HasForeignKey("BotUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Goblin.Domain.Entities.Subscribe", b =>
-                {
-                    b.HasOne("Goblin.Domain.Entities.BotUser", "BotUser")
-                        .WithOne("SubscribeInfo")
-                        .HasForeignKey("Goblin.Domain.Entities.Subscribe", "BotUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
