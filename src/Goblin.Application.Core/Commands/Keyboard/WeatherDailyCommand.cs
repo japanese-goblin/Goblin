@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
+using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Entities;
 using Goblin.OpenWeatherMap;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Goblin.Application.Core.Commands.Keyboard
 {
@@ -63,6 +66,48 @@ namespace Goblin.Application.Core.Commands.Keyboard
                 Message = weather.ToString(),
                 Keyboard = DefaultKeyboards.GetDailyWeatherKeyboard()
             };
+        }
+
+        public async Task<IResult> GetDailyWeather(string city, DateTime date)
+        {
+            try
+            {
+                var weather = await _api.GetDailyWeatherAt(city, date);
+
+                string formattedDate;
+                if(date.Date == DateTime.Today)
+                {
+                    formattedDate = $"сегодня ({date:dd.MM, dddd})";
+                }
+                else if(date.Date == DateTime.Today.AddDays(1))
+                {
+                    formattedDate = $"завтра ({date:dd.MM, dddd})";
+                }
+                else
+                {
+                    formattedDate = $"({date:dd.MM (dddd)})";
+                }
+
+                return new SuccessfulResult
+                {
+                    Message = $"Погода в городе {city} на {formattedDate}:\n{weather}"
+                };
+            }
+            catch(FlurlHttpException ex)
+            {
+                if(ex.Call.HttpStatus == HttpStatusCode.NotFound)
+                {
+                    return new FailedResult("Указанный город не найден");
+                }
+
+                Log.ForContext<OpenWeatherMapApi>().Fatal(ex, "Ошибка при получении погоды на текущий момент");
+                return new FailedResult(DefaultErrors.WeatherSiteIsUnavailable);
+            }
+            catch(Exception ex)
+            {
+                Log.ForContext<OpenWeatherMapApi>().Fatal(ex, "Ошибка при получении погоды на день");
+                return new FailedResult(DefaultErrors.WeatherUnexpectedError);
+            }
         }
     }
 }

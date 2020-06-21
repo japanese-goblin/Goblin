@@ -1,9 +1,12 @@
+using System;
 using System.Threading.Tasks;
+using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Entities;
 using Goblin.Narfu;
+using Serilog;
 
 namespace Goblin.Application.Core.Commands.Merged
 {
@@ -28,12 +31,23 @@ namespace Goblin.Application.Core.Commands.Merged
                 return new FailedResult(DefaultErrors.GroupNotSet);
             }
 
-            var exams = await _api.Students.GetExams(user.NarfuGroup);
-
-            return new SuccessfulResult
+            try
             {
-                Message = exams.ToString()
-            };
+                var lessons = await _api.Students.GetExams(user.NarfuGroup);
+                return new SuccessfulResult
+                {
+                    Message = lessons.ToString()
+                };
+            }
+            catch(FlurlHttpException)
+            {
+                return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
+            }
+            catch(Exception ex)
+            {
+                Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении экзаменов");
+                return new FailedResult(DefaultErrors.NarfuUnexpectedError);
+            }
         }
     }
 }

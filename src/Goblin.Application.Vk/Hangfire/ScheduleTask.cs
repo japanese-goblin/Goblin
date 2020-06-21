@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Goblin.Application.Core.Commands.Keyboard;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Application.Vk.Extensions;
 using Goblin.DataAccess;
-using Goblin.Narfu;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using VkNet.Abstractions;
@@ -15,16 +15,16 @@ namespace Goblin.Application.Vk.Hangfire
 {
     public class ScheduleTask
     {
+        private readonly ScheduleCommand _command;
         private readonly BotDbContext _db;
         private readonly ILogger _logger;
-        private readonly NarfuApi _narfuApi;
         private readonly IVkApi _vkApi;
 
-        public ScheduleTask(NarfuApi narfuApi, BotDbContext db, IVkApi vkApi)
+        public ScheduleTask(BotDbContext db, IVkApi vkApi, ScheduleCommand command)
         {
-            _narfuApi = narfuApi;
             _db = db;
             _vkApi = vkApi;
+            _command = command;
             _logger = Log.ForContext<ScheduleTask>();
         }
 
@@ -41,7 +41,7 @@ namespace Goblin.Application.Vk.Hangfire
                     try
                     {
                         var ids = chunk.Select(x => x.VkId);
-                        var schedule = await _narfuApi.Students.GetScheduleAtDateWithResult(group.Key, DateTime.Today);
+                        var schedule = await _command.GetSchedule(group.Key, DateTime.Today);
                         if(schedule is FailedResult failed)
                         {
                             await _vkApi.Messages.SendErrorToUserIds(failed.Message, ids);

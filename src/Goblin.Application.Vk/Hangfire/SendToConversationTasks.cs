@@ -1,11 +1,10 @@
 using System;
 using System.Threading.Tasks;
+using Goblin.Application.Core.Commands.Keyboard;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Application.Vk.Extensions;
 using Goblin.DataAccess;
-using Goblin.Narfu;
-using Goblin.OpenWeatherMap;
 using Hangfire;
 using Serilog;
 using VkNet.Abstractions;
@@ -16,14 +15,15 @@ namespace Goblin.Application.Vk.Hangfire
     public class SendToConversationTasks
     {
         private readonly BotDbContext _db;
-        private readonly NarfuApi _narfuApi;
+        private readonly ScheduleCommand _scheduleCommand;
         private readonly IVkApi _vkApi;
-        private readonly OpenWeatherMapApi _weatherApi;
+        private readonly WeatherDailyCommand _weatherDailyCommand;
 
-        public SendToConversationTasks(OpenWeatherMapApi weatherApi, NarfuApi narfuApi, IVkApi vkApi, BotDbContext db)
+        public SendToConversationTasks(ScheduleCommand scheduleCommand, WeatherDailyCommand weatherDailyCommand, IVkApi vkApi,
+                                       BotDbContext db)
         {
-            _weatherApi = weatherApi;
-            _narfuApi = narfuApi;
+            _scheduleCommand = scheduleCommand;
+            _weatherDailyCommand = weatherDailyCommand;
             _vkApi = vkApi;
             _db = db;
 
@@ -32,10 +32,10 @@ namespace Goblin.Application.Vk.Hangfire
 
         public async Task SendToConv(long id, int group = 0, string city = "")
         {
-            if(!string.IsNullOrWhiteSpace(city) && await _weatherApi.IsCityExists(city))
+            if(!string.IsNullOrWhiteSpace(city))
             {
                 Log.Information("Отправка погоды в {0}", id);
-                var weather = await _weatherApi.GetDailyWeatherWithResult(city, DateTime.Today);
+                var weather = await _weatherDailyCommand.GetDailyWeather(city, DateTime.Today);
                 if(weather is FailedResult failed)
                 {
                     await _vkApi.Messages.SendError(failed.Message, id);
@@ -51,10 +51,10 @@ namespace Goblin.Application.Vk.Hangfire
                 }
             }
 
-            if(_narfuApi.Students.IsCorrectGroup(group) && DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
+            if(DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
             {
                 Log.Information("Отправка расписания в {0}", id);
-                var schedule = await _narfuApi.Students.GetScheduleAtDateWithResult(group, DateTime.Now);
+                var schedule = await _scheduleCommand.GetSchedule(group, DateTime.Now);
                 if(schedule is FailedResult failed)
                 {
                     await _vkApi.Messages.SendError(failed.Message, id);

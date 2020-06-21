@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Goblin.Application.Core.Commands.Keyboard;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Application.Vk.Extensions;
 using Goblin.DataAccess;
-using Goblin.OpenWeatherMap;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using VkNet.Abstractions;
@@ -18,11 +18,11 @@ namespace Goblin.Application.Vk.Hangfire
         private readonly BotDbContext _db;
         private readonly ILogger _logger;
         private readonly IVkApi _vkApi;
-        private readonly OpenWeatherMapApi _weatherApi;
+        private readonly WeatherDailyCommand _weatherDailyCommand;
 
-        public WeatherTask(OpenWeatherMapApi weatherApi, BotDbContext db, IVkApi vkApi)
+        public WeatherTask(WeatherDailyCommand weatherDailyCommand, BotDbContext db, IVkApi vkApi)
         {
-            _weatherApi = weatherApi;
+            _weatherDailyCommand = weatherDailyCommand;
             _db = db;
             _vkApi = vkApi;
             _logger = Log.ForContext<WeatherTask>();
@@ -41,7 +41,7 @@ namespace Goblin.Application.Vk.Hangfire
                     try
                     {
                         var ids = chunk.Select(x => x.VkId).ToArray();
-                        var weather = await _weatherApi.GetDailyWeatherWithResult(group.Key, DateTime.Today);
+                        var weather = await _weatherDailyCommand.GetDailyWeather(group.Key, DateTime.Today);
                         if(weather is FailedResult failed)
                         {
                             await _vkApi.Messages.SendErrorToUserIds(failed.Message, ids);

@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Entities;
 using Goblin.Narfu;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Goblin.Application.Core.Commands.Keyboard
 {
@@ -28,14 +30,35 @@ namespace Goblin.Application.Core.Commands.Keyboard
             }
 
             var date = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
+            return await GetSchedule(user.NarfuGroup, DateTime.Parse(date));
+        }
 
-            var schedule = await _api.Students.GetScheduleAtDate(user.NarfuGroup, DateTime.Parse(date));
-
-            return new SuccessfulResult
+        public async Task<IResult> GetSchedule(int narfuGroup, DateTime date)
+        {
+            if(!_api.Students.IsCorrectGroup(narfuGroup))
             {
-                Message = schedule.ToString(),
-                Keyboard = DefaultKeyboards.GetScheduleKeyboard()
-            };
+                return new FailedResult($"Группа {narfuGroup} не найдена");
+            }
+
+            try
+            {
+                var schedule = await _api.Students.GetScheduleAtDate(narfuGroup, date);
+
+                return new SuccessfulResult
+                {
+                    Message = schedule.ToString(),
+                    Keyboard = DefaultKeyboards.GetScheduleKeyboard()
+                };
+            }
+            catch(FlurlHttpException)
+            {
+                return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
+            }
+            catch(Exception ex)
+            {
+                Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении расписания на день");
+                return new FailedResult(DefaultErrors.NarfuUnexpectedError);
+            }
         }
     }
 }

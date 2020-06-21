@@ -10,5 +10,8 @@
 
         public const string NarfuSiteIsUnavailable = "Сайт с расписанием временно недоступен. Попробуйте позже.";
         public const string NarfuUnexpectedError = "Непредвиденная ошибка получения расписания с сайта. Попробуйте позже.";
+
+        public const string WeatherSiteIsUnavailable = "Сайт с погодой временно недоступен. Попробуйте позже.";
+        public const string WeatherUnexpectedError = "Непредвиденная ошибка при получении погоды. Попробуйте позже.";
     }
 }
