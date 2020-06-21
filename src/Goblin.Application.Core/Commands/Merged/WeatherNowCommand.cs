@@ -1,14 +1,9 @@
-using System;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
+using Goblin.Application.Core.Services;
 using Goblin.Domain.Abstractions;
-using Goblin.OpenWeatherMap;
-using Serilog;
 
 namespace Goblin.Application.Core.Commands.Merged
 {
@@ -18,12 +13,11 @@ namespace Goblin.Application.Core.Commands.Merged
 
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "погода" };
+        private readonly WeatherService _weatherService;
 
-        private readonly OpenWeatherMapApi _api;
-
-        public WeatherNowCommand(OpenWeatherMapApi api)
+        public WeatherNowCommand(WeatherService weatherService)
         {
-            _api = api;
+            _weatherService = weatherService;
         }
 
         public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
@@ -47,10 +41,10 @@ namespace Goblin.Application.Core.Commands.Merged
 
             if(!string.IsNullOrWhiteSpace(city))
             {
-                return await GetWeather(city);
+                return await _weatherService.GetCurrentWeather(city);
             }
 
-            return await GetWeather(user.WeatherCity);
+            return await _weatherService.GetCurrentWeather(user.WeatherCity);
         }
 
         private async Task<IResult> ExecutePayload(BotUser user)
@@ -60,34 +54,7 @@ namespace Goblin.Application.Core.Commands.Merged
                 return new FailedResult(DefaultErrors.CityNotSet);
             }
 
-            return await GetWeather(user.WeatherCity);
-        }
-
-        public async Task<IResult> GetWeather(string city)
-        {
-            try
-            {
-                var weather = await _api.GetCurrentWeather(city);
-                return new SuccessfulResult
-                {
-                    Message = weather.ToString()
-                };
-            }
-            catch(FlurlHttpException ex)
-            {
-                if(ex.Call.HttpStatus == HttpStatusCode.NotFound)
-                {
-                    return new FailedResult($"Город \"{city}\" не найден");
-                }
-
-                Log.ForContext<OpenWeatherMapApi>().Fatal(ex, "Ошибка при получении погоды на текущий момент");
-                return new FailedResult(DefaultErrors.WeatherSiteIsUnavailable);
-            }
-            catch(Exception ex)
-            {
-                Log.ForContext<OpenWeatherMapApi>().Fatal(ex, "Ошибка при получении погоды на текущий момент");
-                return new FailedResult(DefaultErrors.WeatherUnexpectedError);
-            }
+            return await _weatherService.GetCurrentWeather(user.WeatherCity);
         }
     }
 }

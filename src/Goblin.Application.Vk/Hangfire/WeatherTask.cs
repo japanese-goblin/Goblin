@@ -1,7 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Application.Core.Commands.Keyboard;
+using Goblin.Application.Core.Extensions;
+using Goblin.Application.Core.Services;
 using Goblin.Application.Vk.Extensions;
 using Goblin.DataAccess;
 using Serilog;
@@ -15,11 +16,11 @@ namespace Goblin.Application.Vk.Hangfire
         private readonly BotDbContext _db;
         private readonly ILogger _logger;
         private readonly IVkApi _vkApi;
-        private readonly WeatherDailyCommand _weatherDailyCommand;
+        private readonly WeatherService _weatherService;
 
-        public WeatherTask(WeatherDailyCommand weatherDailyCommand, BotDbContext db, IVkApi vkApi)
+        public WeatherTask(WeatherService weatherService, BotDbContext db, IVkApi vkApi)
         {
-            _weatherDailyCommand = weatherDailyCommand;
+            _weatherService = weatherService;
             _db = db;
             _vkApi = vkApi;
             _logger = Log.ForContext<WeatherTask>();
@@ -37,7 +38,7 @@ namespace Goblin.Application.Vk.Hangfire
                     try
                     {
                         var ids = chunk.Select(x => x.Id).ToArray();
-                        var result = await _weatherDailyCommand.GetDailyWeather(group.Key, DateTime.Today);
+                        var result = await _weatherService.GetDailyWeather(group.Key, DateTime.Today);
 
                         await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
                         {

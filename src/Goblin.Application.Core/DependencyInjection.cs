@@ -2,6 +2,7 @@ using System.Linq;
 using System.Reflection;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Options;
+using Goblin.Application.Core.Services;
 using Goblin.Narfu;
 using Goblin.OpenWeatherMap;
 using Hangfire;
@@ -30,6 +31,9 @@ namespace Goblin.Application.Core
                 return api;
             });
             services.AddSingleton<NarfuApi>();
+
+            services.AddSingleton<ScheduleService>();
+            services.AddSingleton<WeatherService>();
         }
 
         private static void AddBotFeatures(IServiceCollection services)

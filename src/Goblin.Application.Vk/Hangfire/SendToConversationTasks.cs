@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Goblin.Application.Core.Commands.Keyboard;
+using Goblin.Application.Core.Services;
 using Goblin.Application.Vk.Extensions;
 using Goblin.DataAccess;
 using Hangfire;
@@ -13,15 +13,15 @@ namespace Goblin.Application.Vk.Hangfire
     public class SendToConversationTasks
     {
         private readonly BotDbContext _db;
-        private readonly ScheduleCommand _scheduleCommand;
+        private readonly ScheduleService _scheduleService;
         private readonly IVkApi _vkApi;
-        private readonly WeatherDailyCommand _weatherDailyCommand;
+        private readonly WeatherService _weatherService;
 
-        public SendToConversationTasks(ScheduleCommand scheduleCommand, WeatherDailyCommand weatherDailyCommand, IVkApi vkApi,
+        public SendToConversationTasks(ScheduleService scheduleService, WeatherService weatherService, IVkApi vkApi,
                                        BotDbContext db)
         {
-            _scheduleCommand = scheduleCommand;
-            _weatherDailyCommand = weatherDailyCommand;
+            _scheduleService = scheduleService;
+            _weatherService = weatherService;
             _vkApi = vkApi;
             _db = db;
 
@@ -33,7 +33,7 @@ namespace Goblin.Application.Vk.Hangfire
             if(!string.IsNullOrWhiteSpace(city))
             {
                 Log.Information("Отправка погоды в {0}", id);
-                var result = await _weatherDailyCommand.GetDailyWeather(city, DateTime.Today);
+                var result = await _weatherService.GetDailyWeather(city, DateTime.Today);
 
                 await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                 {
@@ -45,7 +45,7 @@ namespace Goblin.Application.Vk.Hangfire
             if(DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
             {
                 Log.Information("Отправка расписания в {0}", id);
-                var result = await _scheduleCommand.GetSchedule(group, DateTime.Now);
+                var result = await _scheduleService.GetSchedule(group, DateTime.Now);
                 await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                 {
                     PeerId = id,

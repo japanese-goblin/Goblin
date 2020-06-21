@@ -1,4 +1,4 @@
-namespace Goblin.Application.Vk.Extensions
+namespace Goblin.Application.Core.Extensions
 {
     public static class StringExtensions
     {

@@ -40,14 +40,14 @@ namespace Goblin.Application.Vk.Hangfire
             if(scheduleSettings.IsEnabled)
             {
                 var scheduleTime = $"{scheduleSettings.Minute} {scheduleSettings.Hour} * * 1-6";
-                RecurringJob.AddOrUpdate<ScheduleTask>("SendDailySchedule", x => x.SendSchedule(),
+                RecurringJob.AddOrUpdate<ScheduleTask>("VK_DailySchedule", x => x.SendSchedule(),
                                                        scheduleTime, TimeZoneInfo.Local);
             }
 
             if(weatherSettings.IsEnabled)
             {
                 var weatherTime = $"{weatherSettings.Minute} {weatherSettings.Hour} * * *";
-                RecurringJob.AddOrUpdate<WeatherTask>("SendDailyWeather", x => x.SendDailyWeather(),
+                RecurringJob.AddOrUpdate<WeatherTask>("VK_DailyWeather", x => x.SendDailyWeather(),
                                                       weatherTime, TimeZoneInfo.Local);
             }
         }

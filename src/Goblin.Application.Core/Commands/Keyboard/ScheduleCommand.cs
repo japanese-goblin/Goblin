@@ -1,23 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
+using Goblin.Application.Core.Services;
 using Goblin.Domain.Abstractions;
-using Goblin.Narfu;
 using Newtonsoft.Json;
-using Serilog;
 
 namespace Goblin.Application.Core.Commands.Keyboard
 {
     public class ScheduleCommand : IKeyboardCommand
     {
         public string Trigger => "schedule";
-        private readonly NarfuApi _api;
+        private readonly ScheduleService _api;
 
-        public ScheduleCommand(NarfuApi api)
+        public ScheduleCommand(ScheduleService api)
         {
             _api = api;
         }
@@ -30,35 +27,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
             }
 
             var date = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
-            return await GetSchedule(user.NarfuGroup, DateTime.Parse(date));
-        }
-
-        public async Task<IResult> GetSchedule(int narfuGroup, DateTime date)
-        {
-            if(!_api.Students.IsCorrectGroup(narfuGroup))
-            {
-                return new FailedResult($"Группа {narfuGroup} не найдена");
-            }
-
-            try
-            {
-                var schedule = await _api.Students.GetScheduleAtDate(narfuGroup, date);
-
-                return new SuccessfulResult
-                {
-                    Message = schedule.ToString(),
-                    Keyboard = DefaultKeyboards.GetScheduleKeyboard()
-                };
-            }
-            catch(FlurlHttpException)
-            {
-                return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
-            }
-            catch(Exception ex)
-            {
-                Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении расписания на день");
-                return new FailedResult(DefaultErrors.NarfuUnexpectedError);
-            }
+            return await _api.GetSchedule(user.NarfuGroup, DateTime.Parse(date));
         }
     }
 }

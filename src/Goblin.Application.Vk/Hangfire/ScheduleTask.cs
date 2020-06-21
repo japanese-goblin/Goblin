@@ -1,7 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Application.Core.Commands.Keyboard;
+using Goblin.Application.Core.Extensions;
+using Goblin.Application.Core.Services;
 using Goblin.Application.Vk.Extensions;
 using Goblin.DataAccess;
 using Serilog;
@@ -12,16 +13,16 @@ namespace Goblin.Application.Vk.Hangfire
 {
     public class ScheduleTask
     {
-        private readonly ScheduleCommand _command;
         private readonly BotDbContext _db;
         private readonly ILogger _logger;
+        private readonly ScheduleService _scheduleService;
         private readonly IVkApi _vkApi;
 
-        public ScheduleTask(BotDbContext db, IVkApi vkApi, ScheduleCommand command)
+        public ScheduleTask(BotDbContext db, IVkApi vkApi, ScheduleService scheduleService)
         {
             _db = db;
             _vkApi = vkApi;
-            _command = command;
+            _scheduleService = scheduleService;
             _logger = Log.ForContext<ScheduleTask>();
         }
 
@@ -37,7 +38,7 @@ namespace Goblin.Application.Vk.Hangfire
                     try
                     {
                         var ids = chunk.Select(x => x.Id);
-                        var result = await _command.GetSchedule(group.Key, DateTime.Today);
+                        var result = await _scheduleService.GetSchedule(group.Key, DateTime.Today);
                         await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
                         {
                             UserIds = ids,
