@@ -1,8 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Commands.Keyboard;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using Goblin.Application.Vk.Extensions;
 using Goblin.DataAccess;
 using Hangfire;
@@ -35,39 +33,24 @@ namespace Goblin.Application.Vk.Hangfire
             if(!string.IsNullOrWhiteSpace(city))
             {
                 Log.Information("Отправка погоды в {0}", id);
-                var weather = await _weatherDailyCommand.GetDailyWeather(city, DateTime.Today);
-                if(weather is FailedResult failed)
+                var result = await _weatherDailyCommand.GetDailyWeather(city, DateTime.Today);
+
+                await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                 {
-                    await _vkApi.Messages.SendError(failed.Message, id);
-                }
-                else
-                {
-                    var success = weather as SuccessfulResult;
-                    await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
-                    {
-                        PeerId = id,
-                        Message = success.Message
-                    });
-                }
+                    PeerId = id,
+                    Message = result.Message
+                });
             }
 
             if(DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
             {
                 Log.Information("Отправка расписания в {0}", id);
-                var schedule = await _scheduleCommand.GetSchedule(group, DateTime.Now);
-                if(schedule is FailedResult failed)
+                var result = await _scheduleCommand.GetSchedule(group, DateTime.Now);
+                await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                 {
-                    await _vkApi.Messages.SendError(failed.Message, id);
-                }
-                else
-                {
-                    var success = schedule as SuccessfulResult;
-                    await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
-                    {
-                        PeerId = id,
-                        Message = success.Message
-                    });
-                }
+                    PeerId = id,
+                    Message = result.Message
+                });
             }
         }
 

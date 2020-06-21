@@ -2,8 +2,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Commands.Keyboard;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using Goblin.Application.Vk.Extensions;
 using Goblin.DataAccess;
 using Microsoft.EntityFrameworkCore;
@@ -41,20 +39,12 @@ namespace Goblin.Application.Vk.Hangfire
                     try
                     {
                         var ids = chunk.Select(x => x.VkId);
-                        var schedule = await _command.GetSchedule(group.Key, DateTime.Today);
-                        if(schedule is FailedResult failed)
+                        var result = await _command.GetSchedule(group.Key, DateTime.Today);
+                        await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
                         {
-                            await _vkApi.Messages.SendErrorToUserIds(failed.Message, ids);
-                        }
-                        else
-                        {
-                            var success = schedule as SuccessfulResult;
-                            await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
-                            {
-                                UserIds = ids,
-                                Message = success.Message
-                            });
-                        }
+                            UserIds = ids,
+                            Message = result.Message
+                        });
 
                         await Task.Delay(TimeSpan.FromSeconds(1.5));
                     }

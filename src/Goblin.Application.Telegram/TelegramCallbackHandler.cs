@@ -43,7 +43,7 @@ namespace Goblin.Application.Telegram
             var user = new BotUser(1, "Архангельск", 351917); //TODO:
             var result = await _commandsService.ExecuteCommand(msg, user);
 
-            if(result is FailedResult failed)
+            if(!result.IsSuccessful)
             {
                 if(result is CommandNotFoundResult && !user.IsErrorsEnabled)
                 {
@@ -51,7 +51,7 @@ namespace Goblin.Application.Telegram
                     return;
                 }
 
-                await _botClient.SendTextMessageAsync(msg.MessageChatId, failed.Message);
+                await _botClient.SendTextMessageAsync(msg.MessageChatId, result.ToString());
             }
             else
             {

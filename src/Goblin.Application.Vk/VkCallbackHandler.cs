@@ -3,9 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Goblin.Application.Core;
-using Goblin.Application.Core.Options;
 using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using Goblin.Application.Vk.Converters;
 using Goblin.Application.Vk.Extensions;
 using Goblin.Application.Vk.Models;
@@ -18,22 +16,21 @@ using VkNet.Abstractions;
 using VkNet.Enums;
 using VkNet.Enums.SafetyEnums;
 using VkNet.Model.GroupUpdate;
-using VkNet.Model.Keyboard;
 using VkNet.Model.RequestParams;
 
 namespace Goblin.Application.Vk
 {
     public class VkCallbackHandler
     {
+        private readonly CommandsService _commandsService;
         private readonly BotDbContext _db;
         private readonly ILogger _logger;
-        private readonly VkOptions _options;
-        private readonly CommandsService _commandsService;
-        private readonly IVkApi _vkApi;
         private readonly IMapper _mapper;
+        private readonly VkOptions _options;
+        private readonly IVkApi _vkApi;
 
         public VkCallbackHandler(CommandsService commandsService, BotDbContext db, IVkApi vkApi, IOptions<VkOptions> options,
-                               IMapper mapper)
+                                 IMapper mapper)
         {
             _commandsService = commandsService;
             _db = db;
@@ -70,6 +67,7 @@ namespace Goblin.Application.Vk
                 _logger.Fatal("Обработчик для события {0} не найден", upd.Type);
                 throw new ArgumentOutOfRangeException(nameof(upd.Type), "Отсутствует обработчик события");
             }
+
             _logger.Information("Обработка события {0} завершена", upd.Type);
         }
 
@@ -99,7 +97,11 @@ namespace Goblin.Application.Vk
                     return;
                 }
 
-                await _vkApi.Messages.SendError(result.Message, msg.MessageChatId);
+                await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
+                {
+                    Message = result.ToString(),
+                    PeerId = msg.MessageChatId
+                });
             }
             else
             {
@@ -110,6 +112,7 @@ namespace Goblin.Application.Vk
                     PeerId = msg.MessageChatId
                 });
             }
+
             _logger.Information("Отправка сообщения завершена");
         }
 
@@ -118,7 +121,7 @@ namespace Goblin.Application.Vk
             const string groupLeaveMessage = "Очень жаль, что ты решил отписаться от группы 😢\n" +
                                              "Если тебе что-то не понравилось или ты не разобрался с ботом, то всегда можешь написать " +
                                              "администрации об этом через команду 'админ *сообщение*' (подробнее смотри в справке).";
-            
+
             _logger.Information("Пользователь id{0} покинул группу", leave.UserId);
             var admins = _db.BotUsers.Where(x => x.IsAdmin).Select(x => x.VkId);
             var vkUser = (await _vkApi.Users.GetAsync(new[] { leave.UserId.Value })).First();
@@ -151,7 +154,7 @@ namespace Goblin.Application.Vk
             const string groupJoinMessage = "Спасибо за подписку! ❤\n" +
                                             "Если у тебя возникнут вопросы, то ты всегда можешь связаться с администрацией бота " +
                                             "при помощи команды 'админ *сообщение*' (подробнее смотри в справке)";
-            
+
             _logger.Information("Пользователь id{0} вступил в группу", join.UserId);
             var admins = _db.BotUsers.Where(x => x.IsAdmin).Select(x => x.VkId);
             var vkUser = (await _vkApi.Users.GetAsync(new[] { join.UserId.Value })).First();

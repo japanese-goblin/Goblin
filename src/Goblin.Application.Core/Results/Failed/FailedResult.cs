@@ -21,7 +21,7 @@ namespace Goblin.Application.Core.Results.Failed
 
         public override string ToString()
         {
-            return Message;
+            return $"❌ Ошибка: {Message}";
         }
     }
 }

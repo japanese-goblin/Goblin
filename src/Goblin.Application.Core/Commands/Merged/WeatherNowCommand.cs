@@ -77,7 +77,7 @@ namespace Goblin.Application.Core.Commands.Merged
             {
                 if(ex.Call.HttpStatus == HttpStatusCode.NotFound)
                 {
-                    return new FailedResult("Указанный город не найден");
+                    return new FailedResult($"Город \"{city}\" не найден");
                 }
 
                 Log.ForContext<OpenWeatherMapApi>().Fatal(ex, "Ошибка при получении погоды на текущий момент");
