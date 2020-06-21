@@ -30,11 +30,11 @@ namespace Goblin.Application.Core.Commands.Keyboard
             var date = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
 
             var schedule = await _api.Students.GetScheduleAtDate(user.NarfuGroup, DateTime.Parse(date));
-            
-            
-            return new SuccessfulResult()
+
+            return new SuccessfulResult
             {
-                Message = schedule.ToString()
+                Message = schedule.ToString(),
+                Keyboard = DefaultKeyboards.GetScheduleKeyboard()
             };
         }
     }

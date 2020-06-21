@@ -28,7 +28,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
             var choose = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
             var isSchedule = user.SubscribeInfo.IsSchedule;
             var isWeather = user.SubscribeInfo.IsWeather;
-            if(choose.Equals("weather", StringComparison.CurrentCultureIgnoreCase))
+            if(choose.Equals("weather", StringComparison.OrdinalIgnoreCase))
             {
                 if(string.IsNullOrWhiteSpace(user.WeatherCity))
                 {
@@ -39,11 +39,12 @@ namespace Goblin.Application.Core.Commands.Keyboard
                 await _db.SaveChangesAsync();
                 return new SuccessfulResult
                 {
-                    Message = success
+                    Message = success,
+                    Keyboard = DefaultKeyboards.GetMailingKeyboard(user)
                 };
             }
 
-            if(choose.Equals("schedule", StringComparison.CurrentCultureIgnoreCase))
+            if(choose.Equals("schedule", StringComparison.OrdinalIgnoreCase))
             {
                 if(user.NarfuGroup == 0)
                 {
@@ -54,7 +55,8 @@ namespace Goblin.Application.Core.Commands.Keyboard
                 await _db.SaveChangesAsync();
                 return new SuccessfulResult
                 {
-                    Message = success
+                    Message = success,
+                    Keyboard = DefaultKeyboards.GetMailingKeyboard(user)
                 };
             }
 

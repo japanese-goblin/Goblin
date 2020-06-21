@@ -42,7 +42,8 @@ namespace Goblin.Application.Core.Commands.Keyboard
 
             return new SuccessfulResult
             {
-                Message = weather.ToString()
+                Message = weather.ToString(),
+                Keyboard = DefaultKeyboards.GetDailyWeatherKeyboard()
             };
         }
 
@@ -59,7 +60,8 @@ namespace Goblin.Application.Core.Commands.Keyboard
 
             return new SuccessfulResult
             {
-                Message = weather.ToString()
+                Message = weather.ToString(),
+                Keyboard = DefaultKeyboards.GetDailyWeatherKeyboard()
             };
         }
     }
