@@ -2,10 +2,10 @@ using AutoMapper;
 using Goblin.Application.Core;
 using Goblin.Application.Telegram;
 using Goblin.Application.Vk;
-using Goblin.Application.Vk.Hangfire;
 using Goblin.DataAccess;
 using Goblin.WebApp.Extensions;
 using Goblin.WebApp.Filters;
+using Goblin.WebApp.Hangfire;
 using Goblin.WebApp.HostedServices;
 using Hangfire;
 using Hangfire.MemoryStorage;
@@ -48,12 +48,12 @@ namespace Goblin.WebApp
             services.AddVkLayer(Configuration);
             services.AddTelegramLayer(Configuration);
             services.AddHangfire(config => { config.UseMemoryStorage(); });
-            
+
             var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProfile()); });
             var mapper = mappingConfig.CreateMapper();
-                services.AddSingleton(mapper);
+            services.AddSingleton(mapper);
 
-                services.AddAuth(Configuration);
+            services.AddAuth(Configuration);
 
             if(_env.IsDevelopment())
             {

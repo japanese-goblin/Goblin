@@ -3,21 +3,20 @@ using Goblin.Application.Core.Options;
 using Goblin.DataAccess;
 using Hangfire;
 using Microsoft.Extensions.Options;
-using VkNet.Abstractions;
 
-namespace Goblin.Application.Vk.Hangfire
+namespace Goblin.WebApp.Hangfire
 {
     public class StartupTasks
     {
         private readonly BotDbContext _db;
         private readonly MailingOptions _options;
-        private readonly IVkApi _vkApi;
 
-        public StartupTasks(BotDbContext db, IVkApi vkApi, IOptions<MailingOptions> options)
+        public StartupTasks(BotDbContext db, IOptions<MailingOptions> options)
         {
             _db = db;
-            _vkApi = vkApi;
             _options = options.Value;
+
+            InitJobs();
         }
 
         public void ConfigureHangfire()
@@ -25,8 +24,6 @@ namespace Goblin.Application.Vk.Hangfire
             ConfigureMailing();
 
             // BackgroundJob.Enqueue<StartupTasks>(x => x.SendOldReminds());
-
-            BackgroundJob.Enqueue<SendToConversationTasks>(x => x.Dummy());
 
             // RecurringJob.AddOrUpdate<SendRemindTask>("SendRemind", x => x.SendRemind(),
             //                                          Cron.Minutely, TimeZoneInfo.Local);
@@ -40,15 +37,29 @@ namespace Goblin.Application.Vk.Hangfire
             if(scheduleSettings.IsEnabled)
             {
                 var scheduleTime = $"{scheduleSettings.Minute} {scheduleSettings.Hour} * * 1-6";
-                RecurringJob.AddOrUpdate<ScheduleTask>("VK_DailySchedule", x => x.SendSchedule(),
+                RecurringJob.AddOrUpdate<ScheduleTask>("DailySchedule", x => x.SendSchedule(),
                                                        scheduleTime, TimeZoneInfo.Local);
             }
 
             if(weatherSettings.IsEnabled)
             {
                 var weatherTime = $"{weatherSettings.Minute} {weatherSettings.Hour} * * *";
-                RecurringJob.AddOrUpdate<WeatherTask>("VK_DailyWeather", x => x.SendDailyWeather(),
+                RecurringJob.AddOrUpdate<WeatherTask>("DailyWeather", x => x.SendDailyWeather(),
                                                       weatherTime, TimeZoneInfo.Local);
+            }
+        }
+
+        public void InitJobs()
+        {
+            foreach(var job in _db.CronJobs)
+            {
+                RecurringJob.AddOrUpdate<SendToChatTasks>(
+                                                          $"DAILY__{job.Name}__{job.ConsumerType}",
+                                                          x => x.SendToConv(job.ChatId, job.NarfuGroup,
+                                                                            job.WeatherCity, job.ConsumerType),
+                                                          $"{job.Minutes} {job.Hours} * * *",
+                                                          TimeZoneInfo.Local
+                                                         );
             }
         }
 

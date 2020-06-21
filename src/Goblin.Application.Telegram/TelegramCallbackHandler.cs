@@ -21,7 +21,8 @@ namespace Goblin.Application.Telegram
         private readonly BotDbContext _context;
         private readonly IMapper _mapper;
 
-        public TelegramCallbackHandler(BotDbContext context, TelegramBotClient botClient, CommandsService commandsService, IMapper mapper)
+        public TelegramCallbackHandler(BotDbContext context, TelegramBotClient botClient, CommandsService commandsService,
+                                       IMapper mapper)
         {
             _context = context;
             _botClient = botClient;
