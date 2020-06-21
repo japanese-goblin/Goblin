@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Goblin.Application.Core.Models;
-using VkNet.Model.Keyboard;
 using VkNet.Enums.SafetyEnums;
+using VkNet.Model.Keyboard;
 
 namespace Goblin.Application.Vk.Converters
 {
@@ -19,17 +19,25 @@ namespace Goblin.Application.Vk.Converters
                     kb.SetOneTime();
                 }
             }
+
             kb.SetInline(isInlineKeyboardEnabled);
+
+            var isFirst = true;
 
             foreach(var line in coreKeyboard.Buttons)
             {
+                if(!isFirst)
+                {
+                    kb.AddLine();
+                }
+
                 foreach(var button in line)
                 {
                     var color = FromCoreColorToVk(button.Color);
                     kb.AddButton(button.Title, button.PayloadValue, color, button.PayloadKey);
                 }
 
-                kb.AddLine();
+                isFirst = false;
             }
 
             return kb.Build();
@@ -37,7 +45,7 @@ namespace Goblin.Application.Vk.Converters
 
         private static KeyboardButtonColor FromCoreColorToVk(CoreKeyboardButtonColor coreColor)
         {
-            var dict = new Dictionary<CoreKeyboardButtonColor, KeyboardButtonColor>()
+            var dict = new Dictionary<CoreKeyboardButtonColor, KeyboardButtonColor>
             {
                 [CoreKeyboardButtonColor.Default] = KeyboardButtonColor.Default,
                 [CoreKeyboardButtonColor.Negative] = KeyboardButtonColor.Negative,
@@ -49,10 +57,8 @@ namespace Goblin.Application.Vk.Converters
             {
                 return result;
             }
-            else
-            {
-                throw new ArgumentException(nameof(coreColor));
-            }
+
+            throw new ArgumentException(nameof(coreColor));
         }
     }
 }
