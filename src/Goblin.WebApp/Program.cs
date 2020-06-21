@@ -31,15 +31,23 @@ namespace Goblin.WebApp
                        .ConfigureLogging(config => { config.ClearProviders(); })
                        .UseSerilog((hostingContext, loggerConfiguration) =>
                        {
-                           loggerConfiguration
-                                   .ReadFrom.Configuration(hostingContext.Configuration)
-                                   .WriteTo.Sentry(o =>
-                                   {
-                                       o.MinimumBreadcrumbLevel = LogEventLevel.Information;
-                                       o.MinimumEventLevel = LogEventLevel.Warning;
-                                       o.Dsn = new Dsn(hostingContext.Configuration["Sentry:Dsn"]);
-                                       o.Environment = hostingContext.HostingEnvironment.EnvironmentName;
-                                   });
+                           if(hostingContext.HostingEnvironment.IsDevelopment())
+                           {
+                               loggerConfiguration
+                                       .ReadFrom.Configuration(hostingContext.Configuration);
+                           }
+                           else
+                           {
+                               loggerConfiguration
+                                       .ReadFrom.Configuration(hostingContext.Configuration)
+                                       .WriteTo.Sentry(o =>
+                                       {
+                                           o.MinimumBreadcrumbLevel = LogEventLevel.Information;
+                                           o.MinimumEventLevel = LogEventLevel.Warning;
+                                           o.Dsn = new Dsn(hostingContext.Configuration["Sentry:Dsn"]);
+                                           o.Environment = hostingContext.HostingEnvironment.EnvironmentName;
+                                       });
+                           }
                        })
                        .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
         }
