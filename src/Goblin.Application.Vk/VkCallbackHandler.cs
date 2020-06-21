@@ -78,7 +78,7 @@ namespace Goblin.Application.Vk
             var user = await GetBotUser(message);
 
             _logger.Debug("Обработка сообщения");
-            var result = await _commandsService.ExecuteCommand<TgBotUser>(message, user);
+            var result = await _commandsService.ExecuteCommand<VkBotUser>(message, user);
             _logger.Information("Обработка сообщения завершена");
             _logger.Debug("Отправка сообщения");
 
