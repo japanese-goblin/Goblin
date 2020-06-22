@@ -2,26 +2,25 @@
 @{
     string GetCssStyle()
     {
-        const string transparent = "transparent d-none d-sm-block";
-        var type = Model.Type;
-        if(string.IsNullOrWhiteSpace(type))
+        const string transparent = "bg-light";
+        if(string.IsNullOrWhiteSpace(Model.Type))
         {
             return transparent;
         }
 
-        if(type.Equals("лекции", StringComparison.CurrentCultureIgnoreCase))
+        if(Model.Type.Equals("лекции", StringComparison.OrdinalIgnoreCase))
         {
             return "green";
         }
-        if(type.Equals("лабораторные занятия", StringComparison.CurrentCultureIgnoreCase))
+        if(Model.Type.Equals("лабораторные занятия", StringComparison.OrdinalIgnoreCase))
         {
             return "blue";
         }
-        if(type.Equals("практические занятия", StringComparison.CurrentCultureIgnoreCase))
+        if(Model.Type.Equals("практические занятия", StringComparison.OrdinalIgnoreCase))
         {
             return "yellow";
         }
-        if(type.Equals("консультация", StringComparison.CurrentCultureIgnoreCase))
+        if(Model.Type.Equals("консультация", StringComparison.OrdinalIgnoreCase))
         {
             return "orange";
         }
@@ -35,26 +34,23 @@
 
 }
 
-<div class="timetable_sheet @GetCssStyle()">
-    <span class="num_para">
-        @Model.Number
-    </span>
+<div class="card mb-3 @GetCssStyle() timetable_sheet">
     @if(!string.IsNullOrEmpty(Model.Type))
     {
-        <span class='time_para'>
-            @Model.StartEndTime
-        </span>
-        <span class='kindOfWork'>
-            @Model.Type
-        </span>
-        <span class='discipline'>
-            @Model.Name (@Model.Teacher)
-        </span>
-        <span class='group'>
-            @Model.Groups
-        </span>
-        <span class='auditorium'>
+        <div class="card-header">
+            <span class="badge badge-light">@Model.Number</span>
+            &nbsp;
+            <span class="badge badge-light">@Model.StartEndTime</span>
+        </div>
+        <div class="card-body">
+            <small class="card-text">@Model.Type</small>
+            <h5>@Model.Name</h5>
+            <small class="card-text text-capitalize">@Model.Teacher</small>
+            <hr/>
+            <p class="card-text font-italic">@Model.Groups</p>
+        </div>
+        <div class="card-footer">
             <b>ауд. @Model.Auditory</b> @Model.Address
-        </span>
+        </div>
     }
 </div>

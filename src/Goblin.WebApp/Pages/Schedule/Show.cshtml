@@ -27,7 +27,7 @@
     </div>
 </div>
 
-<ul class="nav nav-pills">
+<ul class="nav nav-pills mb-3">
     @foreach(var (key, value) in Model.ViewModel.Lessons)
     {
         <li>
@@ -43,17 +43,19 @@
             <div class="row no-gutters">
                 @foreach(var days in value.GroupBy(x => x.StartTime.DayOfWeek))
                 {
-                    <div class="col-md-2">
-                        <div class="dayofweek">
-                            @days.First().StartTime.ToString("dddd, dd.MM.yyyy")
-                        </div>
-                        @foreach(var lesson in days)
-                        {
-                            if(lesson.Number != 0)
+                    <div class="col-lg-2">
+                        <div class="mx-1">
+                            <div class="dayofweek">
+                                @days.First().StartTime.ToString("dddd, dd.MM.yyyy")
+                            </div>
+                            @foreach(var lesson in days)
                             {
-                                await Html.RenderPartialAsync("_Lesson", lesson);
+                                if(lesson.Number != 0)
+                                {
+                                    await Html.RenderPartialAsync("_Lesson", lesson);
+                                }
                             }
-                        }
+                        </div>
                     </div>
                 }
             </div>
