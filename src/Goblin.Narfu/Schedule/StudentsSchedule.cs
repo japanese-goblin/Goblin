@@ -32,6 +32,7 @@ namespace Goblin.Narfu.Schedule
             {
                 date = DateTime.Today;
             }
+
             _logger.Debug("Получение расписания для группы {0}", realGroupId);
             var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
             var response = await RequestBuilder.Create()
@@ -52,12 +53,12 @@ namespace Goblin.Narfu.Schedule
             {
                 var description = ev.Description.Split('\n');
                 var address = ev.Location.Split('/');
-                
+
                 if(!int.TryParse(description[0][0].ToString(), out var number))
                 {
                     number = 1; //в расписании бывают пары, у которых нет номера: п (11:46-11:59)
                 }
-                
+
                 return new Lesson
                 {
                     Id = ev.Uid,
@@ -73,6 +74,7 @@ namespace Goblin.Narfu.Schedule
                     StartEndTime = description[0].Replace(")", "")
                                                  .Replace("(", "")
                                                  .Replace("п", ")")
+                                                 .Substring(3)
                 };
             });
         }
