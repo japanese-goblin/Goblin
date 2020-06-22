@@ -11,14 +11,13 @@ using VkNet.Model.RequestParams;
 
 namespace Goblin.WebApp.Hangfire
 {
-    public class SendRemindTask
+    public class SendRemindTasks
     {
-        private const string DateTimeFormat = "dd.MM.yyyy HH:mm";
         private readonly TelegramBotClient _botClient;
         private readonly BotDbContext _db;
         private readonly IVkApi _vkApi;
 
-        public SendRemindTask(IVkApi vkApi, BotDbContext db, TelegramBotClient botClient)
+        public SendRemindTasks(IVkApi vkApi, BotDbContext db, TelegramBotClient botClient)
         {
             _vkApi = vkApi;
             _db = db;
@@ -27,19 +26,19 @@ namespace Goblin.WebApp.Hangfire
 
         public async Task SendRemindEveryMinute()
         {
+            var currentTime = DateTime.Now;
             var reminds =
                     _db.Reminds
-                       .ToArray()
-                       .Where(x => x.Date.ToString(DateTimeFormat) ==
-                                   DateTime.Now.ToString(DateTimeFormat))
-                       .ToArray(); //TODO: fix it
+                       .Where(x => x.Date - currentTime <= TimeSpan.FromMinutes(1))
+                       .ToArray();
 
             await SendRemindsFromArray(reminds);
         }
 
         public async Task SendOldReminds()
         {
-            var reminds = _db.Reminds.Where(x => x.Date < DateTime.Now).ToArray();
+            var currentTime = DateTime.Now;
+            var reminds = _db.Reminds.Where(x => x.Date < currentTime).ToArray();
             await SendRemindsFromArray(reminds);
         }
 

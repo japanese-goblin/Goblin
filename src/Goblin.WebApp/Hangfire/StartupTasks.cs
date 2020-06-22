@@ -23,10 +23,10 @@ namespace Goblin.WebApp.Hangfire
         {
             ConfigureMailing();
 
-            BackgroundJob.Enqueue<SendRemindTask>(x => x.SendOldReminds());
+            BackgroundJob.Enqueue<SendRemindTasks>(x => x.SendOldReminds());
 
-            RecurringJob.AddOrUpdate<SendRemindTask>("SendRemind", x => x.SendRemindEveryMinute(),
-                                                     Cron.Minutely, TimeZoneInfo.Local);
+            RecurringJob.AddOrUpdate<SendRemindTasks>("SendRemind", x => x.SendRemindEveryMinute(),
+                                                      Cron.Minutely, TimeZoneInfo.Local);
         }
 
         private void ConfigureMailing()
