@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -8,37 +8,30 @@ using Goblin.Narfu;
 using Goblin.Narfu.Models;
 using Goblin.WebApp.Extensions;
 using Goblin.WebApp.ViewModels;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Serilog;
 
-namespace Goblin.WebApp.Controllers
+namespace Goblin.WebApp.Pages.Schedule
 {
-    public class ScheduleController : Controller
+    public class Show : PageModel
     {
+        public LessonsViewModel ViewModel { get; set; }
+
+        public string ErrorMessage { get; set; }
         private readonly NarfuApi _narfuApi;
 
-        public ScheduleController(NarfuApi narfuApi)
+        public Show(NarfuApi narfuApi)
         {
             _narfuApi = narfuApi;
         }
 
-        [ResponseCache(Duration = 60 * 60, Location = ResponseCacheLocation.Client)]
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 60 * 10, Location = ResponseCacheLocation.Client)]
-        public async Task<IActionResult> Show(int id, DateTime date)
+        public async Task OnGet(int id, DateTime date)
         {
             if(!_narfuApi.Students.IsCorrectGroup(id))
             {
                 Log.Warning("Группа с id {0} не найдена", id);
                 HttpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
-                return View("Error", new ErrorViewModel
-                {
-                    Description = $"Группа с номером {id} не найдена"
-                });
+                ErrorMessage = $"Группа с номером {id} не найдена";
             }
 
             var group = _narfuApi.Students.GetGroupByRealId(id);
@@ -50,32 +43,25 @@ namespace Goblin.WebApp.Controllers
                 var scheduleLink = _narfuApi.Students.GenerateScheduleLink(group.RealId);
                 var webcalLink = _narfuApi.Students.GenerateScheduleLink(group.RealId, true);
 
-                return View(new LessonsViewModel
+                ViewModel = new LessonsViewModel
                 {
                     Lessons = MagicWithLessons(lessons.ToList()),
                     GroupTitle = $"{group.RealId} - {group.Name}",
                     ScheduleLink = scheduleLink,
                     WebcalLink = webcalLink
-                });
+                };
             }
             catch(FlurlHttpException)
             {
-                return View("Error", new ErrorViewModel
-                {
-                    Description = "Сайт с расписанием временно недоступен. Попробуйте позже."
-                });
+                ErrorMessage = "Сайт с расписанием временно недоступен. Попробуйте позже.";
             }
             catch(Exception)
             {
-                return View("Error", new ErrorViewModel
-                {
-                    Description = "Непредвиденная ошибка при получении расписания. Попробуйте позже."
-                });
+                ErrorMessage = "Непредвиденная ошибка при получении расписания. Попробуйте позже.";
             }
         }
 
         // какой ужас.... но работает (TODO)
-        [NonAction]
         private static Dictionary<string, Lesson[]> MagicWithLessons(List<Lesson> lessons)
         {
             var first = lessons.First().StartTime.Date;

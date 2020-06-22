@@ -1,25 +1,34 @@
-@model LessonsViewModel
+﻿@page
+@model Goblin.WebApp.Pages.Schedule.Show
 
 @{
     ViewData["Title"] = "Расписание";
 }
 
-<h4>@Model.GroupTitle</h4>
+@if(!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+{
+    <h1 class="text-danger">Ой-ой.</h1>
+    <h4 class="text-danger">При выполнении вашего запроса произошла ошибка.</h4>
+    <p>@Model.ErrorMessage</p>
+    return;
+}
+
+<h4>@Model.ViewModel.GroupTitle</h4>
 
 <div class="dropdown pb-2">
     <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">
         Дополнительно
     </button>
     <div class="dropdown-menu">
-        <a class="dropdown-item" href="@Model.ScheduleLink">Скачать файл (.ics)</a>
-        <a class="dropdown-item" href="@Model.WebcalLink">Добавить в календарь</a>
+        <a class="dropdown-item" href="@Model.ViewModel.ScheduleLink">Скачать файл (.ics)</a>
+        <a class="dropdown-item" href="@Model.ViewModel.WebcalLink">Добавить в календарь</a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="#">А больше пока ничего нет...</a>
     </div>
 </div>
 
 <ul class="nav nav-pills">
-    @foreach(var (key, value) in Model.Lessons)
+    @foreach(var (key, value) in Model.ViewModel.Lessons)
     {
         <li>
             <a class="nav-link" data-toggle="pill" href="#d@(value.First().StartTime.DayOfYear)">@key</a>
@@ -28,7 +37,7 @@
 </ul>
 
 <div class="tab-content">
-    @foreach(var (_, value) in Model.Lessons)
+    @foreach(var (_, value) in Model.ViewModel.Lessons)
     {
         <div id="d@(value.First().StartTime.DayOfYear)" class="tab-pane fade">
             <div class="row no-gutters">

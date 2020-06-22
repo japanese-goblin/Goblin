@@ -22,7 +22,7 @@
         }
         <li class="nav-item">
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
-                  asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                  asp-route-returnUrl="@Url.Page("/")">
                 <button type="submit" class="nav-link btn btn-link">Выход</button>
             </form>
         </li>
@@ -30,7 +30,7 @@
     else
     {
         <form class="form-inline" asp-area="Identity" asp-page="/Account/ExternalLogin"
-              method="post" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+              method="post" asp-route-returnUrl="@Url.Page("/")">
             <button type="submit" class="btn btn-link nav-link" name="provider" value="Vkontakte" title="Вход через Vkontakte">
                 Вход
             </button>
