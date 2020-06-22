@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
+using Goblin.Application.Core.Services;
 using Goblin.Domain.Abstractions;
-using Goblin.OpenWeatherMap;
 using Newtonsoft.Json;
 
 namespace Goblin.Application.Core.Commands.Keyboard
@@ -13,11 +12,12 @@ namespace Goblin.Application.Core.Commands.Keyboard
     public class WeatherDailyCommand : IKeyboardCommand
     {
         public string Trigger => "weatherDaily";
-        private readonly OpenWeatherMapApi _api;
 
-        public WeatherDailyCommand(OpenWeatherMapApi api)
+        private readonly WeatherService _weatherService;
+
+        public WeatherDailyCommand(WeatherService weatherService)
         {
-            _api = api;
+            _weatherService = weatherService;
         }
 
         public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
@@ -38,13 +38,9 @@ namespace Goblin.Application.Core.Commands.Keyboard
                 return new FailedResult(text);
             }
 
-            var weather = await _api.GetDailyWeatherAt(user.WeatherCity, DateTime.Today.AddDays(1));
+            var weather = await _weatherService.GetDailyWeather(user.WeatherCity, DateTime.Today.AddDays(1));
 
-            return new SuccessfulResult
-            {
-                Message = weather.ToString(),
-                Keyboard = DefaultKeyboards.GetDailyWeatherKeyboard()
-            };
+            return weather;
         }
 
         private async Task<IResult> ExecutePayload(IMessage msg, BotUser user)
@@ -56,13 +52,9 @@ namespace Goblin.Application.Core.Commands.Keyboard
 
             var day = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
 
-            var weather = await _api.GetDailyWeatherAt(user.WeatherCity, DateTime.Parse(day));
+            var weather = await _weatherService.GetDailyWeather(user.WeatherCity, DateTime.Parse(day));
 
-            return new SuccessfulResult
-            {
-                Message = weather.ToString(),
-                Keyboard = DefaultKeyboards.GetDailyWeatherKeyboard()
-            };
+            return weather;
         }
     }
 }
