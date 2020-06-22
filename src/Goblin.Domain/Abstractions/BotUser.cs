@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Goblin.Domain.Abstractions
 {
@@ -14,6 +15,9 @@ namespace Goblin.Domain.Abstractions
 
         public bool HasWeatherSubscription { get; private set; }
         public bool HasScheduleSubscription { get; private set; }
+
+        [NotMapped]
+        public ConsumerType ConsumerType { get; set; }
 
         protected BotUser()
         {
