@@ -12,7 +12,7 @@ namespace Goblin.Application.Core
             kb.AddButton("Расписание", CoreKeyboardButtonColor.Primary, "scheduleKeyboard", string.Empty)
               .AddButton("Экзамены", CoreKeyboardButtonColor.Primary, "exams", string.Empty)
               .AddLine()
-              .AddButton("Погода на текущий момент", CoreKeyboardButtonColor.Primary, "weatherNow", string.Empty)
+              .AddButton("Погода", CoreKeyboardButtonColor.Primary, "weatherNow", string.Empty)
               .AddButton("Ежедневная погода", CoreKeyboardButtonColor.Primary, "weatherDailyKeyboard", string.Empty)
               .AddLine()
               .AddButton("Рассылка", CoreKeyboardButtonColor.Primary, "mailingKeyboard", string.Empty)
