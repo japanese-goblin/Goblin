@@ -1,11 +1,13 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Abstractions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Application.Core.Commands.Text
 {
@@ -21,32 +23,47 @@ namespace Goblin.Application.Core.Commands.Text
             _db = db;
         }
 
-        public Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
+        public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
             var strBuilder = new StringBuilder();
 
-            var bday = new DateTime(2017, 4, 29, 19, 42, 0);
-            var dis = DateTime.Now - bday;
+            var birthday = new DateTime(2017, 4, 29, 19, 42, 0);
+            var dis = DateTime.Now - birthday;
 
             var startTime = Process.GetCurrentProcess().StartTime;
             var uptime = DateTime.Now - startTime;
 
-            //TODO:
-            // var users = _db.BotUsers.AsNoTracking();
-            //
-            // strBuilder.AppendFormat("Время старта: {0:F}", startTime).AppendLine();
-            // strBuilder.AppendFormat("Я работаю уже {0} часов {1} минут", uptime.Hours, uptime.Minutes)
-            //           .AppendLine();
-            // strBuilder.AppendFormat("Мне уже {0} дней ({1:dd.MM.yyyy})", dis.Days, bday)
-            //           .AppendLine().AppendLine();
-            // strBuilder.AppendFormat("Всего пользователей {0} ({1} расписание и {2} погода)",
-            //                         users.Count(), users.Count(x => x.HasScheduleSubscription),
-            //                         users.Count(x => x.HasWeatherSubscription));
+            var tgUsers = await _db.TgBotUsers.AsNoTracking().ToArrayAsync();
 
-            return Task.FromResult<IResult>(new SuccessfulResult
+            var vkUsers = await _db.VkBotUsers.AsNoTracking().ToArrayAsync();
+
+            var tgSchedule = tgUsers.Count(x => x.HasScheduleSubscription);
+            var vkSchedule = vkUsers.Count(x => x.HasScheduleSubscription);
+
+            var tgWeather = tgUsers.Count(x => x.HasWeatherSubscription);
+            var vkWeather = vkUsers.Count(x => x.HasWeatherSubscription);
+
+            var sumAll = tgUsers.Count() + vkUsers.Count();
+            var sumSchedule = tgSchedule + vkSchedule;
+            var sumWeather = tgWeather + vkWeather;
+
+            strBuilder.AppendFormat("Время старта: {0:F}", startTime).AppendLine()
+                      .AppendFormat("Я работаю уже {0} часов {1} минут", uptime.Hours, uptime.Minutes)
+                      .AppendLine()
+                      .AppendFormat("Мне уже {0} дней ({1:dd.MM.yyyy})", dis.Days, birthday)
+                      .AppendLine().AppendLine()
+                      .AppendFormat("Всего пользователей {0} ({1} вк и {2} телеграм)",
+                                    sumAll, vkUsers.Count(), tgUsers.Count())
+                      .AppendLine()
+                      .AppendLine("Подписки:")
+                      .AppendFormat("• Погода - {0} ({1} вк, {2} телеграм)", sumWeather, vkWeather, tgWeather)
+                      .AppendLine()
+                      .AppendFormat("• Расписание - {0} ({1} вк, {2} телеграм)", sumSchedule, vkSchedule, tgSchedule);
+
+            return new SuccessfulResult
             {
                 Message = strBuilder.ToString()
-            });
+            };
         }
     }
 }
