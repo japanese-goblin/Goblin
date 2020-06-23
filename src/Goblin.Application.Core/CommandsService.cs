@@ -47,14 +47,18 @@ namespace Goblin.Application.Core
 
             foreach(var command in _textCommands)
             {
+                if(!command.Aliases.Contains(cmdName))
+                {
+                    continue;
+                }
+
                 var isAllowed = command.IsAdminCommand && user.IsAdmin;
-                if(!command.Aliases.Contains(cmdName) || isAllowed)
+                if(!isAllowed)
                 {
                     continue;
                 }
 
                 _logger.Debug("Выполнение команды {0}", command.GetType());
-                var type = user.GetType();
                 var result = await command.Execute<T>(msg, user);
                 _logger.Debug("Команда вернула {0} результат", result.GetType());
 
