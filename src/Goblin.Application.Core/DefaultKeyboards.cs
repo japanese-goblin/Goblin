@@ -45,10 +45,10 @@ namespace Goblin.Application.Core
             {
                 IsInline = true
             };
-            kb.AddButton(scheduleText, scheduleColor, "mailing", "schedule");
-            kb.AddLine();
-            kb.AddButton(weatherText, weatherColor, "mailing", "weather");
-            kb.AddReturnToMenuButton();
+            kb.AddButton(scheduleText, scheduleColor, "mailing", "schedule")
+              .AddLine()
+              .AddButton(weatherText, weatherColor, "mailing", "weather")
+              .AddReturnToMenuButton();
 
             return kb;
         }
@@ -90,18 +90,19 @@ namespace Goblin.Application.Core
         public static CoreKeyboard GetDailyWeatherKeyboard()
         {
             const string defaultFormat = "dd.MM.yyyy";
-            var date = DateTime.Now;
+            var today = DateTime.Now;
+            var tomorrow = today.AddDays(1);
+
             var kb = new CoreKeyboard
             {
                 IsInline = true
             };
             kb.AddButton("На сегодня", CoreKeyboardButtonColor.Primary,
-                         "weatherDaily", date.ToString(defaultFormat));
-            kb.AddLine();
-            date = date.AddDays(1);
-            kb.AddButton("На завтра", CoreKeyboardButtonColor.Primary,
-                         "weatherDaily", date.ToString(defaultFormat));
-            kb.AddReturnToMenuButton();
+                         "weatherDaily", today.ToString(defaultFormat))
+              .AddLine()
+              .AddButton("На завтра", CoreKeyboardButtonColor.Primary,
+                         "weatherDaily", tomorrow.ToString(defaultFormat))
+              .AddReturnToMenuButton();
 
             return kb;
         }

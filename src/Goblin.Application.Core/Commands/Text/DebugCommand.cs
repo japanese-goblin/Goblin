@@ -43,7 +43,7 @@ namespace Goblin.Application.Core.Commands.Text
             var tgWeather = tgUsers.Count(x => x.HasWeatherSubscription);
             var vkWeather = vkUsers.Count(x => x.HasWeatherSubscription);
 
-            var sumAll = tgUsers.Count() + vkUsers.Count();
+            var sumAll = tgUsers.Length + vkUsers.Length;
             var sumSchedule = tgSchedule + vkSchedule;
             var sumWeather = tgWeather + vkWeather;
 
@@ -53,7 +53,7 @@ namespace Goblin.Application.Core.Commands.Text
                       .AppendFormat("Мне уже {0} дней ({1:dd.MM.yyyy})", dis.Days, birthday)
                       .AppendLine().AppendLine()
                       .AppendFormat("Всего пользователей {0} ({1} вк и {2} телеграм)",
-                                    sumAll, vkUsers.Count(), tgUsers.Count())
+                                    sumAll, vkUsers.Length, tgUsers.Length)
                       .AppendLine()
                       .AppendLine("Подписки:")
                       .AppendFormat("• Погода - {0} ({1} вк, {2} телеграм)", sumWeather, vkWeather, tgWeather)

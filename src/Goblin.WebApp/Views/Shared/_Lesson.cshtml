@@ -24,12 +24,7 @@
         {
             return "orange";
         }
-        if(Model.IsExam())
-        {
-            return "red";
-        }
-
-        return transparent;
+        return Model.IsExam() ? "red" : transparent;
     }
 
 }

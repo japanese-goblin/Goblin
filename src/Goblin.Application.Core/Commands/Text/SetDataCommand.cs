@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Extensions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
@@ -36,50 +37,60 @@ namespace Goblin.Application.Core.Commands.Text
                                         "Пример использования: установить город Москва / установить группу 123456");
             }
 
-            if(prms[1] == "город")
+            if(prms[1].Equals("город", StringComparison.OrdinalIgnoreCase))
             {
-                var city = prms[2]; // TODO: .ToUpperFirstLetter();
-                var isExists = await _weather.IsCityExists(city);
-                if(!isExists)
-                {
-                    return new FailedResult($"Город {city} не найден");
-                }
-
-                botUser.SetCity(city);
-                await _db.SaveChangesAsync();
-                return new SuccessfulResult
-                {
-                    Message = $"Город успешно установлен на {city}"
-                };
+                return await SetCity(prms, botUser);
             }
 
-            if(prms[1].Equals("группу", StringComparison.CurrentCultureIgnoreCase) ||
-               prms[1].Equals("группа", StringComparison.CurrentCultureIgnoreCase))
+            if(prms[1].Equals("группу", StringComparison.OrdinalIgnoreCase) ||
+               prms[1].Equals("группа", StringComparison.OrdinalIgnoreCase))
             {
-                var group = prms[2];
-                if(!int.TryParse(group, out var intGroup))
-                {
-                    return new FailedResult("Укажите корректный номер группы.");
-                }
-
-                var isExists = _narfu.Students.IsCorrectGroup(intGroup);
-                if(!isExists)
-                {
-                    return new FailedResult($"Группа с номером {intGroup} не найдена.");
-                }
-
-                var groupName = _narfu.Students.GetGroupByRealId(intGroup).Name;
-
-                user.SetNarfuGroup(intGroup);
-                await _db.SaveChangesAsync();
-                return new SuccessfulResult
-                {
-                    Message = $"Группа успешно установлена на {intGroup} ({groupName})"
-                };
+                return await SetGroup(user, prms);
             }
 
             return new FailedResult("Укажите что вы хотите установить: группу или город. \n" +
                                     "Пример использования: установить город Москва / установить группу 123456");
+        }
+
+        private async Task<IResult> SetGroup(BotUser user, string[] prms)
+        {
+            var group = prms[2];
+            if(!int.TryParse(group, out var intGroup))
+            {
+                return new FailedResult("Укажите корректный номер группы.");
+            }
+
+            var isExists = _narfu.Students.IsCorrectGroup(intGroup);
+            if(!isExists)
+            {
+                return new FailedResult($"Группа с номером {intGroup} не найдена.");
+            }
+
+            var groupName = _narfu.Students.GetGroupByRealId(intGroup).Name;
+
+            user.SetNarfuGroup(intGroup);
+            await _db.SaveChangesAsync();
+            return new SuccessfulResult
+            {
+                Message = $"Группа успешно установлена на {intGroup} ({groupName})"
+            };
+        }
+
+        private async Task<IResult> SetCity(string[] prms, BotUser user)
+        {
+            var city = prms[2].ToUpperFirstLetter();
+            var isExists = await _weather.IsCityExists(city);
+            if(!isExists)
+            {
+                return new FailedResult($"Город {city} не найден");
+            }
+
+            user.SetCity(city);
+            await _db.SaveChangesAsync();
+            return new SuccessfulResult
+            {
+                Message = $"Город успешно установлен на {city}"
+            };
         }
     }
 }

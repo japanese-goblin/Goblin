@@ -6,7 +6,7 @@ namespace Goblin.Application.Core.Abstractions
     {
         public long MessageUserId { get; }
         public long MessageChatId { get; }
-        public string Text { get; set; }
+        public string Text { get; }
         public string Payload { get; }
 
         public string[] MessageParams => Text.ToLower().Split(' ').Skip(1).ToArray();

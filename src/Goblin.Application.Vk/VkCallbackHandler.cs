@@ -112,13 +112,15 @@ namespace Goblin.Application.Vk
         private async Task<VkBotUser> GetBotUser(VkMessage message)
         {
             var user = await _db.VkBotUsers.FindAsync(message.MessageUserId);
-            if(user is null)
+            if(!(user is null))
             {
-                _logger.Debug("Пользователь с id {0} не найден. Создание записи.", message.MessageUserId);
-                user = (await _db.VkBotUsers.AddAsync(new VkBotUser(message.MessageUserId))).Entity;
-                await _db.SaveChangesAsync();
-                _logger.Debug("Пользователь создан");
+                return user;
             }
+
+            _logger.Debug("Пользователь с id {0} не найден. Создание записи.", message.MessageUserId);
+            user = (await _db.VkBotUsers.AddAsync(new VkBotUser(message.MessageUserId))).Entity;
+            await _db.SaveChangesAsync();
+            _logger.Debug("Пользователь создан");
 
             return user;
         }

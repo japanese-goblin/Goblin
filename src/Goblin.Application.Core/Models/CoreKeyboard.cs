@@ -6,10 +6,10 @@ namespace Goblin.Application.Core.Models
     public class CoreKeyboard
     {
         public bool IsOneTime { get; set; }
-        public bool IsInline { get; set; } //TODO:
+        public bool IsInline { get; set; }
         public List<List<CoreKeyboardButton>> Buttons { get; set; }
 
-        private List<CoreKeyboardButton> lastLine => Buttons.Last();
+        private List<CoreKeyboardButton> LastLine => Buttons.Last();
 
         public CoreKeyboard(bool isOneTime = true)
         {
@@ -28,7 +28,7 @@ namespace Goblin.Application.Core.Models
                 Color = color
             };
             button.SetPayload(payloadKey, payloadValue);
-            lastLine.Add(button);
+            LastLine.Add(button);
 
             return this;
         }
@@ -58,7 +58,7 @@ namespace Goblin.Application.Core.Models
                 Color = CoreKeyboardButtonColor.Default
             };
             button.SetPayload("command", "start");
-            lastLine.Add(button);
+            LastLine.Add(button);
 
             return this;
         }

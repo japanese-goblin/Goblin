@@ -70,11 +70,13 @@ namespace Goblin.Application.Telegram
         {
             var user = await _context.TgBotUsers
                                      .FindAsync(message.MessageUserId);
-            if(user is null)
+            if(!(user is null))
             {
-                user = (await _context.AddAsync(new TgBotUser(message.MessageUserId))).Entity;
-                await _context.SaveChangesAsync();
+                return user;
             }
+
+            user = (await _context.AddAsync(new TgBotUser(message.MessageUserId))).Entity;
+            await _context.SaveChangesAsync();
 
             return user;
         }
