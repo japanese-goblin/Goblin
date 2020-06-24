@@ -5,6 +5,7 @@ using Goblin.Application.Core.Options;
 using Goblin.Application.Core.Services;
 using Goblin.Narfu;
 using Goblin.OpenWeatherMap;
+using Goblin.OpenWeatherMap.Abstractions;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +26,7 @@ namespace Goblin.Application.Core
 
         private static void AddAdditions(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton(x =>
+            services.AddSingleton<IOpenWeatherMapApi, OpenWeatherMapApi>(x =>
             {
                 var api = new OpenWeatherMapApi(configuration["OWM:AccessToken"]);
                 return api;

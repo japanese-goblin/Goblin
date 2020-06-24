@@ -8,6 +8,7 @@ using Goblin.DataAccess;
 using Goblin.Domain.Abstractions;
 using Goblin.Narfu;
 using Goblin.OpenWeatherMap;
+using Goblin.OpenWeatherMap.Abstractions;
 
 namespace Goblin.Application.Core.Commands.Text
 {
@@ -18,9 +19,9 @@ namespace Goblin.Application.Core.Commands.Text
         public string[] Aliases => new[] { "установить" };
         private readonly BotDbContext _db;
         private readonly NarfuApi _narfu;
-        private readonly OpenWeatherMapApi _weather;
+        private readonly IOpenWeatherMapApi _weather;
 
-        public SetDataCommand(BotDbContext db, OpenWeatherMapApi weather, NarfuApi narfu)
+        public SetDataCommand(BotDbContext db, IOpenWeatherMapApi weather, NarfuApi narfu)
         {
             _db = db;
             _weather = weather;
@@ -29,7 +30,7 @@ namespace Goblin.Application.Core.Commands.Text
 
         public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
-            var botUser = await _db.Set<T>().FindAsync(user.Id);
+            user = _db.Entry(user).Entity;
             var prms = msg.Text.Split(' ', 3);
             if(prms.Length != 3)
             {
@@ -39,7 +40,7 @@ namespace Goblin.Application.Core.Commands.Text
 
             if(prms[1].Equals("город", StringComparison.OrdinalIgnoreCase))
             {
-                return await SetCity(prms, botUser);
+                return await SetCity(prms, user);
             }
 
             if(prms[1].Equals("группу", StringComparison.OrdinalIgnoreCase) ||

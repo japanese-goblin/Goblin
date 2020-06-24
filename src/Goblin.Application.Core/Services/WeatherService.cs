@@ -6,6 +6,7 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.OpenWeatherMap;
+using Goblin.OpenWeatherMap.Abstractions;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 
@@ -20,16 +21,18 @@ namespace Goblin.Application.Core.Services
         private readonly TimeSpan _currentWeatherExpireTime;
 
         private readonly TimeSpan _dailyWeatherExpireTime;
+        private readonly ILogger _logger;
         private readonly TimeSpan _notFoundExpireTime;
-        private readonly OpenWeatherMapApi _weatherMapApi;
+        private readonly IOpenWeatherMapApi _weatherMapApi;
 
-        public WeatherService(OpenWeatherMapApi weatherMapApi, IMemoryCache cache)
+        public WeatherService(IOpenWeatherMapApi weatherMapApi, IMemoryCache cache)
         {
             _weatherMapApi = weatherMapApi;
             _cache = cache;
             _dailyWeatherExpireTime = TimeSpan.FromHours(3);
             _notFoundExpireTime = TimeSpan.FromMinutes(15);
             _currentWeatherExpireTime = TimeSpan.FromMinutes(10);
+            _logger = Log.ForContext<WeatherService>();
         }
 
         public async Task<IResult> GetCurrentWeather(string city)
@@ -56,12 +59,12 @@ namespace Goblin.Application.Core.Services
                     return new FailedResult($"Город \"{city}\" не найден");
                 }
 
-                Log.ForContext<OpenWeatherMapApi>().Fatal(ex, "Ошибка при получении погоды на текущий момент");
+                _logger.Error(ex, "Ошибка при получении погоды на текущий момент");
                 return new FailedResult(DefaultErrors.WeatherSiteIsUnavailable);
             }
             catch(Exception ex)
             {
-                Log.ForContext<OpenWeatherMapApi>().Fatal(ex, "Ошибка при получении погоды на текущий момент");
+                _logger.Fatal(ex, "Ошибка при получении погоды на текущий момент");
                 return new FailedResult(DefaultErrors.WeatherUnexpectedError);
             }
         }
@@ -107,12 +110,12 @@ namespace Goblin.Application.Core.Services
                     return new FailedResult(result);
                 }
 
-                Log.ForContext<OpenWeatherMapApi>().Fatal(ex, "Ошибка при получении погоды на текущий момент");
+                _logger.Error(ex, "Ошибка при получении погоды на текущий момент");
                 return new FailedResult(DefaultErrors.WeatherSiteIsUnavailable);
             }
             catch(Exception ex)
             {
-                Log.ForContext<OpenWeatherMapApi>().Fatal(ex, "Ошибка при получении погоды на день");
+                _logger.Fatal(ex, "Ошибка при получении погоды на день");
                 return new FailedResult(DefaultErrors.WeatherUnexpectedError);
             }
         }

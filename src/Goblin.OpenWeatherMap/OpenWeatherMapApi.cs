@@ -2,13 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Flurl.Http;
+using Goblin.OpenWeatherMap.Abstractions;
 using Goblin.OpenWeatherMap.Models.Current;
 using Goblin.OpenWeatherMap.Models.Daily;
 using Serilog;
 
 namespace Goblin.OpenWeatherMap
 {
-    public class OpenWeatherMapApi
+    public class OpenWeatherMapApi : IOpenWeatherMapApi
     {
         private readonly ILogger _logger;
         private readonly string _token;
