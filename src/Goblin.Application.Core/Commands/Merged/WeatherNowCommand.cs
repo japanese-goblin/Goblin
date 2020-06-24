@@ -2,7 +2,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Services;
 using Goblin.Domain.Abstractions;
 
 namespace Goblin.Application.Core.Commands.Merged
@@ -13,9 +12,9 @@ namespace Goblin.Application.Core.Commands.Merged
 
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "погода" };
-        private readonly WeatherService _weatherService;
+        private readonly IWeatherService _weatherService;
 
-        public WeatherNowCommand(WeatherService weatherService)
+        public WeatherNowCommand(IWeatherService weatherService)
         {
             _weatherService = weatherService;
         }

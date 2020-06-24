@@ -35,7 +35,7 @@ namespace Goblin.Application.Core
             services.AddSingleton<INarfuApi, NarfuApi>();
 
             services.AddSingleton<IScheduleService, ScheduleService>();
-            services.AddSingleton<WeatherService>();
+            services.AddSingleton<IWeatherService, WeatherService>();
         }
 
         private static void AddBotFeatures(IServiceCollection services)

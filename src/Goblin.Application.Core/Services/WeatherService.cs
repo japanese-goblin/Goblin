@@ -5,14 +5,13 @@ using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Goblin.OpenWeatherMap;
 using Goblin.OpenWeatherMap.Abstractions;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 
 namespace Goblin.Application.Core.Services
 {
-    public class WeatherService
+    public class WeatherService : IWeatherService
     {
         private const string DailyCacheKey = "Weather_Daily";
         private const string NowCacheKey = "Weather_Now";

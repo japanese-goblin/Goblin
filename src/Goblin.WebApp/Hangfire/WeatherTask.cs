@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Extensions;
-using Goblin.Application.Core.Services;
 using Goblin.Application.Vk.Extensions;
 using Goblin.Application.Vk.Hangfire;
 using Goblin.DataAccess;
@@ -20,9 +20,9 @@ namespace Goblin.WebApp.Hangfire
         private readonly BotDbContext _db;
         private readonly ILogger _logger;
         private readonly IVkApi _vkApi;
-        private readonly WeatherService _weatherService;
+        private readonly IWeatherService _weatherService;
 
-        public WeatherTask(WeatherService weatherService, BotDbContext db, IVkApi vkApi, TelegramBotClient botClient)
+        public WeatherTask(IWeatherService weatherService, BotDbContext db, IVkApi vkApi, TelegramBotClient botClient)
         {
             _weatherService = weatherService;
             _db = db;
