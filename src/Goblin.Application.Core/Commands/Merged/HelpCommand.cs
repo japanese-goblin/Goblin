@@ -8,7 +8,7 @@ namespace Goblin.Application.Core.Commands.Merged
     public class HelpCommand : IKeyboardCommand, ITextCommand
     {
         public bool IsAdminCommand => false;
-        public string[] Aliases => new[] { "помоги", "справка", "помощь", "команды" };
+        public string[] Aliases => new[] { "помоги", "справка", "помощь", "команды", "/start" };
 
         public string Trigger => "help";
 
