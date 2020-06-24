@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
+using Goblin.DataAccess;
 using Goblin.Domain.Abstractions;
 using Newtonsoft.Json;
 using Serilog;
@@ -11,21 +13,27 @@ namespace Goblin.Application.Core
 {
     public class CommandsService
     {
+        private readonly BotDbContext _context;
         private readonly IEnumerable<IKeyboardCommand> _keyboardCommands;
         private readonly ILogger _logger;
         private readonly IEnumerable<ITextCommand> _textCommands;
 
         public CommandsService(IEnumerable<ITextCommand> textCommands,
-                               IEnumerable<IKeyboardCommand> keyboardCommands)
+                               IEnumerable<IKeyboardCommand> keyboardCommands,
+                               BotDbContext context)
         {
             _textCommands = textCommands;
             _keyboardCommands = keyboardCommands;
+            _context = context;
             _logger = Log.ForContext<CommandsService>();
         }
 
-        public async Task<IResult> ExecuteCommand<T>(IMessage msg, BotUser user) where T : BotUser
+        public async Task ExecuteCommand<T>(IMessage msg,
+                                            Func<IResult, Task> onSuccess,
+                                            Func<IResult, Task> onFailed) where T : BotUser
         {
             IResult result;
+            var user = await GetBotUser<T>(msg.MessageUserId);
             if(!string.IsNullOrWhiteSpace(msg.Payload))
             {
                 result = await ExecuteKeyboardCommand<T>(msg, user);
@@ -37,7 +45,20 @@ namespace Goblin.Application.Core
 
             result.Keyboard ??= DefaultKeyboards.GetDefaultKeyboard();
 
-            return result;
+            if(!result.IsSuccessful)
+            {
+                if(result is CommandNotFoundResult && !user.IsErrorsEnabled)
+                {
+                    // если команда не найдена, и у пользователя отключены ошибки
+                    return;
+                }
+
+                await onFailed(result);
+            }
+            else
+            {
+                await onSuccess(result);
+            }
         }
 
         private async Task<IResult> ExecuteTextCommand<T>(IMessage msg, BotUser user) where T : BotUser
@@ -84,6 +105,23 @@ namespace Goblin.Application.Core
             }
 
             return new CommandNotFoundResult();
+        }
+
+        private async Task<BotUser> GetBotUser<T>(long userId) where T : BotUser
+        {
+            var user = await _context.Set<T>()
+                                     .FindAsync(userId);
+            if(!(user is null))
+            {
+                return user;
+            }
+
+            var entity = Activator.CreateInstance(typeof(T), new[] { userId }) as T;
+
+            user = (await _context.AddAsync(entity)).Entity;
+            await _context.SaveChangesAsync();
+
+            return user;
         }
     }
 }

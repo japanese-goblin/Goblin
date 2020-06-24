@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Goblin.Application.Core;
-using Goblin.Application.Core.Results.Failed;
+using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Vk.Converters;
 using Goblin.Application.Vk.Extensions;
 using Goblin.Application.Vk.Models;
@@ -75,54 +75,28 @@ namespace Goblin.Application.Vk
 
         private async Task MessageNew(VkMessage message, ClientInfo clientInfo)
         {
-            var user = await GetBotUser(message);
-
             _logger.Debug("Обработка сообщения");
-            var result = await _commandsService.ExecuteCommand<VkBotUser>(message, user);
+            await _commandsService.ExecuteCommand<VkBotUser>(message, OnSuccess, OnFailed);
             _logger.Information("Обработка сообщения завершена");
-            _logger.Debug("Отправка сообщения");
 
-            if(!result.IsSuccessful)
-            {
-                if(result is CommandNotFoundResult && !user.IsErrorsEnabled)
-                {
-                    // если команда не найдена, и у пользователя отключены ошибки
-                    return;
-                }
-
-                await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
-                {
-                    Message = result.ToString(),
-                    PeerId = message.MessageChatId
-                });
-            }
-            else
+            async Task OnSuccess(IResult res)
             {
                 await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                 {
-                    Message = result.Message,
-                    Keyboard = KeyboardConverter.FromCoreToVk(result.Keyboard, clientInfo.InlineKeyboard),
+                    Message = res.Message,
+                    Keyboard = KeyboardConverter.FromCoreToVk(res.Keyboard, clientInfo.InlineKeyboard),
                     PeerId = message.MessageChatId
                 });
             }
 
-            _logger.Information("Отправка сообщения завершена");
-        }
-
-        private async Task<VkBotUser> GetBotUser(VkMessage message)
-        {
-            var user = await _db.VkBotUsers.FindAsync(message.MessageUserId);
-            if(!(user is null))
+            async Task OnFailed(IResult res)
             {
-                return user;
+                await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
+                {
+                    Message = res.ToString(),
+                    PeerId = message.MessageChatId
+                });
             }
-
-            _logger.Debug("Пользователь с id {0} не найден. Создание записи.", message.MessageUserId);
-            user = (await _db.VkBotUsers.AddAsync(new VkBotUser(message.MessageUserId))).Entity;
-            await _db.SaveChangesAsync();
-            _logger.Debug("Пользователь создан");
-
-            return user;
         }
 
         public async Task GroupLeave(GroupLeave leave)
