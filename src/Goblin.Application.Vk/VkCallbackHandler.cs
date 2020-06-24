@@ -106,14 +106,7 @@ namespace Goblin.Application.Vk
                                              "администрации об этом через команду 'админ *сообщение*' (подробнее смотри в справке).";
 
             _logger.Information("Пользователь id{0} покинул группу", leave.UserId);
-            var admins = _db.VkBotUsers.Where(x => x.IsAdmin).Select(x => x.Id);
-            var vkUser = (await _vkApi.Users.GetAsync(new[] { leave.UserId.Value })).First();
-            var userName = $"{vkUser.FirstName} {vkUser.LastName}";
-            await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
-            {
-                Message = $"@id{leave.UserId} ({userName}) отписался :С",
-                UserIds = admins
-            });
+            await SendMessageToAdmins(leave.UserId.Value, "отписался :С");
 
             if(leave.IsSelf.HasValue && leave.IsSelf.Value)
             {
@@ -139,14 +132,7 @@ namespace Goblin.Application.Vk
                                             "при помощи команды 'админ *сообщение*' (подробнее смотри в справке)";
 
             _logger.Information("Пользователь id{0} вступил в группу", join.UserId);
-            var admins = _db.VkBotUsers.Where(x => x.IsAdmin).Select(x => x.Id);
-            var vkUser = (await _vkApi.Users.GetAsync(new[] { join.UserId.Value })).First();
-            var userName = $"{vkUser.FirstName} {vkUser.LastName}";
-            await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
-            {
-                Message = $"@id{join.UserId} ({userName}) подписался!",
-                UserIds = admins
-            });
+            await SendMessageToAdmins(join.UserId.Value, "подписался!");
 
             if(join.JoinType.HasValue && join.JoinType == GroupJoinType.Join)
             {
@@ -163,6 +149,18 @@ namespace Goblin.Application.Vk
                     // ignored
                 }
             }
+        }
+
+        private async Task SendMessageToAdmins(long userId, string message)
+        {
+            var admins = _db.VkBotUsers.Where(x => x.IsAdmin).Select(x => x.Id);
+            var vkUser = (await _vkApi.Users.GetAsync(new[] { userId })).First();
+            var userName = $"{vkUser.FirstName} {vkUser.LastName}";
+            await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
+            {
+                Message = $"@id{userId} ({userName}) {message}",
+                UserIds = admins
+            });
         }
     }
 }
