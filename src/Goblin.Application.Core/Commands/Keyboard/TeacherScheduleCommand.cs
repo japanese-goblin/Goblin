@@ -6,7 +6,6 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Abstractions;
-using Goblin.Narfu;
 using Goblin.Narfu.Abstractions;
 using Newtonsoft.Json;
 
@@ -24,12 +23,19 @@ namespace Goblin.Application.Core.Commands.Keyboard
 
         public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
-            if(string.IsNullOrWhiteSpace(msg.Payload))
+            var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload);
+            var isExists = dict.TryGetValue(Trigger, out var idString);
+            if(!isExists)
             {
                 return new FailedResult("Невозожно получить ID преподавателя.");
             }
 
-            var id = int.Parse(JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger]);
+            var isCorrectId = int.TryParse(idString, out var id);
+            if(!isCorrectId)
+            {
+                return new FailedResult("Некорректный ID преподавателя.");
+            }
+
             try
             {
                 var schedule = await _narfuApi.Teachers.GetLimitedSchedule(id);
