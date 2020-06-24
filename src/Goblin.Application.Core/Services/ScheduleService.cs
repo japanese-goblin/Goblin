@@ -10,7 +10,7 @@ using Serilog;
 
 namespace Goblin.Application.Core.Services
 {
-    public class ScheduleService
+    public class ScheduleService : IScheduleService
     {
         private readonly INarfuApi _narfuApi;
 

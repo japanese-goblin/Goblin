@@ -34,7 +34,7 @@ namespace Goblin.Application.Core
             });
             services.AddSingleton<INarfuApi, NarfuApi>();
 
-            services.AddSingleton<ScheduleService>();
+            services.AddSingleton<IScheduleService, ScheduleService>();
             services.AddSingleton<WeatherService>();
         }
 

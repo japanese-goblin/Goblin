@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Services;
 using Goblin.Application.Vk.Extensions;
 using Goblin.Domain;
@@ -13,11 +14,11 @@ namespace Goblin.WebApp.Hangfire
     public class SendToChatTasks
     {
         private readonly TelegramBotClient _botClient;
-        private readonly ScheduleService _scheduleService;
+        private readonly IScheduleService _scheduleService;
         private readonly IVkApi _vkApi;
         private readonly WeatherService _weatherService;
 
-        public SendToChatTasks(ScheduleService scheduleService, WeatherService weatherService, IVkApi vkApi,
+        public SendToChatTasks(IScheduleService scheduleService, WeatherService weatherService, IVkApi vkApi,
                                TelegramBotClient botClient)
         {
             _scheduleService = scheduleService;

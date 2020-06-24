@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Extensions;
-using Goblin.Application.Core.Services;
 using Goblin.Application.Vk.Extensions;
 using Goblin.Application.Vk.Hangfire;
 using Goblin.DataAccess;
@@ -19,10 +19,10 @@ namespace Goblin.WebApp.Hangfire
         private readonly TelegramBotClient _botClient;
         private readonly BotDbContext _db;
         private readonly ILogger _logger;
-        private readonly ScheduleService _scheduleService;
+        private readonly IScheduleService _scheduleService;
         private readonly IVkApi _vkApi;
 
-        public ScheduleTask(BotDbContext db, IVkApi vkApi, ScheduleService scheduleService, TelegramBotClient botClient)
+        public ScheduleTask(BotDbContext db, IVkApi vkApi, IScheduleService scheduleService, TelegramBotClient botClient)
         {
             _db = db;
             _vkApi = vkApi;
