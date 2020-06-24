@@ -23,7 +23,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
 
         public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
-            user = await _db.Set<T>().FindAsync(user.Id);
+            user = _db.Entry(user).Entity;
             var choose = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
             var isSchedule = user.HasScheduleSubscription;
             var isWeather = user.HasWeatherSubscription;
