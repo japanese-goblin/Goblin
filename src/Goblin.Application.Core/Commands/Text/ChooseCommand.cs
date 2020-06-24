@@ -38,7 +38,7 @@ namespace Goblin.Application.Core.Commands.Text
 
         private static string[] Split(string str)
         {
-            return str.Split(new[] { ",", ", ", " или " }, StringSplitOptions.None);
+            return str.Split(new[] { ",", ", ", " или " }, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }

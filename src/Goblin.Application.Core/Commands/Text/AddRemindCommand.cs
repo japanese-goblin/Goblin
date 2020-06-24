@@ -15,7 +15,7 @@ namespace Goblin.Application.Core.Commands.Text
 {
     public class AddRemindCommand : ITextCommand
     {
-        private const int MaxRemindsCount = 8;
+        public const int MaxRemindsCount = 8;
 
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "напомни" };
@@ -31,7 +31,7 @@ namespace Goblin.Application.Core.Commands.Text
             var param = string.Join(' ', msg.MessageParams);
             var all = param.Split(' ', 3);
 
-            var reminds = await _db.Reminds.Where(x => x.Id == user.Id && x.ConsumerType == user.ConsumerType)
+            var reminds = await _db.Reminds.Where(x => x.ChatId == user.Id && x.ConsumerType == user.ConsumerType)
                                    .ToArrayAsync();
 
             if(!user.IsAdmin && reminds.Length == MaxRemindsCount)
