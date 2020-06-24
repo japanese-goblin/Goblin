@@ -14,10 +14,10 @@ namespace Goblin.Application.Core.Tests.Commands.Text
         {
             var command = new DebugCommand(ApplicationContext);
             var text = command.Aliases[0];
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
             var result = await command.Execute<VkBotUser>(message, DefaultUser);
-            
+
             result.Should().BeOfType<SuccessfulResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }

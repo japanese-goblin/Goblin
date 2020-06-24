@@ -18,50 +18,50 @@ namespace Goblin.Application.Core.Tests.Commands.Text
         {
             var command = new AddRemindCommand(ApplicationContext);
             var text = $"{command.Aliases[0]} {date} 23:59 тест";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
             var result = await command.Execute<VkBotUser>(message, DefaultUser);
-            
+
             result.Should().BeOfType<SuccessfulResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
-        
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_NotEnoughParameters()
-        {
-            var command = new AddRemindCommand(ApplicationContext);
-            var text = $"{command.Aliases[0]} сегодня 23:59";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
-            
-            result.Should().BeOfType<FailedResult>("Нужно указать три параметра");
-            result.Message.Should().NotBeNullOrEmpty();
-        }
-        
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_DateIsOlderThanNow()
-        {
-            var command = new AddRemindCommand(ApplicationContext);
-            var text = $"{command.Aliases[0]} 01.01.2010 23:59 тест";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
-        
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
-            
-            result.Should().BeOfType<FailedResult>("Дата меньше текущей");
-            result.Message.Should().NotBeNullOrEmpty();
-        }
-        
         [Fact]
         public async Task ShouldReturnFailedResult_Because_DateIsIncorrect()
         {
             var command = new AddRemindCommand(ApplicationContext);
             var text = $"{command.Aliases[0]} 45.01.2010 23:59 тест";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
-        
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+
             var result = await command.Execute<VkBotUser>(message, DefaultUser);
-            
+
             result.Should().BeOfType<FailedResult>("Некорректная дата");
+            result.Message.Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task ShouldReturnFailedResult_Because_DateIsOlderThanNow()
+        {
+            var command = new AddRemindCommand(ApplicationContext);
+            var text = $"{command.Aliases[0]} 01.01.2010 23:59 тест";
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+
+            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+
+            result.Should().BeOfType<FailedResult>("Дата меньше текущей");
+            result.Message.Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task ShouldReturnFailedResult_Because_NotEnoughParameters()
+        {
+            var command = new AddRemindCommand(ApplicationContext);
+            var text = $"{command.Aliases[0]} сегодня 23:59";
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+
+            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+
+            result.Should().BeOfType<FailedResult>("Нужно указать три параметра");
             result.Message.Should().NotBeNullOrEmpty();
         }
 
@@ -70,10 +70,10 @@ namespace Goblin.Application.Core.Tests.Commands.Text
         {
             var command = new AddRemindCommand(ApplicationContext);
             var text = $"{command.Aliases[0]} 01.01.2101 23:59 тест";
-            var message = GenerateMessage(DefaultUserWithMaxReminds.Id, DefaultUserWithMaxReminds.Id, text, string.Empty);
-        
+            var message = GenerateMessage(DefaultUserWithMaxReminds.Id, DefaultUserWithMaxReminds.Id, text);
+
             var result = await command.Execute<VkBotUser>(message, DefaultUserWithMaxReminds);
-            
+
             result.Should().BeOfType<FailedResult>("У пользователя максимум напоминаний");
             result.Message.Should().NotBeNullOrEmpty();
         }

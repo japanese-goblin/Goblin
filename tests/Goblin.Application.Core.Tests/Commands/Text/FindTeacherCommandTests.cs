@@ -18,94 +18,9 @@ namespace Goblin.Application.Core.Tests.Commands.Text
 {
     public class FindTeacherCommandTests : TestBase
     {
-        [Fact]
-        public async Task ShouldReturnSuccessfulResult()
-        {
-            var command = new FindTeacherCommand(GetNarfuApi());
-            var text = $"{command.Aliases[0]} Иванов Иван Иванович";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
-
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
-
-            result.Should().BeOfType<SuccessfulResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-            result.Keyboard.Should().NotBeNull();
-            result.Keyboard.Buttons.Should().HaveCount(4);
-        }
-
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_ParameterIsEmpty()
-        {
-            var command = new FindTeacherCommand(GetNarfuApi());
-            var text = $"{command.Aliases[0]} ";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
-
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
-
-            result.Should().BeOfType<FailedResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-            result.Keyboard.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_TeachersNotFound()
-        {
-            var command = new FindTeacherCommand(GetNarfuApi(0));
-            var text = $"{command.Aliases[0]} Петров Пётр Петрович";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
-
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
-
-            result.Should().BeOfType<FailedResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-            result.Keyboard.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_FoundedALotOfTeachers()
-        {
-            var command = new FindTeacherCommand(GetNarfuApi(10));
-            var text = $"{command.Aliases[0]} Петров Пётр Петрович";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
-
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
-
-            result.Should().BeOfType<FailedResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-            result.Keyboard.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_UnknownError()
-        {
-            var command = new FindTeacherCommand(GetNarfuApiWithException());
-            var text = $"{command.Aliases[0]} Петров Пётр Петрович";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
-
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
-
-            result.Should().BeOfType<FailedResult>();
-            result.Message.Should().NotBeEmpty();
-            result.Keyboard.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_SiteIsUnavailable()
-        {
-            var command = new FindTeacherCommand(GetNarfuApiWithFlurlException());
-            var text = $"{command.Aliases[0]} Петров Пётр Петрович";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
-
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
-
-            result.Should().BeOfType<FailedResult>();
-            result.Message.Should().NotBeEmpty();
-            result.Keyboard.Should().BeNull();
-        }
-
         private INarfuApi GetNarfuApi(int max = 3)
         {
-            var teachers = Enumerable.Range(0, max).Select(x => new Teacher()
+            var teachers = Enumerable.Range(0, max).Select(x => new Teacher
             {
                 Id = x,
                 Depart = "depart",
@@ -136,13 +51,98 @@ namespace Goblin.Application.Core.Tests.Commands.Text
                    .ThrowsAsync(new FlurlHttpException(new HttpCall
                    {
                        Request = new HttpRequestMessage(HttpMethod.Get, endPoint),
-                       FlurlRequest = new FlurlRequest()
+                       FlurlRequest = new FlurlRequest
                        {
                            Url = new Url(endPoint)
                        }
                    }, new Exception()));
 
             return mockApi.Object;
+        }
+
+        [Fact]
+        public async Task ShouldReturnFailedResult_Because_FoundedALotOfTeachers()
+        {
+            var command = new FindTeacherCommand(GetNarfuApi(10));
+            var text = $"{command.Aliases[0]} Петров Пётр Петрович";
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+
+            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+
+            result.Should().BeOfType<FailedResult>();
+            result.Message.Should().NotBeNullOrEmpty();
+            result.Keyboard.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task ShouldReturnFailedResult_Because_ParameterIsEmpty()
+        {
+            var command = new FindTeacherCommand(GetNarfuApi());
+            var text = $"{command.Aliases[0]} ";
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+
+            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+
+            result.Should().BeOfType<FailedResult>();
+            result.Message.Should().NotBeNullOrEmpty();
+            result.Keyboard.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task ShouldReturnFailedResult_Because_SiteIsUnavailable()
+        {
+            var command = new FindTeacherCommand(GetNarfuApiWithFlurlException());
+            var text = $"{command.Aliases[0]} Петров Пётр Петрович";
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+
+            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+
+            result.Should().BeOfType<FailedResult>();
+            result.Message.Should().NotBeEmpty();
+            result.Keyboard.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task ShouldReturnFailedResult_Because_TeachersNotFound()
+        {
+            var command = new FindTeacherCommand(GetNarfuApi(0));
+            var text = $"{command.Aliases[0]} Петров Пётр Петрович";
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+
+            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+
+            result.Should().BeOfType<FailedResult>();
+            result.Message.Should().NotBeNullOrEmpty();
+            result.Keyboard.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task ShouldReturnFailedResult_Because_UnknownError()
+        {
+            var command = new FindTeacherCommand(GetNarfuApiWithException());
+            var text = $"{command.Aliases[0]} Петров Пётр Петрович";
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+
+            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+
+            result.Should().BeOfType<FailedResult>();
+            result.Message.Should().NotBeEmpty();
+            result.Keyboard.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task ShouldReturnSuccessfulResult()
+        {
+            var command = new FindTeacherCommand(GetNarfuApi());
+            var text = $"{command.Aliases[0]} Иванов Иван Иванович";
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+
+            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+
+            result.Should().BeOfType<SuccessfulResult>();
+            result.Message.Should().NotBeNullOrEmpty();
+            result.Keyboard.Should().NotBeNull();
+            result.Keyboard.Buttons.Should().HaveCount(4);
         }
     }
 }

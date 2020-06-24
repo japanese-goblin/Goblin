@@ -22,76 +22,11 @@ namespace Goblin.Application.Core.Tests.Commands.Text
         {
             var command = new SetDataCommand(ApplicationContext, GetWeatherApi(), GetNarfuApi());
             var text = $"{command.Aliases[0]} {parameters}";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
             var result = await command.Execute<VkBotUser>(message, DefaultUser);
 
             result.Should().BeOfType<SuccessfulResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-        }
-        
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_NotEnoughParameters()
-        {
-            var command = new SetDataCommand(ApplicationContext, GetWeatherApi(), GetNarfuApi());
-            var text = $"{command.Aliases[0]} город";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
-
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
-
-            result.Should().BeOfType<FailedResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-        }
-        
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_GroupIdIsNotInteger()
-        {
-            var command = new SetDataCommand(ApplicationContext, GetWeatherApi(), GetNarfuApi());
-            var text = $"{command.Aliases[0]} группу абв";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
-
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
-
-            result.Should().BeOfType<FailedResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-        }
-        
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_GroupIsNotExists()
-        {
-            var command = new SetDataCommand(ApplicationContext, GetWeatherApi(), GetNarfuApi(false));
-            var text = $"{command.Aliases[0]} группу 353535";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
-
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
-
-            result.Should().BeOfType<FailedResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-        }
-        
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_CityIsNotExists()
-        {
-            var command = new SetDataCommand(ApplicationContext, GetWeatherApi(false), GetNarfuApi());
-            var text = $"{command.Aliases[0]} город абв";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
-
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
-
-            result.Should().BeOfType<FailedResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-        }
-        
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_IncorrectSetParameter()
-        {
-            var command = new SetDataCommand(ApplicationContext, GetWeatherApi(false), GetNarfuApi());
-            var text = $"{command.Aliases[0]} абв абв";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text, string.Empty);
-
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
-
-            result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
 
@@ -117,6 +52,71 @@ namespace Goblin.Application.Core.Tests.Commands.Text
             mockWeather.Setup(x => x.IsCityExists(It.IsAny<string>()))
                        .ReturnsAsync(response);
             return mockWeather.Object;
+        }
+
+        [Fact]
+        public async Task ShouldReturnFailedResult_Because_CityIsNotExists()
+        {
+            var command = new SetDataCommand(ApplicationContext, GetWeatherApi(false), GetNarfuApi());
+            var text = $"{command.Aliases[0]} город абв";
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+
+            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+
+            result.Should().BeOfType<FailedResult>();
+            result.Message.Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task ShouldReturnFailedResult_Because_GroupIdIsNotInteger()
+        {
+            var command = new SetDataCommand(ApplicationContext, GetWeatherApi(), GetNarfuApi());
+            var text = $"{command.Aliases[0]} группу абв";
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+
+            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+
+            result.Should().BeOfType<FailedResult>();
+            result.Message.Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task ShouldReturnFailedResult_Because_GroupIsNotExists()
+        {
+            var command = new SetDataCommand(ApplicationContext, GetWeatherApi(), GetNarfuApi(false));
+            var text = $"{command.Aliases[0]} группу 353535";
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+
+            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+
+            result.Should().BeOfType<FailedResult>();
+            result.Message.Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task ShouldReturnFailedResult_Because_IncorrectSetParameter()
+        {
+            var command = new SetDataCommand(ApplicationContext, GetWeatherApi(false), GetNarfuApi());
+            var text = $"{command.Aliases[0]} абв абв";
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+
+            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+
+            result.Should().BeOfType<FailedResult>();
+            result.Message.Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task ShouldReturnFailedResult_Because_NotEnoughParameters()
+        {
+            var command = new SetDataCommand(ApplicationContext, GetWeatherApi(), GetNarfuApi());
+            var text = $"{command.Aliases[0]} город";
+            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+
+            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+
+            result.Should().BeOfType<FailedResult>();
+            result.Message.Should().NotBeNullOrEmpty();
         }
     }
 }
