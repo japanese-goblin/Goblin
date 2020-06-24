@@ -6,9 +6,7 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Abstractions;
-using Goblin.Narfu;
 using Goblin.Narfu.Abstractions;
-using Goblin.OpenWeatherMap;
 using Goblin.OpenWeatherMap.Abstractions;
 
 namespace Goblin.Application.Core.Commands.Text
