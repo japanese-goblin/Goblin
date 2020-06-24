@@ -13,6 +13,8 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
 {
     public class ScheduleCommandTests : TestBase
     {
+        private readonly DateTime DateTime = new DateTime(2150, 02, 02);
+
         private IScheduleService GetScheduleService()
         {
             var mock = new Mock<IScheduleService>();
@@ -31,7 +33,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
         {
             DefaultUser.SetNarfuGroup(0);
             var command = new ScheduleCommand(GetScheduleService());
-            var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "22.02.2150");
+            var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, DateTime.ToString("d"));
 
             var result = await command.Execute<VkBotUser>(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
@@ -42,7 +44,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
         public async Task ShouldReturnSuccessfulResult()
         {
             var command = new ScheduleCommand(GetScheduleService());
-            var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "22.02.2150");
+            var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, DateTime.ToString("d"));
 
             var result = await command.Execute<VkBotUser>(message, DefaultUser);
             result.Should().BeOfType<SuccessfulResult>();
