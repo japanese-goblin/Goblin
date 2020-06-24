@@ -1,6 +1,7 @@
 @using Goblin.Narfu
+@using Goblin.Narfu.Abstractions
 @model IEnumerable<IGrouping<int, Goblin.Domain.Abstractions.BotUser>>
-@inject NarfuApi NarfuApi;
+@inject INarfuApi NarfuApi;
 
 @{
     ViewData["Title"] = "Список пользователей";

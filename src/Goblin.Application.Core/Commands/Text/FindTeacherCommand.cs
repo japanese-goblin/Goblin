@@ -8,6 +8,7 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Abstractions;
 using Goblin.Narfu;
+using Goblin.Narfu.Abstractions;
 using Serilog;
 
 namespace Goblin.Application.Core.Commands.Text
@@ -16,9 +17,9 @@ namespace Goblin.Application.Core.Commands.Text
     {
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "препод" };
-        private readonly NarfuApi _narfuApi;
+        private readonly INarfuApi _narfuApi;
 
-        public FindTeacherCommand(NarfuApi narfuApi)
+        public FindTeacherCommand(INarfuApi narfuApi)
         {
             _narfuApi = narfuApi;
         }

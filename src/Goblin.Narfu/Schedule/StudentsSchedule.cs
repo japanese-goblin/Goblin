@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Flurl.Http;
+using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
 using ICalParser.Models;
@@ -13,7 +14,7 @@ using Serilog;
 
 namespace Goblin.Narfu.Schedule
 {
-    public class StudentsSchedule
+    public class StudentsSchedule : IStudentsSchedule
     {
         private Group[] Groups { get; }
         private readonly ILogger _logger;

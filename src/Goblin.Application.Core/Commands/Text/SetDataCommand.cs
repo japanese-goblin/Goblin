@@ -7,6 +7,7 @@ using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Abstractions;
 using Goblin.Narfu;
+using Goblin.Narfu.Abstractions;
 using Goblin.OpenWeatherMap;
 using Goblin.OpenWeatherMap.Abstractions;
 
@@ -18,10 +19,10 @@ namespace Goblin.Application.Core.Commands.Text
 
         public string[] Aliases => new[] { "установить" };
         private readonly BotDbContext _db;
-        private readonly NarfuApi _narfu;
+        private readonly INarfuApi _narfu;
         private readonly IOpenWeatherMapApi _weather;
 
-        public SetDataCommand(BotDbContext db, IOpenWeatherMapApi weather, NarfuApi narfu)
+        public SetDataCommand(BotDbContext db, IOpenWeatherMapApi weather, INarfuApi narfu)
         {
             _db = db;
             _weather = weather;

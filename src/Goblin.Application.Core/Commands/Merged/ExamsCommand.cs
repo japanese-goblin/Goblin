@@ -6,6 +6,7 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Abstractions;
 using Goblin.Narfu;
+using Goblin.Narfu.Abstractions;
 using Serilog;
 
 namespace Goblin.Application.Core.Commands.Merged
@@ -17,9 +18,9 @@ namespace Goblin.Application.Core.Commands.Merged
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "экзамены", "экзы" };
 
-        private readonly NarfuApi _api;
+        private readonly INarfuApi _api;
 
-        public ExamsCommand(NarfuApi api)
+        public ExamsCommand(INarfuApi api)
         {
             _api = api;
         }

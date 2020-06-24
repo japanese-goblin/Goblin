@@ -1,11 +1,12 @@
+using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Schedule;
 
 namespace Goblin.Narfu
 {
-    public class NarfuApi
+    public class NarfuApi : INarfuApi
     {
-        public TeachersSchedule Teachers { get; }
-        public StudentsSchedule Students { get; }
+        public ITeacherSchedule Teachers { get; }
+        public IStudentsSchedule Students { get; }
 
         public NarfuApi()
         {

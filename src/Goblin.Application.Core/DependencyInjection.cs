@@ -4,6 +4,7 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Options;
 using Goblin.Application.Core.Services;
 using Goblin.Narfu;
+using Goblin.Narfu.Abstractions;
 using Goblin.OpenWeatherMap;
 using Goblin.OpenWeatherMap.Abstractions;
 using Hangfire;
@@ -31,7 +32,7 @@ namespace Goblin.Application.Core
                 var api = new OpenWeatherMapApi(configuration["OWM:AccessToken"]);
                 return api;
             });
-            services.AddSingleton<NarfuApi>();
+            services.AddSingleton<INarfuApi, NarfuApi>();
 
             services.AddSingleton<ScheduleService>();
             services.AddSingleton<WeatherService>();

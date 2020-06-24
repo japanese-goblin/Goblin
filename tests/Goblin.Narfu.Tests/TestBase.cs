@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Goblin.Narfu.Abstractions;
 
 namespace Goblin.Narfu.Tests
 {
@@ -16,7 +17,7 @@ namespace Goblin.Narfu.Tests
         protected string TeachersSchedulePath => Path.Combine(DefaultPath, "TeachersSchedule.html");
         protected string FindByNamePath => Path.Combine(DefaultPath, "FindTeacher.json");
 
-        protected NarfuApi Api => new NarfuApi();
+        protected INarfuApi Api => new NarfuApi();
 
         protected DateTime CorrectDate = new DateTime(2040, 01, 23, 16, 15, 0);
         protected DateTime IncorrectDate = new DateTime(2010, 01, 23, 16, 15, 0);

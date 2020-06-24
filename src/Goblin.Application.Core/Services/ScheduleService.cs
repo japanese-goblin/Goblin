@@ -5,15 +5,16 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Narfu;
+using Goblin.Narfu.Abstractions;
 using Serilog;
 
 namespace Goblin.Application.Core.Services
 {
     public class ScheduleService
     {
-        private readonly NarfuApi _narfuApi;
+        private readonly INarfuApi _narfuApi;
 
-        public ScheduleService(NarfuApi narfuApi)
+        public ScheduleService(INarfuApi narfuApi)
         {
             _narfuApi = narfuApi;
         }

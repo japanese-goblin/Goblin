@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Narfu;
+using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.WebApp.Extensions;
 using Goblin.WebApp.ViewModels;
@@ -18,9 +19,9 @@ namespace Goblin.WebApp.Pages.Schedule
         public LessonsViewModel ViewModel { get; set; }
 
         public string ErrorMessage { get; set; }
-        private readonly NarfuApi _narfuApi;
+        private readonly INarfuApi _narfuApi;
 
-        public Show(NarfuApi narfuApi)
+        public Show(INarfuApi narfuApi)
         {
             _narfuApi = narfuApi;
         }

@@ -7,6 +7,7 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Abstractions;
 using Goblin.Narfu;
+using Goblin.Narfu.Abstractions;
 using Newtonsoft.Json;
 
 namespace Goblin.Application.Core.Commands.Keyboard
@@ -14,9 +15,9 @@ namespace Goblin.Application.Core.Commands.Keyboard
     public class TeacherScheduleCommand : IKeyboardCommand
     {
         public string Trigger => "teacherSchedule";
-        private readonly NarfuApi _narfuApi;
+        private readonly INarfuApi _narfuApi;
 
-        public TeacherScheduleCommand(NarfuApi narfuApi)
+        public TeacherScheduleCommand(INarfuApi narfuApi)
         {
             _narfuApi = narfuApi;
         }
