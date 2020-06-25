@@ -7,7 +7,6 @@ using Flurl.Http;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.WebApp.Extensions;
-using Goblin.WebApp.ViewModels;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Serilog;
 
@@ -15,7 +14,10 @@ namespace Goblin.WebApp.Pages.Schedule
 {
     public class Show : PageModel
     {
-        public LessonsViewModel ViewModel { get; set; }
+        public Dictionary<string, Lesson[]> Lessons { get; set; }
+        public string GroupTitle { get; set; }
+        public string ScheduleLink { get; set; }
+        public string WebcalLink { get; set; }
 
         public string ErrorMessage { get; set; }
         private readonly INarfuApi _narfuApi;
@@ -42,14 +44,10 @@ namespace Goblin.WebApp.Pages.Schedule
 
                 var scheduleLink = _narfuApi.Students.GenerateScheduleLink(group.RealId);
                 var webcalLink = _narfuApi.Students.GenerateScheduleLink(group.RealId, true);
-
-                ViewModel = new LessonsViewModel
-                {
-                    Lessons = MagicWithLessons(lessons.ToList()),
-                    GroupTitle = $"{group.RealId} - {group.Name}",
-                    ScheduleLink = scheduleLink,
-                    WebcalLink = webcalLink
-                };
+                Lessons = MagicWithLessons(lessons.ToList());
+                GroupTitle = $"{group.RealId} - {group.Name}";
+                ScheduleLink = scheduleLink;
+                WebcalLink = webcalLink;
             }
             catch(FlurlHttpException)
             {
