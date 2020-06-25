@@ -1,11 +1,10 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Goblin.Application.Core.Extensions;
+﻿using System.Threading.Tasks;
 using Goblin.Application.Vk.Extensions;
-using Goblin.DataAccess;
+using Goblin.Domain;
+using Goblin.WebApp.Hangfire;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
@@ -15,12 +14,10 @@ namespace Goblin.WebApp.Areas.Admin.Controllers
     [Area("Admin")]
     public class MessagesController : Controller
     {
-        private readonly BotDbContext _db;
         private readonly IVkApi _vkApi;
 
-        public MessagesController(BotDbContext db, IVkApi vkApi)
+        public MessagesController(IVkApi vkApi)
         {
-            _db = db;
             _vkApi = vkApi;
         }
 
@@ -30,25 +27,14 @@ namespace Goblin.WebApp.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendToAll(string msg)
+        public IActionResult SendToAll(string msg, string[] attachments, ConsumerType type)
         {
-            var chunks = _db.VkBotUsers.AsNoTracking().Select(x => x.Id)
-                            .AsEnumerable().Chunk(100);
-
-            foreach(var chunk in chunks)
-            {
-                await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
-                {
-                    Message = msg,
-                    UserIds = chunk
-                });
-            }
-
+            BackgroundJob.Enqueue<SendToUsersTasks>(x => x.SendToAll(msg, attachments, type));
             return RedirectToAction("Index", "Messages");
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendToId(long peerId, string msg)
+        public async Task<IActionResult> SendToId(long peerId, string msg, string[] attachments, ConsumerType type)
         {
             await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
             {

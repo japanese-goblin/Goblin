@@ -3,6 +3,7 @@
     public enum ConsumerType
     {
         Vkontakte,
-        Telegram
+        Telegram,
+        AllInOne = 1001
     }
 }
