@@ -14,7 +14,7 @@ namespace Goblin.WebApp.Areas.Admin.Pages.Messages
     {
         public void OnPostSendToAll(string msg, string[] attachments, ConsumerType type, string isSendKeyboard)
         {
-            var isKeyboard = isSendKeyboard.Equals("on", StringComparison.OrdinalIgnoreCase) ? true : false;
+            var isKeyboard = !string.IsNullOrWhiteSpace(isSendKeyboard) && isSendKeyboard.Equals("on", StringComparison.OrdinalIgnoreCase);
             BackgroundJob.Enqueue<SendToUsersTasks>(x => x.SendToAll(msg, attachments, isKeyboard, type));
         }
 
