@@ -12,7 +12,10 @@
                     Админка
                 </a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" asp-area="Admin" asp-controller="Users" asp-action="Index">Главная</a>
+                    <a class="dropdown-item" href="#">Пользователи:</a>
+                    <a class="dropdown-item" asp-area="Admin" asp-page="/Users/Vk">Вк</a>
+                    <a class="dropdown-item" asp-area="Admin" asp-page="/Users/Telegram">Телеграм</a>
+                    <div class="dropdown-divider"></div>
                     <a class="dropdown-item" asp-area="Admin" asp-controller="Messages" asp-action="Index">Сообщения</a>
                     <a class="dropdown-item" asp-area="Admin" asp-controller="Reminds" asp-action="Index">Напоминалки</a>
                     <div class="dropdown-divider"></div>

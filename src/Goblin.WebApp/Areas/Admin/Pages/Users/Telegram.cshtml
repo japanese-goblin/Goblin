@@ -1,0 +1,14 @@
+﻿@page
+@model Goblin.WebApp.Areas.Admin.Pages.Users.Telegram
+
+@{
+    ViewData["Title"] = "Список пользователей [TG]";
+}
+
+<h2>
+    @ViewData["Title"] <span class="badge badge-secondary">@ViewData["count"]</span>
+</h2>
+
+@{
+    await Html.RenderPartialAsync("_UsersTable", Model.Users);
+}
