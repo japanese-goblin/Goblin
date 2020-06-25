@@ -73,8 +73,7 @@ namespace Goblin.Application.Core
                     continue;
                 }
 
-                var isAllowed = command.IsAdminCommand && user.IsAdmin;
-                if(!isAllowed)
+                if(command.IsAdminCommand && !user.IsAdmin)
                 {
                     continue;
                 }
