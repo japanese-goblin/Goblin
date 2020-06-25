@@ -1,15 +1,33 @@
+﻿@page
+@using Goblin.Domain
+@model Goblin.WebApp.Areas.Admin.Pages.Reminds.Add
+
 @{
     ViewData["Title"] = "Добавление напоминания";
+}
+
+@if(!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.ErrorMessage
+    </div>
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <div class="row">
     <div class="col-md-3">
-        <form method="post" asp-area="Admin" asp-controller="Reminds" asp-action="AddRemind">
+        <form method="post">
             <div class="form-group">
                 <label>ID</label>
                 <input type="number" class="form-control" name="peerId" placeholder="ID" required="">
+            </div>
+            <div class="form-group">
+                <label>Куда отправить</label>
+                <select class="form-control" name="consumerType">
+                    <option value="@((int) ConsumerType.Vkontakte)">@ConsumerType.Vkontakte</option>
+                    <option value="@((int) ConsumerType.Telegram)">@ConsumerType.Telegram</option>
+                </select>
             </div>
             <div class="form-group">
                 <label>Текст</label>
@@ -19,10 +37,9 @@
                 <label>Дата</label>
                 <input type="date" class="form-control" name="dateStr" required="">
             </div>
-
             <div class="form-group">
-                <label>Дата</label>
-                <input type="time" class="form-control" name="time" required="">
+                <label>Время</label>
+                <input type="time" class="form-control" name="timeStr" required="">
             </div>
             <button type="submit" class="btn btn-warning">Отправить</button>
         </form>

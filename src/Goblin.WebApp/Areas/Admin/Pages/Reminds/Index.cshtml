@@ -1,4 +1,5 @@
-@model Goblin.Domain.Entities.Remind[];
+﻿@page
+@model Goblin.WebApp.Areas.Admin.Pages.Reminds.Index
 
 @{
     ViewData["Title"] = "Список напоминаний";
@@ -7,22 +8,24 @@
 <h2>
     @ViewData["Title"] <span class="badge badge-secondary">@ViewData["count"]</span>
 </h2>
-<a class="btn btn-success mb-3" asp-area="Admin" asp-controller="Reminds" asp-action="Add">Добавить напоминание</a>
+<a class="btn btn-success mb-3" asp-area="Admin" asp-page="/Reminds/Add">Добавить напоминание</a>
 <table class="table table-striped table-bordered">
     <thead class="thead-dark">
     <tr>
         <th>ID</th>
-        <th>Vk ID</th>
+        <th>UserID</th>
+        <th>Type</th>
         <th>Text</th>
         <th>Date</th>
     </tr>
     </thead>
     <tbody>
-    @foreach(var remind in Model)
+    @foreach(var remind in Model.Reminds)
     {
         <tr>
             <td>@remind.Id</td>
             <td>@remind.ChatId</td>
+            <td>@remind.ConsumerType</td>
             <td>@remind.Text</td>
             <td>@remind.Date.ToString("G")</td>
         </tr>
