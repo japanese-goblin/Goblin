@@ -70,7 +70,7 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account
             if(result.Succeeded)
             {
                 _logger.Information("{0} logged in with {1} provider.", info.Principal.Identity.Name,
-                                       info.LoginProvider);
+                                    info.LoginProvider);
                 return LocalRedirect(returnUrl);
             }
 

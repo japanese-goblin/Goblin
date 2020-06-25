@@ -7,7 +7,6 @@ using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Abstractions;
-using Goblin.Narfu;
 using Goblin.Narfu.Abstractions;
 using Serilog;
 

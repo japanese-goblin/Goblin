@@ -15,7 +15,7 @@ namespace Goblin.WebApp.Controllers
         {
             _handler = handler;
         }
-        
+
         [HttpPost]
         public IActionResult Index([FromBody] Update update)
         {

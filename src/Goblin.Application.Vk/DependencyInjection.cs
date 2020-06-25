@@ -1,5 +1,3 @@
-using AutoMapper;
-using Goblin.Application.Core.Options;
 using Goblin.Application.Vk.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
