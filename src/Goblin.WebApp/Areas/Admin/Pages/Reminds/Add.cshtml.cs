@@ -6,6 +6,7 @@ using Goblin.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace Goblin.WebApp.Areas.Admin.Pages.Reminds
@@ -22,12 +23,15 @@ namespace Goblin.WebApp.Areas.Admin.Pages.Reminds
             _context = context;
         }
 
-        public void OnGet()
+        public async Task<IActionResult> OnPost(long chatId, ConsumerType consumerType, string text, string dateStr, string timeStr)
         {
-        }
+            var isExists = await IsCorrectId(chatId, consumerType);
+            if(!isExists)
+            {
+                ErrorMessage = $"Пользователь [{chatId}-{consumerType}] не существует в бд";
+                return Page();
+            }
 
-        public async Task<IActionResult> OnPost(long peerId, ConsumerType consumerType, string text, string dateStr, string timeStr)
-        {
             var isCorrectDate = DateTime.TryParse($"{dateStr} {timeStr}", out var date);
             if(!isCorrectDate)
             {
@@ -37,10 +41,10 @@ namespace Goblin.WebApp.Areas.Admin.Pages.Reminds
 
             try
             {
-                await _context.Reminds.AddAsync(new Remind(peerId, text, date, consumerType));
+                await _context.Reminds.AddAsync(new Remind(chatId, text, date, consumerType));
                 await _context.SaveChangesAsync();
 
-                return RedirectToPage("Index", "Reminds");
+                return RedirectToPage("Index");
             }
             catch(Exception ex)
             {
@@ -49,6 +53,24 @@ namespace Goblin.WebApp.Areas.Admin.Pages.Reminds
             }
 
             return Page();
+        }
+
+        [NonHandler]
+        public async Task<bool> IsCorrectId(long chatId, ConsumerType type)
+        {
+            if(type == ConsumerType.Telegram)
+            {
+                var isExists = await _context.TgBotUsers.SingleOrDefaultAsync(x => x.Id == chatId);
+                return isExists != null;
+            }
+
+            if(type == ConsumerType.Vkontakte)
+            {
+                var isExists = await _context.VkBotUsers.SingleOrDefaultAsync(x => x.Id == chatId);
+                return isExists != null;
+            }
+
+            return false;
         }
     }
 }
