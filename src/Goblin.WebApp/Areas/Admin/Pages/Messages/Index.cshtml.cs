@@ -1,4 +1,5 @@
-﻿using Goblin.Domain;
+﻿using System;
+using Goblin.Domain;
 using Goblin.WebApp.Hangfire;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
@@ -11,9 +12,10 @@ namespace Goblin.WebApp.Areas.Admin.Pages.Messages
     [Area("Admin")]
     public class Index : PageModel
     {
-        public void OnPostSendToAll(string msg, string[] attachments, ConsumerType type)
+        public void OnPostSendToAll(string msg, string[] attachments, ConsumerType type, string isSendKeyboard)
         {
-            BackgroundJob.Enqueue<SendToUsersTasks>(x => x.SendToAll(msg, attachments, type));
+            var isKeyboard = isSendKeyboard.Equals("on", StringComparison.OrdinalIgnoreCase) ? true : false;
+            BackgroundJob.Enqueue<SendToUsersTasks>(x => x.SendToAll(msg, attachments, isKeyboard, type));
         }
 
         public void OnPostSendToId(long chatId, string msg, string[] attachments, ConsumerType type)

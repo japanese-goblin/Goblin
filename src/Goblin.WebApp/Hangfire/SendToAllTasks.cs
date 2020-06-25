@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Goblin.Application.Core;
 using Goblin.Application.Core.Extensions;
 using Goblin.Application.Vk;
+using Goblin.Application.Vk.Converters;
 using Goblin.Application.Vk.Extensions;
 using Goblin.Application.Vk.Hangfire;
 using Goblin.DataAccess;
@@ -10,6 +12,7 @@ using Goblin.Domain;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
@@ -30,24 +33,24 @@ namespace Goblin.WebApp.Hangfire
             _logger = Log.ForContext<SendToUsersTasks>();
         }
 
-        public async Task SendToAll(string text, string[] attachments, ConsumerType type)
+        public async Task SendToAll(string text, string[] attachments, bool isSendKeyboard, ConsumerType type)
         {
             if(type == ConsumerType.Vkontakte)
             {
-                await SendToAllVk(text, attachments);
+                await SendToAllVk(text, attachments, isSendKeyboard);
                 return;
             }
 
             if(type == ConsumerType.Telegram)
             {
-                await SendToAllTelegram(text, attachments);
+                await SendToAllTelegram(text, attachments, isSendKeyboard);
                 return;
             }
 
             if(type == ConsumerType.AllInOne)
             {
-                await SendToAllVk(text, attachments);
-                await SendToAllTelegram(text, attachments);
+                await SendToAllVk(text, attachments, isSendKeyboard);
+                await SendToAllTelegram(text, attachments, isSendKeyboard);
             }
         }
 
@@ -63,8 +66,9 @@ namespace Goblin.WebApp.Hangfire
             }
         }
 
-        private async Task SendToAllVk(string text, string[] attachs)
+        private async Task SendToAllVk(string text, string[] attachs, bool isSendKeyboard)
         {
+            var keyboard = KeyboardConverter.FromCoreToVk(DefaultKeyboards.GetDefaultKeyboard());
             var chunks = _db.VkBotUsers
                             .AsNoTracking()
                             .Select(x => x.Id)
@@ -77,12 +81,25 @@ namespace Goblin.WebApp.Hangfire
             {
                 try
                 {
-                    await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
+                    if(isSendKeyboard)
                     {
-                        Message = text,
-                        UserIds = chunk,
-                        Attachments = attachments
-                    });
+                        await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
+                        {
+                            Message = text,
+                            UserIds = chunk,
+                            Attachments = attachments,
+                            Keyboard = keyboard
+                        });
+                    }
+                    else
+                    {
+                        await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
+                        {
+                            Message = text,
+                            UserIds = chunk,
+                            Attachments = attachments
+                        });
+                    }
                 }
                 catch(Exception e)
                 {
@@ -102,8 +119,14 @@ namespace Goblin.WebApp.Hangfire
             });
         }
 
-        private async Task SendToAllTelegram(string text, string[] attachs)
+        private async Task SendToAllTelegram(string text, string[] attachs, bool isSendKeyboard)
         {
+            IReplyMarkup keyboard = null;
+            if(isSendKeyboard)
+            {
+                keyboard = Application.Telegram.Converters.KeyboardConverter.FromCoreToTg(DefaultKeyboards.GetDefaultKeyboard());
+            }
+
             var chunks = _db.TgBotUsers
                             .AsNoTracking()
                             .Select(x => x.Id)
@@ -114,18 +137,25 @@ namespace Goblin.WebApp.Hangfire
             {
                 foreach(var id in chunk)
                 {
-                    await SendToTelegram(id, text, attachs);
+                    await SendToTelegram(id, text, attachs, keyboard);
                 }
 
                 await Task.Delay(1500);
             }
         }
 
-        private async Task SendToTelegram(long chatId, string text, string[] attachments)
+        private async Task SendToTelegram(long chatId, string text, string[] attachments, IReplyMarkup keyboard = null)
         {
             try
             {
-                await _botClient.SendTextMessageAsync(chatId, text);
+                if(keyboard != null)
+                {
+                    await _botClient.SendTextMessageAsync(chatId, text, replyMarkup: keyboard);
+                }
+                else
+                {
+                    await _botClient.SendTextMessageAsync(chatId, text);
+                }
             }
             catch(Exception e)
             {
