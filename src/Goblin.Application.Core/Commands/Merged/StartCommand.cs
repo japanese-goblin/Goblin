@@ -8,7 +8,7 @@ namespace Goblin.Application.Core.Commands.Merged
     public class StartCommand : IKeyboardCommand, ITextCommand
     {
         public bool IsAdminCommand => false;
-        public string[] Aliases => new[] { "старт", "начать" };
+        public string[] Aliases => new[] { "старт", "начать", "/start" };
 
         public string Trigger => "command";
 
