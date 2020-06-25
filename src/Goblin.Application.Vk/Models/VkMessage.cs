@@ -8,5 +8,7 @@ namespace Goblin.Application.Vk.Models
     {
         public long MessageUserId => FromId ?? throw new ArgumentException();
         public long MessageChatId => PeerId ?? throw new ArgumentException();
+        public string MessageText => Text;
+        public string MessagePayload => Payload;
     }
 }

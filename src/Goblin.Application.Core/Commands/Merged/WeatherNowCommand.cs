@@ -21,7 +21,7 @@ namespace Goblin.Application.Core.Commands.Merged
 
         public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
-            if(!string.IsNullOrWhiteSpace(msg.Payload))
+            if(!string.IsNullOrWhiteSpace(msg.MessagePayload))
             {
                 return await ExecutePayload(user);
             }

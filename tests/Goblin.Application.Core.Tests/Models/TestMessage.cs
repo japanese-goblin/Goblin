@@ -6,7 +6,7 @@ namespace Goblin.Application.Core.Tests.Models
     {
         public long MessageUserId => UserId;
         public long MessageChatId => ChatId;
-        public string Text => MessageText;
-        public string Payload => Data;
+        public string MessageText => Text;
+        public string MessagePayload => Data;
     }
 }

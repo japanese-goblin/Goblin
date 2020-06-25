@@ -26,7 +26,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
                 return new FailedResult("Для получения погоды установите город (нужно написать следующее - установить город Москва).");
             }
 
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload);
+            var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.MessagePayload);
             var isExists = dict.TryGetValue(Trigger, out var day);
             if(!isExists)
             {

@@ -25,7 +25,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
                 return new FailedResult(DefaultErrors.GroupNotSet);
             }
 
-            var date = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
+            var date = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.MessagePayload)[Trigger];
             return await _api.GetSchedule(user.NarfuGroup, DateTime.Parse(date));
         }
     }

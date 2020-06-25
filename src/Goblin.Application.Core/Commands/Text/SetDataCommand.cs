@@ -30,7 +30,7 @@ namespace Goblin.Application.Core.Commands.Text
         public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
             user = _db.Entry(user).Entity;
-            var prms = msg.Text.Split(' ', 3);
+            var prms = msg.MessageText.Split(' ', 3);
             if(prms.Length != 3)
             {
                 return new FailedResult("Укажите 2 параметра команды." +

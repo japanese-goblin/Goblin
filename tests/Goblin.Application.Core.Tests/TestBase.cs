@@ -72,7 +72,7 @@ namespace Goblin.Application.Core.Tests
             {
                 UserId = userId,
                 ChatId = chatId,
-                MessageText = text,
+                Text = text,
                 Data = string.Empty
             };
         }
@@ -87,7 +87,7 @@ namespace Goblin.Application.Core.Tests
             {
                 UserId = userId,
                 ChatId = chatId,
-                MessageText = string.Empty,
+                Text = string.Empty,
                 Data = JsonSerializer.Serialize(dict)
             };
         }

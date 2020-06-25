@@ -34,7 +34,7 @@ namespace Goblin.Application.Core
         {
             IResult result;
             var user = await GetBotUser<T>(msg.MessageUserId);
-            if(!string.IsNullOrWhiteSpace(msg.Payload))
+            if(!string.IsNullOrWhiteSpace(msg.MessagePayload))
             {
                 result = await ExecuteKeyboardCommand<T>(msg, user);
             }
@@ -91,7 +91,7 @@ namespace Goblin.Application.Core
         private async Task<IResult> ExecuteKeyboardCommand<T>(IMessage msg, BotUser user) where T : BotUser
         {
             _logger.Debug("Обработка команды с клавиатуры");
-            var record = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload).FirstOrDefault();
+            var record = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.MessagePayload).FirstOrDefault();
             foreach(var command in _keyboardCommands)
             {
                 if(!record.Key.Contains(command.Trigger))

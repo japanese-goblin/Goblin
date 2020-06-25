@@ -23,7 +23,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
 
         public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
         {
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload);
+            var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.MessagePayload);
             var isExists = dict.TryGetValue(Trigger, out var idString);
             if(!isExists)
             {

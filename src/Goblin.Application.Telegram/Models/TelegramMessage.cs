@@ -7,6 +7,7 @@ namespace Goblin.Application.Telegram.Models
     {
         public long MessageUserId => From.Id;
         public long MessageChatId => Chat.Id;
-        public string Payload => string.Empty;
+        public string MessageText => Text ?? string.Empty;
+        public string MessagePayload => string.Empty;
     }
 }
