@@ -51,6 +51,18 @@ namespace Goblin.WebApp.Hangfire
             }
         }
 
+        public async Task SendToId(long chatId, string text, string[] attachments, ConsumerType type)
+        {
+            if(type == ConsumerType.Vkontakte)
+            {
+                await SendToVk(chatId, text, attachments);
+            }
+            else if(type == ConsumerType.Telegram)
+            {
+                await SendToTelegram(chatId, text, attachments);
+            }
+        }
+
         private async Task SendToAllVk(string text, string[] attachs)
         {
             var chunks = _db.VkBotUsers
@@ -77,6 +89,17 @@ namespace Goblin.WebApp.Hangfire
                     _logger.Warning("{0} ({1})", e.GetType(), e.Message);
                 }
             }
+        }
+
+        private async Task SendToVk(long chatId, string text, string[] attachs)
+        {
+            var attachments = AttachmentsParser.StringsToAttachments(attachs);
+            await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
+            {
+                PeerId = chatId,
+                Message = text,
+                Attachments = attachments
+            });
         }
 
         private async Task SendToAllTelegram(string text, string[] attachs)
