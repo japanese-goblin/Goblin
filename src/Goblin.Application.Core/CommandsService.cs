@@ -115,7 +115,7 @@ namespace Goblin.Application.Core
                 return user;
             }
 
-            var entity = Activator.CreateInstance(typeof(T), new[] { userId }) as T;
+            var entity = Activator.CreateInstance(typeof(T), userId, "", 0, false, true, false, false) as T;
 
             user = (await _context.AddAsync(entity)).Entity;
             await _context.SaveChangesAsync();
