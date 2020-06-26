@@ -19,6 +19,10 @@ namespace Goblin.Application.Vk.Converters
                     kb.SetOneTime();
                 }
             }
+            else
+            {
+                coreKeyboard.RemoveReturnToMenuButton();
+            }
 
             kb.SetInline(isInlineKeyboardEnabled);
 

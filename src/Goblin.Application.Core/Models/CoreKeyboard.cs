@@ -5,6 +5,8 @@ namespace Goblin.Application.Core.Models
 {
     public class CoreKeyboard
     {
+        public const string ReturnToMainMenuText = "Вернуться в главное меню";
+
         public bool IsOneTime { get; set; }
         public bool IsInline { get; set; }
         public List<List<CoreKeyboardButton>> Buttons { get; set; }
@@ -42,11 +44,6 @@ namespace Goblin.Application.Core.Models
 
         public CoreKeyboard AddReturnToMenuButton(bool addNewLine = true)
         {
-            if(IsInline)
-            {
-                return this;
-            }
-
             if(addNewLine)
             {
                 AddLine();
@@ -54,11 +51,26 @@ namespace Goblin.Application.Core.Models
 
             var button = new CoreKeyboardButton
             {
-                Title = "Вернуться в главное меню",
+                Title = ReturnToMainMenuText,
                 Color = CoreKeyboardButtonColor.Default
             };
             button.SetPayload("command", "start");
             LastLine.Add(button);
+
+            return this;
+        }
+
+        public CoreKeyboard RemoveReturnToMenuButton()
+        {
+            var lineWithReturnButton = Buttons
+                    .SingleOrDefault(x =>
+                                             x.Any(z => z.Title == ReturnToMainMenuText));
+
+            var returnButton = lineWithReturnButton?.SingleOrDefault(x => x.Title == ReturnToMainMenuText);
+            if(returnButton != null)
+            {
+                lineWithReturnButton.Remove(returnButton);
+            }
 
             return this;
         }

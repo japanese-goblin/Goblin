@@ -55,7 +55,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             result.Should().BeOfType<SuccessfulResult>();
             result.Message.Should().NotBeNullOrEmpty();
             result.Keyboard.Should().NotBeNull();
-            result.Keyboard.Buttons.Should().HaveCount(2);
+            result.Keyboard.Buttons.Should().HaveCount(3);
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             result.Should().BeOfType<SuccessfulResult>();
             result.Message.Should().NotBeNullOrEmpty();
             result.Keyboard.Should().NotBeNull();
-            result.Keyboard.Buttons.Should().HaveCount(2);
+            result.Keyboard.Buttons.Should().HaveCount(3);
         }
     }
 }

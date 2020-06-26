@@ -8,6 +8,8 @@ namespace Goblin.Application.Telegram.Converters
     {
         public static IReplyMarkup FromCoreToTg(CoreKeyboard coreKeyboard)
         {
+            coreKeyboard.RemoveReturnToMenuButton();
+
             return coreKeyboard.IsInline ? GenerateInlineKeyboard() : GenerateReplyKeyboard();
 
             IReplyMarkup GenerateReplyKeyboard()
