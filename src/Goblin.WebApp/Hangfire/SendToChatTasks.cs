@@ -74,7 +74,7 @@ namespace Goblin.WebApp.Hangfire
                 await _botClient.SendTextMessageAsync(id, result.Message);
             }
 
-            if(DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
+            if(group != 0 && DateTime.Today.DayOfWeek != DayOfWeek.Sunday)
             {
                 Log.Information("Отправка расписания в {0}", id);
                 var result = await _scheduleService.GetSchedule(group, DateTime.Now);
