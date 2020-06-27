@@ -16,7 +16,7 @@ namespace Goblin.Application.Core.Results.Failed
 
         public FailedResult(string message)
         {
-            Message = message;
+            Message = $"❌ Ошибка: {message}";
         }
 
         public override string ToString()
