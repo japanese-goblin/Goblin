@@ -6,9 +6,9 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Narfu.Abstractions;
+using Goblin.Narfu.ICalParser;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
-using ICalParser.Models;
 using Newtonsoft.Json;
 using Serilog;
 

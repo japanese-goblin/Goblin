@@ -22,8 +22,4 @@
       </None>
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\ICalParser\ICalParser.csproj" />
-    </ItemGroup>
-
 </Project>

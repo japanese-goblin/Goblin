@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ICalParser.Models
+namespace Goblin.Narfu.ICalParser
 {
     public class Calendar
     {
@@ -49,8 +49,8 @@ namespace ICalParser.Models
             {
                 var field = ParseVEventFields(match.Groups["vevent"].ToString());
 
-                var startDate = DateTime.ParseExact(field["DTSTART"], "yyyyMMddTHHmmssZ", CultureInfo.CurrentCulture);
-                var endDate = DateTime.ParseExact(field["DTEND"], "yyyyMMddTHHmmssZ", CultureInfo.CurrentCulture);
+                var startDate = DateTime.ParseExact(field["DTSTART"], "yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture);
+                var endDate = DateTime.ParseExact(field["DTEND"], "yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture);
                 yield return new CalendarEvent(field["UID"], startDate, endDate, field["DESCRIPTION"],
                                                field["LOCATION"], field["SUMMARY"]);
             }

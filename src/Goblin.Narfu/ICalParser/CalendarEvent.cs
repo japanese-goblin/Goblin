@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ICalParser.Models
+namespace Goblin.Narfu.ICalParser
 {
     public class CalendarEvent : IEquatable<CalendarEvent>
     {
