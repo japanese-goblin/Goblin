@@ -5,7 +5,6 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Commands.Keyboard;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Goblin.Domain.Entities;
 using Moq;
 using Xunit;
 
@@ -35,7 +34,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new ScheduleCommand(GetScheduleService());
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, DateTime.ToString("d"));
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -46,7 +45,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new ScheduleCommand(GetScheduleService());
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, DateTime.ToString("d"));
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<SuccessfulResult>();
             result.Message.Should().NotBeNullOrEmpty();
             result.Keyboard.Should().NotBeNull();

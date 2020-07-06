@@ -14,7 +14,7 @@ namespace Goblin.Application.Core.Commands.Merged
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "ежедневная" }; //TODO: lol
 
-        public Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
+        public Task<IResult> Execute(Message msg, BotUser user)
         {
             if(string.IsNullOrWhiteSpace(user.WeatherCity))
             {

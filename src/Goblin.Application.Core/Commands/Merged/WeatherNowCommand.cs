@@ -20,7 +20,7 @@ namespace Goblin.Application.Core.Commands.Merged
             _weatherService = weatherService;
         }
 
-        public async Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
+        public async Task<IResult> Execute(Message msg, BotUser user)
         {
             if(!string.IsNullOrWhiteSpace(msg.Payload))
             {

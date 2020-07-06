@@ -23,7 +23,7 @@ namespace Goblin.Application.Core.Commands.Merged
             _context = context;
         }
 
-        public Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
+        public Task<IResult> Execute(Message msg, BotUser user)
         {
             var reminds = _context.Reminds.Where(x => x.ChatId == user.Id && x.ConsumerType == user.ConsumerType)
                                   .ToArray();

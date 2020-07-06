@@ -10,6 +10,6 @@ namespace Goblin.Application.Core.Abstractions
 
         string[] Aliases { get; }
 
-        Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser;
+        Task<IResult> Execute(Message msg, BotUser user);
     }
 }

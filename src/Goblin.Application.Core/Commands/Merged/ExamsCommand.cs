@@ -26,7 +26,7 @@ namespace Goblin.Application.Core.Commands.Merged
             _api = api;
         }
 
-        public async Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
+        public async Task<IResult> Execute(Message msg, BotUser user)
         {
             if(user.NarfuGroup == 0)
             {

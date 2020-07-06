@@ -8,7 +8,6 @@ using Flurl.Http;
 using Goblin.Application.Core.Commands.Merged;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Goblin.Domain.Entities;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
@@ -60,7 +59,7 @@ namespace Goblin.Application.Core.Tests.Commands.Merged
             var command = new ExamsCommand(GetNarfuApi());
             var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<SuccessfulResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -72,7 +71,7 @@ namespace Goblin.Application.Core.Tests.Commands.Merged
             var command = new ExamsCommand(GetNarfuApi());
             var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -83,7 +82,7 @@ namespace Goblin.Application.Core.Tests.Commands.Merged
             var command = new ExamsCommand(GetNarfuApiWithFlurlException());
             var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -94,7 +93,7 @@ namespace Goblin.Application.Core.Tests.Commands.Merged
             var command = new ExamsCommand(GetNarfuApiWithException());
             var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }

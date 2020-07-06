@@ -8,7 +8,6 @@ using Flurl.Http;
 using Goblin.Application.Core.Commands.Keyboard;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Goblin.Domain.Entities;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
@@ -60,7 +59,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new TeacherScheduleCommand(GetNarfuApi());
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "12345");
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<SuccessfulResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -71,7 +70,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new TeacherScheduleCommand(GetNarfuApiWithException());
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "12345");
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -82,7 +81,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new TeacherScheduleCommand(GetNarfuApiWithFlurlException());
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "12345");
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -93,7 +92,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new TeacherScheduleCommand(GetNarfuApi());
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "key", "12345");
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -104,7 +103,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new TeacherScheduleCommand(GetNarfuApi());
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "asd");
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }

@@ -22,7 +22,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
             _db = db;
         }
 
-        public async Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
+        public async Task<IResult> Execute(Message msg, BotUser user)
         {
             user = _db.Entry(user).Entity;
             var choose = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];

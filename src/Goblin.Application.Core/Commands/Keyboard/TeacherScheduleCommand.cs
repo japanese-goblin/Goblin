@@ -22,7 +22,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
             _narfuApi = narfuApi;
         }
 
-        public async Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
+        public async Task<IResult> Execute(Message msg, BotUser user)
         {
             var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload);
             var isExists = dict.TryGetValue(Trigger, out var idString);

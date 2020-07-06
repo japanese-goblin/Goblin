@@ -27,7 +27,7 @@ namespace Goblin.Application.Core.Commands.Text
             _db = db;
         }
 
-        public async Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
+        public async Task<IResult> Execute(Message msg, BotUser user)
         {
             var param = string.Join(' ', msg.CommandParameters);
             var all = param.Split(' ', 3);

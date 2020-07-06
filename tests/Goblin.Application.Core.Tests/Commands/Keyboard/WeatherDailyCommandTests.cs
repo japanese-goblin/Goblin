@@ -5,7 +5,6 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Commands.Keyboard;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Goblin.Domain.Entities;
 using Moq;
 using Xunit;
 
@@ -31,7 +30,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new WeatherDailyCommand(GetWeatherService());
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "11.11.2011");
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<SuccessfulResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -42,7 +41,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new WeatherDailyCommand(GetWeatherService());
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "asd", "11.11.2011");
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -53,7 +52,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new WeatherDailyCommand(GetWeatherService());
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "20.20.2020");
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -65,7 +64,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new WeatherDailyCommand(GetWeatherService());
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "11.11.2011");
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }

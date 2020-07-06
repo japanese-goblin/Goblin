@@ -13,7 +13,7 @@ namespace Goblin.Application.Core.Commands.Merged
 
         public string Trigger => "help";
 
-        public Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
+        public Task<IResult> Execute(Message msg, BotUser user)
         {
             const string guideLink = "https://vk.com/@-146048760-commands";
             return Task.FromResult<IResult>(new SuccessfulResult

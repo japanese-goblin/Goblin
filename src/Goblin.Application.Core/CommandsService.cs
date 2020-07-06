@@ -37,11 +37,11 @@ namespace Goblin.Application.Core
             var user = await GetBotUser<T>(msg.UserId);
             if(!string.IsNullOrWhiteSpace(msg.Payload))
             {
-                result = await ExecuteKeyboardCommand<T>(msg, user);
+                result = await ExecuteKeyboardCommand(msg, user);
             }
             else
             {
-                result = await ExecuteTextCommand<T>(msg, user);
+                result = await ExecuteTextCommand(msg, user);
             }
 
             result.Keyboard ??= DefaultKeyboards.GetDefaultKeyboard();
@@ -62,7 +62,7 @@ namespace Goblin.Application.Core
             }
         }
 
-        private async Task<IResult> ExecuteTextCommand<T>(Message msg, BotUser user) where T : BotUser
+        private async Task<IResult> ExecuteTextCommand(Message msg, BotUser user)
         {
             _logger.Debug("Обработка текстовой команды");
             var cmdName = msg.CommandName;
@@ -80,7 +80,7 @@ namespace Goblin.Application.Core
                 }
 
                 _logger.Debug("Выполнение команды {0}", command.GetType());
-                var result = await command.Execute<T>(msg, user);
+                var result = await command.Execute(msg, user);
                 _logger.Debug("Команда вернула {0} результат", result.GetType());
 
                 return result;
@@ -89,7 +89,7 @@ namespace Goblin.Application.Core
             return new CommandNotFoundResult();
         }
 
-        private async Task<IResult> ExecuteKeyboardCommand<T>(Message msg, BotUser user) where T : BotUser
+        private async Task<IResult> ExecuteKeyboardCommand(Message msg, BotUser user)
         {
             _logger.Debug("Обработка команды с клавиатуры");
             var record = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload).FirstOrDefault();
@@ -101,7 +101,7 @@ namespace Goblin.Application.Core
                 }
 
                 _logger.Debug("Выполнение команды с клавиатуры {0}", command.GetType());
-                return await command.Execute<T>(msg, user);
+                return await command.Execute(msg, user);
             }
 
             return new CommandNotFoundResult();

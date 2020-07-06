@@ -3,7 +3,6 @@ using FluentAssertions;
 using Goblin.Application.Core.Commands.Keyboard;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Goblin.Domain.Entities;
 using Xunit;
 
 namespace Goblin.Application.Core.Tests.Commands.Keyboard
@@ -17,7 +16,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new MailingCommand(ApplicationContext);
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "weather");
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>("Город пользователя не установлен");
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -28,7 +27,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new MailingCommand(ApplicationContext);
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "asd");
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -40,7 +39,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new MailingCommand(ApplicationContext);
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "schedule");
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>("Группа пользователя не установлена");
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -51,7 +50,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new MailingCommand(ApplicationContext);
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "schedule");
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<SuccessfulResult>();
             result.Message.Should().NotBeNullOrEmpty();
             result.Keyboard.Should().NotBeNull();
@@ -64,7 +63,7 @@ namespace Goblin.Application.Core.Tests.Commands.Keyboard
             var command = new MailingCommand(ApplicationContext);
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "weather");
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<SuccessfulResult>();
             result.Message.Should().NotBeNullOrEmpty();
             result.Keyboard.Should().NotBeNull();

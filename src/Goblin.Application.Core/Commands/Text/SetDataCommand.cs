@@ -29,7 +29,7 @@ namespace Goblin.Application.Core.Commands.Text
             _narfu = narfu;
         }
 
-        public async Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
+        public async Task<IResult> Execute(Message msg, BotUser user)
         {
             user = _db.Entry(user).Entity;
             if(msg.CommandParameters.Length < 2)

@@ -4,7 +4,6 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Commands.Merged;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Goblin.Domain.Entities;
 using Moq;
 using Xunit;
 
@@ -30,7 +29,7 @@ namespace Goblin.Application.Core.Tests.Commands.Merged
             var command = new WeatherNowCommand(GetWeatherService());
             var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<SuccessfulResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -42,7 +41,7 @@ namespace Goblin.Application.Core.Tests.Commands.Merged
             var command = new WeatherNowCommand(GetWeatherService());
             var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -54,7 +53,7 @@ namespace Goblin.Application.Core.Tests.Commands.Merged
             var text = $"{command.Aliases[0]} Москва";
             var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<SuccessfulResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -65,7 +64,7 @@ namespace Goblin.Application.Core.Tests.Commands.Merged
             var command = new WeatherNowCommand(GetWeatherService());
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, string.Empty);
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<SuccessfulResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }
@@ -77,7 +76,7 @@ namespace Goblin.Application.Core.Tests.Commands.Merged
             var command = new WeatherNowCommand(GetWeatherService());
             var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, string.Empty);
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }

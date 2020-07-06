@@ -23,7 +23,7 @@ namespace Goblin.Application.Core.Commands.Text
             _narfuApi = narfuApi;
         }
 
-        public async Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
+        public async Task<IResult> Execute(Message msg, BotUser user)
         {
             var teacherName = string.Join(' ', msg.CommandParameters);
             if(string.IsNullOrWhiteSpace(teacherName))

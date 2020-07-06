@@ -3,7 +3,6 @@ using FluentAssertions;
 using Goblin.Application.Core.Commands.Merged;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Goblin.Domain.Entities;
 using Xunit;
 
 namespace Goblin.Application.Core.Tests.Commands.Merged
@@ -16,7 +15,7 @@ namespace Goblin.Application.Core.Tests.Commands.Merged
             var command = new WeatherDailyKeyboardCommand();
             var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<SuccessfulResult>();
             result.Message.Should().NotBeNullOrEmpty();
             result.Keyboard.Should().NotBeNull();
@@ -29,7 +28,7 @@ namespace Goblin.Application.Core.Tests.Commands.Merged
             var command = new WeatherDailyKeyboardCommand();
             var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
-            var result = await command.Execute<VkBotUser>(message, DefaultUser);
+            var result = await command.Execute(message, DefaultUser);
             result.Should().BeOfType<FailedResult>();
             result.Message.Should().NotBeNullOrEmpty();
         }

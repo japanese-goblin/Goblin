@@ -13,7 +13,7 @@ namespace Goblin.Application.Core.Commands.Merged
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "рассылка" };
 
-        public Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
+        public Task<IResult> Execute(Message msg, BotUser user)
         {
             return Task.FromResult<IResult>(new SuccessfulResult
             {
