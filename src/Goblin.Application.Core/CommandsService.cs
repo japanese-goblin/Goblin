@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.DataAccess;
 using Goblin.Domain.Abstractions;
@@ -28,13 +29,13 @@ namespace Goblin.Application.Core
             _logger = Log.ForContext<CommandsService>();
         }
 
-        public async Task ExecuteCommand<T>(IMessage msg,
+        public async Task ExecuteCommand<T>(Message msg,
                                             Func<IResult, Task> onSuccess,
                                             Func<IResult, Task> onFailed) where T : BotUser
         {
             IResult result;
-            var user = await GetBotUser<T>(msg.MessageUserId);
-            if(!string.IsNullOrWhiteSpace(msg.MessagePayload))
+            var user = await GetBotUser<T>(msg.UserId);
+            if(!string.IsNullOrWhiteSpace(msg.Payload))
             {
                 result = await ExecuteKeyboardCommand<T>(msg, user);
             }
@@ -61,7 +62,7 @@ namespace Goblin.Application.Core
             }
         }
 
-        private async Task<IResult> ExecuteTextCommand<T>(IMessage msg, BotUser user) where T : BotUser
+        private async Task<IResult> ExecuteTextCommand<T>(Message msg, BotUser user) where T : BotUser
         {
             _logger.Debug("Обработка текстовой команды");
             var cmdName = msg.CommandName;
@@ -88,10 +89,10 @@ namespace Goblin.Application.Core
             return new CommandNotFoundResult();
         }
 
-        private async Task<IResult> ExecuteKeyboardCommand<T>(IMessage msg, BotUser user) where T : BotUser
+        private async Task<IResult> ExecuteKeyboardCommand<T>(Message msg, BotUser user) where T : BotUser
         {
             _logger.Debug("Обработка команды с клавиатуры");
-            var record = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.MessagePayload).FirstOrDefault();
+            var record = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload).FirstOrDefault();
             foreach(var command in _keyboardCommands)
             {
                 if(!record.Key.Contains(command.Trigger))

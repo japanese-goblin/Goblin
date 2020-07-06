@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Abstractions;
@@ -23,7 +24,7 @@ namespace Goblin.Application.Core.Commands.Text
             _db = db;
         }
 
-        public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
+        public async Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
         {
             var strBuilder = new StringBuilder();
 

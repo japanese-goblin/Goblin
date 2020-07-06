@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Domain.Abstractions;
 
@@ -19,9 +20,9 @@ namespace Goblin.Application.Core.Commands.Merged
             _weatherService = weatherService;
         }
 
-        public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
+        public async Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
         {
-            if(!string.IsNullOrWhiteSpace(msg.MessagePayload))
+            if(!string.IsNullOrWhiteSpace(msg.Payload))
             {
                 return await ExecutePayload(user);
             }
@@ -29,9 +30,9 @@ namespace Goblin.Application.Core.Commands.Merged
             return await ExecuteText(msg, user);
         }
 
-        private async Task<IResult> ExecuteText(IMessage msg, BotUser user)
+        private async Task<IResult> ExecuteText(Message msg, BotUser user)
         {
-            var city = msg.MessageParams.FirstOrDefault();
+            var city = msg.CommandParameters.FirstOrDefault();
 
             if(string.IsNullOrWhiteSpace(user.WeatherCity) && string.IsNullOrWhiteSpace(city))
             {

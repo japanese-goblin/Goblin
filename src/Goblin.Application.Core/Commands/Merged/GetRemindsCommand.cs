@@ -2,6 +2,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Abstractions;
@@ -22,7 +23,7 @@ namespace Goblin.Application.Core.Commands.Merged
             _context = context;
         }
 
-        public Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
+        public Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
         {
             var reminds = _context.Reminds.Where(x => x.ChatId == user.Id && x.ConsumerType == user.ConsumerType)
                                   .ToArray();

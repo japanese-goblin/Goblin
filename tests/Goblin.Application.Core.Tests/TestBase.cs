@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Commands.Text;
+using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Tests.Models;
 using Goblin.DataAccess;
 using Goblin.Domain;
@@ -66,29 +67,29 @@ namespace Goblin.Application.Core.Tests
             context.SaveChanges();
         }
 
-        public IMessage GenerateMessage(long userId, long chatId, string text = "")
+        public Message GenerateMessage(long userId, long chatId, string text = "")
         {
-            return new TestMessage
+            return new Message
             {
                 UserId = userId,
                 ChatId = chatId,
                 Text = text,
-                Data = string.Empty
+                Payload = string.Empty
             };
         }
 
-        public IMessage GenerateMessageWithPayload(long userId, long chatId, string key, string value)
+        public Message GenerateMessageWithPayload(long userId, long chatId, string key, string value)
         {
             var dict = new Dictionary<string, string>
             {
                 [key] = value
             };
-            return new TestMessage
+            return new Message
             {
                 UserId = userId,
                 ChatId = chatId,
                 Text = string.Empty,
-                Data = JsonSerializer.Serialize(dict)
+                Payload = JsonSerializer.Serialize(dict)
             };
         }
     }

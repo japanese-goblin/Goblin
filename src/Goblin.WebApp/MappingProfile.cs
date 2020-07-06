@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
-using Goblin.Application.Telegram.Models;
-using Goblin.Application.Vk.Models;
-using Telegram.Bot.Types;
-using Message = VkNet.Model.Message;
+using Message = Goblin.Application.Core.Models.Message;
 
 namespace Goblin.WebApp
 {
@@ -10,14 +7,34 @@ namespace Goblin.WebApp
     {
         public MappingProfile()
         {
-            CreateMap<VkMessage, Message>();
-            CreateMap<Message, VkMessage>();
+            CreateMap<VkNet.Model.Message, Message>()
+                    .ForMember(x => x.Text,
+                               x => x.MapFrom(m => m.Text))
+                    .ForMember(x => x.Payload,
+                               x => x.MapFrom(m => m.Payload))
+                    .ForMember(x => x.ChatId,
+                               x => x.MapFrom(m => m.PeerId))
+                    .ForMember(x => x.UserId, 
+                               x => x.MapFrom(m => m.FromId));
 
-            CreateMap<TelegramMessage, Telegram.Bot.Types.Message>();
-            CreateMap<Telegram.Bot.Types.Message, TelegramMessage>();
+            CreateMap<Telegram.Bot.Types.Message, Message>()
+                    .ForMember(x => x.Text,
+                               x => x.MapFrom(m => m.Text))
+                    // .ForMember(x => x.MessagePayload)
+                    .ForMember(x => x.ChatId,
+                               x => x.MapFrom(m => m.Chat.Id))
+                    .ForMember(x => x.UserId,
+                               x => x.MapFrom(m => m.From.Id));
 
-            CreateMap<TelegramCallbackMessage, CallbackQuery>();
-            CreateMap<CallbackQuery, TelegramCallbackMessage>();
+            CreateMap<Telegram.Bot.Types.CallbackQuery, Message>()
+                    .ForMember(x => x.Text,
+                               x => x.MapFrom(m => m.Message.Text))
+                    .ForMember(x => x.Payload,
+                               x => x.MapFrom(m => m.Data))
+                    .ForMember(x => x.ChatId,
+                               x => x.MapFrom(m => m.From.Id))
+                    .ForMember(x => x.UserId,
+                               x => x.MapFrom(m => m.From.Id));
         }
     }
 }

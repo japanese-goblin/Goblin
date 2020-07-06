@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Domain.Abstractions;
 using Newtonsoft.Json;
@@ -19,14 +20,14 @@ namespace Goblin.Application.Core.Commands.Keyboard
             _weatherService = weatherService;
         }
 
-        public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
+        public async Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
         {
             if(string.IsNullOrWhiteSpace(user.WeatherCity))
             {
                 return new FailedResult("Для получения погоды установите город (нужно написать следующее - установить город Москва).");
             }
 
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.MessagePayload);
+            var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload);
             var isExists = dict.TryGetValue(Trigger, out var day);
             if(!isExists)
             {

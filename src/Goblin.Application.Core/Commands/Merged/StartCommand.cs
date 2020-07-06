@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Abstractions;
 
@@ -12,7 +13,7 @@ namespace Goblin.Application.Core.Commands.Merged
 
         public string Trigger => "command";
 
-        public Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
+        public Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
         {
             return Task.FromResult<IResult>(new SuccessfulResult
             {

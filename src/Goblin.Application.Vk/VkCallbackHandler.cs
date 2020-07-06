@@ -6,7 +6,6 @@ using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Vk.Converters;
 using Goblin.Application.Vk.Extensions;
-using Goblin.Application.Vk.Models;
 using Goblin.Application.Vk.Options;
 using Goblin.DataAccess;
 using Goblin.Domain.Entities;
@@ -18,6 +17,7 @@ using VkNet.Enums.SafetyEnums;
 using VkNet.Model;
 using VkNet.Model.GroupUpdate;
 using VkNet.Model.RequestParams;
+using Message = Goblin.Application.Core.Models.Message;
 
 namespace Goblin.Application.Vk
 {
@@ -53,7 +53,7 @@ namespace Goblin.Application.Vk
 
             if(upd.Type == GroupUpdateType.MessageNew)
             {
-                var msg = _mapper.Map<VkMessage>(upd.MessageNew.Message);
+                var msg = _mapper.Map<Message>(upd.MessageNew.Message);
                 await MessageNew(msg, upd.MessageNew.ClientInfo);
             }
             else if(upd.Type == GroupUpdateType.GroupLeave)
@@ -73,7 +73,7 @@ namespace Goblin.Application.Vk
             _logger.Information("Обработка события {0} завершена", upd.Type);
         }
 
-        private async Task MessageNew(VkMessage message, ClientInfo clientInfo)
+        private async Task MessageNew(Message message, ClientInfo clientInfo)
         {
             _logger.Debug("Обработка сообщения");
             await _commandsService.ExecuteCommand<VkBotUser>(message, OnSuccess, OnFailed);
@@ -85,7 +85,7 @@ namespace Goblin.Application.Vk
                 {
                     Message = res.Message,
                     Keyboard = KeyboardConverter.FromCoreToVk(res.Keyboard, clientInfo.InlineKeyboard),
-                    PeerId = message.MessageChatId
+                    PeerId = message.ChatId
                 });
             }
 
@@ -94,7 +94,7 @@ namespace Goblin.Application.Vk
                 await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                 {
                     Message = res.ToString(),
-                    PeerId = message.MessageChatId
+                    PeerId = message.ChatId
                 });
             }
         }
@@ -108,21 +108,12 @@ namespace Goblin.Application.Vk
             _logger.Information("Пользователь id{0} покинул группу", leave.UserId);
             await SendMessageToAdmins(leave.UserId.Value, "отписался :С");
 
-            if(leave.IsSelf.HasValue && leave.IsSelf.Value)
+            if(leave.IsSelf.HasValue && !leave.IsSelf.Value)
             {
-                try
-                {
-                    await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
-                    {
-                        Message = groupLeaveMessage,
-                        PeerId = leave.UserId.Value
-                    });
-                }
-                catch
-                {
-                    // ignored
-                }
+                return;
             }
+
+            await SendMessageToUserWithTry(leave.UserId.Value, groupLeaveMessage);
         }
 
         public async Task GroupJoin(GroupJoin join)
@@ -134,20 +125,27 @@ namespace Goblin.Application.Vk
             _logger.Information("Пользователь id{0} вступил в группу", join.UserId);
             await SendMessageToAdmins(join.UserId.Value, "подписался!");
 
-            if(join.JoinType.HasValue && join.JoinType == GroupJoinType.Join)
+            if(join.JoinType.HasValue && join.JoinType != GroupJoinType.Join)
             {
-                try
+                return;
+            }
+
+            await SendMessageToUserWithTry(join.UserId.Value, groupJoinMessage);
+        }
+        
+        private async Task SendMessageToUserWithTry(long userId, string message)
+        {
+            try
+            {
+                await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                 {
-                    await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
-                    {
-                        Message = groupJoinMessage,
-                        PeerId = join.UserId.Value
-                    });
-                }
-                catch
-                {
-                    // ignored
-                }
+                    Message = message,
+                    PeerId = userId
+                });
+            }
+            catch
+            {
+                // ignored
             }
         }
 

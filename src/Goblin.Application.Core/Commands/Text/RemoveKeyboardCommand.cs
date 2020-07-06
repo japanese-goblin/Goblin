@@ -11,7 +11,7 @@ namespace Goblin.Application.Core.Commands.Text
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "куб" };
 
-        public Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
+        public Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
         {
             var kb = new CoreKeyboard();
             return Task.FromResult<IResult>(new SuccessfulResult

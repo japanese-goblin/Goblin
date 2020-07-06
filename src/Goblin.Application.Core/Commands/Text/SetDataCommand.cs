@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Extensions;
+using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
@@ -27,34 +29,35 @@ namespace Goblin.Application.Core.Commands.Text
             _narfu = narfu;
         }
 
-        public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
+        public async Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
         {
             user = _db.Entry(user).Entity;
-            var prms = msg.MessageText.Split(' ', 3);
-            if(prms.Length != 3)
+            if(msg.CommandParameters.Length < 2)
             {
                 return new FailedResult("Укажите 2 параметра команды." +
                                         "Пример использования: установить город Москва / установить группу 123456");
             }
 
-            if(prms[1].Equals("город", StringComparison.OrdinalIgnoreCase))
+            var whatToSet = msg.CommandParameters.First();
+            var dataToSet = msg.CommandParameters[1];
+
+            if(whatToSet.Equals("город", StringComparison.OrdinalIgnoreCase))
             {
-                return await SetCity(prms, user);
+                return await SetCity(dataToSet, user);
             }
 
-            if(prms[1].Equals("группу", StringComparison.OrdinalIgnoreCase) ||
-               prms[1].Equals("группа", StringComparison.OrdinalIgnoreCase))
+            if(whatToSet.Equals("группу", StringComparison.OrdinalIgnoreCase) ||
+               whatToSet.Equals("группа", StringComparison.OrdinalIgnoreCase))
             {
-                return await SetGroup(user, prms);
+                return await SetGroup(dataToSet, user);
             }
 
             return new FailedResult("Укажите что вы хотите установить: группу или город. \n" +
                                     "Пример использования: установить город Москва / установить группу 123456");
         }
 
-        private async Task<IResult> SetGroup(BotUser user, string[] prms)
+        private async Task<IResult> SetGroup(string group, BotUser user)
         {
-            var group = prms[2];
             if(!int.TryParse(group, out var intGroup))
             {
                 return new FailedResult("Укажите корректный номер группы.");
@@ -76,9 +79,9 @@ namespace Goblin.Application.Core.Commands.Text
             };
         }
 
-        private async Task<IResult> SetCity(string[] prms, BotUser user)
+        private async Task<IResult> SetCity(string city, BotUser user)
         {
-            var city = prms[2].ToUpperFirstLetter();
+            city = city.ToUpperFirstLetter();
             var isExists = await _weather.IsCityExists(city);
             if(!isExists)
             {

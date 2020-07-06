@@ -23,9 +23,9 @@ namespace Goblin.Application.Core.Commands.Text
             _narfuApi = narfuApi;
         }
 
-        public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
+        public async Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
         {
-            var teacherName = string.Join(' ', msg.MessageParams);
+            var teacherName = string.Join(' ', msg.CommandParameters);
             if(string.IsNullOrWhiteSpace(teacherName))
             {
                 return new FailedResult("Укажите имя и фамилию преподавателя.");

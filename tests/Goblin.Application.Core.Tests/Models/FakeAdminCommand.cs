@@ -10,7 +10,7 @@ namespace Goblin.Application.Core.Tests.Models
         public bool IsAdminCommand => true;
         public string[] Aliases => new[] { "demo" };
 
-        public Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
+        public Task<IResult> Execute<T>(Core.Models.Message msg, BotUser user) where T : BotUser
         {
             return Task.FromResult<IResult>(new SuccessfulResult
             {

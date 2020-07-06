@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Abstractions;
@@ -12,9 +13,9 @@ namespace Goblin.Application.Core.Commands.Text
         public bool IsAdminCommand => false;
         public string[] Aliases => new[] { "выбери", "рандом" };
 
-        public Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
+        public Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
         {
-            var param = string.Join(' ', msg.MessageParams);
+            var param = string.Join(' ', msg.CommandParameters);
             var split = Split(param);
 
             if(split.Length < 2)

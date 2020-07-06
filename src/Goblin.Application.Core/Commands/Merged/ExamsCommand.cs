@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Abstractions;
@@ -25,7 +26,7 @@ namespace Goblin.Application.Core.Commands.Merged
             _api = api;
         }
 
-        public async Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
+        public async Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
         {
             if(user.NarfuGroup == 0)
             {

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Abstractions;
 
@@ -12,7 +13,7 @@ namespace Goblin.Application.Core.Commands.Merged
 
         public string Trigger => "help";
 
-        public Task<IResult> Execute<T>(IMessage msg, BotUser user) where T : BotUser
+        public Task<IResult> Execute<T>(Message msg, BotUser user) where T : BotUser
         {
             const string guideLink = "https://vk.com/@-146048760-commands";
             return Task.FromResult<IResult>(new SuccessfulResult

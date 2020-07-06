@@ -3,12 +3,12 @@ using AutoMapper;
 using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Telegram.Converters;
-using Goblin.Application.Telegram.Models;
 using Goblin.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using Message = Goblin.Application.Core.Models.Message;
 
 namespace Goblin.Application.Telegram
 {
@@ -30,7 +30,7 @@ namespace Goblin.Application.Telegram
         {
             if(update.Type == UpdateType.Message)
             {
-                var msg = _mapper.Map<TelegramMessage>(update.Message);
+                var msg = _mapper.Map<Message>(update.Message);
                 await HandleMessageEvent(msg);
             }
             else if(update.Type == UpdateType.CallbackQuery)
@@ -39,25 +39,25 @@ namespace Goblin.Application.Telegram
             }
         }
 
-        private async Task HandleMessageEvent(TelegramMessage message)
+        private async Task HandleMessageEvent(Message message)
         {
             await _commandsService.ExecuteCommand<TgBotUser>(message, OnSuccess, OnFailed);
 
             async Task OnSuccess(IResult res)
             {
-                await _botClient.SendTextMessageAsync(message.MessageChatId, res.Message,
+                await _botClient.SendTextMessageAsync(message.ChatId, res.Message,
                                                       replyMarkup: KeyboardConverter.FromCoreToTg(res.Keyboard));
             }
 
             async Task OnFailed(IResult res)
             {
-                await _botClient.SendTextMessageAsync(message.MessageChatId, res.ToString());
+                await _botClient.SendTextMessageAsync(message.ChatId, res.ToString());
             }
         }
 
         private async Task HandleCallback(CallbackQuery query)
         {
-            var msg = _mapper.Map<TelegramCallbackMessage>(query);
+            var msg = _mapper.Map<Message>(query);
             await _commandsService.ExecuteCommand<TgBotUser>(msg, OnAnyResult, OnAnyResult);
 
             async Task OnAnyResult(IResult res)
