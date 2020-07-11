@@ -3,10 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Extensions;
+using Goblin.Application.Core.Options;
+using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Vk.Extensions;
 using Goblin.Application.Vk.Hangfire;
 using Goblin.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Telegram.Bot;
 using VkNet.Abstractions;
@@ -21,14 +24,17 @@ namespace Goblin.WebApp.Hangfire
         private readonly ILogger _logger;
         private readonly IScheduleService _scheduleService;
         private readonly IVkApi _vkApi;
+        private readonly MailingOptions _mailingOptions;
 
-        public ScheduleTask(BotDbContext db, IVkApi vkApi, IScheduleService scheduleService, TelegramBotClient botClient)
+        public ScheduleTask(BotDbContext db, IVkApi vkApi, IScheduleService scheduleService, TelegramBotClient botClient,
+                            IOptions<MailingOptions> mailingOptions)
         {
             _db = db;
             _vkApi = vkApi;
             _scheduleService = scheduleService;
             _botClient = botClient;
             _logger = Log.ForContext<ScheduleTask>();
+            _mailingOptions = mailingOptions.Value;
         }
 
         public async Task SendSchedule()
@@ -47,6 +53,10 @@ namespace Goblin.WebApp.Hangfire
             foreach(var group in grouped)
             {
                 var result = await _scheduleService.GetSchedule(group.Key, DateTime.Today);
+                if(!result.IsSuccessful && _mailingOptions.IsVacations)
+                {
+                    continue;
+                }
 
                 foreach(var chunk in group.Chunk(Defaults.ChunkLimit))
                 {
@@ -81,6 +91,10 @@ namespace Goblin.WebApp.Hangfire
                 try
                 {
                     var result = await _scheduleService.GetSchedule(group.Key, DateTime.Today);
+                    if(!result.IsSuccessful && _mailingOptions.IsVacations)
+                    {
+                        continue;
+                    }
                     foreach(var user in group)
                     {
                         await _botClient.SendTextMessageAsync(user.Id, result.Message);

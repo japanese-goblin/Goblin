@@ -1,8 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
+using Goblin.Application.Core.Options;
 using Goblin.Application.Vk.Extensions;
 using Goblin.Domain;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Telegram.Bot;
 using VkNet.Abstractions;
@@ -16,14 +18,16 @@ namespace Goblin.WebApp.Hangfire
         private readonly IScheduleService _scheduleService;
         private readonly IVkApi _vkApi;
         private readonly IWeatherService _weatherService;
-
+        private readonly MailingOptions _mailingOptions;
+        
         public SendToChatTasks(IScheduleService scheduleService, IWeatherService weatherService, IVkApi vkApi,
-                               TelegramBotClient botClient)
+                               TelegramBotClient botClient, IOptions<MailingOptions> mailingOptions)
         {
             _scheduleService = scheduleService;
             _weatherService = weatherService;
             _vkApi = vkApi;
             _botClient = botClient;
+            _mailingOptions = mailingOptions.Value;
         }
 
         public async Task SendToConv(long id, int group = 0, string city = "", ConsumerType type = ConsumerType.Vkontakte)
@@ -39,8 +43,8 @@ namespace Goblin.WebApp.Hangfire
 
             async Task Send(Func<string, Task> func)
             {
-                await SendSchedule(id, city, func);
-                await SendWeather(id, group, func);
+                await SendWeather(id, city, func);
+                await SendSchedule(id, group, func);
             }
 
             async Task SendToVk(string message)
@@ -58,7 +62,7 @@ namespace Goblin.WebApp.Hangfire
             }
         }
 
-        private async Task SendSchedule(long id, string city, Func<string, Task> send)
+        private async Task SendWeather(long id, string city, Func<string, Task> send)
         {
             if(string.IsNullOrWhiteSpace(city))
             {
@@ -71,9 +75,10 @@ namespace Goblin.WebApp.Hangfire
             await send(result.Message);
         }
 
-        private async Task SendWeather(long id, int group, Func<string, Task> send)
+        private async Task SendSchedule(long id, int group, Func<string, Task> send)
         {
-            if(group == 0 || DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
+            var isSunday = DateTime.Today.DayOfWeek == DayOfWeek.Sunday;
+            if(group == 0 || isSunday || _mailingOptions.IsVacations)
             {
                 return;
             }
