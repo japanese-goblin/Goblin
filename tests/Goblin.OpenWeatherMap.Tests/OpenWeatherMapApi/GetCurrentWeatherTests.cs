@@ -13,6 +13,9 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         [Fact]
         public async Task GetCurrentWeather_CorrectCity_ReturnsModel()
         {
+            var correctDate = new DateTimeOffset(2019, 09, 28, 09, 17, 58, TimeSpan.Zero);
+            var correctSunriseDate = new DateTimeOffset(2019, 09, 28, 03, 25, 23, TimeSpan.Zero);
+            var correctSunsetDate = new DateTimeOffset(2019, 09, 28, 15, 15, 14, TimeSpan.Zero);
             using var http = new HttpTest();
             http.RespondWith(await File.ReadAllTextAsync(CurrentWeatherPath));
 
@@ -26,7 +29,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
             weather.Info[0].Icon.Should().Be("03d");
             weather.Info[0].Id.Should().Be(802);
             weather.Info[0].Main.Should().Be("Clouds");
-            weather.Info[0].State.Should().Be("слегка облачно");
+            weather.Info[0].Description.Should().Be("слегка облачно");
             weather.Base.Should().Be("stations");
             weather.Weather.Should().NotBeNull();
             weather.Weather.Humidity.Should().BeApproximately(62F, 0.01F);
@@ -38,15 +41,15 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
             weather.Wind.Degrees.Should().BeApproximately(230F, 0.01F);
             weather.Wind.Speed.Should().BeApproximately(2F, 0.01F);
             weather.Clouds.Should().NotBeNull();
-            weather.UnixTime.Should().BePositive();
+            weather.UnixTime.Should().Be(correctDate);
             weather.OtherInfo.Should().NotBeNull();
             weather.OtherInfo.Country.Should().Be("RU");
             weather.OtherInfo.Id.Should().Be(9029);
             weather.OtherInfo.Message.Should().BeApproximately(0.0094, 0.001F);
-            weather.OtherInfo.Sunrise.Should().Be(1569641123);
-            weather.OtherInfo.Sunset.Should().Be(1569683714);
+            weather.OtherInfo.Sunrise.Should().Be(correctSunriseDate); 
+            weather.OtherInfo.Sunset.Should().Be(correctSunsetDate); 
             weather.OtherInfo.Type.Should().Be(1);
-            weather.Id.Should().Be(524901);
+            weather.CityId.Should().Be(524901);
             weather.Visibility.Should().BeApproximately(8000F, 0.01F);
             weather.CityName.Should().Be("Moscow");
             weather.ResponseCode.Should().Be(200);

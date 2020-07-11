@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.OpenWeatherMap.Abstractions;
-using Goblin.OpenWeatherMap.Models.Current;
 using Goblin.OpenWeatherMap.Models.Daily;
+using Goblin.OpenWeatherMap.Models.Responses;
 using Serilog;
 
 namespace Goblin.OpenWeatherMap
@@ -21,20 +21,20 @@ namespace Goblin.OpenWeatherMap
             _logger.Debug("Инициализация {0}", nameof(OpenWeatherMapApi));
             if(string.IsNullOrWhiteSpace(token))
             {
-                _logger.Fatal("Токен пуст", nameof(OpenWeatherMapApi));
+                _logger.Fatal("Токен пуст");
                 throw new ArgumentException("Токен пуст");
             }
 
             _token = token;
         }
 
-        public async Task<CurrentWeather> GetCurrentWeather(string city)
+        public async Task<CurrentWeatherResponse> GetCurrentWeather(string city)
         {
             _logger.Debug("Получение погоды на текущий момент в городе {0}", city);
             var response = await RequestBuilder.Create(_token)
                                                .AppendPathSegment("weather")
                                                .SetQueryParam("q", city)
-                                               .GetJsonAsync<CurrentWeather>();
+                                               .GetJsonAsync<CurrentWeatherResponse>();
             _logger.Debug("Погода получена");
 
             return response;
@@ -48,12 +48,14 @@ namespace Goblin.OpenWeatherMap
                                                .AppendPathSegments("forecast", "daily")
                                                .SetQueryParam("q", city)
                                                .SetQueryParam("cnt", 4)
-                                               .GetJsonAsync<DailyWeather>();
-            var weather = response.List.FirstOrDefault(x => Defaults.UnixToDateTime(x.UnixTime).Date == date.Date);
+                                               .GetJsonAsync<DailyWeatherResponse>();
+            
+            // разница между указанной и полученной меньше одного дня
+            var weather = response.List.FirstOrDefault(x => (x.UnixTime.Date - date.Date).Days >= 0 && (x.UnixTime.Date - date.Date).Days <= 1);
             if(weather is null)
             {
                 var msg = $"Погода на {date:dd.MM.yyyy} в городе {city} не найдена.";
-                _logger.Error(msg);
+                _logger.Warning(msg);
                 throw new ArgumentException(msg);
             }
 

@@ -15,6 +15,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
         [Fact]
         public async Task GetDailyWeatherAt_CorrectCityAndDate_ReturnsModel()
         {
+            var correctDate = new DateTimeOffset(2019, 09, 28, 9, 0, 0, TimeSpan.Zero);
             using var http = new HttpTest();
             http.RespondWith(await File.ReadAllTextAsync(DailyWeatherPath));
 
@@ -33,12 +34,12 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
             weather.Temperature.Min.Should().BeApproximately(8.16F, 0.01F);
             weather.Temperature.Morning.Should().BeApproximately(10.75F, 0.01F);
             weather.Temperature.Night.Should().BeApproximately(8.16F, 0.01F);
-            weather.UnixTime.Should().Be(1569661200);
+            weather.UnixTime.Should().Be(correctDate);
             weather.Weather.Should().HaveCount(1);
             weather.Weather[0].Icon.Should().Be("04d");
             weather.Weather[0].Id.Should().Be(803);
             weather.Weather[0].Main.Should().Be("Clouds");
-            weather.Weather[0].State.Should().Be("пасмурно");
+            weather.Weather[0].Description.Should().Be("пасмурно");
             weather.WindDeg.Should().Be(246);
             weather.WindSpeed.Should().BeApproximately(1.99F, 0.01F);
             weather.ToString().Should().NotBeEmpty();

@@ -1,5 +1,3 @@
-using System;
-
 namespace Goblin.OpenWeatherMap
 {
     public static class Defaults
@@ -10,12 +8,5 @@ namespace Goblin.OpenWeatherMap
         public const string Units = "metric";
 
         internal const double PressureConvert = 0.75006375541921;
-
-        internal static DateTime UnixToDateTime(double unixTimeStamp)
-        {
-            var dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-            return dtDateTime;
-        }
     }
 }

@@ -4,16 +4,28 @@ namespace Goblin.OpenWeatherMap.Models
 {
     public class Weather
     {
-        [JsonProperty("id")]
-        public int Id { get; set; }
+        /// <summary>
+        /// Описание погоды
+        /// </summary>
+        [JsonProperty("description")]
+        public string Description { get; set; }
 
+        /// <summary>
+        /// Иконка погоды
+        /// </summary>
+        [JsonProperty("icon", NullValueHandling = NullValueHandling.Ignore)]
+        public string Icon { get; set; }
+
+        /// <summary>
+        /// Идентификатор состояния погоды
+        /// </summary>
+        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+        public long? Id { get; set; }
+
+        /// <summary>
+        /// Группа погодных условий (?)
+        /// </summary>
         [JsonProperty("main")]
         public string Main { get; set; }
-
-        [JsonProperty("description")]
-        public string State { get; set; }
-
-        [JsonProperty("icon")]
-        public string Icon { get; set; }
     }
 }

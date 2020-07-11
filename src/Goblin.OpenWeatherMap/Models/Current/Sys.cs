@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Goblin.OpenWeatherMap.Models.Current
 {
@@ -17,9 +19,11 @@ namespace Goblin.OpenWeatherMap.Models.Current
         public string Country { get; set; }
 
         [JsonProperty("sunrise")]
-        public int Sunrise { get; set; }
+        [JsonConverter(typeof(UnixDateTimeConverter))]
+        public DateTimeOffset Sunrise { get; set; }
 
         [JsonProperty("sunset")]
-        public int Sunset { get; set; }
+        [JsonConverter(typeof(UnixDateTimeConverter))]
+        public DateTimeOffset Sunset { get; set; }
     }
 }
