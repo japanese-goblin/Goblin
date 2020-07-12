@@ -28,6 +28,7 @@ namespace Goblin.OpenWeatherMap
             _token = token;
         }
 
+        /// <inheritdoc />
         public async Task<CurrentWeatherResponse> GetCurrentWeather(string city)
         {
             _logger.Debug("Получение погоды на текущий момент в городе {0}", city);
@@ -40,6 +41,7 @@ namespace Goblin.OpenWeatherMap
             return response;
         }
 
+        /// <inheritdoc />
         public async Task<DailyWeatherListItem> GetDailyWeatherAt(string city, DateTime date)
         {
             _logger.Debug("Получение погоды на день в городе {0} на дату {1:dd.MM.yyyy}", city, date);
@@ -64,6 +66,7 @@ namespace Goblin.OpenWeatherMap
             return weather;
         }
 
+        /// <inheritdoc />
         public async Task<bool> IsCityExists(string city)
         {
             _logger.Debug("Проверка на существование города {0}", city);
