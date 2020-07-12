@@ -80,12 +80,12 @@ namespace Goblin.OpenWeatherMap.Models.Daily
 
             strBuilder.AppendFormat("Температура: от {0:+#;-#;0}°С до {1:+#;-#;0}°С", Temperature.Min,
                                     Temperature.Max).AppendLine();
-            strBuilder.AppendFormat("Температура утром: {0:+#;-#;0}", Temperature.Morning).AppendLine();
-            strBuilder.AppendFormat("Температура днём: {0:+#;-#;0}", Temperature.Day).AppendLine();
-            strBuilder.AppendFormat("Температура вечером: {0:+#;-#;0}", Temperature.Evening).AppendLine();
-            strBuilder.AppendFormat("Температура ночью: {0:+#;-#;0}", Temperature.Night).AppendLine();
+            strBuilder.AppendFormat("Утром: {0:+#;-#;0}°С", Temperature.Morning).AppendLine();
+            strBuilder.AppendFormat("Днём: {0:+#;-#;0}°С", Temperature.Day).AppendLine();
+            strBuilder.AppendFormat("Вечером: {0:+#;-#;0}°С", Temperature.Evening).AppendLine();
+            strBuilder.AppendFormat("Ночью: {0:+#;-#;0}°С", Temperature.Night).AppendLine();
             strBuilder.AppendLine();
-            strBuilder.AppendFormat("Описание погоды: {0}", Weather[0].Description).AppendLine();
+            strBuilder.AppendFormat("Описание: {0}", Weather[0].Description).AppendLine();
             strBuilder.AppendFormat("Влажность: {0}%", Humidity).AppendLine();
             strBuilder.AppendFormat("Ветер: {0:N0} м/с", WindSpeed).AppendLine();
             strBuilder.AppendFormat("Давление: {0:N0} мм.рт.ст", Pressure * Defaults.PressureConvert).AppendLine();
