@@ -37,10 +37,10 @@ namespace Goblin.Application.Core
 
             var scheduleText = isSchedule
                                        ? "❌Отписаться от рассылки расписания"
-                                       : "✅Подписаться на рассылку расписания";
+                                       : "✔Подписаться на рассылку расписания";
             var weatherText = isWeather
                                       ? "❌Отписаться от рассылки погоды"
-                                      : "✅Подписаться на рассылку погоды";
+                                      : "✔Подписаться на рассылку погоды";
 
             var kb = new CoreKeyboard
             {
