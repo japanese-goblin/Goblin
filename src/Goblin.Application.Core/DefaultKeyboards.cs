@@ -24,6 +24,7 @@ namespace Goblin.Application.Core
 
         public static CoreKeyboard GetMailingKeyboard(BotUser user)
         {
+            const string mailingKey = "mailing";
             var isSchedule = user.HasScheduleSubscription;
             var isWeather = user.HasWeatherSubscription;
 
@@ -35,19 +36,19 @@ namespace Goblin.Application.Core
                                        : CoreKeyboardButtonColor.Positive;
 
             var scheduleText = isSchedule
-                                       ? "Отписаться от рассылки расписания"
-                                       : "Подписаться на рассылку расписания";
+                                       ? "❌Отписаться от рассылки расписания"
+                                       : "✅Подписаться на рассылку расписания";
             var weatherText = isWeather
-                                      ? "Отписаться от рассылки погоды"
-                                      : "Подписаться на рассылку погоды";
+                                      ? "❌Отписаться от рассылки погоды"
+                                      : "✅Подписаться на рассылку погоды";
 
             var kb = new CoreKeyboard
             {
                 IsInline = true
             };
-            kb.AddButton(scheduleText, scheduleColor, "mailing", "schedule")
+            kb.AddButton(scheduleText, scheduleColor, mailingKey, "schedule")
               .AddLine()
-              .AddButton(weatherText, weatherColor, "mailing", "weather")
+              .AddButton(weatherText, weatherColor, mailingKey, "weather")
               .AddReturnToMenuButton();
 
             return kb;
