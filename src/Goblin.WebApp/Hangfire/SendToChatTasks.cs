@@ -78,13 +78,17 @@ namespace Goblin.WebApp.Hangfire
         private async Task SendSchedule(long id, int group, Func<string, Task> send)
         {
             var isSunday = DateTime.Today.DayOfWeek == DayOfWeek.Sunday;
-            if(group == 0 || isSunday || _mailingOptions.IsVacations)
+            if(group == 0 || isSunday)
             {
                 return;
             }
 
             Log.Information("Отправка расписания в {0}", id);
             var result = await _scheduleService.GetSchedule(group, DateTime.Now);
+            if(!result.IsSuccessful && _mailingOptions.IsVacations)
+            {
+                return;
+            }
             
             await send(result.Message);
         }
