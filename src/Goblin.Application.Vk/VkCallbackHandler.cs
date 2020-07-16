@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Goblin.Application.Core;
@@ -54,6 +55,14 @@ namespace Goblin.Application.Vk
             if(upd.Type == GroupUpdateType.MessageNew)
             {
                 var msg = _mapper.Map<Message>(upd.MessageNew.Message);
+                if(msg.ChatId != msg.UserId)
+                {
+                    var regEx = Regex.Match(msg.Text, @"\[club\d+\|.*\] (.*)");
+                    if(regEx.Groups.Count > 1)
+                    {
+                        msg.Text = regEx.Groups[1].Value.Trim();
+                    }
+                }
                 await MessageNew(msg, upd.MessageNew.ClientInfo);
             }
             else if(upd.Type == GroupUpdateType.GroupLeave)
