@@ -93,7 +93,7 @@ namespace Goblin.Application.Vk
             {
                 await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                 {
-                    Message = res.ToString(),
+                    Message = res.Message,
                     PeerId = message.ChatId
                 });
             }

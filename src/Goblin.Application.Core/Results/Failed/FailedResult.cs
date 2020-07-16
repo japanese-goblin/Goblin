@@ -18,10 +18,5 @@ namespace Goblin.Application.Core.Results.Failed
         {
             Message = $"❌ Ошибка: {message}";
         }
-
-        public override string ToString()
-        {
-            return $"❌ Ошибка: {Message}";
-        }
     }
 }

@@ -51,7 +51,7 @@ namespace Goblin.Application.Telegram
 
             async Task OnFailed(IResult res)
             {
-                await _botClient.SendTextMessageAsync(message.ChatId, res.ToString());
+                await _botClient.SendTextMessageAsync(message.ChatId, res.Message);
             }
         }
 
