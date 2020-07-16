@@ -5,15 +5,14 @@
     ViewData["Title"] = "Главная";
 }
 
-<div class="text-center">
+<div class="jumbotron text-center">
     <h1 class="display-4">Что это такое?</h1>
-    <p>Вы попали на сайт бота для ВКонтакте и Telegram!</p>
-    <p>
-        Здесь Вы <a asp-area="" asp-page="/Schedule/Index">можете просмотреть всё доступное расписание по номеру Вашей группы</a> (а не на месяц, как на официальном сайте)
-    </p>
-    <p>А также можете воспользоваться функционалом одного из ботов (имеют абсолоютно одинаковые функции):</p>
-    <ul class="list-group">
-        <li class="list-group-item">ВКонтакте - <a href="https://vk.com/japanese.goblin">ссылка на группу ВКонтакте</a></li>
-        <li class="list-group-item">Telegram - <a href="https://t.me/japanese_goblin_bot">ссылка на бота в Telegram</a></li>
-    </ul>
+    <p class="lead">Вы попали на сайт бота для ВКонтакте и Telegram!</p>
+    <a class="btn btn-primary btn-lg" asp-area="" asp-page="/Schedule/Index">Открыть расписание САФУ</a>
+    <hr class="my-4">
+    <p>А также можете воспользоваться функционалом бота в следующих местах:</p>
+    <div class="btn-group btn-group-lg">
+        <a class="btn btn-info" href="https://vk.com/japanese.goblin" target="_blank">ВКонтакте</a>
+        <a class="btn btn-info" href="https://t.me/japanese_goblin_bot" target="_blank">Telegram</a>
+    </div>
 </div>
