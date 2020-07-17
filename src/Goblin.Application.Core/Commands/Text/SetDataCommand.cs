@@ -1,8 +1,8 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Core.Extensions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
@@ -31,15 +31,16 @@ namespace Goblin.Application.Core.Commands.Text
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
+            var parameters = msg.Text.Split(' ', 3).Skip(1).ToArray();
             user = _db.Entry(user).Entity;
-            if(msg.CommandParameters.Length < 2)
+            if(parameters.Length < 2)
             {
                 return new FailedResult("Укажите 2 параметра команды." +
                                         "Пример использования: установить город Москва / установить группу 123456");
             }
 
-            var whatToSet = msg.CommandParameters.First();
-            var dataToSet = msg.CommandParameters[1];
+            var whatToSet = parameters[0];
+            var dataToSet = parameters[1];
 
             if(whatToSet.Equals("город", StringComparison.OrdinalIgnoreCase))
             {
@@ -81,7 +82,7 @@ namespace Goblin.Application.Core.Commands.Text
 
         private async Task<IResult> SetCity(string city, BotUser user)
         {
-            city = city.ToUpperFirstLetter();
+            city = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(city);
             var isExists = await _weather.IsCityExists(city);
             if(!isExists)
             {
