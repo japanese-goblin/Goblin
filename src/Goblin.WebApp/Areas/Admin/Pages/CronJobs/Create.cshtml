@@ -1,0 +1,43 @@
+﻿@page
+@using Goblin.Domain
+@model Goblin.WebApp.Areas.Admin.Pages.CronJobs.Create;
+@{
+    ViewData["Title"] = "Добавление Cron";
+}
+
+<div class="col-md-3">
+    <h2>@ViewData["Title"]</h2>
+    <hr/>
+    <form asp-area="Admin" asp-page="./Create" asp-antiforgery="true" method="post">
+        <div class="form-group">
+            <label asp-for="Input.Name"></label>
+            <input asp-for="Input.Name" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.ChatId"></label>
+            <input asp-for="Input.ChatId" class="form-control"/>
+            <small class="form-text text-muted">Для вк - 2000000001 для бесед</small>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.NarfuGroup"></label>
+            <input asp-for="Input.NarfuGroup" class="form-control" min="0"/>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.WeatherCity"></label>
+            <input asp-for="Input.WeatherCity" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.Hours"></label>
+            <input asp-for="Input.Hours" class="form-control" min="0" max="24"/>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.Minutes"></label>
+            <input asp-for="Input.Minutes" class="form-control" min="0" max="60"/>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.ConsumerType"></label>
+            <select asp-for="Input.ConsumerType" class="form-control" asp-items="Html.GetEnumSelectList<ConsumerType>()"></select>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">Добавить</button>
+    </form>
+</div>

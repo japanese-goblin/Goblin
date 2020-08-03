@@ -1,0 +1,43 @@
+﻿@page
+@model Goblin.WebApp.Areas.Admin.Pages.CronJobs.Index
+@{
+    ViewData["Title"] = "Cron задачи";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr/>
+
+<a class="btn btn-success" asp-area="Admin" asp-page="Create">Добавить</a>
+<hr/>
+
+<table class="table table-striped table-bordered">
+<thead class="thead-dark">
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>ChatId</th>
+    <th>ConsumerType</th>
+    <th>Группа</th>
+    <th>Город</th>
+    <th>Время отправвки</th>
+    <th></th>
+</tr>
+</thead>
+<tbody>
+@foreach(var job in Model.CronJobs)
+{
+    <tr>
+        <td>@job.Id</td>
+        <td>@job.Name</td>
+        <td>@job.ChatId</td>
+        <td>@job.ConsumerType</td>
+        <th>@job.NarfuGroup</th>
+        <th>@job.WeatherCity</th>
+        <th>@job.Hours:@job.Minutes.ToString("00")</th>
+        <th>
+            <a class="btn btn-danger" asp-area="Admin" asp-page="/CronJobs/Delete" asp-route-id="@job.Id">Удалить</a>
+        </th>
+    </tr>
+}
+</tbody>
+</table>

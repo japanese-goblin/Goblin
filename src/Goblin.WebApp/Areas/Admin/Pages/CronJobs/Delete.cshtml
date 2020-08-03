@@ -1,0 +1,55 @@
+﻿@page
+@model Goblin.WebApp.Areas.Admin.Pages.CronJobs.Delete
+@{
+    ViewData["Title"] = $"Удаление Cron [{Model.CronJob.Id}]";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr/>
+
+@if(Model.CronJob is null)
+{
+    <div class="alert alert-danger" role="alert">
+        CronJob не найдена
+    </div>
+    return;
+}
+<div class="col-md-3">
+    <table class="table table-striped table-bordered">
+        <tbody>
+        <tr>
+            <td>ID</td>
+            <td>@Model.CronJob.Id</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>@Model.CronJob.Name</td>
+        </tr>
+        <tr>
+            <td>ChatId</td>
+            <td>@Model.CronJob.ChatId</td>
+        </tr>
+        <tr>
+            <td>ConsumerType</td>
+            <td>@Model.CronJob.ConsumerType</td>
+        </tr>
+        <tr>
+            <td>Группа</td>
+            <td>@Model.CronJob.NarfuGroup</td>
+        </tr>
+        <tr>
+            <td>Город</td>
+            <td>@Model.CronJob.WeatherCity</td>
+        </tr>
+        <tr>
+            <td>Время отправвки</td>
+            <td>@Model.CronJob.Hours:@Model.CronJob.Minutes.ToString("00")</td>
+        </tr>
+        </tbody>
+    </table>
+    
+    <form asp-area="Admin" asp-page="./Delete" asp-route-id="@Model.CronJob.Id" method="post">
+        <input type="hidden" value="@Model.CronJob.Id"/>
+        <button type="submit" class="btn btn-danger btn-block">Удалить</button>
+    </form>
+</div>
