@@ -26,8 +26,9 @@ namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs
 
         public async Task<IActionResult> OnPost()
         {
-            var job = new CronJob(Input.Name, Input.ChatId, Input.NarfuGroup, Input.WeatherCity, Input.Hours, Input.Minutes,
-                                  Input.ConsumerType);
+            var time = new CronTime(Input.CronMinute, Input.CronHour, Input.CronDayOfMonth,
+                                    Input.CronMonth, Input.CronDayOfWeek);
+            var job = new CronJob(Input.Name, Input.ChatId, Input.NarfuGroup, Input.WeatherCity, time, Input.ConsumerType);
             await _context.AddAsync(job);
             await _context.SaveChangesAsync();
             
@@ -43,8 +44,11 @@ namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs
         public int NarfuGroup { get; set; }
         public string WeatherCity { get; set; }
 
-        public int Hours { get; set; }
-        public int Minutes { get; set; }
+        public string CronMinute { get; set; }
+        public string CronHour { get; set; }
+        public string CronDayOfMonth { get; set; }
+        public string CronMonth { get; set; }
+        public string CronDayOfWeek { get; set; }
 
         public ConsumerType ConsumerType { get; set; }
     }

@@ -55,9 +55,9 @@ namespace Goblin.WebApp.Hangfire
             {
                 RecurringJob.AddOrUpdate<SendToChatTasks>(
                                                           $"DAILY__{job.Name}__{job.ConsumerType}",
-                                                          x => x.SendToConv(job.ChatId, job.NarfuGroup,
+                                                          x => x.SendToConv(job.ChatId, job.NarfuGroup, 
                                                                             job.WeatherCity, job.ConsumerType),
-                                                          $"{job.Minutes} {job.Hours} * * *",
+                                                          job.Time.ToString(),
                                                           TimeZoneInfo.Local
                                                          );
             }

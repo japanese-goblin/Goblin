@@ -11,8 +11,7 @@ namespace Goblin.Domain.Entities
         public int NarfuGroup { get; private set; }
         public string WeatherCity { get; private set; }
 
-        public int Hours { get; private set; }
-        public int Minutes { get; private set; }
+        public CronTime Time { get; private set; }
 
         public ConsumerType ConsumerType { get; private set; }
 
@@ -20,15 +19,14 @@ namespace Goblin.Domain.Entities
         {
         }
 
-        public CronJob(string name, long vkId, int narfuGroup, string weatherCity, int hours, int minutes, ConsumerType type)
+        public CronJob(string name, long vkId, int narfuGroup, string weatherCity, CronTime time, ConsumerType type)
         {
             SetName(name);
             SetChatId(vkId);
             SetNarfuGroup(narfuGroup);
             SetWeatherCity(weatherCity);
-            SetHours(hours);
-            SetMinutes(minutes);
             SetConsumerType(type);
+            Time = time;
         }
 
         public void SetName(string name)
@@ -64,28 +62,6 @@ namespace Goblin.Domain.Entities
         public void SetWeatherCity(string city)
         {
             WeatherCity = city;
-        }
-
-        public void SetHours(int hours)
-        {
-            if(hours < 0 || hours > 23)
-            {
-                throw new ArgumentOutOfRangeException(nameof(hours), hours,
-                                                      "Параметр должен быть в пределах от 0 до 23");
-            }
-
-            Hours = hours;
-        }
-
-        public void SetMinutes(int minutes)
-        {
-            if(minutes < 0 || minutes > 60)
-            {
-                throw new ArgumentOutOfRangeException(nameof(minutes), minutes,
-                                                      "Параметр должен быть в пределах от 0 до 60");
-            }
-
-            Minutes = minutes;
         }
 
         private void SetConsumerType(ConsumerType type)

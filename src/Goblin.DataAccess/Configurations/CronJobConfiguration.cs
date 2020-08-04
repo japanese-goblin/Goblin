@@ -19,10 +19,7 @@ namespace Goblin.DataAccess.Configurations
                    .HasDefaultValue(0);
             builder.Property(x => x.WeatherCity)
                    .HasDefaultValue(string.Empty);
-            builder.Property(x => x.Hours)
-                   .IsRequired();
-            builder.Property(x => x.Minutes)
-                   .IsRequired();
+            builder.OwnsOne(x => x.Time);
             builder.Property(x => x.ConsumerType)
                    .HasDefaultValue(ConsumerType.Vkontakte);
         }
