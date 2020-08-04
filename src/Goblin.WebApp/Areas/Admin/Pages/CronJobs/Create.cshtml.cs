@@ -1,12 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Goblin.DataAccess;
 using Goblin.Domain;
 using Goblin.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs
 {
@@ -17,6 +15,7 @@ namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs
         [BindProperty]
         [FromForm]
         public InputModel Input { get; set; }
+
         private readonly BotDbContext _context;
 
         public Create(BotDbContext context)
@@ -28,10 +27,10 @@ namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs
         {
             var time = new CronTime(Input.CronMinute, Input.CronHour, Input.CronDayOfMonth,
                                     Input.CronMonth, Input.CronDayOfWeek);
-            var job = new CronJob(Input.Name, Input.ChatId, Input.NarfuGroup, Input.WeatherCity, time, Input.ConsumerType);
+            var job = new CronJob(Input.Name, Input.ChatId, Input.NarfuGroup, Input.WeatherCity, time, Input.ConsumerType, Input.CronType, Input.Text);
             await _context.AddAsync(job);
             await _context.SaveChangesAsync();
-            
+
             return RedirectToPage("Index");
         }
     }
@@ -43,6 +42,7 @@ namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs
 
         public int NarfuGroup { get; set; }
         public string WeatherCity { get; set; }
+        public string Text { get; set; }
 
         public string CronMinute { get; set; }
         public string CronHour { get; set; }
@@ -51,5 +51,6 @@ namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs
         public string CronDayOfWeek { get; set; }
 
         public ConsumerType ConsumerType { get; set; }
+        public CronType CronType { get; set; }
     }
 }

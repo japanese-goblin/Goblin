@@ -17,8 +17,10 @@
     <th>Name</th>
     <th>ChatId</th>
     <th>ConsumerType</th>
+    <th>CronType</th>
     <th>Группа</th>
     <th>Город</th>
+    <th>Текст</th>
     <th>Время</th>
     <th></th>
 </tr>
@@ -31,12 +33,14 @@
         <td>@job.Name</td>
         <td>@job.ChatId</td>
         <td>@job.ConsumerType</td>
-        <th>@job.NarfuGroup</th>
-        <th>@job.WeatherCity</th>
-        <th>@job.Time.ToString()</th>
-        <th>
+        <td>@job.CronType</td>
+        <td>@job.NarfuGroup</td>
+        <td>@job.WeatherCity</td>
+        <td>@job.Text</td>
+        <td>@job.Time.ToString()</td>
+        <td>
             <a class="btn btn-danger" asp-area="Admin" asp-page="/CronJobs/Delete" asp-route-id="@job.Id">Удалить</a>
-        </th>
+        </td>
     </tr>
 }
 </tbody>

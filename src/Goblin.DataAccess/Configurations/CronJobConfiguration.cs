@@ -22,6 +22,12 @@ namespace Goblin.DataAccess.Configurations
             builder.OwnsOne(x => x.Time);
             builder.Property(x => x.ConsumerType)
                    .HasDefaultValue(ConsumerType.Vkontakte);
+
+            builder.Property(x => x.Text)
+                   .HasDefaultValue(string.Empty)
+                   .HasMaxLength(500);
+            builder.Property(x => x.CronType)
+                   .HasDefaultValue(CronType.Text);
         }
     }
 }

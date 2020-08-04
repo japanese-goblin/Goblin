@@ -34,6 +34,10 @@
             <td>@Model.CronJob.ConsumerType</td>
         </tr>
         <tr>
+            <td>CronType</td>
+            <td>@Model.CronJob.CronType</td>
+        </tr>
+        <tr>
             <td>Группа</td>
             <td>@Model.CronJob.NarfuGroup</td>
         </tr>
@@ -42,12 +46,16 @@
             <td>@Model.CronJob.WeatherCity</td>
         </tr>
         <tr>
+            <td>Текст</td>
+            <td>@Model.CronJob.Text</td>
+        </tr>
+        <tr>
             <td>Время</td>
             <td>@Model.CronJob.Time.ToString()</td>
         </tr>
         </tbody>
     </table>
-    
+
     <form asp-area="Admin" asp-page="./Delete" asp-route-id="@Model.CronJob.Id" method="post">
         <input type="hidden" value="@Model.CronJob.Id"/>
         <button type="submit" class="btn btn-danger btn-block">Удалить</button>

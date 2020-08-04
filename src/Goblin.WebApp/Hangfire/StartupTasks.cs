@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Goblin.Application.Core.Options;
 using Goblin.DataAccess;
+using Goblin.Domain;
 using Hangfire;
 using Microsoft.Extensions.Options;
 
@@ -51,12 +54,12 @@ namespace Goblin.WebApp.Hangfire
 
         public void InitJobs()
         {
-            foreach(var job in _db.CronJobs)
+            foreach(var job in _db.CronJobs.ToArray())
             {
                 RecurringJob.AddOrUpdate<SendToChatTasks>(
                                                           $"DAILY__{job.Name}__{job.ConsumerType}",
-                                                          x => x.SendToConv(job.ChatId, job.NarfuGroup, 
-                                                                            job.WeatherCity, job.ConsumerType),
+                                                          x => x.SendToConv(job.ChatId, job.ConsumerType, job.CronType,
+                                                                            job.WeatherCity, job.NarfuGroup, job.Text),
                                                           job.Time.ToString(),
                                                           TimeZoneInfo.Local
                                                          );

@@ -10,8 +10,10 @@ namespace Goblin.Domain.Entities
 
         public int NarfuGroup { get; private set; }
         public string WeatherCity { get; private set; }
+        public string Text { get; set; }
 
         public CronTime Time { get; private set; }
+        public CronType CronType { get; set; }
 
         public ConsumerType ConsumerType { get; private set; }
 
@@ -19,14 +21,17 @@ namespace Goblin.Domain.Entities
         {
         }
 
-        public CronJob(string name, long vkId, int narfuGroup, string weatherCity, CronTime time, ConsumerType type)
+        public CronJob(string name, long chatId, int narfuGroup, string weatherCity, CronTime time, ConsumerType consumerType,
+                       CronType cronType, string text = "")
         {
             SetName(name);
-            SetChatId(vkId);
+            SetChatId(chatId);
             SetNarfuGroup(narfuGroup);
             SetWeatherCity(weatherCity);
-            SetConsumerType(type);
+            SetConsumerType(consumerType);
             Time = time;
+            SetCronType(cronType);
+            SetText(text);
         }
 
         public void SetName(string name)
@@ -67,6 +72,16 @@ namespace Goblin.Domain.Entities
         private void SetConsumerType(ConsumerType type)
         {
             ConsumerType = type;
+        }
+        
+        private void SetCronType(CronType type)
+        {
+            CronType = type;
+        }
+
+        private void SetText(string text)
+        {
+            Text = text;
         }
     }
 }

@@ -4,6 +4,7 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Options;
 using Goblin.Application.Vk.Extensions;
 using Goblin.Domain;
+using Goblin.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Telegram.Bot;
@@ -30,45 +31,50 @@ namespace Goblin.WebApp.Hangfire
             _mailingOptions = mailingOptions.Value;
         }
 
-        public async Task SendToConv(long id, int group = 0, string city = "", ConsumerType type = ConsumerType.Vkontakte)
+        public async Task SendToConv(long chatId, ConsumerType consumerType, CronType cronType, string city, int group, string text)
         {
-            if(type == ConsumerType.Vkontakte)
+            if(consumerType == ConsumerType.Vkontakte)
             {
                 await Send(SendToVk);
             }
-            else if(type == ConsumerType.Telegram)
+            else if(consumerType == ConsumerType.Telegram)
             {
                 await Send(SendToTelegram);
             }
 
             async Task Send(Func<string, Task> func)
             {
-                await SendWeather(id, city, func);
-                await SendSchedule(id, group, func);
+                if(cronType == CronType.Schedule && group != 0)
+                {
+                    await SendSchedule(chatId, group, func);
+                }
+                else if(cronType == CronType.Weather && !string.IsNullOrWhiteSpace(city))
+                {
+                    await SendWeather(chatId, city, func);
+                }
+                else if(cronType == CronType.Text && !string.IsNullOrWhiteSpace(text))
+                {
+                    await SendText(text, func);
+                }
             }
 
             async Task SendToVk(string message)
             {
                 await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                 {
-                    PeerId = id,
+                    PeerId = chatId,
                     Message = message
                 });
             }
             
             async Task SendToTelegram(string message)
             {
-                await _botClient.SendTextMessageAsync(id, message);
+                await _botClient.SendTextMessageAsync(chatId, message);
             }
         }
 
         private async Task SendWeather(long id, string city, Func<string, Task> send)
         {
-            if(string.IsNullOrWhiteSpace(city))
-            {
-                return;
-            }
-
             Log.Information("Отправка погоды в {0}", id);
             var result = await _weatherService.GetDailyWeather(city, DateTime.Today);
             
@@ -77,12 +83,6 @@ namespace Goblin.WebApp.Hangfire
 
         private async Task SendSchedule(long id, int group, Func<string, Task> send)
         {
-            var isSunday = DateTime.Today.DayOfWeek == DayOfWeek.Sunday;
-            if(group == 0 || isSunday)
-            {
-                return;
-            }
-
             Log.Information("Отправка расписания в {0}", id);
             var result = await _scheduleService.GetSchedule(group, DateTime.Now);
             if(!result.IsSuccessful && _mailingOptions.IsVacations)
@@ -91,6 +91,11 @@ namespace Goblin.WebApp.Hangfire
             }
             
             await send(result.Message);
+        }
+        
+        private async Task SendText(string text, Func<string, Task> send)
+        {
+            await send(text);
         }
     }
 }
