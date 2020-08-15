@@ -1,0 +1,70 @@
+﻿@page "/calc"
+@model Goblin.WebApp.Pages.Home.Calculator
+
+@{
+    ViewData["Title"] = "Калькулятор";
+}
+
+<h1>Супер-секретный калькулятор</h1>
+<div id="app">
+    <div class="row">
+        <div class="col-md-3">
+            <h3>Первый товар</h3>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Вес</span>
+                </div>
+                <input type="number" class="form-control" id="first_weight" v-model="firstItem.weight">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Цена</span>
+                </div>
+                <input type="number" class="form-control" id="first_price" v-model="firstItem.price">
+            </div>
+            <p class="font-weight-bold">
+                {{ firstPricePerWeight }} рублей за единицу
+            </p>
+        </div>
+
+        <div class="col-md-3">
+            <h3>Первый товар</h3>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Вес</span>
+                </div>
+                <input type="number" class="form-control" id="second_weight" v-model="secondItem.weight">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Цена</span>
+                </div>
+                <input type="number" class="form-control" id="second_price" v-model="secondItem.price">
+            </div>
+            <p class="font-weight-bold">
+                {{ secondPricePerWeight }} рублей за единицу
+            </p>
+        </div>
+    </div>
+    <div class="row text-center">
+        <div class="col-md-6">
+            {{ profit }}
+        </div>
+    </div>
+</div>
+
+<small class="text-muted">
+    inspired by <a href="https://habr.com/ru/company/just_ai/blog/514728/">morfeusys's article</a>
+</small>
+
+@section Scripts
+{
+    <environment include="Development">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="~/js/calc.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <script src="~/js/calc.min.js"></script>
+    </environment>
+}
