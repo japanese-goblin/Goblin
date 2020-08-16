@@ -11,30 +11,21 @@ namespace Goblin.Application.Vk
     {
         public static void AddVkLayer(this IServiceCollection services, IConfiguration configuration)
         {
-            AddVkNet();
-            AddVkOptions();
+            services.AddSingleton<IVkApi, VkApi>(x =>
+            {
+                var token = configuration["Vk:AccessToken"];
+                var api = new VkApi { RequestsPerSecond = 20 };
+                api.Authorize(new ApiAuthParams
+                {
+                    AccessToken = token
+                });
+                return api;
+            });
+
+            services.Configure<VkOptions>(configuration.GetSection("Vk"));
+            services.Configure<VkAuthOptions>(configuration.GetSection("VkAuth"));
 
             services.AddScoped<VkCallbackHandler>();
-
-            void AddVkNet()
-            {
-                services.AddSingleton<IVkApi, VkApi>(x =>
-                {
-                    var token = configuration["Vk:AccessToken"];
-                    var api = new VkApi { RequestsPerSecond = 20 };
-                    api.Authorize(new ApiAuthParams
-                    {
-                        AccessToken = token
-                    });
-                    return api;
-                });
-            }
-
-            void AddVkOptions()
-            {
-                services.Configure<VkOptions>(configuration.GetSection("Vk"));
-                services.Configure<VkAuthOptions>(configuration.GetSection("VkAuth"));
-            }
         }
     }
 }

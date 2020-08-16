@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Goblin.Application.Core.Options;
 using Goblin.DataAccess;
-using Goblin.Domain;
 using Hangfire;
 using Microsoft.Extensions.Options;
 

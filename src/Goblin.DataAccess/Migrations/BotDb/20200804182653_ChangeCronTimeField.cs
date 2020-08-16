@@ -7,74 +7,74 @@ namespace Goblin.DataAccess.Migrations.BotDb
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Hours",
-                table: "CronJobs");
+                                        "Hours",
+                                        "CronJobs");
 
             migrationBuilder.DropColumn(
-                name: "Minutes",
-                table: "CronJobs");
+                                        "Minutes",
+                                        "CronJobs");
 
             migrationBuilder.AddColumn<string>(
-                name: "Time_DayOfMonth",
-                table: "CronJobs",
-                nullable: true);
+                                               "Time_DayOfMonth",
+                                               "CronJobs",
+                                               nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Time_DayOfWeek",
-                table: "CronJobs",
-                nullable: true);
+                                               "Time_DayOfWeek",
+                                               "CronJobs",
+                                               nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Time_Hour",
-                table: "CronJobs",
-                nullable: true);
+                                               "Time_Hour",
+                                               "CronJobs",
+                                               nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Time_Minute",
-                table: "CronJobs",
-                nullable: true);
+                                               "Time_Minute",
+                                               "CronJobs",
+                                               nullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "Time_Month",
-                table: "CronJobs",
-                nullable: true);
+                                               "Time_Month",
+                                               "CronJobs",
+                                               nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Time_DayOfMonth",
-                table: "CronJobs");
+                                        "Time_DayOfMonth",
+                                        "CronJobs");
 
             migrationBuilder.DropColumn(
-                name: "Time_DayOfWeek",
-                table: "CronJobs");
+                                        "Time_DayOfWeek",
+                                        "CronJobs");
 
             migrationBuilder.DropColumn(
-                name: "Time_Hour",
-                table: "CronJobs");
+                                        "Time_Hour",
+                                        "CronJobs");
 
             migrationBuilder.DropColumn(
-                name: "Time_Minute",
-                table: "CronJobs");
+                                        "Time_Minute",
+                                        "CronJobs");
 
             migrationBuilder.DropColumn(
-                name: "Time_Month",
-                table: "CronJobs");
+                                        "Time_Month",
+                                        "CronJobs");
 
             migrationBuilder.AddColumn<int>(
-                name: "Hours",
-                table: "CronJobs",
-                type: "integer",
-                nullable: false,
-                defaultValue: 0);
+                                            "Hours",
+                                            "CronJobs",
+                                            "integer",
+                                            nullable: false,
+                                            defaultValue: 0);
 
             migrationBuilder.AddColumn<int>(
-                name: "Minutes",
-                table: "CronJobs",
-                type: "integer",
-                nullable: false,
-                defaultValue: 0);
+                                            "Minutes",
+                                            "CronJobs",
+                                            "integer",
+                                            nullable: false,
+                                            defaultValue: 0);
         }
     }
 }

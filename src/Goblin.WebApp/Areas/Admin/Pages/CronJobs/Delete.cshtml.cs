@@ -30,7 +30,7 @@ namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs
 
             CronJob = job;
         }
-        
+
         public async Task<IActionResult> OnPost(int id)
         {
             var job = await _context.CronJobs.FirstOrDefaultAsync(x => x.Id == id);

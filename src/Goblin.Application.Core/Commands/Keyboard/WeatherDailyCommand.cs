@@ -43,7 +43,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
             var weather = await _weatherService.GetDailyWeather(user.WeatherCity, dateTime);
 
             weather.Keyboard = DefaultKeyboards.GetDailyWeatherKeyboard();
-            
+
             return weather;
         }
     }

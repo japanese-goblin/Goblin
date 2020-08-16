@@ -9,15 +9,10 @@ namespace Goblin.Application.Telegram
     {
         public static void AddTelegramLayer(this IServiceCollection services, IConfiguration configuration)
         {
-            AddTelegramOptions();
+            services.Configure<TelegramOptions>(configuration.GetSection("Telegram"));
 
             services.AddSingleton(new TelegramBotClient(configuration["Telegram:AccessToken"]));
             services.AddScoped<TelegramCallbackHandler>();
-
-            void AddTelegramOptions()
-            {
-                services.Configure<TelegramOptions>(configuration.GetSection("Telegram"));
-            }
         }
     }
 }

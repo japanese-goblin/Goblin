@@ -15,7 +15,7 @@ namespace Goblin.OpenWeatherMap.Models.Current
         /// </summary>
         [JsonProperty("sea_level", NullValueHandling = NullValueHandling.Ignore)]
         public double? SeaLevel { get; set; }
-        
+
         /// <summary>
         /// Температура
         /// </summary>
@@ -47,7 +47,7 @@ namespace Goblin.OpenWeatherMap.Models.Current
         /// </summary>
         [JsonProperty("temp_max")]
         public double MaxTemp { get; set; }
-        
+
         /// <summary>
         /// Температура, которая учитывает восприятие погоды человеком
         /// </summary>

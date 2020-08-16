@@ -1,10 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Goblin.DataAccess;
-using Goblin.Domain;
 using Goblin.Domain.Entities;
-using Goblin.WebApp.Hangfire;
-using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,9 +12,8 @@ namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs
     [Area("Admin")]
     public class Index : PageModel
     {
-        private readonly BotDbContext _context;
-
         public CronJob[] CronJobs { get; set; }
+        private readonly BotDbContext _context;
 
         public Index(BotDbContext context)
         {

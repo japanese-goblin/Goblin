@@ -63,6 +63,7 @@ namespace Goblin.Application.Vk
                         msg.Text = regEx.Groups[1].Value.Trim();
                     }
                 }
+
                 await MessageNew(msg, upd.MessageNew.ClientInfo);
             }
             else if(upd.Type == GroupUpdateType.GroupLeave)
@@ -141,7 +142,7 @@ namespace Goblin.Application.Vk
 
             await SendMessageToUserWithTry(join.UserId.Value, groupJoinMessage);
         }
-        
+
         private async Task SendMessageToUserWithTry(long userId, string message)
         {
             try

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Extensions;
 using Goblin.Application.Core.Options;
-using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Vk.Extensions;
 using Goblin.Application.Vk.Hangfire;
 using Goblin.DataAccess;
@@ -95,6 +94,7 @@ namespace Goblin.WebApp.Hangfire
                     {
                         continue;
                     }
+
                     foreach(var user in group)
                     {
                         await _botClient.SendTextMessageAsync(user.Id, result.Message);

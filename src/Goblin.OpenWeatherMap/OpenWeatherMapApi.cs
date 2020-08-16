@@ -51,9 +51,14 @@ namespace Goblin.OpenWeatherMap
                                                .SetQueryParam("q", city)
                                                .SetQueryParam("cnt", 4)
                                                .GetJsonAsync<DailyWeatherResponse>();
-            
+
             // разница между указанной и полученной меньше одного дня
-            var weather = response.List.FirstOrDefault(x => (x.UnixTime.Date - date.Date).Days >= 0 && (x.UnixTime.Date - date.Date).Days <= 1);
+            var weather = response.List.FirstOrDefault(x =>
+            {
+                var diff = (x.UnixTime.Date - date.Date).Days;
+                return diff >= 0 && diff <= 1;
+            });
+            
             if(weather is null)
             {
                 var msg = $"Погода на {date:dd.MM.yyyy} в городе {city} не найдена.";

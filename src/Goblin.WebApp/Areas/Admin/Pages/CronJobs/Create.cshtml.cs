@@ -27,7 +27,8 @@ namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs
         {
             var time = new CronTime(Input.CronMinute, Input.CronHour, Input.CronDayOfMonth,
                                     Input.CronMonth, Input.CronDayOfWeek);
-            var job = new CronJob(Input.Name, Input.ChatId, Input.NarfuGroup, Input.WeatherCity, time, Input.ConsumerType, Input.CronType, Input.Text);
+            var job = new CronJob(Input.Name, Input.ChatId, Input.NarfuGroup, Input.WeatherCity, time, Input.ConsumerType, Input.CronType,
+                                  Input.Text);
             await _context.AddAsync(job);
             await _context.SaveChangesAsync();
 

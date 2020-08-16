@@ -4,7 +4,6 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Options;
 using Goblin.Application.Vk.Extensions;
 using Goblin.Domain;
-using Goblin.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Telegram.Bot;
@@ -20,7 +19,7 @@ namespace Goblin.WebApp.Hangfire
         private readonly IVkApi _vkApi;
         private readonly IWeatherService _weatherService;
         private readonly MailingOptions _mailingOptions;
-        
+
         public SendToChatTasks(IScheduleService scheduleService, IWeatherService weatherService, IVkApi vkApi,
                                TelegramBotClient botClient, IOptions<MailingOptions> mailingOptions)
         {
@@ -66,7 +65,7 @@ namespace Goblin.WebApp.Hangfire
                     Message = message
                 });
             }
-            
+
             async Task SendToTelegram(string message)
             {
                 await _botClient.SendTextMessageAsync(chatId, message);
@@ -77,7 +76,7 @@ namespace Goblin.WebApp.Hangfire
         {
             Log.Information("Отправка погоды в {0}", id);
             var result = await _weatherService.GetDailyWeather(city, DateTime.Today);
-            
+
             await send(result.Message);
         }
 
@@ -89,10 +88,10 @@ namespace Goblin.WebApp.Hangfire
             {
                 return;
             }
-            
+
             await send(result.Message);
         }
-        
+
         private async Task SendText(string text, Func<string, Task> send)
         {
             await send(text);

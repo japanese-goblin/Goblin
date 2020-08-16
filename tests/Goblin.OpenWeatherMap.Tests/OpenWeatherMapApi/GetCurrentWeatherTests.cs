@@ -46,8 +46,8 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi
             weather.OtherInfo.Country.Should().Be("RU");
             weather.OtherInfo.Id.Should().Be(9029);
             weather.OtherInfo.Message.Should().BeApproximately(0.0094, 0.001F);
-            weather.OtherInfo.Sunrise.Should().Be(correctSunriseDate); 
-            weather.OtherInfo.Sunset.Should().Be(correctSunsetDate); 
+            weather.OtherInfo.Sunrise.Should().Be(correctSunriseDate);
+            weather.OtherInfo.Sunset.Should().Be(correctSunsetDate);
             weather.OtherInfo.Type.Should().Be(1);
             weather.CityId.Should().Be(524901);
             weather.Visibility.Should().BeApproximately(8000F, 0.01F);

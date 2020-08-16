@@ -9,19 +9,19 @@ namespace Goblin.OpenWeatherMap.Models.Daily
         /// </summary>
         [JsonProperty("morn")]
         public double Morning { get; set; }
-        
+
         /// <summary>
         /// Температура днём
         /// </summary>
         [JsonProperty("day")]
         public double Day { get; set; }
-        
+
         /// <summary>
         /// Температура вечером
         /// </summary>
         [JsonProperty("eve")]
         public double Evening { get; set; }
-        
+
         /// <summary>
         /// Температура ночью
         /// </summary>

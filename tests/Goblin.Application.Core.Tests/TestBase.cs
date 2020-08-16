@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
-using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Commands.Text;
 using Goblin.Application.Core.Models;
-using Goblin.Application.Core.Tests.Models;
 using Goblin.DataAccess;
 using Goblin.Domain;
 using Goblin.Domain.Entities;

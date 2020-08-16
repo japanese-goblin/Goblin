@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Goblin.OpenWeatherMap.Models.Current;
 using Goblin.OpenWeatherMap.Models.Daily;
 using Goblin.OpenWeatherMap.Models.Responses;
 

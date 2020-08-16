@@ -27,11 +27,7 @@ namespace Goblin.Application.Core
 
         private static void AddAdditions(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton<IOpenWeatherMapApi, OpenWeatherMapApi>(x =>
-            {
-                var api = new OpenWeatherMapApi(configuration["OWM:AccessToken"]);
-                return api;
-            });
+            services.AddSingleton<IOpenWeatherMapApi, OpenWeatherMapApi>(x => new OpenWeatherMapApi(configuration["OWM:AccessToken"]));
             services.AddSingleton<INarfuApi, NarfuApi>();
 
             services.AddSingleton<IScheduleService, ScheduleService>();

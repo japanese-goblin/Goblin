@@ -73,7 +73,7 @@ namespace Goblin.Domain.Entities
         {
             ConsumerType = type;
         }
-        
+
         private void SetCronType(CronType type)
         {
             CronType = type;
