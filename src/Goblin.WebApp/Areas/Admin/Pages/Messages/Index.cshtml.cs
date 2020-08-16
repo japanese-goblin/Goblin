@@ -1,6 +1,6 @@
 ﻿using System;
+using Goblin.BackgroundJobs.Jobs;
 using Goblin.Domain;
-using Goblin.WebApp.Hangfire;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

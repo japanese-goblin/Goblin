@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Extensions;
 using Goblin.Application.Core.Options;
 using Goblin.Application.Vk.Extensions;
-using Goblin.Application.Vk.Hangfire;
 using Goblin.DataAccess;
+using Goblin.Domain.Abstractions;
+using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -14,7 +16,7 @@ using Telegram.Bot;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
-namespace Goblin.WebApp.Hangfire
+namespace Goblin.BackgroundJobs.Jobs
 {
     public class ScheduleTask
     {
@@ -36,15 +38,32 @@ namespace Goblin.WebApp.Hangfire
             _mailingOptions = mailingOptions.Value;
         }
 
-        public async Task SendSchedule()
+        public async Task Execute()
         {
-            await SendToVk();
-            await SendToTelegram();
+            Func<string, IEnumerable<long>, Task> vk = async (text, userIds) =>
+            {
+                await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams()
+                {
+                    Message = text,
+                    UserIds = userIds
+                });
+            };
+
+            Func<string, IEnumerable<long>, Task> telegram = async (text, userIds) =>
+            {
+                foreach(var userId in userIds)
+                {
+                    await _botClient.SendTextMessageAsync(userId, text);
+                }
+            };
+
+            await SendSchedule<VkBotUser>(vk);
+            await SendSchedule<TgBotUser>(telegram);
         }
 
-        private async Task SendToVk()
+        private async Task SendSchedule<T>(Func<string, IEnumerable<long>, Task> func) where T : BotUser
         {
-            var grouped = _db.VkBotUsers
+            var grouped = _db.Set<T>()
                              .AsNoTracking()
                              .Where(x => x.HasScheduleSubscription)
                              .ToArray()
@@ -62,47 +81,14 @@ namespace Goblin.WebApp.Hangfire
                     try
                     {
                         var ids = chunk.Select(x => x.Id);
-                        await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
-                        {
-                            UserIds = ids,
-                            Message = result.Message
-                        });
-
-                        await Task.Delay(TimeSpan.FromSeconds(1.5));
+                        await func(result.Message, ids);
                     }
                     catch(Exception ex)
                     {
-                        _logger.Error(ex, "Ошибка при отправке расписания вконтакте");
+                        _logger.Error(ex, "Ошибка при отправке расписания");
                     }
-                }
-            }
-        }
-
-        private async Task SendToTelegram()
-        {
-            var grouped = _db.TgBotUsers
-                             .AsNoTracking()
-                             .Where(x => x.HasScheduleSubscription)
-                             .ToArray()
-                             .GroupBy(x => x.NarfuGroup);
-            foreach(var group in grouped)
-            {
-                try
-                {
-                    var result = await _scheduleService.GetSchedule(group.Key, DateTime.Today);
-                    if(!result.IsSuccessful && _mailingOptions.IsVacations)
-                    {
-                        continue;
-                    }
-
-                    foreach(var user in group)
-                    {
-                        await _botClient.SendTextMessageAsync(user.Id, result.Message);
-                    }
-                }
-                catch(Exception ex)
-                {
-                    _logger.Error(ex, "Ошибка при отправке расписания telegram");
+                    
+                    await Task.Delay(TimeSpan.FromSeconds(1.5));
                 }
             }
         }

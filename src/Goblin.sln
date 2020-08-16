@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Application.Telegram
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Application.Core.Tests", "..\tests\Goblin.Application.Core.Tests\Goblin.Application.Core.Tests.csproj", "{B6F81EA5-02F2-4842-9BFF-F72B46CB3462}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.BackgroundJobs", "Goblin.BackgroundJobs\Goblin.BackgroundJobs.csproj", "{8BA141A9-5ECB-4671-82C6-9A4C43C348FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -171,6 +173,18 @@ Global
 		{B6F81EA5-02F2-4842-9BFF-F72B46CB3462}.Release|x64.Build.0 = Release|Any CPU
 		{B6F81EA5-02F2-4842-9BFF-F72B46CB3462}.Release|x86.ActiveCfg = Release|Any CPU
 		{B6F81EA5-02F2-4842-9BFF-F72B46CB3462}.Release|x86.Build.0 = Release|Any CPU
+		{8BA141A9-5ECB-4671-82C6-9A4C43C348FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BA141A9-5ECB-4671-82C6-9A4C43C348FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BA141A9-5ECB-4671-82C6-9A4C43C348FF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8BA141A9-5ECB-4671-82C6-9A4C43C348FF}.Debug|x64.Build.0 = Debug|Any CPU
+		{8BA141A9-5ECB-4671-82C6-9A4C43C348FF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8BA141A9-5ECB-4671-82C6-9A4C43C348FF}.Debug|x86.Build.0 = Debug|Any CPU
+		{8BA141A9-5ECB-4671-82C6-9A4C43C348FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BA141A9-5ECB-4671-82C6-9A4C43C348FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BA141A9-5ECB-4671-82C6-9A4C43C348FF}.Release|x64.ActiveCfg = Release|Any CPU
+		{8BA141A9-5ECB-4671-82C6-9A4C43C348FF}.Release|x64.Build.0 = Release|Any CPU
+		{8BA141A9-5ECB-4671-82C6-9A4C43C348FF}.Release|x86.ActiveCfg = Release|Any CPU
+		{8BA141A9-5ECB-4671-82C6-9A4C43C348FF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

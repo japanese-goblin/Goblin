@@ -9,7 +9,7 @@ using Telegram.Bot;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
-namespace Goblin.WebApp.Hangfire
+namespace Goblin.BackgroundJobs.Jobs
 {
     public class SendRemindTasks
     {
@@ -35,7 +35,7 @@ namespace Goblin.WebApp.Hangfire
             await SendRemindsFromArray(reminds);
         }
 
-        public async Task SendOldReminds()
+        public async Task SendOldRemindsOnStartup()
         {
             var currentTime = DateTime.Now;
             var reminds = _db.Reminds.Where(x => x.Date < currentTime).ToArray();

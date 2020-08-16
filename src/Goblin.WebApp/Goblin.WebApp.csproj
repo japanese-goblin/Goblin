@@ -8,7 +8,6 @@
     <ItemGroup>
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.5" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.5" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.5" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.5" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.5" />
@@ -22,6 +21,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Goblin.Application.Telegram\Goblin.Application.Telegram.csproj" />
       <ProjectReference Include="..\Goblin.Application.Vk\Goblin.Application.Vk.csproj" />
+      <ProjectReference Include="..\Goblin.BackgroundJobs\Goblin.BackgroundJobs.csproj" />
       <ProjectReference Include="..\Goblin.DataAccess\Goblin.DataAccess.csproj" />
       <ProjectReference Include="..\Goblin.Domain\Goblin.Domain.csproj" />
       <ProjectReference Include="..\Goblin.Narfu\Goblin.Narfu.csproj" />

@@ -1,4 +1,4 @@
-namespace Goblin.Application.Vk.Hangfire
+namespace Goblin.BackgroundJobs
 {
     public static class Defaults
     {

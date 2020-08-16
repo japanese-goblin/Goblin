@@ -10,7 +10,7 @@ using Telegram.Bot;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
-namespace Goblin.WebApp.Hangfire
+namespace Goblin.BackgroundJobs.Jobs
 {
     public class SendToChatTasks
     {
@@ -30,7 +30,7 @@ namespace Goblin.WebApp.Hangfire
             _mailingOptions = mailingOptions.Value;
         }
 
-        public async Task SendToConv(long chatId, ConsumerType consumerType, CronType cronType, string city, int group, string text)
+        public async Task Execute(long chatId, ConsumerType consumerType, CronType cronType, string city, int group, string text)
         {
             if(consumerType == ConsumerType.Vkontakte)
             {

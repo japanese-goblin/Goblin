@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Extensions;
 using Goblin.Application.Vk.Extensions;
-using Goblin.Application.Vk.Hangfire;
 using Goblin.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -12,7 +11,7 @@ using Telegram.Bot;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
-namespace Goblin.WebApp.Hangfire
+namespace Goblin.BackgroundJobs.Jobs
 {
     public class WeatherTask
     {
@@ -31,7 +30,7 @@ namespace Goblin.WebApp.Hangfire
             _logger = Log.ForContext<WeatherTask>();
         }
 
-        public async Task SendDailyWeather()
+        public async Task Execute()
         {
             await SendToVk();
             await SendToTelegram();

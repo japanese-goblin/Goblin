@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Goblin.Application.Telegram\Goblin.Application.Telegram.csproj" />
+      <ProjectReference Include="..\Goblin.Application.Vk\Goblin.Application.Vk.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Hangfire" Version="1.7.12" />
+    </ItemGroup>
+
+</Project>

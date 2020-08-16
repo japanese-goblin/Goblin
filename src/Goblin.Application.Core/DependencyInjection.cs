@@ -21,8 +21,6 @@ namespace Goblin.Application.Core
             AddBotFeatures(services);
             AddOptions(services, configuration);
             AddAdditions(services, configuration);
-
-            services.AddHangfire(config => { config.UseMemoryStorage(); });
         }
 
         private static void AddAdditions(IServiceCollection services, IConfiguration configuration)

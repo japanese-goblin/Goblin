@@ -6,7 +6,6 @@ using Goblin.Application.Core.Extensions;
 using Goblin.Application.Vk;
 using Goblin.Application.Vk.Converters;
 using Goblin.Application.Vk.Extensions;
-using Goblin.Application.Vk.Hangfire;
 using Goblin.DataAccess;
 using Goblin.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +15,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
-namespace Goblin.WebApp.Hangfire
+namespace Goblin.BackgroundJobs.Jobs
 {
     public class SendToUsersTasks
     {
@@ -81,25 +80,19 @@ namespace Goblin.WebApp.Hangfire
             {
                 try
                 {
+                    var @params = new MessagesSendParams
+                    {
+                        Message = text,
+                        UserIds = chunk,
+                        Attachments = attachments,
+                    };
+                    
                     if(isSendKeyboard)
                     {
-                        await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
-                        {
-                            Message = text,
-                            UserIds = chunk,
-                            Attachments = attachments,
-                            Keyboard = keyboard
-                        });
+                        @params.Keyboard = keyboard;
                     }
-                    else
-                    {
-                        await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
-                        {
-                            Message = text,
-                            UserIds = chunk,
-                            Attachments = attachments
-                        });
-                    }
+                    
+                    await _vkApi.Messages.SendToUserIdsWithRandomId(@params);
                 }
                 catch(Exception e)
                 {
