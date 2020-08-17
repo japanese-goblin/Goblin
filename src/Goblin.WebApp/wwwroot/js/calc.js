@@ -31,7 +31,10 @@ let app = new Vue({
             let percent = Math.abs((worse - best) / best * 100).toFixed();
 
             let selectedStuff = stuff === this.firstItem ? "Первый" : "Второй";
-            return `${selectedStuff} вариант выгоднее на ${percent}%`;
+            return {
+                text: `${selectedStuff} вариант выгоднее на ${percent}%`,
+                percent: percent
+            };
         }
     }
 })

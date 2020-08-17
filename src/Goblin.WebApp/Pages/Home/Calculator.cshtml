@@ -5,11 +5,11 @@
     ViewData["Title"] = "Калькулятор";
 }
 
-<h1>Супер-секретный калькулятор</h1>
+<h1>Секретный калькулятор выгоды</h1>
 <div id="app">
     <div class="row">
         <div class="col-md-3">
-            <h3>Первый товар</h3>
+            <h3>Первый продукт</h3>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Вес</span>
@@ -22,13 +22,13 @@
                 </div>
                 <input type="number" class="form-control" id="first_price" v-model="firstItem.price">
             </div>
-            <p class="font-weight-bold">
+            <p class="font-weight-bold" v-if="!isNaN(firstPricePerWeight)">
                 {{ firstPricePerWeight }} рублей за единицу
             </p>
         </div>
 
         <div class="col-md-3">
-            <h3>Первый товар</h3>
+            <h3>Второй продукт</h3>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Вес</span>
@@ -41,14 +41,14 @@
                 </div>
                 <input type="number" class="form-control" id="second_price" v-model="secondItem.price">
             </div>
-            <p class="font-weight-bold">
+            <p class="font-weight-bold" v-if="!isNaN(secondPricePerWeight)">
                 {{ secondPricePerWeight }} рублей за единицу
             </p>
         </div>
     </div>
     <div class="row text-center">
-        <div class="col-md-6">
-            {{ profit }}
+        <div class="col-md-6" v-if="!isNaN(profit.percent)">
+            {{ profit.text }}
         </div>
     </div>
 </div>
