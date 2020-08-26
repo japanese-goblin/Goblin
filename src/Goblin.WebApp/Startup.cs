@@ -110,6 +110,7 @@ namespace Goblin.WebApp
             });
 
             BackgroundJob.Enqueue<StartupTasks>(x => x.ConfigureHangfire());
+            BackgroundJob.Enqueue<ResetUsersGroups>(x => x.Execute());
         }
     }
 }
