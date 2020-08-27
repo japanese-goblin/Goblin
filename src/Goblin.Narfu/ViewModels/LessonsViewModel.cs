@@ -29,7 +29,8 @@ namespace Goblin.Narfu.ViewModels
 
             foreach(var lesson in Lessons.Where(x => x.StartTime.Date == Date.Date))
             {
-                strBuilder.AppendFormat("{0} - {1} ({2}) [{3}]", lesson.StartEndTime, lesson.Name, lesson.Teacher, lesson.Type)
+                strBuilder.AppendFormat("{0}) {1} - {2} ({3}) [{4}]", lesson.Number,
+                                        lesson.StartEndTime, lesson.Name, lesson.Teacher, lesson.Type)
                           .AppendLine();
 
                 if(lesson.Groups != null)
