@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Domain.Abstractions;
-using Newtonsoft.Json;
 
 namespace Goblin.Application.Core.Commands.Keyboard
 {
@@ -27,7 +25,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
                 return new FailedResult("Для получения погоды установите город (нужно написать следующее - установить город Москва).");
             }
 
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload);
+            var dict = msg.ParsedPayload;
             var isExists = dict.TryGetValue(Trigger, out var day);
             if(!isExists)
             {

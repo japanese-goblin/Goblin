@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
@@ -7,7 +6,6 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Abstractions;
-using Newtonsoft.Json;
 
 namespace Goblin.Application.Core.Commands.Keyboard
 {
@@ -25,7 +23,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
             user = _db.Entry(user).Entity;
-            var choose = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
+            var choose = msg.ParsedPayload[Trigger];
             var isSchedule = user.HasScheduleSubscription;
             var isWeather = user.HasWeatherSubscription;
             if(choose.Equals("weather", StringComparison.OrdinalIgnoreCase))

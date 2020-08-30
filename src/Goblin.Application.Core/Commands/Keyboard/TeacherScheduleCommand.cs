@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
@@ -8,7 +7,6 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Abstractions;
 using Goblin.Narfu.Abstractions;
-using Newtonsoft.Json;
 
 namespace Goblin.Application.Core.Commands.Keyboard
 {
@@ -24,7 +22,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload);
+            var dict = msg.ParsedPayload;
             var isExists = dict.TryGetValue(Trigger, out var idString);
             if(!isExists)
             {

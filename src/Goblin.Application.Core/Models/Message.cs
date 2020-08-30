@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Goblin.Application.Core.Models
 {
@@ -19,5 +21,7 @@ namespace Goblin.Application.Core.Models
         }
 
         public string CommandName => Text.ToLower().Split(' ').FirstOrDefault();
+
+        public Dictionary<string, string> ParsedPayload => JsonConvert.DeserializeObject<Dictionary<string, string>>(Payload);
     }
 }

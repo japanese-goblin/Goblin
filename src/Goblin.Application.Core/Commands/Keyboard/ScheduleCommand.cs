@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Domain.Abstractions;
-using Newtonsoft.Json;
 
 namespace Goblin.Application.Core.Commands.Keyboard
 {
@@ -26,7 +24,7 @@ namespace Goblin.Application.Core.Commands.Keyboard
                 return new FailedResult(DefaultErrors.GroupNotSet);
             }
 
-            var date = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload)[Trigger];
+            var date = msg.ParsedPayload[Trigger];
             return await _api.GetSchedule(user.NarfuGroup, DateTime.Parse(date));
         }
     }

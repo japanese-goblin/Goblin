@@ -7,7 +7,6 @@ using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.DataAccess;
 using Goblin.Domain.Abstractions;
-using Newtonsoft.Json;
 using Serilog;
 
 namespace Goblin.Application.Core
@@ -92,7 +91,7 @@ namespace Goblin.Application.Core
         private async Task<IResult> ExecuteKeyboardCommand(Message msg, BotUser user)
         {
             _logger.Debug("Обработка команды с клавиатуры");
-            var record = JsonConvert.DeserializeObject<Dictionary<string, string>>(msg.Payload).FirstOrDefault();
+            var record = msg.ParsedPayload.First();
             foreach(var command in _keyboardCommands)
             {
                 if(!record.Key.Contains(command.Trigger))
