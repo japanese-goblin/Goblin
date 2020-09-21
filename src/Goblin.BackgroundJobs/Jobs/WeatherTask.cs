@@ -8,6 +8,7 @@ using Goblin.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
@@ -77,19 +78,28 @@ namespace Goblin.BackgroundJobs.Jobs
                              .GroupBy(x => x.WeatherCity);
             foreach(var group in grouped)
             {
-                try
+                var result = await _weatherService.GetDailyWeather(group.Key, DateTime.Today);
+                foreach(var user in group)
                 {
-                    var result = await _weatherService.GetDailyWeather(group.Key, DateTime.Today);
-                    foreach(var user in group)
+                    try
                     {
                         await _botClient.SendTextMessageAsync(user.Id, result.Message);
                     }
-                }
-                catch(Exception ex)
-                {
-                    _logger.Error(ex, "Ошибка при отправке погоды");
+                    catch(ApiRequestException ex)
+                    {
+                        if(ex.ErrorCode == 403) // Forbidden: bot was blocked by the user
+                        {
+                            _db.TgBotUsers.Remove(user);
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        _logger.Error(ex, "Ошибка при отправке погоды");
+                    }
                 }
             }
+
+            await _db.SaveChangesAsync();
         }
     }
 }

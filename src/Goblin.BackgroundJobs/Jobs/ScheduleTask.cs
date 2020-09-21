@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using VkNet.Abstractions;
 using VkNet.Model.RequestParams;
 
@@ -42,7 +43,7 @@ namespace Goblin.BackgroundJobs.Jobs
         {
             Func<string, IEnumerable<long>, Task> vk = async (text, userIds) =>
             {
-                await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams()
+                await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
                 {
                     Message = text,
                     UserIds = userIds
@@ -53,8 +54,28 @@ namespace Goblin.BackgroundJobs.Jobs
             {
                 foreach(var userId in userIds)
                 {
-                    await _botClient.SendTextMessageAsync(userId, text);
+                    try
+                    {
+                        await _botClient.SendTextMessageAsync(userId, text);
+                    }
+                    catch(ApiRequestException ex)
+                    {
+                        if(ex.ErrorCode == 403) // Forbidden: bot was blocked by the user
+                        {
+                            var user = _db.TgBotUsers.FirstOrDefault(x => x.Id == userId);
+                            if(user != null)
+                            {
+                                _db.TgBotUsers.Remove(user);
+                            }
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        _logger.Error(ex, "Ошибка при отправке погоды");
+                    }
                 }
+
+                await _db.SaveChangesAsync();
             };
 
             await SendSchedule<VkBotUser>(vk);
@@ -87,7 +108,7 @@ namespace Goblin.BackgroundJobs.Jobs
                     {
                         _logger.Error(ex, "Ошибка при отправке расписания");
                     }
-                    
+
                     await Task.Delay(TimeSpan.FromSeconds(1.5));
                 }
             }
