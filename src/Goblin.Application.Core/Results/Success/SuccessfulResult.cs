@@ -11,5 +11,10 @@ namespace Goblin.Application.Core.Results.Success
 
         // public MediaAttachment[] Attachments { get; set; } //TODO:
         public CoreKeyboard Keyboard { get; set; }
+
+        public SuccessfulResult(string message = "")
+        {
+            Message = message;
+        }
     }
 }
