@@ -4,6 +4,7 @@ namespace Goblin.Domain
 {
     public class CronTime
     {
+        private const string AnyChar = "*";
         public string Minute { get; private set; }
         public string Hour { get; private set; }
         public string DayOfMonth { get; private set; }
@@ -14,7 +15,8 @@ namespace Goblin.Domain
         {
         }
 
-        public CronTime(string minute = "*", string hour = "*", string dayOfMonth = "*", string month = "*", string dayOfWeek = "*")
+        public CronTime(string minute = AnyChar, string hour = AnyChar, string dayOfMonth = AnyChar, string month = AnyChar,
+                        string dayOfWeek = AnyChar)
         {
             SetMinute(minute);
             SetHour(hour);
@@ -23,35 +25,41 @@ namespace Goblin.Domain
             SetDayOfWeek(dayOfWeek);
         }
 
-        public void SetMinute(int minute)
-        {
-            if(minute < 0 || minute > 59)
-            {
-                throw new ArgumentOutOfRangeException(nameof(minute), minute,
-                                                      "Параметр должен быть в пределах от 0 до 60");
-            }
-
-            SetMinute(minute.ToString());
-        }
-
         public void SetMinute(string minute)
         {
-            Minute = minute;
-        }
-
-        public void SetHour(int hour)
-        {
-            if(hour < 0 || hour > 23)
+            if(!minute.Equals(AnyChar))
             {
-                throw new ArgumentOutOfRangeException(nameof(hour), hour,
-                                                      "Параметр должен быть в пределах от 0 до 23");
+                if(!int.TryParse(minute, out var intMinute))
+                {
+                    throw new ArgumentException("Параметр не является числом", nameof(minute));
+                }
+
+                if(intMinute < 0 || intMinute > 59)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(minute), minute,
+                                                          "Параметр должен быть в пределах от 0 до 60");
+                }
             }
 
-            SetHour(hour.ToString());
+            Minute = minute;
         }
 
         public void SetHour(string hour)
         {
+            if(!hour.Equals(AnyChar))
+            {
+                if(!int.TryParse(hour, out var intHour))
+                {
+                    throw new ArgumentException("Параметр не является числом", nameof(hour));
+                }
+
+                if(intHour < 0 || intHour > 23)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(hour), hour,
+                                                          "Параметр должен быть в пределах от 0 до 23");
+                }
+            }
+
             Hour = hour;
         }
 

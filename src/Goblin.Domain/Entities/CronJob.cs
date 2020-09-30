@@ -29,7 +29,7 @@ namespace Goblin.Domain.Entities
             SetNarfuGroup(narfuGroup);
             SetWeatherCity(weatherCity);
             SetConsumerType(consumerType);
-            Time = time;
+            SetCronTime(time);
             SetCronType(cronType);
             SetText(text);
         }
@@ -82,6 +82,11 @@ namespace Goblin.Domain.Entities
         private void SetText(string text)
         {
             Text = text;
+        }
+
+        public void SetCronTime(CronTime time)
+        {
+            Time = time;
         }
     }
 }
