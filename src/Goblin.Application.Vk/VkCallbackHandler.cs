@@ -54,16 +54,19 @@ namespace Goblin.Application.Vk
 
             if(upd.Type == GroupUpdateType.MessageNew)
             {
-                var msg = _mapper.Map<Message>(upd.MessageNew.Message);
-                if(msg.ChatId != msg.UserId)
+                if(upd.MessageNew.Message.Action?.Type == MessageAction.ChatInviteUser)
                 {
-                    var regEx = Regex.Match(msg.Text, @"\[club\d+\|.*\] (.*)");
-                    if(regEx.Groups.Count > 1)
+                    await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
                     {
-                        msg.Text = regEx.Groups[1].Value.Trim();
-                    }
+                        PeerId = upd.MessageNew.Message.PeerId,
+                        Message = "Здравствуйте!\n" +
+                                  "Подробности по настройке бота для бесед здесь: vk.com/@japanese.goblin-conversations"
+                    });
+                    return;
                 }
 
+                var msg = _mapper.Map<Message>(upd.MessageNew.Message);
+                ExtractUserIdFromConversation(msg);
                 await MessageNew(msg, upd.MessageNew.ClientInfo);
             }
             else if(upd.Type == GroupUpdateType.GroupLeave)
@@ -81,6 +84,20 @@ namespace Goblin.Application.Vk
             }
 
             _logger.Information("Обработка события {0} завершена", upd.Type);
+
+            void ExtractUserIdFromConversation(Message msg)
+            {
+                if(msg.ChatId == msg.UserId)
+                {
+                    return;
+                }
+
+                var regEx = Regex.Match(msg.Text, @"\[club\d+\|.*\] (.*)");
+                if(regEx.Groups.Count > 1)
+                {
+                    msg.Text = regEx.Groups[1].Value.Trim();
+                }
+            }
         }
 
         private async Task MessageNew(Message message, ClientInfo clientInfo)
