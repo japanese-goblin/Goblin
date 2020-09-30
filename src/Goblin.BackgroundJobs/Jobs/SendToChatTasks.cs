@@ -48,15 +48,17 @@ namespace Goblin.BackgroundJobs.Jobs
 
             async Task Send(Func<string, Task> func)
             {
-                if(cronType == CronType.Schedule && group != 0)
+                if(cronType.HasFlag(CronType.Schedule) && group != 0)
                 {
                     await SendSchedule(chatId, group, func);
                 }
-                else if(cronType == CronType.Weather && !string.IsNullOrWhiteSpace(city))
+
+                if(cronType.HasFlag(CronType.Weather) && !string.IsNullOrWhiteSpace(city))
                 {
                     await SendWeather(chatId, city, func);
                 }
-                else if(cronType == CronType.Text && !string.IsNullOrWhiteSpace(text))
+
+                if(cronType.HasFlag(CronType.Text) && !string.IsNullOrWhiteSpace(text))
                 {
                     await SendText(text, func);
                 }
