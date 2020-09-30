@@ -3,11 +3,14 @@ using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Options;
 using Goblin.Application.Vk.Extensions;
+using Goblin.DataAccess;
 using Goblin.Domain;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Telegram.Bot;
 using VkNet.Abstractions;
+using VkNet.Exception;
 using VkNet.Model.RequestParams;
 
 namespace Goblin.BackgroundJobs.Jobs
@@ -15,18 +18,20 @@ namespace Goblin.BackgroundJobs.Jobs
     public class SendToChatTasks
     {
         private readonly TelegramBotClient _botClient;
+        private readonly BotDbContext _context;
         private readonly IScheduleService _scheduleService;
         private readonly IVkApi _vkApi;
         private readonly IWeatherService _weatherService;
         private readonly MailingOptions _mailingOptions;
 
         public SendToChatTasks(IScheduleService scheduleService, IWeatherService weatherService, IVkApi vkApi,
-                               TelegramBotClient botClient, IOptions<MailingOptions> mailingOptions)
+                               TelegramBotClient botClient, IOptions<MailingOptions> mailingOptions, BotDbContext context)
         {
             _scheduleService = scheduleService;
             _weatherService = weatherService;
             _vkApi = vkApi;
             _botClient = botClient;
+            _context = context;
             _mailingOptions = mailingOptions.Value;
         }
 
@@ -59,11 +64,24 @@ namespace Goblin.BackgroundJobs.Jobs
 
             async Task SendToVk(string message)
             {
-                await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
+                try
                 {
-                    PeerId = chatId,
-                    Message = message
-                });
+                    await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
+                    {
+                        PeerId = chatId,
+                        Message = message
+                    });
+                }
+                catch(PermissionToPerformThisActionException)
+                {
+                    var job = _context.CronJobs.FirstOrDefaultAsync(x => x.ConsumerType == ConsumerType.Vkontakte &&
+                                                                         x.ChatId == chatId);
+                    if(job != null)
+                    {
+                        _context.Remove(job);
+                        await _context.SaveChangesAsync();
+                    }
+                }
             }
 
             async Task SendToTelegram(string message)
