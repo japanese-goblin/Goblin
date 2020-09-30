@@ -11,6 +11,8 @@ namespace Goblin.Application.Core.Models
         public string Text { get; set; }
         public string Payload { get; set; }
 
+        public bool IsConversation => UserId != ChatId;
+
         public string[] CommandParameters
         {
             get
