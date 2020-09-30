@@ -23,6 +23,7 @@ namespace Goblin.BackgroundJobs.Jobs
         private readonly IVkApi _vkApi;
         private readonly IWeatherService _weatherService;
         private readonly MailingOptions _mailingOptions;
+        private readonly ILogger _logger;
 
         public SendToChatTasks(IScheduleService scheduleService, IWeatherService weatherService, IVkApi vkApi,
                                TelegramBotClient botClient, IOptions<MailingOptions> mailingOptions, BotDbContext context)
@@ -33,6 +34,7 @@ namespace Goblin.BackgroundJobs.Jobs
             _botClient = botClient;
             _context = context;
             _mailingOptions = mailingOptions.Value;
+            _logger = Log.ForContext<SendToChatTasks>();
         }
 
         public async Task Execute(long chatId, ConsumerType consumerType, CronType cronType, string city, int group, string text)
@@ -103,7 +105,7 @@ namespace Goblin.BackgroundJobs.Jobs
 
         private async Task SendWeather(long id, string city, Func<string, Task> send)
         {
-            Log.Information("Отправка погоды в {0}", id);
+            _logger.Information("Отправка погоды в {0}", id);
             var result = await _weatherService.GetDailyWeather(city, DateTime.Today);
 
             await send(result.Message);
@@ -111,7 +113,7 @@ namespace Goblin.BackgroundJobs.Jobs
 
         private async Task SendSchedule(long id, int group, Func<string, Task> send)
         {
-            Log.Information("Отправка расписания в {0}", id);
+            _logger.Information("Отправка расписания в {0}", id);
             var result = await _scheduleService.GetSchedule(group, DateTime.Now);
             if(!result.IsSuccessful && _mailingOptions.IsVacations)
             {
