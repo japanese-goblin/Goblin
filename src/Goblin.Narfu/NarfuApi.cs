@@ -8,10 +8,10 @@ namespace Goblin.Narfu
         public ITeacherSchedule Teachers { get; }
         public IStudentsSchedule Students { get; }
 
-        public NarfuApi()
+        public NarfuApi(string groupsLink)
         {
             Teachers = new TeachersSchedule();
-            Students = new StudentsSchedule();
+            Students = new StudentsSchedule(groupsLink);
         }
     }
 }

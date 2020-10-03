@@ -7,8 +7,6 @@ using Goblin.Narfu;
 using Goblin.Narfu.Abstractions;
 using Goblin.OpenWeatherMap;
 using Goblin.OpenWeatherMap.Abstractions;
-using Hangfire;
-using Hangfire.MemoryStorage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,7 +24,11 @@ namespace Goblin.Application.Core
         private static void AddAdditions(IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IOpenWeatherMapApi, OpenWeatherMapApi>(x => new OpenWeatherMapApi(configuration["OWM:AccessToken"]));
-            services.AddSingleton<INarfuApi, NarfuApi>();
+            services.AddSingleton<INarfuApi, NarfuApi>(x =>
+            {
+                var link = configuration["NarfuGroupsLink"];
+                return new NarfuApi(link);
+            });
 
             services.AddSingleton<IScheduleService, ScheduleService>();
             services.AddSingleton<IWeatherService, WeatherService>();

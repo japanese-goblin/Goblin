@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Flurl.Http;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.ICalParser;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
-using Newtonsoft.Json;
 using Serilog;
 
 namespace Goblin.Narfu.Schedule
@@ -19,10 +16,11 @@ namespace Goblin.Narfu.Schedule
         private Group[] Groups { get; }
         private readonly ILogger _logger;
 
-        public StudentsSchedule()
+        public StudentsSchedule(string groupsLink)
         {
-            var path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(StudentsSchedule)).Location);
-            Groups = JsonConvert.DeserializeObject<Group[]>(File.ReadAllText($"{path}/Data/Groups.json"));
+            Groups = groupsLink.GetJsonAsync<Group[]>()
+                               .GetAwaiter()
+                               .GetResult();
 
             _logger = Log.ForContext<StudentsSchedule>();
         }
