@@ -111,6 +111,7 @@ namespace Goblin.WebApp
             });
 
             BackgroundJob.Enqueue<StartupTasks>(x => x.ConfigureHangfire());
+            BackgroundJob.Enqueue<StartupTasks>(x => x.RemoveInactiveUsersFromVk());
             BackgroundJob.Enqueue<ResetUsersGroups>(x => x.Execute());
         }
     }

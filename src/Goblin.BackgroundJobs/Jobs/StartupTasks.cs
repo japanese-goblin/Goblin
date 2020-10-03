@@ -1,20 +1,27 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Goblin.Application.Core.Options;
 using Goblin.DataAccess;
 using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using VkNet.Abstractions;
+using VkNet.Enums.SafetyEnums;
+using VkNet.Model.RequestParams;
 
 namespace Goblin.BackgroundJobs.Jobs
 {
     public class StartupTasks
     {
         private readonly BotDbContext _db;
+        private readonly IVkApi _api;
         private readonly MailingOptions _options;
 
-        public StartupTasks(BotDbContext db, IOptions<MailingOptions> options)
+        public StartupTasks(BotDbContext db, IOptions<MailingOptions> options, IVkApi api)
         {
             _db = db;
+            _api = api;
             _options = options.Value;
 
             InitJobsFromDatabase();
@@ -28,6 +35,42 @@ namespace Goblin.BackgroundJobs.Jobs
 
             RecurringJob.AddOrUpdate<SendRemindTasks>("SendRemind", x => x.SendRemindEveryMinute(),
                                                       Cron.Minutely, TimeZoneInfo.Local);
+        }
+
+        public async Task RemoveInactiveUsersFromVk()
+        {
+            const int count = 200;
+            var today = DateTime.Today;
+            var inactiveTime = TimeSpan.FromDays(75);
+
+            var vkUsers = await _db.VkBotUsers.ToArrayAsync();
+            var getConversationResult = await _api.Messages.GetConversationsAsync(new GetConversationsParams
+            {
+                Count = 1
+            });
+
+            var conversationsCount = (getConversationResult.Count / 200) + 1;
+
+            for(var offset = 0; offset < conversationsCount; offset++)
+            {
+                var conversations = await _api.Messages.GetConversationsAsync(new GetConversationsParams
+                {
+                    Count = count,
+                    Offset = (ulong) (count * offset),
+                    Filter = GetConversationFilter.All
+                });
+
+                var inactiveUsers = conversations.Items
+                                                 .Where(x => !x.Conversation.CanWrite.Allowed ||
+                                                             today - x.LastMessage.Date > inactiveTime)
+                                                 .Select(x => x.Conversation.Peer.Id)
+                                                 .ToArray();
+
+                var usersToRemove = vkUsers.Where(x => inactiveUsers.Contains(x.Id));
+                _db.VkBotUsers.RemoveRange(usersToRemove);
+            }
+
+            await _db.SaveChangesAsync();
         }
 
         private void ConfigureMailing()
