@@ -19,6 +19,8 @@ namespace Goblin.WebApp.Pages.Schedule
         public string ScheduleLink { get; set; }
         public string WebcalLink { get; set; }
 
+        public int RealGroupId { get; set; }
+
         public string ErrorMessage { get; set; }
         private readonly INarfuApi _narfuApi;
 
@@ -29,6 +31,7 @@ namespace Goblin.WebApp.Pages.Schedule
 
         public async Task OnGet(int id, DateTime date)
         {
+            RealGroupId = id;
             if(!_narfuApi.Students.IsCorrectGroup(id))
             {
                 Log.Warning("Группа с id {0} не найдена", id);
@@ -42,12 +45,10 @@ namespace Goblin.WebApp.Pages.Schedule
             {
                 var lessons = await _narfuApi.Students.GetSchedule(group.RealId, date);
 
-                var scheduleLink = _narfuApi.Students.GenerateScheduleLink(group.RealId);
-                var webcalLink = _narfuApi.Students.GenerateScheduleLink(group.RealId, true);
                 Lessons = MagicWithLessons(lessons.ToList());
                 GroupTitle = $"{group.RealId} - {group.Name}";
-                ScheduleLink = scheduleLink;
-                WebcalLink = webcalLink;
+                ScheduleLink = _narfuApi.Students.GenerateScheduleLink(group.RealId);
+                WebcalLink = _narfuApi.Students.GenerateScheduleLink(group.RealId, true);
             }
             catch(FlurlHttpException)
             {

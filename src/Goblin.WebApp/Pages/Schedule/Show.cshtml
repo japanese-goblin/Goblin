@@ -2,7 +2,7 @@
 @model Goblin.WebApp.Pages.Schedule.Show
 
 @{
-    ViewData["Title"] = "Расписание";
+    ViewData["Title"] = $"Расписание группы {Model.RealGroupId}";
 }
 
 @if(!string.IsNullOrWhiteSpace(Model.ErrorMessage))
