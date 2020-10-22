@@ -1,6 +1,6 @@
 # Goblin - бот для ВКонтакте и Telegram
 
-Сайт - https://equus-cs.herokuapp.com (или https://japanese-goblin.site)
+Сайт - https://goblin-safu.herokuapp.com (или https://japanese-goblin.site)
 
 Группа ВК - https://vk.com/club146048760
 
