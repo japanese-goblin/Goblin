@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Goblin.DataAccess;
 using Goblin.Domain;
 using Goblin.Domain.Entities;
@@ -25,9 +26,10 @@ namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs
 
         public async Task<IActionResult> OnPost()
         {
+            var cronType = Input.CronType.Aggregate((x, y) => x | y); 
             var time = new CronTime(Input.CronMinute, Input.CronHour, Input.CronDayOfMonth,
                                     Input.CronMonth, Input.CronDayOfWeek);
-            var job = new CronJob(Input.Name, Input.ChatId, Input.NarfuGroup, Input.WeatherCity, time, Input.ConsumerType, Input.CronType,
+            var job = new CronJob(Input.Name, Input.ChatId, Input.NarfuGroup, Input.WeatherCity, time, Input.ConsumerType, cronType,
                                   Input.Text);
             await _context.AddAsync(job);
             await _context.SaveChangesAsync();
@@ -52,6 +54,6 @@ namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs
         public string CronDayOfWeek { get; set; }
 
         public ConsumerType ConsumerType { get; set; }
-        public CronType CronType { get; set; }
+        public CronType[] CronType { get; set; }
     }
 }
