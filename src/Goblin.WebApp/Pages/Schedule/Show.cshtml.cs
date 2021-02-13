@@ -63,6 +63,11 @@ namespace Goblin.WebApp.Pages.Schedule
         // какой ужас.... но работает (TODO)
         private static Dictionary<string, Lesson[]> MagicWithLessons(List<Lesson> lessons)
         {
+            if(!lessons.Any())
+            {
+                return new Dictionary<string, Lesson[]>();
+            }
+
             var first = lessons.First().StartTime.Date;
             var last = lessons.Last().StartTime.Date;
             var dif = (last - first).Days;
