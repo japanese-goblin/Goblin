@@ -27,55 +27,40 @@ namespace Goblin.Narfu.Schedule
 
         public async Task<IEnumerable<Lesson>> GetSchedule(int realGroupId, DateTime date = default)
         {
-            if(date == default)
+            try
             {
-                date = DateTime.Today;
-            }
-
-            _logger.Debug("Получение расписания для группы {0}", realGroupId);
-            var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
-            var response = await RequestBuilder.Create()
-                                               .SetQueryParam("icalendar")
-                                               .SetQueryParam("oid", siteGroupId)
-                                               .SetQueryParam("cod", realGroupId)
-                                               .SetQueryParam("from", date.ToString("dd.MM.yyyy"))
-                                               .GetStringAsync();
-            _logger.Debug("Расписание получено");
-
-            var calendar = new Calendar(response);
-
-            var events = calendar.Events
-                                 .Distinct()
-                                 .OrderBy(x => x.DtStart);
-
-            return events.Select(ev =>
-            {
-                var description = ev.Description.Split('\n');
-                var address = ev.Location.Split('/');
-
-                if(!int.TryParse(description[0][0].ToString(), out var number))
+                if (date == default)
                 {
-                    number = 1; //в расписании бывают пары, у которых нет номера: п (11:46-11:59)
+                    date = DateTime.Today;
                 }
 
-                return new Lesson
-                {
-                    Id = ev.Uid,
-                    Address = address[0],
-                    Auditory = address[1],
-                    Number = number,
-                    Groups = description[1].Substring(3),
-                    Name = ev.Summary,
-                    Type = description[3],
-                    Teacher = description[4],
-                    StartTime = ev.DtStart,
-                    EndTime = ev.DtEnd,
-                    StartEndTime = description[0].Replace(")", "")
-                                                 .Replace("(", "")
-                                                 .Replace("п", ")")
-                                                 .Substring(3)
-                };
-            });
+                _logger.Debug("Получение расписания для группы {0}", realGroupId);
+                var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
+                var response = await RequestBuilder.Create()
+                                                   .SetQueryParam("icalendar")
+                                                   .SetQueryParam("oid", siteGroupId)
+                                                   .SetQueryParam("cod", realGroupId)
+                                                   .SetQueryParam("from", date.ToString("dd.MM.yyyy"))
+                                                   .GetStringAsync();
+
+
+                _logger.Debug("Расписание получено");
+
+                return GetCalendarLessons(response).ToList();
+            }
+            catch(FlurlHttpException)
+            {
+                var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
+                var response = await RequestBuilder.Create()
+                                                   .SetQueryParam("timetable")
+                                                   .SetQueryParam("group", siteGroupId)
+                                                   .GetStreamAsync();
+
+
+                _logger.Debug("Расписание получено");
+
+                 return  HtmlParser.GetAllLessonsFromHtml(response).Where(x => x.StartTime.Date >= date.Date).ToList();
+            }
         }
 
         public async Task<ExamsViewModel> GetExams(int realGroupId)
@@ -116,6 +101,44 @@ namespace Goblin.Narfu.Schedule
             var todayDate = DateTime.Today.ToString("dd.MM.yyyy");
 
             return $"{protocol}://{url}&oid={siteGroupId}&cod={realGroupId}&from={todayDate}";
+        }
+
+        public IEnumerable<Lesson> GetCalendarLessons(string response)
+        {
+            var calendar = new Calendar(response);
+
+            var events = calendar.Events
+                                 .Distinct()
+                                 .OrderBy(x => x.DtStart);
+
+            return events.Select(ev =>
+            {
+                var description = ev.Description.Split('\n');
+                var address = ev.Location.Split('/');
+
+                if (!int.TryParse(description[0][0].ToString(), out var number))
+                {
+                    number = 1; //в расписании бывают пары, у которых нет номера: п (11:46-11:59)
+                }
+
+                return new Lesson
+                {
+                    Id = ev.Uid,
+                    Address = address[0],
+                    Auditory = address[1],
+                    Number = number,
+                    Groups = description[1].Substring(3),
+                    Name = ev.Summary,
+                    Type = description[3],
+                    Teacher = description[4],
+                    StartTime = ev.DtStart,
+                    EndTime = ev.DtEnd,
+                    StartEndTime = description[0].Replace(")", "")
+                                                 .Replace("(", "")
+                                                 .Replace("п", ")")
+                                                 .Substring(3)
+                };
+            });
         }
     }
 }
