@@ -18,6 +18,11 @@ namespace Goblin.Narfu
 
             var lessonItems = doc.DocumentNode.SelectNodes("//div[contains(@class, 'timetable_sheet hidden-xs hidden-sm')]");
 
+            if(lessonItems is null)
+            {
+                yield break;
+            }
+
             foreach(var lessonNode in lessonItems.Where(x => x.ChildNodes.Count > 3))
             {
                 var date = lessonNode.ParentNode.SelectSingleNode(".//div[contains(@class,'dayofweek')]")

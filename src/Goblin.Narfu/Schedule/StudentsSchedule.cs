@@ -59,7 +59,9 @@ namespace Goblin.Narfu.Schedule
 
                 _logger.Debug("Расписание получено");
 
-                 return  HtmlParser.GetAllLessonsFromHtml(response).Where(x => x.StartTime.Date >= date.Date).ToList();
+                var allLessonsFromHtml = HtmlParser.GetAllLessonsFromHtml(response).ToList();
+
+                return  allLessonsFromHtml.Where(x => x.StartTime.Date >= date.Date);
             }
         }
 
