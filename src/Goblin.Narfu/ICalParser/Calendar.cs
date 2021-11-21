@@ -17,22 +17,28 @@ namespace Goblin.Narfu.ICalParser
 
         private static IDictionary<string, string> ParseVEventFields(string source)
         {
-            const string contentLinePattern = @"(?<field>.+?):(?<value>.+?)(?=\s[A-Z-]{3,}:|$)";
-            const RegexOptions contentLineTRegexOptions = RegexOptions.Singleline;
-
-            source = Regex.Unescape(source)
-                          .Replace(Environment.NewLine, "\n")
-                          .Replace("\r\n", "\n")
-                          .Replace("\n\tn", "\n")
-                          .Replace("\n\t", string.Empty);
-
-            var matches = Regex.Matches(source, contentLinePattern, contentLineTRegexOptions);
+            var regex = new Regex(@"^|\n[A-Z-]+:", RegexOptions.Singleline | RegexOptions.Compiled);
 
             var eventDictionary = new Dictionary<string, string>();
+            var lastAddedKey = "";
 
-            foreach(Match match in matches)
+            source = source.Replace("\r\n\t", string.Empty);
+
+            foreach(var line in source.Split("\r\n"))
             {
-                eventDictionary.Add(match.Groups["field"].ToString().Trim(), match.Groups["value"].ToString().Trim());
+                var match = regex.Match(line);
+                if(match.Success)
+                {
+                    var split = line.Split(":", 2, StringSplitOptions.RemoveEmptyEntries);
+                    lastAddedKey = split[0].Trim();
+                    eventDictionary.Add(lastAddedKey, split[1].Trim());
+                }
+                else
+                {
+                    var lastValue = eventDictionary[lastAddedKey];
+                    eventDictionary.Remove(lastAddedKey);
+                    eventDictionary.Add(lastAddedKey, lastValue + line.Trim());
+                }
             }
 
             return eventDictionary;
@@ -47,7 +53,7 @@ namespace Goblin.Narfu.ICalParser
 
             foreach(Match match in contentMatch)
             {
-                var field = ParseVEventFields(match.Groups["vevent"].ToString());
+                var field = ParseVEventFields(match.Groups["vevent"].Value);
 
                 var startDate = DateTime.ParseExact(field["DTSTART"], "yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture);
                 var endDate = DateTime.ParseExact(field["DTEND"], "yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture);
