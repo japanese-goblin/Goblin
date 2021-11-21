@@ -22,7 +22,8 @@ namespace Goblin.Narfu.ICalParser
             var eventDictionary = new Dictionary<string, string>();
             var lastAddedKey = "";
 
-            source = source.Replace("\r\n\t", string.Empty);
+            source = source.Replace("\r\n\t", string.Empty)
+                           .Replace("\\,", ",");
 
             foreach(var line in source.Split("\r\n"))
             {
