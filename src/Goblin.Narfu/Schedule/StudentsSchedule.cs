@@ -115,7 +115,7 @@ namespace Goblin.Narfu.Schedule
 
             return events.Select(ev =>
             {
-                var description = ev.Description.Split("\\n");
+                var description = ev.Description.Split("\n");
                 var address = ev.Location.Split('/');
 
                 if (!int.TryParse(description[0][0].ToString(), out var number))

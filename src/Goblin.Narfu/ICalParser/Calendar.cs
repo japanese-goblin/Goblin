@@ -17,15 +17,14 @@ namespace Goblin.Narfu.ICalParser
 
         private static IDictionary<string, string> ParseVEventFields(string source)
         {
-            var regex = new Regex(@"^|\n[A-Z-]+:", RegexOptions.Singleline | RegexOptions.Compiled);
+            var regex = new Regex(@"[^|\n][A-Z-]+:", RegexOptions.Singleline | RegexOptions.Compiled);
 
             var eventDictionary = new Dictionary<string, string>();
             var lastAddedKey = "";
 
-            source = source.Replace("\r\n\t", string.Empty)
+            source = Regex.Unescape(source.Replace("\r\n\t", string.Empty)
                            .Replace("\r\n", "\n")
-                           .Replace(Environment.NewLine, "\n")
-                           .Replace("\\,", ",");
+                           .Replace(Environment.NewLine, "\n"));
 
             foreach(var line in source.Split("\n", StringSplitOptions.RemoveEmptyEntries))
             {
@@ -40,7 +39,7 @@ namespace Goblin.Narfu.ICalParser
                 {
                     var lastValue = eventDictionary[lastAddedKey];
                     eventDictionary.Remove(lastAddedKey);
-                    eventDictionary.Add(lastAddedKey, lastValue + line.Trim());
+                    eventDictionary.Add(lastAddedKey, lastValue + "\n" + line.Trim());
                 }
             }
 
