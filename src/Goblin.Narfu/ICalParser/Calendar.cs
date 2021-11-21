@@ -23,9 +23,11 @@ namespace Goblin.Narfu.ICalParser
             var lastAddedKey = "";
 
             source = source.Replace("\r\n\t", string.Empty)
+                           .Replace("\r\n", "\n")
+                           .Replace(Environment.NewLine, "\n")
                            .Replace("\\,", ",");
 
-            foreach(var line in source.Split("\r\n"))
+            foreach(var line in source.Split("\n", StringSplitOptions.RemoveEmptyEntries))
             {
                 var match = regex.Match(line);
                 if(match.Success)
