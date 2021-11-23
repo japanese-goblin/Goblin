@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Core.Extensions;
 using Goblin.Application.Vk.Extensions;
 using Goblin.DataAccess;
 using Microsoft.EntityFrameworkCore;

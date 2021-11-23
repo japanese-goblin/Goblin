@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Core;
-using Goblin.Application.Core.Extensions;
 using Goblin.Application.Vk;
 using Goblin.Application.Vk.Converters;
 using Goblin.Application.Vk.Extensions;
