@@ -14,11 +14,6 @@ namespace Goblin.Application.Telegram.Converters
 
             IReplyMarkup GenerateReplyKeyboard()
             {
-                var keyboard = new ReplyKeyboardMarkup
-                {
-                    OneTimeKeyboard = coreKeyboard.IsOneTime,
-                    ResizeKeyboard = true
-                };
                 var tgButtonsList = new List<List<KeyboardButton>>();
                 var currentLine = new List<KeyboardButton>();
 
@@ -32,8 +27,12 @@ namespace Goblin.Application.Telegram.Converters
                     tgButtonsList.Add(currentLine);
                     currentLine = new List<KeyboardButton>();
                 }
-
-                keyboard.Keyboard = tgButtonsList;
+                
+                var keyboard = new ReplyKeyboardMarkup(tgButtonsList)
+                {
+                    OneTimeKeyboard = coreKeyboard.IsOneTime,
+                    ResizeKeyboard = true
+                };
 
                 return keyboard;
             }

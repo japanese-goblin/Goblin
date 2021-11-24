@@ -53,7 +53,7 @@ namespace Goblin.Application.Core.Services
             }
             catch(FlurlHttpException ex)
             {
-                if(ex.Call.HttpStatus == HttpStatusCode.NotFound)
+                if(ex.StatusCode == (int) HttpStatusCode.NotFound)
                 {
                     return new FailedResult($"Город \"{city}\" не найден");
                 }
@@ -103,7 +103,7 @@ namespace Goblin.Application.Core.Services
             }
             catch(FlurlHttpException ex)
             {
-                if(ex.Call.HttpStatus == HttpStatusCode.NotFound)
+                if(ex.StatusCode == (int) HttpStatusCode.NotFound)
                 {
                     var result = SetNotFoundCacheValue(city);
                     return new FailedResult(result);

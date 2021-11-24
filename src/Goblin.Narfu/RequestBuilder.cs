@@ -20,17 +20,17 @@ namespace Goblin.Narfu
                        .WithHeader("User-Agent", Defaults.UserAgent);
 
                 _client.Settings.BeforeCall = call => _logger.Debug("Запрос [{0}] {1}",
-                                                                    call.Request.Method, call.Request.RequestUri);
+                                                                    call.Request.Verb, call.Request.Url);
                 _client.Settings.AfterCall = call => _logger.Debug("Запрос выполнен за {0}", call.Duration);
 #if DEBUG
                 _client.Settings.OnError = call => _logger.Error(call.Exception, "Ошибка при выполнении запроса");
 #else
                 _client.Settings.OnError = call =>
                 {
-                    if(call.HttpStatus != null && call.HttpStatus == HttpStatusCode.NotFound)
+                    if(call.HttpResponseMessage is null || call.HttpResponseMessage?.StatusCode == HttpStatusCode.NotFound)
                     {
-                        _logger.Warning("{0} [{1}] - {2}", call.Request.RequestUri, call.Request.Method,
-                                      call.HttpStatus);
+                        _logger.Error("[{0}] {1} - {2}", call.Request.Verb, call.Request.Url,
+                                      call.HttpResponseMessage?.StatusCode ?? HttpStatusCode.GatewayTimeout);
                         return;
                     }
                     if(call.Exception is FlurlHttpException || call.Exception is TaskCanceledException)

@@ -81,7 +81,7 @@ namespace Goblin.OpenWeatherMap
                                                .SetQueryParam("q", city)
                                                .HeadAsync();
 
-            return response.IsSuccessStatusCode;
+            return response.ResponseMessage.IsSuccessStatusCode;
         }
     }
 }

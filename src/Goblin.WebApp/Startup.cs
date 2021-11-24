@@ -68,6 +68,12 @@ namespace Goblin.WebApp
             }
 
             services.AddRazorPages();
+            services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddHangfireServer(x =>
+            {
+                x.WorkerCount = 4;
+            });
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -75,7 +81,6 @@ namespace Goblin.WebApp
             if(env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -91,8 +96,6 @@ namespace Goblin.WebApp
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 4 });
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
             app.UseHangfireDashboard("/Admin/HangFire", new DashboardOptions
             {
                 Authorization = new[] { new AuthFilter() },

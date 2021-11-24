@@ -24,7 +24,7 @@ namespace Goblin.OpenWeatherMap
                        });
 
                 _client.Settings.BeforeCall = call => _logger.Debug("Запрос [{0}] {1}",
-                                                                    call.Request.Method, call.Request.RequestUri);
+                                                                    call.Request.Verb, call.Request.Url);
                 _client.Settings.AfterCall = call => _logger.Debug("Запрос выполнен за {0}", call.Duration);
 #if DEBUG
                 _client.Settings.OnError = call => _logger.Error(call.Exception, "Ошибка при выполнении запроса");
@@ -33,8 +33,8 @@ namespace Goblin.OpenWeatherMap
                 {
                     if(call.Exception is FlurlHttpException || call.Exception is TaskCanceledException)
                     {
-                        _logger.Error("{0} [{1}] - {2}", call.Request.RequestUri, call.Request.Method,
-                                      call.HttpStatus ?? HttpStatusCode.GatewayTimeout);
+                        _logger.Error("[{0}] {1} - {2}", call.Request.Verb, call.Request.Url,
+                                      call.HttpResponseMessage?.StatusCode ?? HttpStatusCode.GatewayTimeout);
                     }
                     else
                     {
