@@ -1,8 +1,8 @@
+using System;
 using System.Globalization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Sentry;
 using Serilog;
 using Serilog.Events;
 
@@ -12,6 +12,7 @@ namespace Goblin.WebApp
     {
         public static void Main(string[] args)
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // TODO:
             SetDefaultLocale();
             CreateHostBuilder(args).Build().Run();
         }
@@ -31,20 +32,16 @@ namespace Goblin.WebApp
                        .ConfigureLogging(config => { config.ClearProviders(); })
                        .UseSerilog((hostingContext, loggerConfiguration) =>
                        {
-                           if(hostingContext.HostingEnvironment.IsDevelopment())
+                           loggerConfiguration
+                                   .ReadFrom.Configuration(hostingContext.Configuration);
+                           if(!hostingContext.HostingEnvironment.IsDevelopment())
                            {
                                loggerConfiguration
-                                       .ReadFrom.Configuration(hostingContext.Configuration);
-                           }
-                           else
-                           {
-                               loggerConfiguration
-                                       .ReadFrom.Configuration(hostingContext.Configuration)
                                        .WriteTo.Sentry(o =>
                                        {
                                            o.MinimumBreadcrumbLevel = LogEventLevel.Information;
                                            o.MinimumEventLevel = LogEventLevel.Warning;
-                                           o.Dsn = new Dsn(hostingContext.Configuration["Sentry:Dsn"]);
+                                           o.Dsn = hostingContext.Configuration["Sentry:Dsn"];
                                            o.Environment = hostingContext.HostingEnvironment.EnvironmentName;
                                        });
                            }
