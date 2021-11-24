@@ -47,14 +47,11 @@ namespace Goblin.Application.Core.Tests.Commands.Text
             const string endPoint = "https://localhost";
             var mockApi = new Mock<INarfuApi>();
             mockApi.Setup(x => x.Teachers.FindByName(It.IsAny<string>()))
-                   .ThrowsAsync(new FlurlHttpException(new HttpCall
+                   .ThrowsAsync(new FlurlHttpException(new FlurlCall()
                    {
-                       Request = new HttpRequestMessage(HttpMethod.Get, endPoint),
-                       FlurlRequest = new FlurlRequest
-                       {
-                           Url = new Url(endPoint)
-                       }
-                   }, new Exception()));
+                       Request = new FlurlRequest(new Url(endPoint)),
+                       HttpRequestMessage = new HttpRequestMessage(HttpMethod.Get, endPoint)
+                   }));
 
             return mockApi.Object;
         }
