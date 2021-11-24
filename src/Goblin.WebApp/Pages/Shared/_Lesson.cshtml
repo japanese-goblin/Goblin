@@ -45,7 +45,15 @@
             <p class="card-text font-italic">@Model.Groups</p>
         </div>
         <div class="card-footer">
-            <b>ауд. @Model.Auditory</b> @Model.Address
+            <p>
+                <b>ауд. @Model.Auditory</b> @Model.Address
+            </p>
+            @if(!string.IsNullOrEmpty(Model.Link))
+            {
+                <b>
+                    <a href="@Model.Link">Ссылка на курс</a>
+                </b>
+            }
         </div>
     }
 </div>

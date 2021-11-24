@@ -122,8 +122,8 @@ namespace Goblin.Narfu.Schedule
                 {
                     number = 1; //в расписании бывают пары, у которых нет номера: п (11:46-11:59)
                 }
-
-                return new Lesson
+                
+                var lesson = new Lesson
                 {
                     Id = ev.Uid,
                     Address = address[0],
@@ -140,6 +140,19 @@ namespace Goblin.Narfu.Schedule
                                                  .Replace("п", ")")
                                                  .Substring(3)
                 };
+
+                if(description.Length <= 6)
+                {
+                    return lesson;
+                }
+
+                var possiblyLink = description[6];
+                if(Uri.TryCreate(possiblyLink, UriKind.Absolute, out _))
+                {
+                    lesson.Link = possiblyLink;
+                }
+
+                return lesson;
             });
         }
     }

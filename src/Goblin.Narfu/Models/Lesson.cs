@@ -17,6 +17,8 @@ namespace Goblin.Narfu.Models
         public string Teacher { get; set; }
         public string Groups { get; set; }
 
+        public string Link { get; set; }
+
         public bool IsExam()
         {
             return Type.Contains("экзамен", StringComparison.OrdinalIgnoreCase) ||
