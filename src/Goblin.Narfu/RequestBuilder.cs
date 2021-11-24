@@ -27,10 +27,10 @@ namespace Goblin.Narfu
 #else
                 _client.Settings.OnError = call =>
                 {
-                    if(call.HttpStatus != null && call.HttpStatus == HttpStatusCode.NotFound)
+                    if(call.HttpResponseMessage is null || call.HttpResponseMessage?.StatusCode == HttpStatusCode.NotFound)
                     {
-                        _logger.Warning("{0} [{1}] - {2}", call.Request.RequestUri, call.Request.Method,
-                                      call.HttpStatus);
+                        _logger.Error("[{0}] {1} - {2}", call.Request.Verb, call.Request.Url,
+                                      call.HttpResponseMessage?.StatusCode ?? HttpStatusCode.GatewayTimeout);
                         return;
                     }
                     if(call.Exception is FlurlHttpException || call.Exception is TaskCanceledException)

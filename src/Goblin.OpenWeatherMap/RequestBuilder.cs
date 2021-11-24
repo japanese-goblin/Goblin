@@ -33,8 +33,8 @@ namespace Goblin.OpenWeatherMap
                 {
                     if(call.Exception is FlurlHttpException || call.Exception is TaskCanceledException)
                     {
-                        _logger.Error("{0} [{1}] - {2}", call.Request.RequestUri, call.Request.Method,
-                                      call.HttpStatus ?? HttpStatusCode.GatewayTimeout);
+                        _logger.Error("[{0}] {1} - {2}", call.Request.Verb, call.Request.Url,
+                                      call.HttpResponseMessage?.StatusCode ?? HttpStatusCode.GatewayTimeout);
                     }
                     else
                     {
