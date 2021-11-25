@@ -36,9 +36,14 @@ namespace Goblin.Application.Core.Commands.Merged
             try
             {
                 var lessons = await _api.Students.GetExams(user.NarfuGroup);
+                var str = lessons.ToString();
+                if(str.Length > 4096)
+                {
+                    str = $"{str[..4000]}...\n\nПолный список экзаменов можете посмотреть на сайте";
+                }
                 return new SuccessfulResult
                 {
-                    Message = lessons.ToString()
+                    Message = str
                 };
             }
             catch(FlurlHttpException)
