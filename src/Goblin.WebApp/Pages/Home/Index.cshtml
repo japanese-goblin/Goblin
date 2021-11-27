@@ -1,4 +1,7 @@
 ﻿@page "/"
+@inject IOptions<LinksOptions> Links
+@using Goblin.Application.Core.Options
+@using Microsoft.Extensions.Options
 @model Goblin.WebApp.Pages.Home.Index
 
 @{
@@ -12,7 +15,7 @@
     <hr class="my-4">
     <p>А также можете воспользоваться функционалом бота в следующих местах:</p>
     <div class="btn-group btn-group-lg">
-        <a class="btn btn-info" href="https://vk.com/japanese.goblin" target="_blank">ВКонтакте</a>
-        <a class="btn btn-info" href="https://t.me/japanese_goblin_bot" target="_blank">Telegram</a>
+        <a class="btn btn-info" href="@Links.Value.Vk" target="_blank">ВКонтакте</a>
+        <a class="btn btn-info" href="@Links.Value.Telegram" target="_blank">Telegram</a>
     </div>
 </div>

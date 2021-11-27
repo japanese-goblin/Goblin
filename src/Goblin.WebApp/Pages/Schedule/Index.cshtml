@@ -1,5 +1,8 @@
 ﻿@page "/Schedule/"
 @model Goblin.WebApp.Pages.Schedule.Index
+@inject IOptions<LinksOptions> Links
+@using Goblin.Application.Core.Options
+@using Microsoft.Extensions.Options
 
 @{
     ViewData["Title"] = "Расписание";
@@ -21,7 +24,7 @@
     <hr/>
     <p>А также можете воспользоваться функционалом бота для <b>получения расписания по утрам в личные сообщения</b> в следующих местах:</p>
     <div class="btn-group btn-group-lg btn-block">
-        <a class="btn btn-info" href="https://vk.com/japanese.goblin" target="_blank">ВКонтакте</a>
-        <a class="btn btn-info" href="https://t.me/japanese_goblin_bot" target="_blank">Telegram</a>
+        <a class="btn btn-info" href="@Links.Value.Vk" target="_blank">ВКонтакте</a>
+        <a class="btn btn-info" href="@Links.Value.Telegram" target="_blank">Telegram</a>
     </div>
 </div>

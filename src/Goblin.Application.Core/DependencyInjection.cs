@@ -26,7 +26,7 @@ namespace Goblin.Application.Core
             services.AddSingleton<IOpenWeatherMapApi, OpenWeatherMapApi>(x => new OpenWeatherMapApi(configuration["OWM:AccessToken"]));
             services.AddSingleton<INarfuApi, NarfuApi>(x =>
             {
-                var link = configuration["NarfuGroupsLink"];
+                var link = configuration["Links:NarfuGroups"];
                 return new NarfuApi(link);
             });
 
@@ -46,6 +46,7 @@ namespace Goblin.Application.Core
         {
             services.Configure<OpenWeatherMapOptions>(config.GetSection("OWM"));
             services.Configure<MailingOptions>(config.GetSection("Mailing"));
+            services.Configure<LinksOptions>(config.GetSection("Links"));
         }
 
         public static void RegisterAllTypes<T>(this IServiceCollection services, Assembly[] assemblies,
