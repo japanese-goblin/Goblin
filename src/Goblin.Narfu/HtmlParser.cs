@@ -61,7 +61,7 @@ namespace Goblin.Narfu
                 var lesson = new Lesson
                 {
                     Address = adr[1],
-                    Auditory = adr[0],
+                    Auditory = adr[0].Replace("ауд.", string.Empty).Trim(),
                     Number = number,
                     Groups = groups,
                     Name = name,
