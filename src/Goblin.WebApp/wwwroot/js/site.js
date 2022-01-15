@@ -1,17 +1,15 @@
-﻿$("#add-attach-all").click(() => appendAttach(true));
-$("#add-attach-one").click(() => appendAttach(false));
-
-function appendAttach(isAll) {
+﻿function appendAttach(isAll) {
     let selector = isAll ? "attach-all" : "attach-one";
-    let appendTo = isAll ? $(".attachments-all") : $(".attachments-one");
+    let appendToSelector = isAll ? "attachments-all" : "attachments-one";
+    let appendTo = document.getElementById(appendToSelector);
 
-    let count = $(`.${selector}`).length + 1;
+    let count = document.getElementsByClassName(selector).length + 1;
     if (count > 10) return;
-
-    appendTo.append(`<div class="input-group mb-3">
+    
+    appendTo.innerHTML += `<div class="input-group mb-3">
 <div class="input-group-prepend">
     <span class="input-group-text">${count}</span>
 </div>
 <input type="text" class="form-control ${selector}" name="attachments[]">
-</div>`);
+</div>`;
 } 

@@ -2,8 +2,8 @@
 @model IEnumerable<IGrouping<int, BotUser>>
 @inject INarfuApi NarfuApi;
 
-<table class="table table-striped table-bordered">
-    <thead class="thead-dark">
+<table class="table table-striped table-bordered table-hover">
+    <thead class="table-dark">
     <tr>
         <th>ID</th>
         <th>Admin?</th>
@@ -18,7 +18,7 @@
         var gr = NarfuApi.Students.GetGroupByRealId(group.Key);
         var narfuGroup = gr?.SiteId ?? 0;
         var groupName = gr is null ? "" : gr.Name;
-        <tr class="table-info">
+        <tr class="table-primary">
             <td colspan="6">
                 @if(narfuGroup != 0)
                 {

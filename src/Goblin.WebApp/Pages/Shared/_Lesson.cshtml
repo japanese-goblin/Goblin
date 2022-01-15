@@ -33,9 +33,9 @@
     @if(!string.IsNullOrEmpty(Model.Type))
     {
         <div class="card-header">
-            <span class="badge badge-light">@Model.Number</span>
+            <span class="badge rounded-pill text-dark border border-dark border-2">@Model.Number</span>
             &nbsp;
-            <span class="badge badge-light">@Model.StartEndTime</span>
+            <span class="badge text-dark">@Model.StartEndTime</span>
         </div>
         <div class="card-body">
             <small class="card-text">@Model.Type</small>
@@ -46,7 +46,10 @@
         </div>
         <div class="card-footer">
             <p>
-                <b>ауд. @Model.Auditory</b> @Model.Address
+                <b>ауд. @Model.Auditory</b>
+            </p>
+            <p>
+                @Model.Address
             </p>
             @if(!string.IsNullOrEmpty(Model.Link))
             {

@@ -18,28 +18,28 @@
 <div class="row">
     <div class="col-md-3">
         <form method="post">
-            <div class="form-group">
-                <label>ID</label>
+            <div class="mb-3 form-floating">
                 <input type="number" class="form-control" name="chatId" placeholder="ID" required="">
+                <label>ID</label>
             </div>
-            <div class="form-group">
-                <label>Куда отправить</label>
+            <div class="mb-3 form-floating">
                 <select class="form-control" name="consumerType">
                     <option value="@((int) ConsumerType.Vkontakte)">@ConsumerType.Vkontakte</option>
                     <option value="@((int) ConsumerType.Telegram)">@ConsumerType.Telegram</option>
                 </select>
+                <label>Куда отправить</label>
             </div>
-            <div class="form-group">
-                <label>Текст</label>
+            <div class="mb-3 form-floating">
                 <input type="text" class="form-control" name="text" placeholder="text" required="">
+                <label>Текст</label>
             </div>
-            <div class="form-group">
-                <label>Дата</label>
+            <div class="mb-3 form-floating">
                 <input type="date" class="form-control" name="dateStr" required="">
+                <label>Дата</label>
             </div>
-            <div class="form-group">
-                <label>Время</label>
+            <div class="mb-3 form-floating">
                 <input type="time" class="form-control" name="timeStr" required="">
+                <label>Время</label>
             </div>
             <button type="submit" class="btn btn-warning">Отправить</button>
         </form>

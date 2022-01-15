@@ -1,11 +1,5 @@
 ﻿@page
 @model Goblin.WebApp.Areas.Admin.Pages.CronJobs.Delete
-@{
-    ViewData["Title"] = $"Удаление Cron [{Model.CronJob.Id}]";
-}
-
-<h2>@ViewData["Title"]</h2>
-<hr/>
 
 @if(Model.CronJob is null)
 {
@@ -14,6 +8,14 @@
     </div>
     return;
 }
+
+@{
+    ViewData["Title"] = $"Удаление Cron";
+}
+
+<h2>@ViewData["Title"]</h2>
+<hr/>
+
 <div class="col-md-3">
     <table class="table table-striped table-bordered">
         <tbody>

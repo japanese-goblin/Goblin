@@ -8,10 +8,10 @@
         if(User.IsInRole("Admin"))
         {
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                     Админка
                 </a>
-                <div class="dropdown-menu">
+                <div class="dropdown-menu dropdown-menu-dark">
                     <a class="dropdown-item disabled" href="#">Пользователи:</a>
                     <a class="dropdown-item" asp-area="Admin" asp-page="/Users/Vk">Вк</a>
                     <a class="dropdown-item" asp-area="Admin" asp-page="/Users/Telegram">Телеграм</a>

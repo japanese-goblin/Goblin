@@ -1,21 +1,25 @@
 ﻿@page "/"
-@inject IOptions<LinksOptions> Links
-@using Goblin.Application.Core.Options
-@using Microsoft.Extensions.Options
 @model Goblin.WebApp.Pages.Home.Index
 
 @{
     ViewData["Title"] = "Главная";
 }
 
-<div class="jumbotron text-center">
-    <h1 class="display-4">Что это такое?</h1>
-    <p class="lead">Вы попали на сайт бота для ВКонтакте и Telegram!</p>
-    <a class="btn btn-primary btn-lg" asp-area="" asp-page="/Schedule/Index">Открыть расписание САФУ</a>
-    <hr class="my-4">
-    <p>А также можете воспользоваться функционалом бота в следующих местах:</p>
-    <div class="btn-group btn-group-lg">
-        <a class="btn btn-info" href="@Links.Value.Vk" target="_blank">ВКонтакте</a>
-        <a class="btn btn-info" href="@Links.Value.Telegram" target="_blank">Telegram</a>
+<div class="text-center">
+    <img class="d-block mx-auto mb-4" src="/goblin.svg" alt="" width="124" height="124">
+    <h1 class="display-4">Бот для студентов САФУ</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">
+            Тут будет крутой текст для пользователей
+        </p>
+    </div>
+    <div class="col-lg-6 mx-auto">
+        <a class="btn btn-primary btn-lg" asp-area="" asp-page="/Schedule/Index">Открыть расписание САФУ</a>
+    </div>
+    <div class="col-lg-6 mx-auto m-4">
+        <h2 class="display-6">
+            Ссылки на ботов:
+        </h2>
+        <partial name="_ExternalLinks"/>
     </div>
 </div>

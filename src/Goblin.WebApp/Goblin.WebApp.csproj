@@ -26,5 +26,4 @@
       <ProjectReference Include="..\Goblin.Domain\Goblin.Domain.csproj" />
       <ProjectReference Include="..\Goblin.Narfu\Goblin.Narfu.csproj" />
     </ItemGroup>
-
 </Project>

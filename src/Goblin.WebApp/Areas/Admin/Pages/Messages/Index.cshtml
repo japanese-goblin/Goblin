@@ -12,18 +12,18 @@
     <div class="col-md-3">
         <form method="post" asp-page-handler="SendToAll">
             <h3>Рассылка всем</h3>
-            <div class="form-group">
-                <label>Куда отправлять</label>
+            <div class="mb-3 form-floating">
                 <select class="form-control custom-select" name="type" required="">
                     <option disabled="" selected="">...</option>
-                    <option value="@((int) ConsumerType.Vkontakte)">@ConsumerType.Vkontakte</option>
-                    <option value="@((int) ConsumerType.Telegram)">@ConsumerType.Telegram</option>
-                    <option value="@((int) ConsumerType.AllInOne)">Отправить всем-всем-всем</option>
+                    <option value="@((int)ConsumerType.Vkontakte)">@ConsumerType.Vkontakte</option>
+                    <option value="@((int)ConsumerType.Telegram)">@ConsumerType.Telegram</option>
+                    <option value="@((int)ConsumerType.AllInOne)">Отправить всем-всем-всем</option>
                 </select>
+                <label>Куда отправлять</label>
             </div>
-            <div class="form-group">
-                <label>Сообщение</label>
+            <div class="mb-3 form-floating">
                 <textarea class="form-control message-all" name="msg" placeholder="Сообщение" required=""></textarea>
+                <label>Сообщение</label>
             </div>
             <div class="form-check mb-3">
                 <input class="form-check-input" type="checkbox" id="keyboardCheck" name="isSendKeyboard">
@@ -31,19 +31,13 @@
                     Отправить стандартную клавиатуру?
                 </label>
             </div>
-            <div class="btn-group">
-                <div class="btn-toolbar" role="toolbar">
-                    <div class="btn-group mr-2">
-                        <button type="submit" class="btn btn-warning">Отправить</button>
-                    </div>
-                    <div class="btn-group mr-2">
-                        <button id="add-attach-all" type="button" class="btn btn-info">Добавить аттач</button>
-                    </div>
-                </div>
+            <div class="d-grid gap-2 d-md-block">
+                <button type="submit" class="btn btn-danger">Отправить</button>
+                <button id="add-attach-all" type="button" class="btn btn-secondary" onclick="appendAttach(true)">Добавить аттач</button>
             </div>
-            <div class="form-group attachments-all">
+            <div class="form-group">
                 <label>Прикрепления</label>
-                <div class="input-group mb-3">
+                <div class="input-group mb-3" id="attachments-all">
                 </div>
             </div>
         </form>
@@ -51,35 +45,30 @@
     <div class="col-md-3 offset-md-2">
         <form method="post" asp-page-handler="SendToId">
             <h3>Письмо одному</h3>
-            <div class="form-group">
-                <label>Куда отправлять</label>
+            <div class="mb-3 form-floating">
                 <select class="form-control custom-select" name="type" required="">
                     <option disabled="" selected="">...</option>
-                    <option value="@((int) ConsumerType.Vkontakte)">@ConsumerType.Vkontakte</option>
-                    <option value="@((int) ConsumerType.Telegram)">@ConsumerType.Telegram</option>
+                    <option value="@((int)ConsumerType.Vkontakte)">@ConsumerType.Vkontakte</option>
+                    <option value="@((int)ConsumerType.Telegram)">@ConsumerType.Telegram</option>
                 </select>
+                <label>Куда отправлять</label>
             </div>
-            <div class="form-group">
-                <label>ID (2000000001 для бесед)</label>
+            <div class="mb-3 form-floating">
                 <input type="number" class="form-control user-id" name="chatId" placeholder="ID" required="">
+                <label>ID чата</label>
+                <small class="form-text text-muted">2000000001 для бесед</small>
+            </div>
+            <div class="mb-3 form-floating">
+                <textarea class="form-control message-one" name="msg" placeholder="Сообщение" required=""></textarea>
+                <label>Сообщение</label>
+            </div>
+            <div class="d-grid gap-2 d-md-block">
+                <button type="submit" class="btn btn-danger">Отправить</button>
+                <button id="add-attach-one" type="button" class="btn btn-secondary" onclick="appendAttach(false)">Добавить аттач</button>
             </div>
             <div class="form-group">
-                <label>Сообщение</label>
-                <textarea class="form-control message-one" name="msg" placeholder="Сообщение" required=""></textarea>
-            </div>
-            <div class="btn-group">
-                <div class="btn-toolbar" role="toolbar">
-                    <div class="btn-group mr-2">
-                        <button type="submit" class="btn btn-warning">Отправить</button>
-                    </div>
-                    <div class="btn-group mr-2">
-                        <button id="add-attach-one" type="button" class="btn btn-info">Добавить аттач</button>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group attachments-one">
                 <label>Прикрепления</label>
-                <div class="input-group mb-3">
+                <div class="input-group mb-3" id="attachments-one">
                 </div>
             </div>
         </form>
