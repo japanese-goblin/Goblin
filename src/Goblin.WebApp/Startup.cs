@@ -99,7 +99,7 @@ namespace Goblin.WebApp
             app.UseHangfireDashboard("/Admin/HangFire", new DashboardOptions
             {
                 Authorization = new[] { new AuthFilter() },
-                AppPath = "/Admin/Users",
+                AppPath = "/",
                 StatsPollingInterval = 10000,
                 DisplayStorageConnectionString = false
             });
