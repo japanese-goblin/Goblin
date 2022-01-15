@@ -46,8 +46,8 @@ namespace Goblin.Narfu
                 var groups = lessonNode.SelectSingleNode(".//span[contains(@class,'group')]")
                                        ?.GetNormalizedInnerText();
 
-                var name = lessonNode.SelectSingleNode(".//span[contains(@class,'discipline')]")
-                                     .GetNormalizedInnerText();
+                var name = lessonNode.SelectSingleNode(".//span[contains(@class,'discipline')]//text()")
+                                     .GetNormalizedInnerText()[..^2];
 
                 var type = lessonNode.SelectSingleNode(".//span[contains(@class,'kindOfWork')]")
                                      .GetNormalizedInnerText();
