@@ -18,6 +18,8 @@ namespace Goblin.WebApp.Extensions
                     {
                         options.ClientId = config["Github:ClientId"];
                         options.ClientSecret = config["Github:ClientSecret"];
+                        
+                        options.Scope.Add("user:email");
                     });
         }
     }

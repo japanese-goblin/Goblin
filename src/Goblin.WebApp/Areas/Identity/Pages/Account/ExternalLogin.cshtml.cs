@@ -65,12 +65,10 @@ namespace Goblin.WebApp.Areas.Identity.Pages.Account
             }
 
             // Sign in the user with this external login provider if the user already has a login.
-            var result =
-                    await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false, true);
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false, true);
             if(result.Succeeded)
             {
-                _logger.Information("{0} logged in with {1} provider.", info.Principal.Identity.Name,
-                                    info.LoginProvider);
+                _logger.Information("{0} logged in with {1} provider.", info.Principal.Identity.Name, info.LoginProvider);
                 return LocalRedirect(returnUrl);
             }
 
