@@ -14,12 +14,10 @@ namespace Goblin.WebApp.Extensions
                     .AddDefaultUI();
 
             services.AddAuthentication()
-                    .AddVkontakte(options =>
+                    .AddGitHub("github", options =>
                     {
-                        options.ApiVersion = "5.95";
-                        options.ClientId = config["VkAuth:AppId"];
-                        options.ClientSecret = config["VkAuth:SecretKey"];
-                        options.Scope.Add("email");
+                        options.ClientId = config["Github:ClientId"];
+                        options.ClientSecret = config["Github:ClientSecret"];
                     });
         }
     }
