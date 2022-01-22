@@ -27,7 +27,13 @@ namespace Goblin.Narfu.Tests
         {
             using var http = new HttpTest();
             {
-                http.RespondWith(File.ReadAllText("Data/Groups.json"));
+                http.RespondWith(@"[
+{
+    ""RealId"": 271901,
+    ""SiteId"": 14068,
+    ""Name"": ""Строительство (Строительство)""
+}]
+");
                 Api = new NarfuApi("https://1.1.1.1/");
             }
         }
