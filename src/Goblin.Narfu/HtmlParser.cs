@@ -58,6 +58,8 @@ namespace Goblin.Narfu
                 var startEnd = lessonNode.SelectSingleNode(".//span[contains(@class,'time_para')]")
                                          .GetNormalizedInnerText();
 
+                var linkElement = lessonNode.SelectSingleNode(".//a");
+
                 var lesson = new Lesson
                 {
                     Address = adr[1],
@@ -69,7 +71,8 @@ namespace Goblin.Narfu
                     Teacher = teacher,
                     StartTime = DateTime.ParseExact($"{date} {time[0]}", "dd.MM.yyyy HH:mm", null, DateTimeStyles.None),
                     EndTime = DateTime.ParseExact($"{date} {time[1]}", "dd.MM.yyyy HH:mm", null, DateTimeStyles.None),
-                    StartEndTime = startEnd
+                    StartEndTime = startEnd,
+                    Link = linkElement?.GetAttributeValue("href", string.Empty)
                 };
 
                 yield return lesson;
