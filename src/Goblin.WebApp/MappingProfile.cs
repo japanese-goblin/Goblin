@@ -15,7 +15,8 @@ namespace Goblin.WebApp
                     .ForMember(x => x.ChatId,
                                x => x.MapFrom(m => m.PeerId))
                     .ForMember(x => x.UserId, 
-                               x => x.MapFrom(m => m.FromId));
+                               x => x.MapFrom(m => m.FromId))
+                    .ForMember(dst => dst.UserTag, src => src.MapFrom(x => $"@id{x.FromId}"));
 
             CreateMap<Telegram.Bot.Types.Message, Message>()
                     .ForMember(x => x.Text,
@@ -24,7 +25,8 @@ namespace Goblin.WebApp
                     .ForMember(x => x.ChatId,
                                x => x.MapFrom(m => m.Chat.Id))
                     .ForMember(x => x.UserId,
-                               x => x.MapFrom(m => m.From.Id));
+                               x => x.MapFrom(m => m.From.Id))
+                    .ForMember(dst => dst.UserTag, src => src.MapFrom(x => $"@{x.Chat.Username} (`{x.Chat.Id}`)"));
 
             CreateMap<Telegram.Bot.Types.CallbackQuery, Message>()
                     .ForMember(x => x.Text,

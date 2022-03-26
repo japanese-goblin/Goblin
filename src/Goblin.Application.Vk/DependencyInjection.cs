@@ -1,3 +1,4 @@
+using Goblin.Application.Core;
 using Goblin.Application.Vk.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +27,8 @@ namespace Goblin.Application.Vk
             services.Configure<VkAuthOptions>(configuration.GetSection("VkAuth"));
 
             services.AddScoped<VkCallbackHandler>();
+
+            services.AddScoped<ISender, VkSender>();
         }
     }
 }

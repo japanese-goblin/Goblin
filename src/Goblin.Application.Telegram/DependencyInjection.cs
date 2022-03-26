@@ -1,4 +1,5 @@
-﻿using Goblin.Application.Telegram.Options;
+﻿using Goblin.Application.Core;
+using Goblin.Application.Telegram.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Telegram.Bot;
@@ -13,6 +14,8 @@ namespace Goblin.Application.Telegram
 
             services.AddSingleton(new TelegramBotClient(configuration["Telegram:AccessToken"]));
             services.AddScoped<TelegramCallbackHandler>();
+
+            services.AddScoped<ISender, TelegramSender>();
         }
     }
 }
