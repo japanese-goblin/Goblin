@@ -31,7 +31,7 @@ namespace Goblin.Application.Core.Commands.Text
 
         public async Task<IResult> Execute(Message msg, BotUser user)
         {
-            var parameters = msg.Text.Split(' ', 3).Skip(1).ToArray();
+            var parameters = msg.Text.Split(' ', 3)[1..];
             user = _db.Entry(user).Entity;
             if(parameters.Length < 2)
             {

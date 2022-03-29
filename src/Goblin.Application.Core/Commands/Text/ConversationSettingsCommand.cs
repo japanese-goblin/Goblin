@@ -44,7 +44,7 @@ namespace Goblin.Application.Core.Commands.Text
                 return await GenerateCronInfo(msg.ChatId, user.ConsumerType);
             }
 
-            var parameters = msg.Text.Split(' ', 3).Skip(1).ToArray();
+            var parameters = msg.Text.Split(' ', 3)[1..];
             if(parameters.Length != 2)
             {
                 return new FailedResult("Команда принимает лишь два параметра (слова, разделенных пробелами)");

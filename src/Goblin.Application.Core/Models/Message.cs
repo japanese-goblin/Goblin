@@ -21,7 +21,7 @@ namespace Goblin.Application.Core.Models
             get
             {
                 var data = Text.ToLower().Split(' ');
-                return data.Length <= 1 ? new[] { string.Empty } : data.Skip(1).ToArray();
+                return data.Length <= 1 ? new[] { string.Empty } : data[1..];
             }
         }
 
