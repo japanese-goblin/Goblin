@@ -6,29 +6,28 @@ using VkNet;
 using VkNet.Abstractions;
 using VkNet.Model;
 
-namespace Goblin.Application.Vk
+namespace Goblin.Application.Vk;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    public static void AddVkLayer(this IServiceCollection services, IConfiguration configuration)
     {
-        public static void AddVkLayer(this IServiceCollection services, IConfiguration configuration)
+        services.AddSingleton<IVkApi, VkApi>(x =>
         {
-            services.AddSingleton<IVkApi, VkApi>(x =>
+            var token = configuration["Vk:AccessToken"];
+            var api = new VkApi { RequestsPerSecond = 20 };
+            api.Authorize(new ApiAuthParams
             {
-                var token = configuration["Vk:AccessToken"];
-                var api = new VkApi { RequestsPerSecond = 20 };
-                api.Authorize(new ApiAuthParams
-                {
-                    AccessToken = token
-                });
-                return api;
+                AccessToken = token
             });
+            return api;
+        });
 
-            services.Configure<VkOptions>(configuration.GetSection("Vk"));
-            services.Configure<VkAuthOptions>(configuration.GetSection("VkAuth"));
+        services.Configure<VkOptions>(configuration.GetSection("Vk"));
+        services.Configure<VkAuthOptions>(configuration.GetSection("VkAuth"));
 
-            services.AddScoped<VkCallbackHandler>();
+        services.AddScoped<VkCallbackHandler>();
 
-            services.AddScoped<ISender, VkSender>();
-        }
+        services.AddScoped<ISender, VkSender>();
     }
 }

@@ -1,119 +1,118 @@
 using System;
 
-namespace Goblin.Domain
+namespace Goblin.Domain;
+
+public class CronTime
 {
-    public class CronTime
+    private const string AnyChar = "*";
+    public string Minute { get; private set; }
+    public string Hour { get; private set; }
+    public string DayOfMonth { get; private set; }
+    public string Month { get; private set; }
+    public string DayOfWeek { get; private set; }
+
+    protected CronTime()
     {
-        private const string AnyChar = "*";
-        public string Minute { get; private set; }
-        public string Hour { get; private set; }
-        public string DayOfMonth { get; private set; }
-        public string Month { get; private set; }
-        public string DayOfWeek { get; private set; }
+    }
 
-        protected CronTime()
-        {
-        }
+    public CronTime(string minute = AnyChar, string hour = AnyChar, string dayOfMonth = AnyChar, string month = AnyChar,
+                    string dayOfWeek = AnyChar)
+    {
+        SetMinute(minute);
+        SetHour(hour);
+        SetDayOfMonth(dayOfMonth);
+        SetMonth(month);
+        SetDayOfWeek(dayOfWeek);
+    }
 
-        public CronTime(string minute = AnyChar, string hour = AnyChar, string dayOfMonth = AnyChar, string month = AnyChar,
-                        string dayOfWeek = AnyChar)
+    public void SetMinute(string minute)
+    {
+        if(!minute.Equals(AnyChar))
         {
-            SetMinute(minute);
-            SetHour(hour);
-            SetDayOfMonth(dayOfMonth);
-            SetMonth(month);
-            SetDayOfWeek(dayOfWeek);
-        }
-
-        public void SetMinute(string minute)
-        {
-            if(!minute.Equals(AnyChar))
+            if(!int.TryParse(minute, out var intMinute))
             {
-                if(!int.TryParse(minute, out var intMinute))
-                {
-                    throw new ArgumentException("Параметр не является числом", nameof(minute));
-                }
-
-                if(intMinute < 0 || intMinute > 59)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(minute), minute,
-                                                          "Параметр должен быть в пределах от 0 до 60");
-                }
+                throw new ArgumentException("Параметр не является числом", nameof(minute));
             }
 
-            Minute = minute;
+            if(intMinute < 0 || intMinute > 59)
+            {
+                throw new ArgumentOutOfRangeException(nameof(minute), minute,
+                                                      "Параметр должен быть в пределах от 0 до 60");
+            }
         }
 
-        public void SetHour(string hour)
-        {
-            if(!hour.Equals(AnyChar))
-            {
-                if(!int.TryParse(hour, out var intHour))
-                {
-                    throw new ArgumentException("Параметр не является числом", nameof(hour));
-                }
+        Minute = minute;
+    }
 
-                if(intHour < 0 || intHour > 23)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(hour), hour,
-                                                          "Параметр должен быть в пределах от 0 до 23");
-                }
+    public void SetHour(string hour)
+    {
+        if(!hour.Equals(AnyChar))
+        {
+            if(!int.TryParse(hour, out var intHour))
+            {
+                throw new ArgumentException("Параметр не является числом", nameof(hour));
             }
 
-            Hour = hour;
-        }
-
-        public void SetDayOfMonth(int day)
-        {
-            if(day < 1 || day > 31)
+            if(intHour < 0 || intHour > 23)
             {
-                throw new ArgumentOutOfRangeException(nameof(day), day,
-                                                      "Параметр должен быть в пределах от 1 до 31");
+                throw new ArgumentOutOfRangeException(nameof(hour), hour,
+                                                      "Параметр должен быть в пределах от 0 до 23");
             }
-
-            SetDayOfMonth(day.ToString());
         }
 
-        public void SetDayOfMonth(string day)
+        Hour = hour;
+    }
+
+    public void SetDayOfMonth(int day)
+    {
+        if(day < 1 || day > 31)
         {
-            DayOfMonth = day;
+            throw new ArgumentOutOfRangeException(nameof(day), day,
+                                                  "Параметр должен быть в пределах от 1 до 31");
         }
 
-        public void SetMonth(int month)
+        SetDayOfMonth(day.ToString());
+    }
+
+    public void SetDayOfMonth(string day)
+    {
+        DayOfMonth = day;
+    }
+
+    public void SetMonth(int month)
+    {
+        if(month < 1 || month > 12)
         {
-            if(month < 1 || month > 12)
-            {
-                throw new ArgumentOutOfRangeException(nameof(month), month,
-                                                      "Параметр должен быть в пределах от 1 до 12");
-            }
-
-            SetMonth(month.ToString());
+            throw new ArgumentOutOfRangeException(nameof(month), month,
+                                                  "Параметр должен быть в пределах от 1 до 12");
         }
 
-        public void SetMonth(string month)
+        SetMonth(month.ToString());
+    }
+
+    public void SetMonth(string month)
+    {
+        Month = month;
+    }
+
+    public void SetDayOfWeek(int dayOfWeek)
+    {
+        if(dayOfWeek < 0 || dayOfWeek > 6)
         {
-            Month = month;
+            throw new ArgumentOutOfRangeException(nameof(dayOfWeek), dayOfWeek,
+                                                  "Параметр должен быть в пределах от 1 до 6");
         }
 
-        public void SetDayOfWeek(int dayOfWeek)
-        {
-            if(dayOfWeek < 0 || dayOfWeek > 6)
-            {
-                throw new ArgumentOutOfRangeException(nameof(dayOfWeek), dayOfWeek,
-                                                      "Параметр должен быть в пределах от 1 до 6");
-            }
+        SetDayOfWeek(dayOfWeek.ToString());
+    }
 
-            SetDayOfWeek(dayOfWeek.ToString());
-        }
+    public void SetDayOfWeek(string dayOfWeek)
+    {
+        DayOfWeek = dayOfWeek;
+    }
 
-        public void SetDayOfWeek(string dayOfWeek)
-        {
-            DayOfWeek = dayOfWeek;
-        }
-
-        public override string ToString()
-        {
-            return $"{Minute} {Hour} {DayOfMonth} {Month} {DayOfWeek}";
-        }
+    public override string ToString()
+    {
+        return $"{Minute} {Hour} {DayOfMonth} {Month} {DayOfWeek}";
     }
 }

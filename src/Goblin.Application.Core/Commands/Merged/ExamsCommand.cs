@@ -10,51 +10,50 @@ using Goblin.Narfu;
 using Goblin.Narfu.Abstractions;
 using Serilog;
 
-namespace Goblin.Application.Core.Commands.Merged
+namespace Goblin.Application.Core.Commands.Merged;
+
+public class ExamsCommand : IKeyboardCommand, ITextCommand
 {
-    public class ExamsCommand : IKeyboardCommand, ITextCommand
+    public string Trigger => "exams";
+
+    public bool IsAdminCommand => false;
+    public string[] Aliases => new[] { "экзамены", "экзы" };
+
+    private readonly INarfuApi _api;
+
+    public ExamsCommand(INarfuApi api)
     {
-        public string Trigger => "exams";
+        _api = api;
+    }
 
-        public bool IsAdminCommand => false;
-        public string[] Aliases => new[] { "экзамены", "экзы" };
-
-        private readonly INarfuApi _api;
-
-        public ExamsCommand(INarfuApi api)
+    public async Task<IResult> Execute(Message msg, BotUser user)
+    {
+        if(user.NarfuGroup == 0)
         {
-            _api = api;
+            return new FailedResult(DefaultErrors.GroupNotSet);
         }
 
-        public async Task<IResult> Execute(Message msg, BotUser user)
+        try
         {
-            if(user.NarfuGroup == 0)
+            var lessons = await _api.Students.GetExams(user.NarfuGroup);
+            var str = lessons.ToString();
+            if(str.Length > 4096)
             {
-                return new FailedResult(DefaultErrors.GroupNotSet);
+                str = $"{str[..4000]}...\n\nПолный список экзаменов можете посмотреть на сайте";
             }
-
-            try
+            return new SuccessfulResult
             {
-                var lessons = await _api.Students.GetExams(user.NarfuGroup);
-                var str = lessons.ToString();
-                if(str.Length > 4096)
-                {
-                    str = $"{str[..4000]}...\n\nПолный список экзаменов можете посмотреть на сайте";
-                }
-                return new SuccessfulResult
-                {
-                    Message = str
-                };
-            }
-            catch(FlurlHttpException)
-            {
-                return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
-            }
-            catch(Exception ex)
-            {
-                Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении экзаменов");
-                return new FailedResult(DefaultErrors.NarfuUnexpectedError);
-            }
+                Message = str
+            };
+        }
+        catch(FlurlHttpException)
+        {
+            return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
+        }
+        catch(Exception ex)
+        {
+            Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении экзаменов");
+            return new FailedResult(DefaultErrors.NarfuUnexpectedError);
         }
     }
 }

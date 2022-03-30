@@ -7,46 +7,45 @@ using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Abstractions;
 
-namespace Goblin.Application.Core.Commands.Merged
+namespace Goblin.Application.Core.Commands.Merged;
+
+public class GetRemindsCommand : IKeyboardCommand, ITextCommand
 {
-    public class GetRemindsCommand : IKeyboardCommand, ITextCommand
+    public string Trigger => "reminds";
+
+    public bool IsAdminCommand => false;
+    public string[] Aliases => new[] { "напоминания" };
+
+    private readonly BotDbContext _context;
+
+    public GetRemindsCommand(BotDbContext context)
     {
-        public string Trigger => "reminds";
+        _context = context;
+    }
 
-        public bool IsAdminCommand => false;
-        public string[] Aliases => new[] { "напоминания" };
-
-        private readonly BotDbContext _context;
-
-        public GetRemindsCommand(BotDbContext context)
+    public Task<IResult> Execute(Message msg, BotUser user)
+    {
+        var reminds = _context.Reminds.Where(x => x.ChatId == user.Id && x.ConsumerType == user.ConsumerType)
+                              .ToArray();
+        if(reminds.Length == 0)
         {
-            _context = context;
-        }
-
-        public Task<IResult> Execute(Message msg, BotUser user)
-        {
-            var reminds = _context.Reminds.Where(x => x.ChatId == user.Id && x.ConsumerType == user.ConsumerType)
-                                  .ToArray();
-            if(reminds.Length == 0)
-            {
-                return Task.FromResult<IResult>(new SuccessfulResult
-                {
-                    Message = "У Вас нет ни одного добавленного напоминания."
-                });
-            }
-
-            var strBuilder = new StringBuilder();
-            strBuilder.AppendLine("Список напоминаний:");
-            foreach(var userRemind in reminds.OrderBy(x => x.Date))
-            {
-                strBuilder.AppendFormat("{0:dd.MM.yyyy HH:mm} - {1}", userRemind.Date, userRemind.Text)
-                          .AppendLine();
-            }
-
             return Task.FromResult<IResult>(new SuccessfulResult
             {
-                Message = strBuilder.ToString()
+                Message = "У Вас нет ни одного добавленного напоминания."
             });
         }
+
+        var strBuilder = new StringBuilder();
+        strBuilder.AppendLine("Список напоминаний:");
+        foreach(var userRemind in reminds.OrderBy(x => x.Date))
+        {
+            strBuilder.AppendFormat("{0:dd.MM.yyyy HH:mm} - {1}", userRemind.Date, userRemind.Text)
+                      .AppendLine();
+        }
+
+        return Task.FromResult<IResult>(new SuccessfulResult
+        {
+            Message = strBuilder.ToString()
+        });
     }
 }

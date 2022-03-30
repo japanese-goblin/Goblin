@@ -3,13 +3,12 @@ using Microsoft.AspNetCore.Hosting;
 
 [assembly: HostingStartup(typeof(IdentityHostingStartup))]
 
-namespace Goblin.WebApp.Areas.Identity
+namespace Goblin.WebApp.Areas.Identity;
+
+public class IdentityHostingStartup : IHostingStartup
 {
-    public class IdentityHostingStartup : IHostingStartup
+    public void Configure(IWebHostBuilder builder)
     {
-        public void Configure(IWebHostBuilder builder)
-        {
-            builder.ConfigureServices((context, services) => { });
-        }
+        builder.ConfigureServices((context, services) => { });
     }
 }

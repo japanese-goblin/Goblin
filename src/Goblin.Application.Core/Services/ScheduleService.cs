@@ -8,43 +8,42 @@ using Goblin.Narfu;
 using Goblin.Narfu.Abstractions;
 using Serilog;
 
-namespace Goblin.Application.Core.Services
-{
-    public class ScheduleService : IScheduleService
-    {
-        private readonly INarfuApi _narfuApi;
+namespace Goblin.Application.Core.Services;
 
-        public ScheduleService(INarfuApi narfuApi)
+public class ScheduleService : IScheduleService
+{
+    private readonly INarfuApi _narfuApi;
+
+    public ScheduleService(INarfuApi narfuApi)
+    {
+        _narfuApi = narfuApi;
+    }
+
+    public async Task<IResult> GetSchedule(int narfuGroup, DateTime date)
+    {
+        if(!_narfuApi.Students.IsCorrectGroup(narfuGroup))
         {
-            _narfuApi = narfuApi;
+            return new FailedResult($"Группа {narfuGroup} не найдена");
         }
 
-        public async Task<IResult> GetSchedule(int narfuGroup, DateTime date)
+        try
         {
-            if(!_narfuApi.Students.IsCorrectGroup(narfuGroup))
-            {
-                return new FailedResult($"Группа {narfuGroup} не найдена");
-            }
+            var schedule = await _narfuApi.Students.GetScheduleAtDate(narfuGroup, date);
 
-            try
+            return new SuccessfulResult
             {
-                var schedule = await _narfuApi.Students.GetScheduleAtDate(narfuGroup, date);
-
-                return new SuccessfulResult
-                {
-                    Message = schedule.ToString(),
-                    Keyboard = DefaultKeyboards.GetScheduleKeyboard()
-                };
-            }
-            catch(FlurlHttpException)
-            {
-                return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
-            }
-            catch(Exception ex)
-            {
-                Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении расписания на день");
-                return new FailedResult(DefaultErrors.NarfuUnexpectedError);
-            }
+                Message = schedule.ToString(),
+                Keyboard = DefaultKeyboards.GetScheduleKeyboard()
+            };
+        }
+        catch(FlurlHttpException)
+        {
+            return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
+        }
+        catch(Exception ex)
+        {
+            Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении расписания на день");
+            return new FailedResult(DefaultErrors.NarfuUnexpectedError);
         }
     }
 }

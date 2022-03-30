@@ -8,33 +8,32 @@ using VkNet.Enums.SafetyEnums;
 using VkNet.Model.GroupUpdate;
 using VkNet.Utils;
 
-namespace Goblin.WebApp.Controllers
+namespace Goblin.WebApp.Controllers;
+
+[ApiController]
+[Route("/api/callback/vk")]
+public class VkCallbackController : ControllerBase
 {
-    [ApiController]
-    [Route("/api/callback/vk")]
-    public class VkCallbackController : ControllerBase
+    private readonly VkCallbackHandler _handler;
+    private readonly VkOptions _vkOptions;
+
+    public VkCallbackController(VkCallbackHandler handler, IOptions<VkOptions> vkOptions)
     {
-        private readonly VkCallbackHandler _handler;
-        private readonly VkOptions _vkOptions;
+        _handler = handler;
+        _vkOptions = vkOptions.Value;
+    }
 
-        public VkCallbackController(VkCallbackHandler handler, IOptions<VkOptions> vkOptions)
+    [HttpPost]
+    public string Handle([FromBody] object update)
+    {
+        var response = GroupUpdate.FromJson(new VkResponse(JToken.FromObject(update)));
+        if(response.Type == GroupUpdateType.Confirmation)
         {
-            _handler = handler;
-            _vkOptions = vkOptions.Value;
+            return _vkOptions.ConfirmationCode;
         }
 
-        [HttpPost]
-        public string Handle([FromBody] object update)
-        {
-            var response = GroupUpdate.FromJson(new VkResponse(JToken.FromObject(update)));
-            if(response.Type == GroupUpdateType.Confirmation)
-            {
-                return _vkOptions.ConfirmationCode;
-            }
+        BackgroundJob.Enqueue(() => _handler.Handle(response));
 
-            BackgroundJob.Enqueue(() => _handler.Handle(response));
-
-            return "ok";
-        }
+        return "ok";
     }
 }

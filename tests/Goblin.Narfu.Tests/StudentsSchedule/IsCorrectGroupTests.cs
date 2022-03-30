@@ -1,24 +1,23 @@
 ﻿using FluentAssertions;
 using Xunit;
 
-namespace Goblin.Narfu.Tests.StudentsSchedule
+namespace Goblin.Narfu.Tests.StudentsSchedule;
+
+public class IsCorrectGroupTests : TestBase
 {
-    public class IsCorrectGroupTests : TestBase
+    [Fact]
+    public void IsCorrectGroup_CorrectGroup_ReturnsTrue()
     {
-        [Fact]
-        public void IsCorrectGroup_CorrectGroup_ReturnsTrue()
-        {
-            var result = Api.Students.IsCorrectGroup(CorrectGroup);
+        var result = Api.Students.IsCorrectGroup(CorrectGroup);
 
-            result.Should().BeTrue();
-        }
+        result.Should().BeTrue();
+    }
 
-        [Fact]
-        public void IsCorrectGroup_IncorrectGroup_ReturnsTrue()
-        {
-            var result = Api.Students.IsCorrectGroup(IncorrectGroup);
+    [Fact]
+    public void IsCorrectGroup_IncorrectGroup_ReturnsTrue()
+    {
+        var result = Api.Students.IsCorrectGroup(IncorrectGroup);
 
-            result.Should().BeFalse();
-        }
+        result.Should().BeFalse();
     }
 }

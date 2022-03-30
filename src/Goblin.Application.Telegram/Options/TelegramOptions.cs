@@ -1,8 +1,7 @@
-﻿namespace Goblin.Application.Telegram.Options
+﻿namespace Goblin.Application.Telegram.Options;
+
+public class TelegramOptions
 {
-    public class TelegramOptions
-    {
-        public string AccessToken { get; set; }
-        public string SecretKey { get; set; }
-    }
+    public string AccessToken { get; set; }
+    public string SecretKey { get; set; }
 }

@@ -1,9 +1,8 @@
-﻿namespace Goblin.Domain
+﻿namespace Goblin.Domain;
+
+public enum ConsumerType
 {
-    public enum ConsumerType
-    {
-        Vkontakte,
-        Telegram,
-        AllInOne = 1001
-    }
+    Vkontakte,
+    Telegram,
+    AllInOne = 1001
 }

@@ -7,92 +7,91 @@ using Goblin.Application.Core.Tests.Models;
 using Goblin.Domain.Entities;
 using Xunit;
 
-namespace Goblin.Application.Core.Tests
+namespace Goblin.Application.Core.Tests;
+
+public class CommandsServiceTests : TestBase
 {
-    public class CommandsServiceTests : TestBase
+    private CommandsService GetService()
     {
-        private CommandsService GetService()
+        var service = new CommandsService(GetTextCommands(), GetKeyboardCommands(), ApplicationContext);
+
+        return service;
+
+        IEnumerable<IKeyboardCommand> GetKeyboardCommands()
         {
-            var service = new CommandsService(GetTextCommands(), GetKeyboardCommands(), ApplicationContext);
-
-            return service;
-
-            IEnumerable<IKeyboardCommand> GetKeyboardCommands()
-            {
-                return new IKeyboardCommand[] { new MailingKeyboardCommand(), new ScheduleKeyboardCommand() };
-            }
-
-            IEnumerable<ITextCommand> GetTextCommands()
-            {
-                return new ITextCommand[] { new HelpCommand(), new StartCommand(), new FakeAdminCommand() };
-            }
+            return new IKeyboardCommand[] { new MailingKeyboardCommand(), new ScheduleKeyboardCommand() };
         }
 
-        private Task OnSuccess(IResult res)
+        IEnumerable<ITextCommand> GetTextCommands()
         {
-            res.IsSuccessful.Should().BeTrue();
-            return Task.CompletedTask;
+            return new ITextCommand[] { new HelpCommand(), new StartCommand(), new FakeAdminCommand() };
         }
+    }
 
-        private Task OnFailed(IResult res)
-        {
-            res.IsSuccessful.Should().BeFalse();
-            return Task.CompletedTask;
-        }
+    private Task OnSuccess(IResult res)
+    {
+        res.IsSuccessful.Should().BeTrue();
+        return Task.CompletedTask;
+    }
 
-        [Fact]
-        public async Task ShouldExecuteOnSuccess_On_Text()
-        {
-            var service = GetService();
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "справка");
+    private Task OnFailed(IResult res)
+    {
+        res.IsSuccessful.Should().BeFalse();
+        return Task.CompletedTask;
+    }
 
-            await service.ExecuteCommand<VkBotUser>(message, OnSuccess, res => null);
-        }
+    [Fact]
+    public async Task ShouldExecuteOnSuccess_On_Text()
+    {
+        var service = GetService();
+        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "справка");
 
-        [Fact]
-        public async Task ShouldExecuteOnFailed_On_Text()
-        {
-            var service = GetService();
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "абв");
+        await service.ExecuteCommand<VkBotUser>(message, OnSuccess, res => null);
+    }
 
-            await service.ExecuteCommand<VkBotUser>(message, res => null, OnFailed);
-        }
+    [Fact]
+    public async Task ShouldExecuteOnFailed_On_Text()
+    {
+        var service = GetService();
+        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "абв");
 
-        [Fact]
-        public async Task ShouldExecuteOnFailed_Because_UserIsNotAdmin_On_Text()
-        {
-            var service = GetService();
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "demo");
+        await service.ExecuteCommand<VkBotUser>(message, res => null, OnFailed);
+    }
 
-            await service.ExecuteCommand<VkBotUser>(message, res => null, OnFailed);
-        }
+    [Fact]
+    public async Task ShouldExecuteOnFailed_Because_UserIsNotAdmin_On_Text()
+    {
+        var service = GetService();
+        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "demo");
 
-        [Fact]
-        public async Task ShouldNotExecuteAnything_Because_CommandNotFound_And_UserErrorsIsDisabled_On_Text()
-        {
-            DefaultUser.SetErrorNotification(false);
-            var service = GetService();
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "абв");
+        await service.ExecuteCommand<VkBotUser>(message, res => null, OnFailed);
+    }
 
-            await service.ExecuteCommand<VkBotUser>(message, res => null, res => null);
-        }
+    [Fact]
+    public async Task ShouldNotExecuteAnything_Because_CommandNotFound_And_UserErrorsIsDisabled_On_Text()
+    {
+        DefaultUser.SetErrorNotification(false);
+        var service = GetService();
+        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "абв");
 
-        [Fact]
-        public async Task ShouldExecuteOnSuccess_On_Payload()
-        {
-            var service = GetService();
-            var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "mailingKeyboard", string.Empty);
+        await service.ExecuteCommand<VkBotUser>(message, res => null, res => null);
+    }
 
-            await service.ExecuteCommand<VkBotUser>(message, OnSuccess, res => null);
-        }
+    [Fact]
+    public async Task ShouldExecuteOnSuccess_On_Payload()
+    {
+        var service = GetService();
+        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "mailingKeyboard", string.Empty);
 
-        [Fact]
-        public async Task ShouldExecuteOnFailed_Because_CommandNotFound_On_Payload()
-        {
-            var service = GetService();
-            var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "asd", string.Empty);
+        await service.ExecuteCommand<VkBotUser>(message, OnSuccess, res => null);
+    }
 
-            await service.ExecuteCommand<VkBotUser>(message, res => null, OnFailed);
-        }
+    [Fact]
+    public async Task ShouldExecuteOnFailed_Because_CommandNotFound_On_Payload()
+    {
+        var service = GetService();
+        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "asd", string.Empty);
+
+        await service.ExecuteCommand<VkBotUser>(message, res => null, OnFailed);
     }
 }

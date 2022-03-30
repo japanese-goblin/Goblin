@@ -1,10 +1,9 @@
-﻿namespace Goblin.Application.Core.Models
+﻿namespace Goblin.Application.Core.Models;
+
+public enum CoreKeyboardButtonColor
 {
-    public enum CoreKeyboardButtonColor
-    {
-        Default,
-        Primary,
-        Negative,
-        Positive
-    }
+    Default,
+    Primary,
+    Negative,
+    Positive
 }

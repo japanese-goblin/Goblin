@@ -1,7 +1,6 @@
-namespace Goblin.Application.Core.Options
+namespace Goblin.Application.Core.Options;
+
+public class OpenWeatherMapOptions
 {
-    public class OpenWeatherMapOptions
-    {
-        public string AccessToken { get; set; }
-    }
+    public string AccessToken { get; set; }
 }

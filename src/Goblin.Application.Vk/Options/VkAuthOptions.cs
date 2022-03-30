@@ -1,8 +1,7 @@
-namespace Goblin.Application.Vk.Options
+namespace Goblin.Application.Vk.Options;
+
+public class VkAuthOptions
 {
-    public class VkAuthOptions
-    {
-        public int AppId { get; set; }
-        public string SecretKey { get; set; }
-    }
+    public int AppId { get; set; }
+    public string SecretKey { get; set; }
 }

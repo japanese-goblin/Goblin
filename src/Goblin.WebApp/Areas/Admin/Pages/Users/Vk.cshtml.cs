@@ -7,28 +7,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace Goblin.WebApp.Areas.Admin.Pages.Users
+namespace Goblin.WebApp.Areas.Admin.Pages.Users;
+
+[Authorize(Roles = "Admin")]
+[Area("Admin")]
+public class Vk : PageModel
 {
-    [Authorize(Roles = "Admin")]
-    [Area("Admin")]
-    public class Vk : PageModel
+    public IEnumerable<IGrouping<int, VkBotUser>> Users { get; set; }
+    private readonly BotDbContext _context;
+
+    public Vk(BotDbContext context)
     {
-        public IEnumerable<IGrouping<int, VkBotUser>> Users { get; set; }
-        private readonly BotDbContext _context;
+        _context = context;
+    }
 
-        public Vk(BotDbContext context)
-        {
-            _context = context;
-        }
+    public void OnGet()
+    {
+        var data = _context.VkBotUsers
+                           .AsNoTracking()
+                           .ToArray();
+        ViewData["count"] = data.Length;
 
-        public void OnGet()
-        {
-            var data = _context.VkBotUsers
-                               .AsNoTracking()
-                               .ToArray();
-            ViewData["count"] = data.Length;
-
-            Users = data.GroupBy(x => x.NarfuGroup);
-        }
+        Users = data.GroupBy(x => x.NarfuGroup);
     }
 }

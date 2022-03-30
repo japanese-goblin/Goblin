@@ -2,14 +2,13 @@ using System.Threading.Tasks;
 using Goblin.Application.Core.Models;
 using Goblin.Domain.Abstractions;
 
-namespace Goblin.Application.Core.Abstractions
+namespace Goblin.Application.Core.Abstractions;
+
+public interface ITextCommand
 {
-    public interface ITextCommand
-    {
-        bool IsAdminCommand { get; }
+    bool IsAdminCommand { get; }
 
-        string[] Aliases { get; }
+    string[] Aliases { get; }
 
-        Task<IResult> Execute(Message msg, BotUser user);
-    }
+    Task<IResult> Execute(Message msg, BotUser user);
 }

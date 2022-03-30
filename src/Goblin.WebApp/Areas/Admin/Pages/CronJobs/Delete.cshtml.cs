@@ -6,43 +6,42 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs
+namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs;
+
+[Authorize(Roles = "Admin")]
+[Area("Admin")]
+public class Delete : PageModel
 {
-    [Authorize(Roles = "Admin")]
-    [Area("Admin")]
-    public class Delete : PageModel
+    public CronJob CronJob { get; set; }
+    private readonly BotDbContext _context;
+
+    public Delete(BotDbContext context)
     {
-        public CronJob CronJob { get; set; }
-        private readonly BotDbContext _context;
+        _context = context;
+    }
 
-        public Delete(BotDbContext context)
+    public async Task OnGet(int id)
+    {
+        var job = await _context.CronJobs.FirstOrDefaultAsync(x => x.Id == id);
+        if(job is null)
         {
-            _context = context;
+            return;
         }
 
-        public async Task OnGet(int id)
-        {
-            var job = await _context.CronJobs.FirstOrDefaultAsync(x => x.Id == id);
-            if(job is null)
-            {
-                return;
-            }
+        CronJob = job;
+    }
 
-            CronJob = job;
+    public async Task<IActionResult> OnPost(int id)
+    {
+        var job = await _context.CronJobs.FirstOrDefaultAsync(x => x.Id == id);
+        if(job is null)
+        {
+            return Page();
         }
 
-        public async Task<IActionResult> OnPost(int id)
-        {
-            var job = await _context.CronJobs.FirstOrDefaultAsync(x => x.Id == id);
-            if(job is null)
-            {
-                return Page();
-            }
+        _context.Remove(job);
+        await _context.SaveChangesAsync();
 
-            _context.Remove(job);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("Index");
-        }
+        return RedirectToPage("Index");
     }
 }

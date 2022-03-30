@@ -8,65 +8,64 @@ using Goblin.Application.Core.Results.Success;
 using Moq;
 using Xunit;
 
-namespace Goblin.Application.Core.Tests.Commands.Keyboard
+namespace Goblin.Application.Core.Tests.Commands.Keyboard;
+
+public class WeatherDailyCommandTests : TestBase
 {
-    public class WeatherDailyCommandTests : TestBase
+    private IWeatherService GetWeatherService()
     {
-        private IWeatherService GetWeatherService()
-        {
-            var mock = new Mock<IWeatherService>();
-            mock.Setup(x => x.GetDailyWeather(It.IsAny<string>(), It.IsAny<DateTime>()))
-                .ReturnsAsync(new SuccessfulResult
-                {
-                    Message = "weather"
-                });
+        var mock = new Mock<IWeatherService>();
+        mock.Setup(x => x.GetDailyWeather(It.IsAny<string>(), It.IsAny<DateTime>()))
+            .ReturnsAsync(new SuccessfulResult
+            {
+                Message = "weather"
+            });
 
-            return mock.Object;
-        }
+        return mock.Object;
+    }
 
-        [Fact]
-        public async Task ShouldReturnSuccessfulResult()
-        {
-            var command = new WeatherDailyCommand(GetWeatherService());
-            var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "11.11.2011");
+    [Fact]
+    public async Task ShouldReturnSuccessfulResult()
+    {
+        var command = new WeatherDailyCommand(GetWeatherService());
+        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "11.11.2011");
 
-            var result = await command.Execute(message, DefaultUser);
-            result.Should().BeOfType<SuccessfulResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-        }
+        var result = await command.Execute(message, DefaultUser);
+        result.Should().BeOfType<SuccessfulResult>();
+        result.Message.Should().NotBeNullOrEmpty();
+    }
 
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_DictionaryKeyDoesNotExists()
-        {
-            var command = new WeatherDailyCommand(GetWeatherService());
-            var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "asd", "11.11.2011");
+    [Fact]
+    public async Task ShouldReturnFailedResult_Because_DictionaryKeyDoesNotExists()
+    {
+        var command = new WeatherDailyCommand(GetWeatherService());
+        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "asd", "11.11.2011");
 
-            var result = await command.Execute(message, DefaultUser);
-            result.Should().BeOfType<FailedResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-        }
+        var result = await command.Execute(message, DefaultUser);
+        result.Should().BeOfType<FailedResult>();
+        result.Message.Should().NotBeNullOrEmpty();
+    }
 
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_DictionaryValueIsNotCorrectDate()
-        {
-            var command = new WeatherDailyCommand(GetWeatherService());
-            var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "20.20.2020");
+    [Fact]
+    public async Task ShouldReturnFailedResult_Because_DictionaryValueIsNotCorrectDate()
+    {
+        var command = new WeatherDailyCommand(GetWeatherService());
+        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "20.20.2020");
 
-            var result = await command.Execute(message, DefaultUser);
-            result.Should().BeOfType<FailedResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-        }
+        var result = await command.Execute(message, DefaultUser);
+        result.Should().BeOfType<FailedResult>();
+        result.Message.Should().NotBeNullOrEmpty();
+    }
 
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_UserCityIsEmpty()
-        {
-            DefaultUser.SetCity(string.Empty);
-            var command = new WeatherDailyCommand(GetWeatherService());
-            var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "11.11.2011");
+    [Fact]
+    public async Task ShouldReturnFailedResult_Because_UserCityIsEmpty()
+    {
+        DefaultUser.SetCity(string.Empty);
+        var command = new WeatherDailyCommand(GetWeatherService());
+        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "11.11.2011");
 
-            var result = await command.Execute(message, DefaultUser);
-            result.Should().BeOfType<FailedResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-        }
+        var result = await command.Execute(message, DefaultUser);
+        result.Should().BeOfType<FailedResult>();
+        result.Message.Should().NotBeNullOrEmpty();
     }
 }

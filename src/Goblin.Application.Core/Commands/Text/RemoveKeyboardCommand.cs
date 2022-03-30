@@ -4,21 +4,20 @@ using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Abstractions;
 
-namespace Goblin.Application.Core.Commands.Text
-{
-    public class RemoveKeyboardCommand : ITextCommand
-    {
-        public bool IsAdminCommand => false;
-        public string[] Aliases => new[] { "куб" };
+namespace Goblin.Application.Core.Commands.Text;
 
-        public Task<IResult> Execute(Message msg, BotUser user)
+public class RemoveKeyboardCommand : ITextCommand
+{
+    public bool IsAdminCommand => false;
+    public string[] Aliases => new[] { "куб" };
+
+    public Task<IResult> Execute(Message msg, BotUser user)
+    {
+        var kb = new CoreKeyboard();
+        return Task.FromResult<IResult>(new SuccessfulResult
         {
-            var kb = new CoreKeyboard();
-            return Task.FromResult<IResult>(new SuccessfulResult
-            {
-                Message = "Окей",
-                Keyboard = kb
-            });
-        }
+            Message = "Окей",
+            Keyboard = kb
+        });
     }
 }

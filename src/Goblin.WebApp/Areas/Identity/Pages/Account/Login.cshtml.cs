@@ -7,40 +7,39 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Goblin.WebApp.Areas.Identity.Pages.Account
+namespace Goblin.WebApp.Areas.Identity.Pages.Account;
+
+[AllowAnonymous]
+public class LoginModel : PageModel
 {
-    [AllowAnonymous]
-    public class LoginModel : PageModel
+    public IList<AuthenticationScheme> ExternalLogins { get; set; }
+
+    public string ReturnUrl { get; set; }
+
+    [TempData]
+    public string ErrorMessage { get; set; }
+
+    private readonly SignInManager<IdentityUser> _signInManager;
+
+    public LoginModel(SignInManager<IdentityUser> signInManager)
     {
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        _signInManager = signInManager;
+    }
 
-        public string ReturnUrl { get; set; }
-
-        [TempData]
-        public string ErrorMessage { get; set; }
-
-        private readonly SignInManager<IdentityUser> _signInManager;
-
-        public LoginModel(SignInManager<IdentityUser> signInManager)
+    public async Task OnGetAsync(string returnUrl = null)
+    {
+        if(!string.IsNullOrEmpty(ErrorMessage))
         {
-            _signInManager = signInManager;
+            ModelState.AddModelError(string.Empty, ErrorMessage);
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
-        {
-            if(!string.IsNullOrEmpty(ErrorMessage))
-            {
-                ModelState.AddModelError(string.Empty, ErrorMessage);
-            }
+        returnUrl ??= Url.Content("~/");
 
-            returnUrl ??= Url.Content("~/");
+        // Clear the existing external cookie to ensure a clean login process
+        await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            ReturnUrl = returnUrl;
-        }
+        ReturnUrl = returnUrl;
     }
 }

@@ -1,9 +1,8 @@
-﻿namespace Goblin.Application.Core.Options
+﻿namespace Goblin.Application.Core.Options;
+
+public class MailingOptions
 {
-    public class MailingOptions
-    {
-        public bool IsVacations { get; set; }
-        public MailingSettings Schedule { get; set; }
-        public MailingSettings Weather { get; set; }
-    }
+    public bool IsVacations { get; set; }
+    public MailingSettings Schedule { get; set; }
+    public MailingSettings Weather { get; set; }
 }

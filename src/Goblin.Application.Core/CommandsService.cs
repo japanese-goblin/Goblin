@@ -9,118 +9,117 @@ using Goblin.DataAccess;
 using Goblin.Domain.Abstractions;
 using Serilog;
 
-namespace Goblin.Application.Core
+namespace Goblin.Application.Core;
+
+public class CommandsService
 {
-    public class CommandsService
+    private readonly BotDbContext _context;
+    private readonly IEnumerable<IKeyboardCommand> _keyboardCommands;
+    private readonly ILogger _logger;
+    private readonly IEnumerable<ITextCommand> _textCommands;
+
+    public CommandsService(IEnumerable<ITextCommand> textCommands,
+                           IEnumerable<IKeyboardCommand> keyboardCommands,
+                           BotDbContext context)
     {
-        private readonly BotDbContext _context;
-        private readonly IEnumerable<IKeyboardCommand> _keyboardCommands;
-        private readonly ILogger _logger;
-        private readonly IEnumerable<ITextCommand> _textCommands;
+        _textCommands = textCommands;
+        _keyboardCommands = keyboardCommands;
+        _context = context;
+        _logger = Log.ForContext<CommandsService>();
+    }
 
-        public CommandsService(IEnumerable<ITextCommand> textCommands,
-                               IEnumerable<IKeyboardCommand> keyboardCommands,
-                               BotDbContext context)
+    public async Task ExecuteCommand<T>(Message msg,
+                                        Func<IResult, Task> onSuccess,
+                                        Func<IResult, Task> onFailed) where T : BotUser
+    {
+        IResult result;
+        var user = await GetBotUser<T>(msg.UserId);
+        if(!string.IsNullOrWhiteSpace(msg.Payload))
         {
-            _textCommands = textCommands;
-            _keyboardCommands = keyboardCommands;
-            _context = context;
-            _logger = Log.ForContext<CommandsService>();
+            result = await ExecuteKeyboardCommand(msg, user);
+        }
+        else
+        {
+            result = await ExecuteTextCommand(msg, user);
         }
 
-        public async Task ExecuteCommand<T>(Message msg,
-                                            Func<IResult, Task> onSuccess,
-                                            Func<IResult, Task> onFailed) where T : BotUser
+        result.Keyboard ??= DefaultKeyboards.GetDefaultKeyboard();
+
+        if(!result.IsSuccessful)
         {
-            IResult result;
-            var user = await GetBotUser<T>(msg.UserId);
-            if(!string.IsNullOrWhiteSpace(msg.Payload))
+            if(result is CommandNotFoundResult && !user.IsErrorsEnabled)
             {
-                result = await ExecuteKeyboardCommand(msg, user);
-            }
-            else
-            {
-                result = await ExecuteTextCommand(msg, user);
+                // если команда не найдена, и у пользователя отключены ошибки
+                return;
             }
 
-            result.Keyboard ??= DefaultKeyboards.GetDefaultKeyboard();
+            await onFailed(result);
+        }
+        else
+        {
+            await onSuccess(result);
+        }
+    }
 
-            if(!result.IsSuccessful)
-            {
-                if(result is CommandNotFoundResult && !user.IsErrorsEnabled)
-                {
-                    // если команда не найдена, и у пользователя отключены ошибки
-                    return;
-                }
+    private async Task<IResult> ExecuteTextCommand(Message msg, BotUser user)
+    {
+        _logger.Debug("Обработка текстовой команды");
+        var cmdName = msg.CommandName;
 
-                await onFailed(result);
-            }
-            else
+        foreach(var command in _textCommands)
+        {
+            if(!command.Aliases.Contains(cmdName))
             {
-                await onSuccess(result);
+                continue;
             }
+
+            if(command.IsAdminCommand && !user.IsAdmin)
+            {
+                continue;
+            }
+
+            _logger.Debug("Выполнение команды {0}", command.GetType());
+            var result = await command.Execute(msg, user);
+            _logger.Debug("Команда вернула {0} результат", result.GetType());
+
+            return result;
         }
 
-        private async Task<IResult> ExecuteTextCommand(Message msg, BotUser user)
+        return new CommandNotFoundResult();
+    }
+
+    private async Task<IResult> ExecuteKeyboardCommand(Message msg, BotUser user)
+    {
+        _logger.Debug("Обработка команды с клавиатуры");
+        var record = msg.ParsedPayload.First();
+        foreach(var command in _keyboardCommands)
         {
-            _logger.Debug("Обработка текстовой команды");
-            var cmdName = msg.CommandName;
-
-            foreach(var command in _textCommands)
+            if(!record.Key.Contains(command.Trigger))
             {
-                if(!command.Aliases.Contains(cmdName))
-                {
-                    continue;
-                }
-
-                if(command.IsAdminCommand && !user.IsAdmin)
-                {
-                    continue;
-                }
-
-                _logger.Debug("Выполнение команды {0}", command.GetType());
-                var result = await command.Execute(msg, user);
-                _logger.Debug("Команда вернула {0} результат", result.GetType());
-
-                return result;
+                continue;
             }
 
-            return new CommandNotFoundResult();
+            _logger.Debug("Выполнение команды с клавиатуры {0}", command.GetType());
+            return await command.Execute(msg, user);
         }
 
-        private async Task<IResult> ExecuteKeyboardCommand(Message msg, BotUser user)
+        return new CommandNotFoundResult();
+    }
+
+    private async Task<BotUser> GetBotUser<T>(long userId) where T : BotUser
+    {
+        var user = await _context.Set<T>()
+                                 .FindAsync(userId);
+        if(!(user is null))
         {
-            _logger.Debug("Обработка команды с клавиатуры");
-            var record = msg.ParsedPayload.First();
-            foreach(var command in _keyboardCommands)
-            {
-                if(!record.Key.Contains(command.Trigger))
-                {
-                    continue;
-                }
-
-                _logger.Debug("Выполнение команды с клавиатуры {0}", command.GetType());
-                return await command.Execute(msg, user);
-            }
-
-            return new CommandNotFoundResult();
-        }
-
-        private async Task<BotUser> GetBotUser<T>(long userId) where T : BotUser
-        {
-            var user = await _context.Set<T>()
-                                     .FindAsync(userId);
-            if(!(user is null))
-            {
-                return user;
-            }
-
-            var entity = Activator.CreateInstance(typeof(T), userId, "", 0, false, true, false, false) as T;
-
-            user = (await _context.AddAsync(entity)).Entity;
-            await _context.SaveChangesAsync();
-
             return user;
         }
+
+        var entity = Activator.CreateInstance(typeof(T), userId, "", 0, false, true, false, false) as T;
+
+        user = (await _context.AddAsync(entity)).Entity;
+        await _context.SaveChangesAsync();
+
+        return user;
     }
 }

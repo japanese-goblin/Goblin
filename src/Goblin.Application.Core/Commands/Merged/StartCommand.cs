@@ -4,22 +4,21 @@ using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Abstractions;
 
-namespace Goblin.Application.Core.Commands.Merged
+namespace Goblin.Application.Core.Commands.Merged;
+
+public class StartCommand : IKeyboardCommand, ITextCommand
 {
-    public class StartCommand : IKeyboardCommand, ITextCommand
+    public bool IsAdminCommand => false;
+    public string[] Aliases => new[] { "старт", "начать", "/start" };
+
+    public string Trigger => "command";
+
+    public Task<IResult> Execute(Message msg, BotUser user)
     {
-        public bool IsAdminCommand => false;
-        public string[] Aliases => new[] { "старт", "начать", "/start" };
-
-        public string Trigger => "command";
-
-        public Task<IResult> Execute(Message msg, BotUser user)
+        return Task.FromResult<IResult>(new SuccessfulResult
         {
-            return Task.FromResult<IResult>(new SuccessfulResult
-            {
-                Message = "Выберите действие:",
-                Keyboard = DefaultKeyboards.GetDefaultKeyboard()
-            });
-        }
+            Message = "Выберите действие:",
+            Keyboard = DefaultKeyboards.GetDefaultKeyboard()
+        });
     }
 }

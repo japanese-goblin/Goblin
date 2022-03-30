@@ -7,78 +7,77 @@ using Goblin.Application.Core.Results.Success;
 using Moq;
 using Xunit;
 
-namespace Goblin.Application.Core.Tests.Commands.Merged
+namespace Goblin.Application.Core.Tests.Commands.Merged;
+
+public class WeatherNowCommandTests : TestBase
 {
-    public class WeatherNowCommandTests : TestBase
+    private IWeatherService GetWeatherService()
     {
-        private IWeatherService GetWeatherService()
-        {
-            var mock = new Mock<IWeatherService>();
-            mock.Setup(x => x.GetCurrentWeather(It.IsAny<string>()))
-                .ReturnsAsync(new SuccessfulResult
-                {
-                    Message = "weather"
-                });
+        var mock = new Mock<IWeatherService>();
+        mock.Setup(x => x.GetCurrentWeather(It.IsAny<string>()))
+            .ReturnsAsync(new SuccessfulResult
+            {
+                Message = "weather"
+            });
 
-            return mock.Object;
-        }
+        return mock.Object;
+    }
 
-        [Fact]
-        public async Task ShouldReturnSuccessfulResultWithText_Because_UserHasSetCity()
-        {
-            var command = new WeatherNowCommand(GetWeatherService());
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
+    [Fact]
+    public async Task ShouldReturnSuccessfulResultWithText_Because_UserHasSetCity()
+    {
+        var command = new WeatherNowCommand(GetWeatherService());
+        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
-            var result = await command.Execute(message, DefaultUser);
-            result.Should().BeOfType<SuccessfulResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-        }
+        var result = await command.Execute(message, DefaultUser);
+        result.Should().BeOfType<SuccessfulResult>();
+        result.Message.Should().NotBeNullOrEmpty();
+    }
 
-        [Fact]
-        public async Task ShouldReturnFailedResult_Because_UserCityAndParameterAreEmpty()
-        {
-            DefaultUser.SetCity(string.Empty);
-            var command = new WeatherNowCommand(GetWeatherService());
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
+    [Fact]
+    public async Task ShouldReturnFailedResult_Because_UserCityAndParameterAreEmpty()
+    {
+        DefaultUser.SetCity(string.Empty);
+        var command = new WeatherNowCommand(GetWeatherService());
+        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
-            var result = await command.Execute(message, DefaultUser);
-            result.Should().BeOfType<FailedResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-        }
+        var result = await command.Execute(message, DefaultUser);
+        result.Should().BeOfType<FailedResult>();
+        result.Message.Should().NotBeNullOrEmpty();
+    }
 
-        [Fact]
-        public async Task ShouldReturnSuccessfulResult_Because_ParameterIsNotEmpty()
-        {
-            var command = new WeatherNowCommand(GetWeatherService());
-            var text = $"{command.Aliases[0]} Москва";
-            var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+    [Fact]
+    public async Task ShouldReturnSuccessfulResult_Because_ParameterIsNotEmpty()
+    {
+        var command = new WeatherNowCommand(GetWeatherService());
+        var text = $"{command.Aliases[0]} Москва";
+        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
-            var result = await command.Execute(message, DefaultUser);
-            result.Should().BeOfType<SuccessfulResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-        }
+        var result = await command.Execute(message, DefaultUser);
+        result.Should().BeOfType<SuccessfulResult>();
+        result.Message.Should().NotBeNullOrEmpty();
+    }
 
-        [Fact]
-        public async Task ShouldReturnSuccessfulResultWithPayload_Because_UserHasSetCity()
-        {
-            var command = new WeatherNowCommand(GetWeatherService());
-            var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, string.Empty);
+    [Fact]
+    public async Task ShouldReturnSuccessfulResultWithPayload_Because_UserHasSetCity()
+    {
+        var command = new WeatherNowCommand(GetWeatherService());
+        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, string.Empty);
 
-            var result = await command.Execute(message, DefaultUser);
-            result.Should().BeOfType<SuccessfulResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-        }
+        var result = await command.Execute(message, DefaultUser);
+        result.Should().BeOfType<SuccessfulResult>();
+        result.Message.Should().NotBeNullOrEmpty();
+    }
 
-        [Fact]
-        public async Task ShouldReturnFailedResultWithPayload_Because_UserDoesNotSetCity()
-        {
-            DefaultUser.SetCity(string.Empty);
-            var command = new WeatherNowCommand(GetWeatherService());
-            var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, string.Empty);
+    [Fact]
+    public async Task ShouldReturnFailedResultWithPayload_Because_UserDoesNotSetCity()
+    {
+        DefaultUser.SetCity(string.Empty);
+        var command = new WeatherNowCommand(GetWeatherService());
+        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, string.Empty);
 
-            var result = await command.Execute(message, DefaultUser);
-            result.Should().BeOfType<FailedResult>();
-            result.Message.Should().NotBeNullOrEmpty();
-        }
+        var result = await command.Execute(message, DefaultUser);
+        result.Should().BeOfType<FailedResult>();
+        result.Message.Should().NotBeNullOrEmpty();
     }
 }

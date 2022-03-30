@@ -8,32 +8,31 @@ using Flurl.Http;
 using Flurl.Http.Testing;
 using Xunit;
 
-namespace Goblin.Narfu.Tests.TeachersSchedule
+namespace Goblin.Narfu.Tests.TeachersSchedule;
+
+public class GetScheduleTests : TestBase
 {
-    public class GetScheduleTests : TestBase
+    [Fact]
+    public async Task GetSchedule_CorrectId_ReturnsLessons()
     {
-        [Fact]
-        public async Task GetSchedule_CorrectId_ReturnsLessons()
-        {
-            using var http = new HttpTest();
-            http.RespondWith(await File.ReadAllTextAsync(TeachersSchedulePath));
+        using var http = new HttpTest();
+        http.RespondWith(await File.ReadAllTextAsync(TeachersSchedulePath));
 
-            var lessons = await Api.Teachers.GetSchedule(CorrectTeacherId);
+        var lessons = await Api.Teachers.GetSchedule(CorrectTeacherId);
 
-            lessons.ToArray().Should()
-                   .NotBeNullOrEmpty().And
-                   .HaveCount(27);
-        }
+        lessons.ToArray().Should()
+               .NotBeNullOrEmpty().And
+               .HaveCount(27);
+    }
 
-        [Fact]
-        public async Task GetSchedule_IncorrectId_ReturnsLessons()
-        {
-            using var http = new HttpTest();
-            http.RespondWith(string.Empty, (int) HttpStatusCode.NotFound);
+    [Fact]
+    public async Task GetSchedule_IncorrectId_ReturnsLessons()
+    {
+        using var http = new HttpTest();
+        http.RespondWith(string.Empty, (int) HttpStatusCode.NotFound);
 
-            Func<Task> func = async () => await Api.Teachers.GetSchedule(CorrectTeacherId);
+        Func<Task> func = async () => await Api.Teachers.GetSchedule(CorrectTeacherId);
 
-            await func.Should().ThrowAsync<FlurlHttpException>();
-        }
+        await func.Should().ThrowAsync<FlurlHttpException>();
     }
 }

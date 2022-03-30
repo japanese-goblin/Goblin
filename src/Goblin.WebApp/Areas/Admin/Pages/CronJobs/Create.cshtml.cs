@@ -7,53 +7,52 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs
+namespace Goblin.WebApp.Areas.Admin.Pages.CronJobs;
+
+[Authorize(Roles = "Admin")]
+[Area("Admin")]
+public class Create : PageModel
 {
-    [Authorize(Roles = "Admin")]
-    [Area("Admin")]
-    public class Create : PageModel
+    [BindProperty]
+    [FromForm]
+    public InputModel Input { get; set; }
+
+    private readonly BotDbContext _context;
+
+    public Create(BotDbContext context)
     {
-        [BindProperty]
-        [FromForm]
-        public InputModel Input { get; set; }
-
-        private readonly BotDbContext _context;
-
-        public Create(BotDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<IActionResult> OnPost()
-        {
-            var cronType = Input.CronType.Aggregate((x, y) => x | y); 
-            var time = new CronTime(Input.CronMinute, Input.CronHour, Input.CronDayOfMonth,
-                                    Input.CronMonth, Input.CronDayOfWeek);
-            var job = new CronJob(Input.Name, Input.ChatId, Input.NarfuGroup, Input.WeatherCity, time, Input.ConsumerType, cronType,
-                                  Input.Text);
-            await _context.AddAsync(job);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("Index");
-        }
+        _context = context;
     }
 
-    public class InputModel
+    public async Task<IActionResult> OnPost()
     {
-        public string Name { get; set; }
-        public long ChatId { get; set; }
+        var cronType = Input.CronType.Aggregate((x, y) => x | y); 
+        var time = new CronTime(Input.CronMinute, Input.CronHour, Input.CronDayOfMonth,
+                                Input.CronMonth, Input.CronDayOfWeek);
+        var job = new CronJob(Input.Name, Input.ChatId, Input.NarfuGroup, Input.WeatherCity, time, Input.ConsumerType, cronType,
+                              Input.Text);
+        await _context.AddAsync(job);
+        await _context.SaveChangesAsync();
 
-        public int NarfuGroup { get; set; }
-        public string WeatherCity { get; set; }
-        public string Text { get; set; }
-
-        public string CronMinute { get; set; }
-        public string CronHour { get; set; }
-        public string CronDayOfMonth { get; set; }
-        public string CronMonth { get; set; }
-        public string CronDayOfWeek { get; set; }
-
-        public ConsumerType ConsumerType { get; set; }
-        public CronType[] CronType { get; set; }
+        return RedirectToPage("Index");
     }
+}
+
+public class InputModel
+{
+    public string Name { get; set; }
+    public long ChatId { get; set; }
+
+    public int NarfuGroup { get; set; }
+    public string WeatherCity { get; set; }
+    public string Text { get; set; }
+
+    public string CronMinute { get; set; }
+    public string CronHour { get; set; }
+    public string CronDayOfMonth { get; set; }
+    public string CronMonth { get; set; }
+    public string CronDayOfWeek { get; set; }
+
+    public ConsumerType ConsumerType { get; set; }
+    public CronType[] CronType { get; set; }
 }

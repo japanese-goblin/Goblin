@@ -1,12 +1,11 @@
 using System;
 
-namespace Goblin.Domain
+namespace Goblin.Domain;
+
+[Flags]
+public enum CronType
 {
-    [Flags]
-    public enum CronType
-    {
-        Weather = 1,
-        Schedule = 2,
-        Text = 4
-    }
+    Weather = 1,
+    Schedule = 2,
+    Text = 4
 }

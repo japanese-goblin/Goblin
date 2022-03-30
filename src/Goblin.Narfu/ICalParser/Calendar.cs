@@ -4,64 +4,63 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Goblin.Narfu.ICalParser
+namespace Goblin.Narfu.ICalParser;
+
+public class Calendar
 {
-    public class Calendar
+    public CalendarEvent[] Events { get; }
+
+    public Calendar(string source)
     {
-        public CalendarEvent[] Events { get; }
+        Events = GetEvents(source).ToArray();
+    }
 
-        public Calendar(string source)
+    private static IDictionary<string, string> ParseVEventFields(string source)
+    {
+        var regex = new Regex(@"[^|\n][A-Z-]+:", RegexOptions.Singleline | RegexOptions.Compiled);
+
+        var eventDictionary = new Dictionary<string, string>();
+        var lastAddedKey = "";
+
+        source = source.Replace("\r\n", "\n")
+                       .Replace("\n\t", string.Empty)
+                       .Replace("\\,", ",");
+
+        foreach(var line in source.Split("\n", StringSplitOptions.RemoveEmptyEntries))
         {
-            Events = GetEvents(source).ToArray();
+            var match = regex.Match(line);
+            if(match.Success)
+            {
+                var split = line.Split(":", 2, StringSplitOptions.RemoveEmptyEntries);
+                lastAddedKey = split[0].Trim();
+                eventDictionary.Add(lastAddedKey, split[1].Trim());
+            }
+            else
+            {
+                var lastValue = eventDictionary[lastAddedKey];
+                eventDictionary.Remove(lastAddedKey);
+                eventDictionary.Add(lastAddedKey, lastValue + "\n" + line.Trim());
+            }
         }
 
-        private static IDictionary<string, string> ParseVEventFields(string source)
+        return eventDictionary;
+    }
+
+    private static IEnumerable<CalendarEvent> GetEvents(string source)
+    {
+        const string vEventContentPattern = @"BEGIN:VEVENT\s(?<vevent>.+?)\sEND:VEVENT";
+        const RegexOptions vEventContentRegexOptions = RegexOptions.Singleline;
+
+        var contentMatch = Regex.Matches(source, vEventContentPattern, vEventContentRegexOptions);
+
+        foreach(Match match in contentMatch)
         {
-            var regex = new Regex(@"[^|\n][A-Z-]+:", RegexOptions.Singleline | RegexOptions.Compiled);
+            var field = ParseVEventFields(match.Groups["vevent"].Value);
 
-            var eventDictionary = new Dictionary<string, string>();
-            var lastAddedKey = "";
-
-            source = source.Replace("\r\n", "\n")
-                           .Replace("\n\t", string.Empty)
-                           .Replace("\\,", ",");
-
-            foreach(var line in source.Split("\n", StringSplitOptions.RemoveEmptyEntries))
-            {
-                var match = regex.Match(line);
-                if(match.Success)
-                {
-                    var split = line.Split(":", 2, StringSplitOptions.RemoveEmptyEntries);
-                    lastAddedKey = split[0].Trim();
-                    eventDictionary.Add(lastAddedKey, split[1].Trim());
-                }
-                else
-                {
-                    var lastValue = eventDictionary[lastAddedKey];
-                    eventDictionary.Remove(lastAddedKey);
-                    eventDictionary.Add(lastAddedKey, lastValue + "\n" + line.Trim());
-                }
-            }
-
-            return eventDictionary;
-        }
-
-        private static IEnumerable<CalendarEvent> GetEvents(string source)
-        {
-            const string vEventContentPattern = @"BEGIN:VEVENT\s(?<vevent>.+?)\sEND:VEVENT";
-            const RegexOptions vEventContentRegexOptions = RegexOptions.Singleline;
-
-            var contentMatch = Regex.Matches(source, vEventContentPattern, vEventContentRegexOptions);
-
-            foreach(Match match in contentMatch)
-            {
-                var field = ParseVEventFields(match.Groups["vevent"].Value);
-
-                var startDate = DateTime.ParseExact(field["DTSTART"], "yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture);
-                var endDate = DateTime.ParseExact(field["DTEND"], "yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture);
-                yield return new CalendarEvent(field["UID"], startDate, endDate, field["DESCRIPTION"],
-                                               field["LOCATION"], field["SUMMARY"]);
-            }
+            var startDate = DateTime.ParseExact(field["DTSTART"], "yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(field["DTEND"], "yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture);
+            yield return new CalendarEvent(field["UID"], startDate, endDate, field["DESCRIPTION"],
+                                           field["LOCATION"], field["SUMMARY"]);
         }
     }
 }

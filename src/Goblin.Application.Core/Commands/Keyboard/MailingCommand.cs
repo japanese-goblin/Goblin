@@ -7,68 +7,67 @@ using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain.Abstractions;
 
-namespace Goblin.Application.Core.Commands.Keyboard
+namespace Goblin.Application.Core.Commands.Keyboard;
+
+public class MailingCommand : IKeyboardCommand
 {
-    public class MailingCommand : IKeyboardCommand
+    private const string Success = "Успешно.";
+    public string Trigger => "mailing";
+    private readonly BotDbContext _db;
+
+    public MailingCommand(BotDbContext db)
     {
-        private const string Success = "Успешно.";
-        public string Trigger => "mailing";
-        private readonly BotDbContext _db;
+        _db = db;
+    }
 
-        public MailingCommand(BotDbContext db)
+    public async Task<IResult> Execute(Message msg, BotUser user)
+    {
+        user = _db.Entry(user).Entity;
+        var choose = msg.ParsedPayload[Trigger];
+        var isSchedule = user.HasScheduleSubscription;
+        var isWeather = user.HasWeatherSubscription;
+        if(choose.Equals("weather", StringComparison.OrdinalIgnoreCase))
         {
-            _db = db;
+            return await SetWeatherMailing(user, isWeather);
         }
 
-        public async Task<IResult> Execute(Message msg, BotUser user)
+        if(choose.Equals("schedule", StringComparison.OrdinalIgnoreCase))
         {
-            user = _db.Entry(user).Entity;
-            var choose = msg.ParsedPayload[Trigger];
-            var isSchedule = user.HasScheduleSubscription;
-            var isWeather = user.HasWeatherSubscription;
-            if(choose.Equals("weather", StringComparison.OrdinalIgnoreCase))
-            {
-                return await SetWeatherMailing(user, isWeather);
-            }
-
-            if(choose.Equals("schedule", StringComparison.OrdinalIgnoreCase))
-            {
-                return await SetScheduleMailing(user, isSchedule);
-            }
-
-            return new FailedResult("Действие не найдено");
+            return await SetScheduleMailing(user, isSchedule);
         }
 
-        private async Task<IResult> SetScheduleMailing(BotUser user, bool isSchedule)
-        {
-            if(user.NarfuGroup == 0)
-            {
-                return new FailedResult(DefaultErrors.GroupNotSet);
-            }
+        return new FailedResult("Действие не найдено");
+    }
 
-            user.SetHasSchedule(!isSchedule);
-            await _db.SaveChangesAsync();
-            return new SuccessfulResult
-            {
-                Message = Success,
-                Keyboard = DefaultKeyboards.GetMailingKeyboard(user)
-            };
+    private async Task<IResult> SetScheduleMailing(BotUser user, bool isSchedule)
+    {
+        if(user.NarfuGroup == 0)
+        {
+            return new FailedResult(DefaultErrors.GroupNotSet);
         }
 
-        private async Task<IResult> SetWeatherMailing(BotUser user, bool isWeather)
+        user.SetHasSchedule(!isSchedule);
+        await _db.SaveChangesAsync();
+        return new SuccessfulResult
         {
-            if(string.IsNullOrWhiteSpace(user.WeatherCity))
-            {
-                return new FailedResult(DefaultErrors.CityNotSet);
-            }
+            Message = Success,
+            Keyboard = DefaultKeyboards.GetMailingKeyboard(user)
+        };
+    }
 
-            user.SetHasWeather(!isWeather);
-            await _db.SaveChangesAsync();
-            return new SuccessfulResult
-            {
-                Message = Success,
-                Keyboard = DefaultKeyboards.GetMailingKeyboard(user)
-            };
+    private async Task<IResult> SetWeatherMailing(BotUser user, bool isWeather)
+    {
+        if(string.IsNullOrWhiteSpace(user.WeatherCity))
+        {
+            return new FailedResult(DefaultErrors.CityNotSet);
         }
+
+        user.SetHasWeather(!isWeather);
+        await _db.SaveChangesAsync();
+        return new SuccessfulResult
+        {
+            Message = Success,
+            Keyboard = DefaultKeyboards.GetMailingKeyboard(user)
+        };
     }
 }

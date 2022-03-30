@@ -6,47 +6,46 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 
-namespace Goblin.WebApp
+namespace Goblin.WebApp;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // TODO:
-            SetDefaultLocale();
-            CreateHostBuilder(args).Build().Run();
-        }
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true); // TODO:
+        SetDefaultLocale();
+        CreateHostBuilder(args).Build().Run();
+    }
 
-        private static void SetDefaultLocale()
-        {
-            var culture = new CultureInfo("ru-RU");
-            CultureInfo.CurrentCulture = culture;
-            CultureInfo.CurrentUICulture = culture;
-            CultureInfo.DefaultThreadCurrentCulture = culture;
-            CultureInfo.DefaultThreadCurrentUICulture = culture;
-        }
+    private static void SetDefaultLocale()
+    {
+        var culture = new CultureInfo("ru-RU");
+        CultureInfo.CurrentCulture = culture;
+        CultureInfo.CurrentUICulture = culture;
+        CultureInfo.DefaultThreadCurrentCulture = culture;
+        CultureInfo.DefaultThreadCurrentUICulture = culture;
+    }
 
-        public static IHostBuilder CreateHostBuilder(string[] args)
-        {
-            return Host.CreateDefaultBuilder(args)
-                       .ConfigureLogging(config => { config.ClearProviders(); })
-                       .UseSerilog((hostingContext, loggerConfiguration) =>
+    public static IHostBuilder CreateHostBuilder(string[] args)
+    {
+        return Host.CreateDefaultBuilder(args)
+                   .ConfigureLogging(config => { config.ClearProviders(); })
+                   .UseSerilog((hostingContext, loggerConfiguration) =>
+                   {
+                       loggerConfiguration
+                               .ReadFrom.Configuration(hostingContext.Configuration);
+                       if(!hostingContext.HostingEnvironment.IsDevelopment())
                        {
                            loggerConfiguration
-                                   .ReadFrom.Configuration(hostingContext.Configuration);
-                           if(!hostingContext.HostingEnvironment.IsDevelopment())
-                           {
-                               loggerConfiguration
-                                       .WriteTo.Sentry(o =>
-                                       {
-                                           o.MinimumBreadcrumbLevel = LogEventLevel.Information;
-                                           o.MinimumEventLevel = LogEventLevel.Warning;
-                                           o.Dsn = hostingContext.Configuration["Sentry:Dsn"];
-                                           o.Environment = hostingContext.HostingEnvironment.EnvironmentName;
-                                       });
-                           }
-                       })
-                       .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
-        }
+                                   .WriteTo.Sentry(o =>
+                                   {
+                                       o.MinimumBreadcrumbLevel = LogEventLevel.Information;
+                                       o.MinimumEventLevel = LogEventLevel.Warning;
+                                       o.Dsn = hostingContext.Configuration["Sentry:Dsn"];
+                                       o.Environment = hostingContext.HostingEnvironment.EnvironmentName;
+                                   });
+                       }
+                   })
+                   .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
     }
 }

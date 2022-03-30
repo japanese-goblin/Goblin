@@ -6,36 +6,35 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace Goblin.WebApp.HostedServices
+namespace Goblin.WebApp.HostedServices;
+
+public class CreateDefaultRolesHostedService : IHostedService
 {
-    public class CreateDefaultRolesHostedService : IHostedService
+    private readonly IServiceProvider _serviceProvider;
+
+    public CreateDefaultRolesHostedService(IServiceProvider serviceProvider)
     {
-        private readonly IServiceProvider _serviceProvider;
+        _serviceProvider = serviceProvider;
+    }
 
-        public CreateDefaultRolesHostedService(IServiceProvider serviceProvider)
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
+        using var scope = _serviceProvider.CreateScope();
+        var manager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+        const string roleName = "Admin";
+        if(await manager.RoleExistsAsync(roleName))
         {
-            _serviceProvider = serviceProvider;
+            return;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
-        {
-            using var scope = _serviceProvider.CreateScope();
-            var manager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        Log.ForContext<CreateDefaultRolesHostedService>().Debug("Создание {0} роли", roleName);
+        var role = new IdentityRole(roleName);
+        await manager.CreateAsync(role);
+    }
 
-            const string roleName = "Admin";
-            if(await manager.RoleExistsAsync(roleName))
-            {
-                return;
-            }
-
-            Log.ForContext<CreateDefaultRolesHostedService>().Debug("Создание {0} роли", roleName);
-            var role = new IdentityRole(roleName);
-            await manager.CreateAsync(role);
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
     }
 }

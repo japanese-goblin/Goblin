@@ -5,27 +5,26 @@ using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Domain.Abstractions;
 
-namespace Goblin.Application.Core.Commands.Keyboard
+namespace Goblin.Application.Core.Commands.Keyboard;
+
+public class ScheduleCommand : IKeyboardCommand
 {
-    public class ScheduleCommand : IKeyboardCommand
+    public string Trigger => "schedule";
+    private readonly IScheduleService _api;
+
+    public ScheduleCommand(IScheduleService api)
     {
-        public string Trigger => "schedule";
-        private readonly IScheduleService _api;
+        _api = api;
+    }
 
-        public ScheduleCommand(IScheduleService api)
+    public async Task<IResult> Execute(Message msg, BotUser user)
+    {
+        if(user.NarfuGroup == 0)
         {
-            _api = api;
+            return new FailedResult(DefaultErrors.GroupNotSet);
         }
 
-        public async Task<IResult> Execute(Message msg, BotUser user)
-        {
-            if(user.NarfuGroup == 0)
-            {
-                return new FailedResult(DefaultErrors.GroupNotSet);
-            }
-
-            var date = msg.ParsedPayload[Trigger];
-            return await _api.GetSchedule(user.NarfuGroup, DateTime.Parse(date));
-        }
+        var date = msg.ParsedPayload[Trigger];
+        return await _api.GetSchedule(user.NarfuGroup, DateTime.Parse(date));
     }
 }

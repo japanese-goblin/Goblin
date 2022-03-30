@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Goblin.Application.Core.Abstractions
+namespace Goblin.Application.Core.Abstractions;
+
+public interface IScheduleService
 {
-    public interface IScheduleService
-    {
-        public Task<IResult> GetSchedule(int narfuGroup, DateTime date);
-    }
+    public Task<IResult> GetSchedule(int narfuGroup, DateTime date);
 }

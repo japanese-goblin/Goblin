@@ -9,68 +9,67 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
-namespace Goblin.WebApp.Areas.Admin.Pages.Reminds
+namespace Goblin.WebApp.Areas.Admin.Pages.Reminds;
+
+[Authorize(Roles = "Admin")]
+[Area("Admin")]
+public class Add : PageModel
 {
-    [Authorize(Roles = "Admin")]
-    [Area("Admin")]
-    public class Add : PageModel
+    public string ErrorMessage { get; set; }
+    private readonly BotDbContext _context;
+
+    public Add(BotDbContext context)
     {
-        public string ErrorMessage { get; set; }
-        private readonly BotDbContext _context;
+        _context = context;
+    }
 
-        public Add(BotDbContext context)
+    public async Task<IActionResult> OnPost(long chatId, ConsumerType consumerType, string text, string dateStr, string timeStr)
+    {
+        var isExists = await IsCorrectId(chatId, consumerType);
+        if(!isExists)
         {
-            _context = context;
-        }
-
-        public async Task<IActionResult> OnPost(long chatId, ConsumerType consumerType, string text, string dateStr, string timeStr)
-        {
-            var isExists = await IsCorrectId(chatId, consumerType);
-            if(!isExists)
-            {
-                ErrorMessage = $"Пользователь [{chatId}-{consumerType}] не существует в бд";
-                return Page();
-            }
-
-            var isCorrectDate = DateTime.TryParse($"{dateStr} {timeStr}", out var date);
-            if(!isCorrectDate)
-            {
-                ErrorMessage = "Некорректная дата";
-                return Page();
-            }
-
-            try
-            {
-                await _context.Reminds.AddAsync(new Remind(chatId, text, date, consumerType));
-                await _context.SaveChangesAsync();
-
-                return RedirectToPage("Index");
-            }
-            catch(Exception ex)
-            {
-                ErrorMessage = ex.Message;
-                Log.ForContext<Add>().Error(ex, "Невозможно добавить напоминание");
-            }
-
+            ErrorMessage = $"Пользователь [{chatId}-{consumerType}] не существует в бд";
             return Page();
         }
 
-        [NonHandler]
-        public async Task<bool> IsCorrectId(long chatId, ConsumerType type)
+        var isCorrectDate = DateTime.TryParse($"{dateStr} {timeStr}", out var date);
+        if(!isCorrectDate)
         {
-            if(type == ConsumerType.Telegram)
-            {
-                var isExists = await _context.TgBotUsers.SingleOrDefaultAsync(x => x.Id == chatId);
-                return isExists != null;
-            }
-
-            if(type == ConsumerType.Vkontakte)
-            {
-                var isExists = await _context.VkBotUsers.SingleOrDefaultAsync(x => x.Id == chatId);
-                return isExists != null;
-            }
-
-            return false;
+            ErrorMessage = "Некорректная дата";
+            return Page();
         }
+
+        try
+        {
+            await _context.Reminds.AddAsync(new Remind(chatId, text, date, consumerType));
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("Index");
+        }
+        catch(Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            Log.ForContext<Add>().Error(ex, "Невозможно добавить напоминание");
+        }
+
+        return Page();
+    }
+
+    [NonHandler]
+    public async Task<bool> IsCorrectId(long chatId, ConsumerType type)
+    {
+        if(type == ConsumerType.Telegram)
+        {
+            var isExists = await _context.TgBotUsers.SingleOrDefaultAsync(x => x.Id == chatId);
+            return isExists != null;
+        }
+
+        if(type == ConsumerType.Vkontakte)
+        {
+            var isExists = await _context.VkBotUsers.SingleOrDefaultAsync(x => x.Id == chatId);
+            return isExists != null;
+        }
+
+        return false;
     }
 }
