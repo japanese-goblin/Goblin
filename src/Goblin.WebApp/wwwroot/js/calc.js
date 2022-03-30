@@ -25,6 +25,13 @@ let app = new Vue({
 
             let best = Math.max(first, second);
             let worse = Math.min(first, second);
+            
+            if(best === worse) {
+                return {
+                    text: 'Разницы между товарами нет',
+                    percent: 0
+                };
+            }
 
             let stuff = first < second ? this.firstItem : this.secondItem;
 
