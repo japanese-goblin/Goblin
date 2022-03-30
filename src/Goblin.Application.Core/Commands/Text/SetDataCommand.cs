@@ -42,13 +42,12 @@ namespace Goblin.Application.Core.Commands.Text
             var whatToSet = parameters[0];
             var dataToSet = parameters[1];
 
-            if(whatToSet.Equals("город", StringComparison.OrdinalIgnoreCase))
+            if(whatToSet.Contains("город", StringComparison.InvariantCultureIgnoreCase))
             {
                 return await SetCity(dataToSet, user);
             }
 
-            if(whatToSet.Equals("группу", StringComparison.OrdinalIgnoreCase) ||
-               whatToSet.Equals("группа", StringComparison.OrdinalIgnoreCase))
+            if(whatToSet.Contains("групп", StringComparison.InvariantCultureIgnoreCase))
             {
                 return await SetGroup(dataToSet, user);
             }
