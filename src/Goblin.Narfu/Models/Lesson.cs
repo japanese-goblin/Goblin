@@ -2,7 +2,7 @@ using System;
 
 namespace Goblin.Narfu.Models;
 
-public class Lesson
+public record Lesson
 {
     public string Id { get; set; }
 
@@ -19,9 +19,6 @@ public class Lesson
 
     public string Link { get; set; }
 
-    public bool IsExam()
-    {
-        return Type.Contains("экзамен", StringComparison.OrdinalIgnoreCase) ||
-               Type.Contains("зачет", StringComparison.OrdinalIgnoreCase);
-    }
+    public bool IsExam => Type.Contains("экзамен", StringComparison.InvariantCultureIgnoreCase) ||
+                          Type.Contains("зачет", StringComparison.InvariantCultureIgnoreCase);
 }

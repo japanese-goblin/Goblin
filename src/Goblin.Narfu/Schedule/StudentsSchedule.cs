@@ -61,7 +61,7 @@ public class StudentsSchedule : IStudentsSchedule
 
             var allLessonsFromHtml = HtmlParser.GetAllLessonsFromHtml(response).ToList();
 
-            return  allLessonsFromHtml.Where(x => x.StartTime.Date >= date.Date);
+            return allLessonsFromHtml.Where(x => x.StartTime.Date >= date.Date);
         }
     }
 
@@ -69,7 +69,7 @@ public class StudentsSchedule : IStudentsSchedule
     {
         _logger.Debug("Получение списка экзаменов для группы {0}", realGroupId);
         var schedule = await GetSchedule(realGroupId);
-        var exams = schedule.Where(x => x.IsExam());
+        var exams = schedule.Where(x => x.IsExam);
         _logger.Debug("Список экзаменов получен");
 
         return new ExamsViewModel(exams, DateTime.Today);
@@ -138,7 +138,7 @@ public class StudentsSchedule : IStudentsSchedule
                 StartEndTime = description[0].Replace(")", "")
                                              .Replace("(", "")
                                              .Replace("п", ")")
-                                             .Substring(3)
+                                             [3..]
             };
 
             if(description.Length <= 6)
