@@ -8,7 +8,7 @@ public class Remind
     public long ChatId { get; private set; }
 
     public string Text { get; private set; }
-    public DateTime Date { get; private set; }
+    public DateTimeOffset Date { get; private set; }
 
     public ConsumerType ConsumerType { get; private set; }
 
@@ -16,7 +16,7 @@ public class Remind
     {
     }
 
-    public Remind(long chatId, string text, DateTime date, ConsumerType type)
+    public Remind(long chatId, string text, DateTimeOffset date, ConsumerType type)
     {
         SetChatId(chatId);
         SetText(text);
@@ -34,14 +34,14 @@ public class Remind
         Text = text;
     }
 
-    private void SetDateTime(DateTime date)
+    private void SetDateTime(DateTimeOffset date)
     {
         if(date < DateTime.Now)
         {
             throw new ArgumentException("Дата должна быть больше текущей", nameof(date));
         }
 
-        Date = date;
+        Date = date.ToUniversalTime();
     }
 
     private void SetChatId(long botUserId)

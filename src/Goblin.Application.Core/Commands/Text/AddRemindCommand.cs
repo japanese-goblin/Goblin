@@ -47,12 +47,12 @@ public class AddRemindCommand : ITextCommand
 
         if(all[0].Equals("завтра", StringComparison.OrdinalIgnoreCase))
         {
-            var d = DateTime.Now.AddDays(1);
+            var d = DateTimeOffset.UtcNow.AddDays(1);
             all[0] = $"{d.Day}.{d.Month}.{d.Year}";
         }
         else if(all[0].Equals("сегодня", StringComparison.OrdinalIgnoreCase))
         {
-            var d = DateTime.Now;
+            var d = DateTimeOffset.UtcNow;
             all[0] = $"{d.Day}.{d.Month}.{d.Year}";
         }
 
@@ -75,15 +75,15 @@ public class AddRemindCommand : ITextCommand
         };
     }
 
-    private async Task AddRemind(long chatId, ConsumerType consumerType, string remindText, DateTime dateTime)
+    private async Task AddRemind(long chatId, ConsumerType consumerType, string remindText, DateTimeOffset dateTime)
     {
         await _db.Reminds.AddAsync(new Remind(chatId, remindText, dateTime, consumerType));
         await _db.SaveChangesAsync();
     }
 
-    private static bool ParseTime(string date, string time, out DateTime dateTime)
+    private static bool ParseTime(string date, string time, out DateTimeOffset dateTime)
     {
-        var isCorrect = DateTime.TryParseExact($"{date} {time}",
+        var isCorrect = DateTimeOffset.TryParseExact($"{date} {time}",
                                                new[]
                                                {
                                                    "dd.MM.yyyy HH:mm", "d.MM.yyyy HH:mm",
@@ -94,8 +94,7 @@ public class AddRemindCommand : ITextCommand
                                                    "dd.M.yyyy HH:m", "d.M.yyyy HH:m",
                                                    "dd.MM.yyyy H:m", "d.MM.yyyy H:m",
                                                    "dd.M.yyyy H:m", "d.M.yyyy H:m"
-                                               },
-                                               null, DateTimeStyles.AssumeLocal, out dateTime);
+                                               }, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out dateTime);
 
         return isCorrect;
     }

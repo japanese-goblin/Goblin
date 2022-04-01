@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using Goblin.DataAccess;
 using Goblin.Domain;
@@ -32,7 +33,8 @@ public class Add : PageModel
             return Page();
         }
 
-        var isCorrectDate = DateTime.TryParse($"{dateStr} {timeStr}", out var date);
+        var isCorrectDate = DateTimeOffset.TryParse($"{dateStr} {timeStr}", CultureInfo.InvariantCulture,
+                                                    DateTimeStyles.AssumeLocal, out var date);
         if(!isCorrectDate)
         {
             ErrorMessage = "Некорректная дата";

@@ -26,7 +26,7 @@ public class SendRemindTasks
 
     public async Task SendRemindEveryMinute()
     {
-        var currentTime = DateTime.Now;
+        var currentTime = DateTimeOffset.UtcNow;
         var reminds =
                 _db.Reminds
                    .Where(x => x.Date - currentTime <= TimeSpan.FromMinutes(1))
@@ -37,7 +37,7 @@ public class SendRemindTasks
 
     public async Task SendOldRemindsOnStartup()
     {
-        var currentTime = DateTime.Now;
+        var currentTime = DateTimeOffset.UtcNow;
         var reminds = _db.Reminds.Where(x => x.Date < currentTime).ToArray();
         await SendRemindsFromArray(reminds);
     }
