@@ -69,6 +69,11 @@ public class VkCallbackHandler
             ExtractUserIdFromConversation(msg);
             await MessageNew(msg, upd.MessageNew.ClientInfo);
         }
+
+        if(upd.Type == GroupUpdateType.MessageEvent)
+        {
+            await MessageEvent(upd.MessageEvent);
+        }
         else if(upd.Type == GroupUpdateType.GroupLeave)
         {
             await GroupLeave(upd.GroupLeave);
@@ -123,6 +128,34 @@ public class VkCallbackHandler
                 Message = res.Message,
                 PeerId = message.ChatId
             });
+        }
+    }
+
+    private async Task MessageEvent(MessageEvent messageEvent)
+    {
+        var mappedToMessage = _mapper.Map<Message>(messageEvent);
+        await _commandsService.ExecuteCommand<VkBotUser>(mappedToMessage, OnSuccess, OnFailed);
+        async Task OnSuccess(IResult res)
+        {
+            await _vkApi.Messages.SendMessageEventAnswerAsync(messageEvent.EventId,
+                                                              messageEvent.UserId.GetValueOrDefault(0),
+                                                              messageEvent.PeerId.GetValueOrDefault(0),
+                                                              new EventData()
+                                                              {
+                                                                  Text = res.Message
+                                                              });
+        }
+
+        async Task OnFailed(IResult res)
+        {
+            await _vkApi.Messages.SendMessageEventAnswerAsync(messageEvent.EventId,
+                                                              messageEvent.UserId.GetValueOrDefault(0),
+                                                              messageEvent.PeerId.GetValueOrDefault(0),
+                                                              new EventData()
+                                                              {
+                                                                  Type = MessageEventType.SnowSnackbar,
+                                                                  Text = res.Message
+                                                              });
         }
     }
 

@@ -17,6 +17,15 @@ public class MappingProfile : Profile
                 .ForMember(x => x.UserId, 
                            x => x.MapFrom(m => m.FromId))
                 .ForMember(dst => dst.UserTag, src => src.MapFrom(x => $"@id{x.FromId}"));
+        
+        CreateMap<VkNet.Model.GroupUpdate.MessageEvent, Message>()
+                .ForMember(x => x.Payload,
+                           x => x.MapFrom(m => m.Payload))
+                .ForMember(x => x.ChatId,
+                           x => x.MapFrom(m => m.PeerId))
+                .ForMember(x => x.UserId, 
+                           x => x.MapFrom(m => m.UserId))
+                .ForMember(dst => dst.UserTag, src => src.MapFrom(x => $"@id{x.UserId}"));
 
         CreateMap<Telegram.Bot.Types.Message, Message>()
                 .ForMember(x => x.Text,
