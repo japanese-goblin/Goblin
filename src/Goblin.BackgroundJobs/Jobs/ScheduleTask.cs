@@ -2,86 +2,52 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Options;
-using Goblin.Application.Vk.Extensions;
 using Goblin.DataAccess;
+using Goblin.Domain;
 using Goblin.Domain.Abstractions;
 using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
-using Telegram.Bot;
-using Telegram.Bot.Exceptions;
-using VkNet.Abstractions;
-using VkNet.Model.RequestParams;
 
 namespace Goblin.BackgroundJobs.Jobs;
 
 public class ScheduleTask
 {
-    private readonly TelegramBotClient _botClient;
     private readonly BotDbContext _db;
     private readonly ILogger _logger;
     private readonly IScheduleService _scheduleService;
-    private readonly IVkApi _vkApi;
+    private readonly IEnumerable<ISender> _senders;
     private readonly MailingOptions _mailingOptions;
 
-    public ScheduleTask(BotDbContext db, IVkApi vkApi, IScheduleService scheduleService, TelegramBotClient botClient,
+    public ScheduleTask(BotDbContext db,
+                        IScheduleService scheduleService,
+                        IEnumerable<ISender> senders,
                         IOptions<MailingOptions> mailingOptions)
     {
         _db = db;
-        _vkApi = vkApi;
         _scheduleService = scheduleService;
-        _botClient = botClient;
-        _logger = Log.ForContext<ScheduleTask>();
+        _senders = senders;
         _mailingOptions = mailingOptions.Value;
+        _logger = Log.ForContext<ScheduleTask>();
     }
 
     public async Task Execute()
     {
-        Func<string, IEnumerable<long>, Task> vk = async (text, userIds) =>
+        Func<string, IEnumerable<long>, ConsumerType, Task> send = async (text, userIds, consumer) =>
         {
-            await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
-            {
-                Message = text,
-                UserIds = userIds
-            });
+            var sender = _senders.FirstOrDefault(x => x.ConsumerType == consumer);
+            await sender.SendToMany(userIds, text);
         };
 
-        Func<string, IEnumerable<long>, Task> telegram = async (text, userIds) =>
-        {
-            foreach(var userId in userIds)
-            {
-                try
-                {
-                    await _botClient.SendTextMessageAsync(userId, text);
-                }
-                catch(ApiRequestException ex)
-                {
-                    if(ex.ErrorCode == 403) // Forbidden: bot was blocked by the user
-                    {
-                        var user = _db.TgBotUsers.FirstOrDefault(x => x.Id == userId);
-                        if(user != null)
-                        {
-                            _db.TgBotUsers.Remove(user);
-                        }
-                    }
-                }
-                catch(Exception ex)
-                {
-                    _logger.Error(ex, "Ошибка при отправке погоды");
-                }
-            }
-
-            await _db.SaveChangesAsync();
-        };
-
-        await SendSchedule<VkBotUser>(vk);
-        await SendSchedule<TgBotUser>(telegram);
+        await SendSchedule<VkBotUser>(send);
+        await SendSchedule<TgBotUser>(send);
     }
 
-    private async Task SendSchedule<T>(Func<string, IEnumerable<long>, Task> func) where T : BotUser
+    private async Task SendSchedule<T>(Func<string, IEnumerable<long>, ConsumerType, Task> func) where T : BotUser
     {
         var grouped = _db.Set<T>()
                          .AsNoTracking()
@@ -101,11 +67,11 @@ public class ScheduleTask
                 try
                 {
                     var ids = chunk.Select(x => x.Id);
-                    await func(result.Message, ids);
+                    await func(result.Message, ids, chunk.FirstOrDefault().ConsumerType); //TODO:
                 }
                 catch(Exception ex)
                 {
-                    _logger.Error(ex, "Ошибка при отправке расписания");
+                    _logger.Error(ex, "Ошибка при отправке ежедневного расписания");
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(1.5));

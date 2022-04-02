@@ -10,6 +10,10 @@ public static class KeyboardConverter
 {
     public static MessageKeyboard FromCoreToVk(CoreKeyboard coreKeyboard, bool isInlineKeyboardAllowed = false)
     {
+        if(coreKeyboard is null)
+        {
+            return null;
+        }
         var kb = new KeyboardBuilder();
         var inlineKeyboardEnabled = coreKeyboard.IsInline && isInlineKeyboardAllowed;
         if(!isInlineKeyboardAllowed)

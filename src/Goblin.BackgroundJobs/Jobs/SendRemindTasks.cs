@@ -1,27 +1,22 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Goblin.Application.Vk.Extensions;
+using Goblin.Application.Core;
 using Goblin.DataAccess;
-using Goblin.Domain;
 using Goblin.Domain.Entities;
-using Telegram.Bot;
-using VkNet.Abstractions;
-using VkNet.Model.RequestParams;
 
 namespace Goblin.BackgroundJobs.Jobs;
 
 public class SendRemindTasks
 {
-    private readonly TelegramBotClient _botClient;
     private readonly BotDbContext _db;
-    private readonly IVkApi _vkApi;
+    private readonly IEnumerable<ISender> _senders;
 
-    public SendRemindTasks(IVkApi vkApi, BotDbContext db, TelegramBotClient botClient)
+    public SendRemindTasks(BotDbContext db, IEnumerable<ISender> senders)
     {
-        _vkApi = vkApi;
         _db = db;
-        _botClient = botClient;
+        _senders = senders;
     }
 
     public async Task SendRemindEveryMinute()
@@ -52,14 +47,13 @@ public class SendRemindTasks
         foreach(var remind in reminds)
         {
             var message = $"Напоминаю:\n{remind.Text}";
-            if(remind.ConsumerType == ConsumerType.Vkontakte)
+            var sender = _senders.FirstOrDefault(x => x.ConsumerType == remind.ConsumerType);
+            if(sender is null)
             {
-                await SendToVk(message, remind.ChatId);
+                throw new ArgumentNullException($"sender for '{remind.ConsumerType}' not found", nameof(sender));
             }
-            else if(remind.ConsumerType == ConsumerType.Telegram)
-            {
-                await SendToTelegram(message, remind.ChatId);
-            }
+
+            await sender.Send(remind.ChatId, message);
 
             _db.Reminds.Remove(remind);
         }
@@ -68,19 +62,5 @@ public class SendRemindTasks
         {
             await _db.SaveChangesAsync();
         }
-    }
-
-    private async Task SendToVk(string message, long chatId)
-    {
-        await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
-        {
-            Message = message,
-            PeerId = chatId
-        });
-    }
-
-    private async Task SendToTelegram(string message, long chatId)
-    {
-        await _botClient.SendTextMessageAsync(chatId, message);
     }
 }

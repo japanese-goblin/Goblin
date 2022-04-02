@@ -1,37 +1,35 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Options;
-using Goblin.Application.Vk.Extensions;
 using Goblin.DataAccess;
 using Goblin.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
-using Telegram.Bot;
-using VkNet.Abstractions;
-using VkNet.Exception;
-using VkNet.Model.RequestParams;
 
 namespace Goblin.BackgroundJobs.Jobs;
 
 public class SendToChatTasks
 {
-    private readonly TelegramBotClient _botClient;
     private readonly BotDbContext _context;
     private readonly IScheduleService _scheduleService;
-    private readonly IVkApi _vkApi;
     private readonly IWeatherService _weatherService;
+    private readonly IEnumerable<ISender> _senders;
     private readonly MailingOptions _mailingOptions;
     private readonly ILogger _logger;
 
-    public SendToChatTasks(IScheduleService scheduleService, IWeatherService weatherService, IVkApi vkApi,
-                           TelegramBotClient botClient, IOptions<MailingOptions> mailingOptions, BotDbContext context)
+    public SendToChatTasks(IScheduleService scheduleService, IWeatherService weatherService,
+                           IEnumerable<ISender> senders,
+                           IOptions<MailingOptions> mailingOptions,
+                           BotDbContext context)
     {
         _scheduleService = scheduleService;
         _weatherService = weatherService;
-        _vkApi = vkApi;
-        _botClient = botClient;
+        _senders = senders;
         _context = context;
         _mailingOptions = mailingOptions.Value;
         _logger = Log.ForContext<SendToChatTasks>();
@@ -39,14 +37,8 @@ public class SendToChatTasks
 
     public async Task Execute(long chatId, ConsumerType consumerType, CronType cronType, string city, int group, string text)
     {
-        if(consumerType == ConsumerType.Vkontakte)
-        {
-            await Send(SendToVk);
-        }
-        else if(consumerType == ConsumerType.Telegram)
-        {
-            await Send(SendToTelegram);
-        }
+        var sender = _senders.FirstOrDefault(x => x.ConsumerType == consumerType);
+        await Send(responseText => sender.Send(chatId, responseText));
 
         async Task Send(Func<string, Task> func)
         {
@@ -64,31 +56,6 @@ public class SendToChatTasks
             {
                 await SendText(text, func);
             }
-        }
-
-        async Task SendToVk(string message)
-        {
-            try
-            {
-                await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
-                {
-                    PeerId = chatId,
-                    Message = message
-                });
-            }
-            catch(PermissionToPerformThisActionException)
-            {
-                await RemoveJob(chatId);
-            }
-            catch(CannotSendToUserFirstlyException)
-            {
-                await RemoveJob(chatId);
-            }
-        }
-
-        async Task SendToTelegram(string message)
-        {
-            await _botClient.SendTextMessageAsync(chatId, message);
         }
     }
 

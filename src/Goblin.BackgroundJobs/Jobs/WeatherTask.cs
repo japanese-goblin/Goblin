@@ -1,44 +1,48 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Vk.Extensions;
 using Goblin.DataAccess;
+using Goblin.Domain;
+using Goblin.Domain.Abstractions;
+using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Telegram.Bot;
-using Telegram.Bot.Exceptions;
-using VkNet.Abstractions;
-using VkNet.Model.RequestParams;
 
 namespace Goblin.BackgroundJobs.Jobs;
 
 public class WeatherTask
 {
-    private readonly TelegramBotClient _botClient;
     private readonly BotDbContext _db;
+    private readonly IEnumerable<ISender> _senders;
     private readonly ILogger _logger;
-    private readonly IVkApi _vkApi;
     private readonly IWeatherService _weatherService;
 
-    public WeatherTask(IWeatherService weatherService, BotDbContext db, IVkApi vkApi, TelegramBotClient botClient)
+    public WeatherTask(IWeatherService weatherService, BotDbContext db, IEnumerable<ISender> senders)
     {
         _weatherService = weatherService;
         _db = db;
-        _vkApi = vkApi;
-        _botClient = botClient;
+        _senders = senders;
         _logger = Log.ForContext<WeatherTask>();
     }
 
     public async Task Execute()
     {
-        await SendToVk();
-        await SendToTelegram();
+        Func<string, IEnumerable<long>, ConsumerType, Task> send = async (text, userIds, consumer) =>
+        {
+            var sender = _senders.FirstOrDefault(x => x.ConsumerType == consumer);
+            await sender.SendToMany(userIds, text);
+        };
+
+        await SendWeather<VkBotUser>(send);
+        await SendWeather<TgBotUser>(send);
     }
 
-    private async Task SendToVk()
+    private async Task SendWeather<T>(Func<string, IEnumerable<long>, ConsumerType, Task> func) where T : BotUser
     {
-        var grouped = _db.VkBotUsers
+        var grouped = _db.Set<T>()
                          .AsNoTracking()
                          .Where(x => x.HasWeatherSubscription)
                          .ToArray()
@@ -46,58 +50,21 @@ public class WeatherTask
         foreach(var group in grouped)
         {
             var result = await _weatherService.GetDailyWeather(group.Key, DateTime.Today);
+
             foreach(var chunk in group.Chunk(Defaults.ChunkLimit))
             {
                 try
                 {
-                    var ids = chunk.Select(x => x.Id).ToArray();
-
-                    await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
-                    {
-                        UserIds = ids,
-                        Message = result.Message
-                    });
-
-                    await Task.Delay(Defaults.ExtraDelay);
+                    var ids = chunk.Select(x => x.Id);
+                    await func(result.Message, ids, chunk.FirstOrDefault().ConsumerType); //TODO:
                 }
                 catch(Exception ex)
                 {
-                    _logger.Error(ex, "Ошибка при отправке погоды");
+                    _logger.Error(ex, "Ошибка при отправке ежедневной погоды");
                 }
+
+                await Task.Delay(TimeSpan.FromSeconds(1.5));
             }
         }
-    }
-
-    private async Task SendToTelegram()
-    {
-        var grouped = _db.TgBotUsers
-                         .AsNoTracking()
-                         .Where(x => x.HasWeatherSubscription)
-                         .ToArray()
-                         .GroupBy(x => x.WeatherCity);
-        foreach(var group in grouped)
-        {
-            var result = await _weatherService.GetDailyWeather(group.Key, DateTime.Today);
-            foreach(var user in group)
-            {
-                try
-                {
-                    await _botClient.SendTextMessageAsync(user.Id, result.Message);
-                }
-                catch(ApiRequestException ex)
-                {
-                    if(ex.ErrorCode == 403) // Forbidden: bot was blocked by the user
-                    {
-                        _db.TgBotUsers.Remove(user);
-                    }
-                }
-                catch(Exception ex)
-                {
-                    _logger.Error(ex, "Ошибка при отправке погоды");
-                }
-            }
-        }
-
-        await _db.SaveChangesAsync();
     }
 }

@@ -8,6 +8,11 @@ public static class KeyboardConverter
 {
     public static IReplyMarkup FromCoreToTg(CoreKeyboard coreKeyboard)
     {
+        if(coreKeyboard is null)
+        {
+            return null;
+        }
+        
         coreKeyboard.RemoveReturnToMenuButton();
 
         return coreKeyboard.IsInline ? GenerateInlineKeyboard() : GenerateReplyKeyboard();

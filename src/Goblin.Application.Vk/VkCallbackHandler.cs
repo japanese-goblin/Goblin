@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -6,9 +7,9 @@ using AutoMapper;
 using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Vk.Converters;
-using Goblin.Application.Vk.Extensions;
 using Goblin.Application.Vk.Options;
 using Goblin.DataAccess;
+using Goblin.Domain;
 using Goblin.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -30,13 +31,19 @@ public class VkCallbackHandler
     private readonly IMapper _mapper;
     private readonly VkOptions _options;
     private readonly IVkApi _vkApi;
+    private readonly ISender _sender;
 
-    public VkCallbackHandler(CommandsService commandsService, BotDbContext db, IVkApi vkApi, IOptions<VkOptions> options,
+    public VkCallbackHandler(CommandsService commandsService,
+                             BotDbContext db,
+                             IVkApi vkApi,
+                             IEnumerable<ISender> senders,
+                             IOptions<VkOptions> options,
                              IMapper mapper)
     {
         _commandsService = commandsService;
         _db = db;
         _vkApi = vkApi;
+        _sender = senders.First(x => x.ConsumerType == ConsumerType.Vkontakte);
         _mapper = mapper;
         _options = options.Value;
         _logger = Log.ForContext<VkCallbackHandler>();
@@ -56,18 +63,15 @@ public class VkCallbackHandler
         {
             if(upd.MessageNew.Message.Action?.Type == MessageAction.ChatInviteUser)
             {
-                await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
-                {
-                    PeerId = upd.MessageNew.Message.PeerId,
-                    Message = "Здравствуйте!\n" +
-                              "Подробности по настройке бота для бесед здесь: vk.com/@japanese.goblin-conversations"
-                });
+                await _sender.Send(upd.MessageNew.Message.PeerId.Value,
+                                   "Здравствуйте!\n" +
+                                   "Подробности по настройке бота для бесед здесь: vk.com/@japanese.goblin-conversations");
                 return;
             }
 
             var msg = _mapper.Map<Message>(upd.MessageNew.Message);
             ExtractUserIdFromConversation(msg);
-            await MessageNew(msg, upd.MessageNew.ClientInfo);
+            await MessageNew(msg);
         }
 
         if(upd.Type == GroupUpdateType.MessageEvent)
@@ -105,7 +109,7 @@ public class VkCallbackHandler
         }
     }
 
-    private async Task MessageNew(Message message, ClientInfo clientInfo)
+    private async Task MessageNew(Message message)
     {
         _logger.Debug("Обработка сообщения");
         await _commandsService.ExecuteCommand<VkBotUser>(message, OnSuccess, OnFailed);
@@ -113,21 +117,12 @@ public class VkCallbackHandler
 
         async Task OnSuccess(IResult res)
         {
-            await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
-            {
-                Message = res.Message,
-                Keyboard = KeyboardConverter.FromCoreToVk(res.Keyboard, clientInfo.InlineKeyboard),
-                PeerId = message.ChatId
-            });
+            await _sender.Send(message.ChatId, res.Message, res.Keyboard);
         }
 
         async Task OnFailed(IResult res)
         {
-            await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
-            {
-                Message = res.Message,
-                PeerId = message.ChatId
-            });
+            await _sender.Send(message.ChatId, res.Message, res.Keyboard);
         }
     }
 
@@ -173,7 +168,7 @@ public class VkCallbackHandler
             return;
         }
 
-        await SendMessageToUserWithTry(leave.UserId.Value, groupLeaveMessage);
+        await TrySendMessageToUser(leave.UserId.Value, groupLeaveMessage);
     }
 
     public async Task GroupJoin(GroupJoin join)
@@ -190,18 +185,14 @@ public class VkCallbackHandler
             return;
         }
 
-        await SendMessageToUserWithTry(join.UserId.Value, groupJoinMessage);
+        await TrySendMessageToUser(join.UserId.Value, groupJoinMessage);
     }
 
-    private async Task SendMessageToUserWithTry(long userId, string message)
+    private async Task TrySendMessageToUser(long userId, string message)
     {
         try
         {
-            await _vkApi.Messages.SendWithRandomId(new MessagesSendParams
-            {
-                Message = message,
-                PeerId = userId
-            });
+            await _sender.Send(userId, message);
         }
         catch
         {
@@ -214,10 +205,6 @@ public class VkCallbackHandler
         var admins = _db.VkBotUsers.Where(x => x.IsAdmin).Select(x => x.Id);
         var vkUser = (await _vkApi.Users.GetAsync(new[] { userId })).First();
         var userName = $"{vkUser.FirstName} {vkUser.LastName}";
-        await _vkApi.Messages.SendToUserIdsWithRandomId(new MessagesSendParams
-        {
-            Message = $"@id{userId} ({userName}) {message}",
-            UserIds = admins
-        });
+        await _sender.SendToMany(admins, $"@id{userId} ({userName}) {message}");
     }
 }
