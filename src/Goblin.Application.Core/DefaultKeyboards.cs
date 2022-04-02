@@ -57,24 +57,32 @@ public static class DefaultKeyboards
     public static CoreKeyboard GetScheduleKeyboard()
     {
         const string defaultFormat = "dd.MM.yyyy";
-        var startDate = DateTime.Now;
+        var today = DateTime.Now;
 
         var keyboard = new CoreKeyboard
         {
             IsInline = true
         };
-        keyboard.AddButton($"На сегодня ({startDate:dd.MM - dddd})", CoreKeyboardButtonColor.Primary,
-                           "schedule", startDate.ToString(defaultFormat));
+        keyboard.AddButton($"На сегодня ({today:dd.MM - dddd})", CoreKeyboardButtonColor.Primary,
+                           "schedule", today.ToString(defaultFormat));
         keyboard.AddLine();
 
-        startDate = startDate.AddDays(1);
-        keyboard.AddButton($"На завтра ({startDate:dd.MM - dddd})", CoreKeyboardButtonColor.Primary,
-                           "schedule", startDate.ToString(defaultFormat));
-        keyboard.AddLine();
+        var tomorrow = today.AddDays(1);
+        if(tomorrow.DayOfWeek != DayOfWeek.Sunday)
+        {
+            keyboard.AddButton($"На завтра ({tomorrow:dd.MM - dddd})", CoreKeyboardButtonColor.Primary,
+                               "schedule", tomorrow.ToString(defaultFormat));
+            keyboard.AddLine();
+        }
 
         for(var i = 1; i < 7; i++)
         {
-            var date = startDate.AddDays(i);
+            var date = tomorrow.AddDays(i);
+            if(date.DayOfWeek == DayOfWeek.Sunday)
+            {
+                continue;
+            }
+            
             keyboard.AddButton($"На {date:dd.MM (dddd)}", CoreKeyboardButtonColor.Primary,
                                "schedule", date.ToString(defaultFormat));
             if(i % 2 == 0)
@@ -83,9 +91,7 @@ public static class DefaultKeyboards
             }
         }
 
-        keyboard.AddReturnToMenuButton(false);
-
-        return keyboard;
+        return keyboard.AddReturnToMenuButton(false);
     }
 
     public static CoreKeyboard GetDailyWeatherKeyboard()
