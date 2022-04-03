@@ -48,7 +48,7 @@ public class VkSender : ISender
     {
         if(message.Length >= textLimit)
         {
-            message = $"{message[..4092]}...";
+            message = $"{message[..4020]}\n...\nСообщение обрезано";
         }
         
         return _vkApi.Messages.SendAsync(new MessagesSendParams
@@ -63,6 +63,11 @@ public class VkSender : ISender
 
     public async Task SendToMany(IEnumerable<long> chatIds, string message, CoreKeyboard keyboard = null, IEnumerable<string> attachments = null)
     {
+        if(message.Length >= textLimit)
+        {
+            message = $"{message[..4092]}...";
+        }
+        
         foreach(var chunk in chatIds.Chunk(chunkLimit))
         {
             try
