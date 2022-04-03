@@ -9,3 +9,21 @@
 Первая версия PHP - 29.04.2017
 
 Первая версия C# - 08.02.2018
+
+# Запуск проекта
+## 1. С докером
+```shell
+cd Goblin
+docker compose up
+```
+
+Проект будет запущен на http://localhost:5177.
+
+При необходимости поменять конфиг в .env файле
+## 2. Без докера
+Для запуска необходимо поднять Postgres
+```shell
+cd Goblin
+dotnet restore
+dotnet run --project src/Goblin.WebApp/Goblin.WebApp.csproj
+```
