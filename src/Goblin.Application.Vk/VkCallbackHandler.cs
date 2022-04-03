@@ -73,8 +73,7 @@ public class VkCallbackHandler
             ExtractUserIdFromConversation(msg);
             await MessageNew(msg);
         }
-
-        if(upd.Type == GroupUpdateType.MessageEvent)
+        else if(upd.Type == GroupUpdateType.MessageEvent)
         {
             await MessageEvent(upd.MessageEvent);
         }
