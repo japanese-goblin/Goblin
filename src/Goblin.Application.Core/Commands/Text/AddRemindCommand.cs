@@ -47,12 +47,12 @@ public class AddRemindCommand : ITextCommand
 
         if(all[0].Equals("завтра", StringComparison.OrdinalIgnoreCase))
         {
-            var d = DateTimeOffset.UtcNow.AddDays(1);
+            var d = DateTimeOffset.Now.AddDays(1);
             all[0] = $"{d.Day}.{d.Month}.{d.Year}";
         }
         else if(all[0].Equals("сегодня", StringComparison.OrdinalIgnoreCase))
         {
-            var d = DateTimeOffset.UtcNow;
+            var d = DateTimeOffset.Now;
             all[0] = $"{d.Day}.{d.Month}.{d.Year}";
         }
 
@@ -62,8 +62,9 @@ public class AddRemindCommand : ITextCommand
             return new FailedResult("Некорректная дата или время");
         }
 
-        if(dateTime <= DateTime.Now)
+        if(dateTime.ToUniversalTime() <= DateTimeOffset.UtcNow)
         {
+            var z = dateTime.ToUniversalTime();
             return new FailedResult("Дата напоминания меньше текущей");
         }
 
