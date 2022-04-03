@@ -28,7 +28,7 @@ public class TelegramSender : ISender
     public Task Send(long chatId, string message, CoreKeyboard keyboard = null, IEnumerable<string> attachments = null)
     {
         var replyMarkup = KeyboardConverter.FromCoreToTg(keyboard);
-        return _botClient.SendTextMessageAsync(chatId, message, ParseMode.Markdown, replyMarkup: replyMarkup);
+        return _botClient.SendTextMessageAsync(chatId, message, replyMarkup: replyMarkup);
     }
 
     public async Task SendToMany(IEnumerable<long> chatIds, string message, CoreKeyboard keyboard = null, IEnumerable<string> attachments = null)
