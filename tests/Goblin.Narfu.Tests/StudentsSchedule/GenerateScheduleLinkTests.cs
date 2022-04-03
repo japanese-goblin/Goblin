@@ -4,7 +4,6 @@ using Xunit;
 
 namespace Goblin.Narfu.Tests.StudentsSchedule;
 
-//TODO: сделать так, чтобы не зависело от файла групп в Goblin.Narfu
 public class GenerateScheduleLinkTests : TestBase
 {
     [Fact]

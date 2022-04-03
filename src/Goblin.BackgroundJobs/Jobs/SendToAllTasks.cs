@@ -14,7 +14,6 @@ public class SendToUsersTasks
     private readonly BotDbContext _db;
     private readonly IEnumerable<ISender> _senders;
 
-    //TODO: ISender
     public SendToUsersTasks(BotDbContext db, IEnumerable<ISender> senders)
     {
         _db = db;
@@ -41,6 +40,7 @@ public class SendToUsersTasks
                                .Select(x => x.Id)
                                .AsEnumerable();
             await tgSender.SendToMany(tgUserIds, text, keyboard, attachments);
+            return;
         }
 
         if(type == ConsumerType.Vkontakte)
