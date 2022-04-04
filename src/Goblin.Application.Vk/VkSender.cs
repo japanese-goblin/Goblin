@@ -86,6 +86,11 @@ public class VkSender : ISender
 
     private string TrimText(string text)
     {
+        if(text.Length < TextLimit)
+        {
+            return text;
+        }
+        
         const string separator = "...";
         var limit = TextLimit - separator.Length - 2;
         return $"{text[..limit]}...";
