@@ -59,7 +59,10 @@ public class DebugCommand : ITextCommand
                   .AppendLine("Подписки:")
                   .AppendFormat("• Погода - {0} ({1} вк, {2} телеграм)", sumWeather, vkWeather, tgWeather)
                   .AppendLine()
-                  .AppendFormat("• Расписание - {0} ({1} вк, {2} телеграм)", sumSchedule, vkSchedule, tgSchedule);
+                  .AppendFormat("• Расписание - {0} ({1} вк, {2} телеграм)", sumSchedule, vkSchedule, tgSchedule)
+                  .AppendLine()
+                  .AppendLine()
+                  .AppendFormat("Кодировка: {0}", Encoding.Default.BodyName);
 
         return new SuccessfulResult
         {
