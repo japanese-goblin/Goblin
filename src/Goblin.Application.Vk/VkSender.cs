@@ -17,10 +17,9 @@ namespace Goblin.Application.Vk;
 
 public class VkSender : ISender
 {
+    private const int ChunkLimit = 100;
+    public int TextLimit => 4096;
     public ConsumerType ConsumerType => ConsumerType.Vkontakte;
-
-    private const int textLimit = 4096;
-    private const int chunkLimit = 100;
 
     private readonly Dictionary<string, Type> _attachmentTypes = new Dictionary<string, Type>
     {
@@ -46,11 +45,8 @@ public class VkSender : ISender
 
     public Task Send(long chatId, string message, CoreKeyboard keyboard = null, IEnumerable<string> attachments = null)
     {
-        if(message.Length >= textLimit)
-        {
-            message = $"{message[..4020]}\n...\nСообщение обрезано";
-        }
-        
+        message = TrimText(message);
+
         return _vkApi.Messages.SendAsync(new MessagesSendParams
         {
             PeerId = chatId,
@@ -61,18 +57,16 @@ public class VkSender : ISender
         });
     }
 
-    public async Task SendToMany(IEnumerable<long> chatIds, string message, CoreKeyboard keyboard = null, IEnumerable<string> attachments = null)
+    public async Task SendToMany(IEnumerable<long> chatIds, string message, CoreKeyboard keyboard = null,
+                                 IEnumerable<string> attachments = null)
     {
-        if(message.Length >= textLimit)
-        {
-            message = $"{message[..4092]}...";
-        }
-        
-        foreach(var chunk in chatIds.Chunk(chunkLimit))
+        message = TrimText(message);
+
+        foreach(var chunk in chatIds.Chunk(ChunkLimit))
         {
             try
             {
-                await _vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams()
+                await _vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams
                 {
                     UserIds = chunk,
                     Message = message,
@@ -80,7 +74,7 @@ public class VkSender : ISender
                     Attachments = ConvertAttachments(attachments),
                     RandomId = GetRandomId()
                 });
-            
+
                 await Task.Delay(100);
             }
             catch(Exception e)
@@ -89,13 +83,21 @@ public class VkSender : ISender
             }
         }
     }
-    
+
+    private string TrimText(string text)
+    {
+        const string separator = "...";
+        var limit = TextLimit - separator.Length - 2;
+        return $"{text[..limit]}...";
+    }
+
     private IEnumerable<MediaAttachment> ConvertAttachments(IEnumerable<string> attachments)
     {
         if(attachments is null)
         {
             return null;
         }
+
         var attachmentList = new List<MediaAttachment>();
 
         foreach(var attachType in _attachmentTypes)
@@ -122,7 +124,7 @@ public class VkSender : ISender
 
         return attachmentList.Any() ? attachmentList : null;
     }
-    
+
     private int GetRandomId()
     {
         var intBytes = new byte[4];
