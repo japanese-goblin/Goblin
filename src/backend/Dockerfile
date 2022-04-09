@@ -8,7 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
 COPY . .
 RUN dotnet restore
-WORKDIR "/src/Goblin.WebApp"
+WORKDIR "Goblin.WebApp"
 RUN dotnet build "Goblin.WebApp.csproj" -c Release -o /app/build
 
 FROM build AS publish
