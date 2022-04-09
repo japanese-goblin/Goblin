@@ -1,4 +1,4 @@
-name: ASP.NET Core CI
+name: ASP.NET Core Build & Test CI
 
 on: [push, pull_request]
 
@@ -13,6 +13,6 @@ jobs:
       with:
         dotnet-version: 6.0.100
     - name: Build with dotnet
-      run: dotnet build Goblin.sln --configuration Release
+      run: dotnet build src/backend/Goblin.sln --configuration Release
     - name: Run tests
-      run: dotnet test Goblin.sln 
+      run: dotnet test src/backend/Goblin.sln 

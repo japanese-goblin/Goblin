@@ -30,7 +30,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Goblin.OpenWeatherMap\Goblin.OpenWeatherMap.csproj" />
+      <ProjectReference Include="..\..\Goblin.OpenWeatherMap\Goblin.OpenWeatherMap.csproj" />
     </ItemGroup>
 
 </Project>
