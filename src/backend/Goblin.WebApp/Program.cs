@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.HttpLogging;
 using Serilog;
 using Serilog.Events;
 
+const string corsName = "frontend";
+
 var builder = WebApplication.CreateBuilder(args);
 if(builder.Environment.IsDevelopment())
 {
@@ -43,6 +45,15 @@ builder.Services.AddHttpLogging(x =>
 // builder.Services.AddEndpointsApiExplorer();
 // builder.Services.AddSwaggerGen();
 builder.Services.AddFastEndpoints();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(corsName,
+                      policy  =>
+                      {
+                          var cors = builder.Configuration.GetSection("CORS").Get<string[]>();
+                          policy.WithOrigins(cors);
+                      });
+});
 
 // builder.Services.AddHostedService<MigrationHostedService>();
 // builder.Services.AddHostedService<CreateDefaultRolesHostedService>();
@@ -74,7 +85,7 @@ var app = builder.Build();
 //     app.UseSwagger();
 //     app.UseSwaggerUI();
 // }
-
+app.UseCors(corsName);
 app.UseAuthorization();
 app.UseFastEndpoints();
 app.Run();
