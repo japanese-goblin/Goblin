@@ -1,9 +1,9 @@
-name: ASP.NET Core Build & Test CI
+name: Build pipeline
 
 on: [push, pull_request]
 
 jobs:
-  build:
+  backend-build:
     runs-on: ubuntu-18.04
     steps:
     - name: Checkout
@@ -16,3 +16,22 @@ jobs:
       run: dotnet build src/backend/Goblin.sln --configuration Release
     - name: Run tests
       run: dotnet test src/backend/Goblin.sln 
+  frontend-build:
+    runs-on: ubuntu-18.04
+    env:
+      working-directory: src/frontend
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2.4.0
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.14.2
+        cache: 'npm'
+        cache-dependency-path: ${{env.working-directory}}/package-lock.json
+    - run: npm ci
+      working-directory: ${{env.working-directory}}
+    - run: npm run build --if-present --prod
+      working-directory: ${{env.working-directory}}
+    - run: npm run deploy
+      working-directory: ${{env.working-directory}}
