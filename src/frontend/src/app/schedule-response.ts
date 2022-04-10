@@ -3,7 +3,7 @@ import { Lesson } from "./lesson";
 export interface ScheduleResponse {
     groupName: string;
     groupId: number;
-    lessons: Map<Date, Lesson[]>;
+    lessons: Map<string, Map<string, Lesson[]>>;
     startDate: Date;
     endDate: Date;
 }

@@ -1,31 +1,42 @@
-<h1>
-    {{ groupId }} - {{ response.groupName }}
-</h1>
+<div *ngIf="!response" align="center">
+    <mat-spinner></mat-spinner>
+</div>
 
-<button mat-raised-button [matMenuTriggerFor]="menu" color="primary">
-    <span>
-        Дополнительно
-    </span>
-    <mat-icon>more_vert</mat-icon>
-</button>
-<mat-menu #menu="matMenu">
-    <button mat-menu-item>
-        <mat-icon>dialpad</mat-icon>
-        <span>Скачать файл (.ics)</span>
+<div *ngIf="response">
+    <h1>
+        {{ groupId }} - {{ response.groupName }}
+    </h1>
+    <button mat-raised-button [matMenuTriggerFor]="menu" color="primary">
+        <span>
+            Дополнительно
+        </span>
+        <mat-icon>more_vert</mat-icon>
     </button>
-    <button mat-menu-item>
-        <mat-icon>voicemail</mat-icon>
-        <span>Добавить в календарь</span>
-    </button>
-    <mat-divider></mat-divider>
-    <button mat-menu-item disabled="">
-        <mat-icon>notifications_off</mat-icon>
-        <span>А больше ничего нет...</span>
-    </button>
-</mat-menu>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+            <mat-icon>dialpad</mat-icon>
+            <span>Скачать файл (.ics)</span>
+        </button>
+        <button mat-menu-item>
+            <mat-icon>voicemail</mat-icon>
+            <span>Добавить в календарь</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item disabled="">
+            <mat-icon>notifications_off</mat-icon>
+            <span>А больше ничего нет...</span>
+        </button>
+    </mat-menu>
 
-<mat-tab-group mat-align-tabs="center" >
-    <mat-tab label="{{ item.key }}" *ngFor="let item of response.lessons | keyvalue">
-        <app-lesson *ngFor="let lesson of item.value" [lesson]="lesson"></app-lesson>
-    </mat-tab>
-</mat-tab-group>
+    <mat-tab-group mat-align-tabs="center">
+        <mat-tab label="{{ weeks.key }}" *ngFor="let weeks of response.lessons | keyvalue">
+            <div *ngFor="let day of weeks.value | keyvalue" fxLayout="row wrap" fxLayout.lt-sm="column"
+                fxLayoutGap="32px" fxLayoutAlign="flex-start">
+                <div>
+                    <p>{{ day.key }}</p>
+                    <app-lesson *ngFor="let lesson of day.value" [lesson]="lesson" class="lesson-card"></app-lesson>
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>

@@ -15,6 +15,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -57,7 +58,8 @@ import { LessonComponent } from './lesson/lesson.component';
         MatChipsModule,
         FlexLayoutModule,
         MatGridListModule,
-        MatTabsModule
+        MatTabsModule,
+        MatProgressSpinnerModule
     ],
     providers: [
         { provide: MAT_DATE_LOCALE, useValue: 'ru-RU' },
