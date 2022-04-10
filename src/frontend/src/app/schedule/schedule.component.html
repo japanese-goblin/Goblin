@@ -1,0 +1,18 @@
+<h1>Расписание САФУ</h1>
+<form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+    <p>
+        <mat-form-field appearance="fill">
+            <mat-label>Номер группы</mat-label>
+            <input matInput #message type="number" placeholder="Например, 351017" min="100000" formControlName="groupId">
+        </mat-form-field>
+    </p>
+    <p>
+        <mat-form-field appearance="fill">
+            <mat-label>Дата для получения пар</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date" [min]="minDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+    </p>
+    <button mat-raised-button color="primary" type="submit">Открыть</button>
+</form>

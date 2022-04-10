@@ -1,0 +1,17 @@
+@use '@angular/material' as mat;
+@include mat.core();
+
+
+$my-palette: mat.define-palette(mat.$deep-purple-palette);
+
+.active-link {
+    background: mat.get-color-from-palette($my-palette, 'darker');
+}
+
+main {
+    padding: 1rem;
+}
+
+.example-spacer {
+    flex: 1 1 auto;
+}

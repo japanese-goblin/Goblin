@@ -1,0 +1,25 @@
+<h1>
+    {{ groupId }} - Информационные системы и технологии (Информационные системы и технологии)
+</h1>
+
+<button mat-raised-button [matMenuTriggerFor]="menu" color="primary">
+    <span>
+        Дополнительно
+    </span>
+    <mat-icon>more_vert</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+    <button mat-menu-item>
+        <mat-icon>dialpad</mat-icon>
+        <span>Скачать файл (.ics)</span>
+    </button>
+    <button mat-menu-item>
+        <mat-icon>voicemail</mat-icon>
+        <span>Добавить в календарь</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item disabled="">
+        <mat-icon>notifications_off</mat-icon>
+        <span>А больше ничего нет...</span>
+    </button>
+</mat-menu>
