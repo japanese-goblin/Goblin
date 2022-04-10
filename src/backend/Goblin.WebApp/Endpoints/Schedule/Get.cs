@@ -13,7 +13,7 @@ public class Get : Endpoint<ScheduleRequest, ScheduleResponse>
     {
         _narfuApi = narfuApi;
     }
-    
+
     public override void Configure()
     {
         Get("/api/schedule/{groupId}");
@@ -23,7 +23,7 @@ public class Get : Endpoint<ScheduleRequest, ScheduleResponse>
     public override async Task HandleAsync(ScheduleRequest req, CancellationToken ct)
     {
         var r = await _narfuApi.Students.GetSchedule(req.GroupId, req.Date);
-        await SendAsync(new ScheduleResponse()
+        await SendAsync(new ScheduleResponse
         {
             Lessons = r.GroupBy(x => x.StartTime.Date)
                        .ToDictionary(x => x.Key, x => x.AsEnumerable()),
@@ -37,7 +37,7 @@ public class ScheduleRequest
 {
     [FromQuery]
     public int GroupId { get; set; }
-    
+
     [FromQuery]
     public DateTime? Date { get; set; }
 }

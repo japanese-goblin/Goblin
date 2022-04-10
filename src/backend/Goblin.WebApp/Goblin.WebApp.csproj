@@ -23,8 +23,4 @@
       <ProjectReference Include="..\Goblin.DataAccess\Goblin.DataAccess.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Endpoints\Callback" />
-    </ItemGroup>
-
 </Project>
