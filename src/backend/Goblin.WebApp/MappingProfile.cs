@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Message = Goblin.Application.Core.Models.Message;
+using Goblin.Application.Core.Models;
 
 namespace Goblin.WebApp;
 

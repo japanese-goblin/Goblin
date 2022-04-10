@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.Application.Core", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Additions", "Additions", "{4FA84E51-26A7-47AB-A2AD-61EDE5C73555}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Goblin.WebApp", "Goblin.WebApp\Goblin.WebApp.csproj", "{163F2A98-C35A-46BC-A769-6C9DD9822D4C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "..\tests", "{8C4DF9AB-BF9E-4534-A4F9-F8F38BF091AE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Narfu.Tests", "tests\Goblin.Narfu.Tests\Goblin.Narfu.Tests.csproj", "{563FB6B0-8CF8-433C-B7CC-EB260BDEEA8E}"
@@ -30,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.Narfu", "Goblin.Narfu\Goblin.Narfu.csproj", "{EB4B266D-1030-44D7-87AF-F4153D506C9B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.OpenWeatherMap", "Goblin.OpenWeatherMap\Goblin.OpenWeatherMap.csproj", "{39DB7CF6-9733-48AF-8B22-9AD535981808}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Goblin.WebApp", "Goblin.WebApp\Goblin.WebApp.csproj", "{FF06763B-E312-43D6-B940-50A3EE2C1A94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,18 +77,6 @@ Global
 		{3E9EC0CA-31BC-4636-9C16-DBBFA1F5B097}.Release|x64.Build.0 = Release|Any CPU
 		{3E9EC0CA-31BC-4636-9C16-DBBFA1F5B097}.Release|x86.ActiveCfg = Release|Any CPU
 		{3E9EC0CA-31BC-4636-9C16-DBBFA1F5B097}.Release|x86.Build.0 = Release|Any CPU
-		{163F2A98-C35A-46BC-A769-6C9DD9822D4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{163F2A98-C35A-46BC-A769-6C9DD9822D4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{163F2A98-C35A-46BC-A769-6C9DD9822D4C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{163F2A98-C35A-46BC-A769-6C9DD9822D4C}.Debug|x64.Build.0 = Debug|Any CPU
-		{163F2A98-C35A-46BC-A769-6C9DD9822D4C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{163F2A98-C35A-46BC-A769-6C9DD9822D4C}.Debug|x86.Build.0 = Debug|Any CPU
-		{163F2A98-C35A-46BC-A769-6C9DD9822D4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{163F2A98-C35A-46BC-A769-6C9DD9822D4C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{163F2A98-C35A-46BC-A769-6C9DD9822D4C}.Release|x64.ActiveCfg = Release|Any CPU
-		{163F2A98-C35A-46BC-A769-6C9DD9822D4C}.Release|x64.Build.0 = Release|Any CPU
-		{163F2A98-C35A-46BC-A769-6C9DD9822D4C}.Release|x86.ActiveCfg = Release|Any CPU
-		{163F2A98-C35A-46BC-A769-6C9DD9822D4C}.Release|x86.Build.0 = Release|Any CPU
 		{563FB6B0-8CF8-433C-B7CC-EB260BDEEA8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{563FB6B0-8CF8-433C-B7CC-EB260BDEEA8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{563FB6B0-8CF8-433C-B7CC-EB260BDEEA8E}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -185,6 +173,18 @@ Global
 		{39DB7CF6-9733-48AF-8B22-9AD535981808}.Release|x64.Build.0 = Release|Any CPU
 		{39DB7CF6-9733-48AF-8B22-9AD535981808}.Release|x86.ActiveCfg = Release|Any CPU
 		{39DB7CF6-9733-48AF-8B22-9AD535981808}.Release|x86.Build.0 = Release|Any CPU
+		{FF06763B-E312-43D6-B940-50A3EE2C1A94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF06763B-E312-43D6-B940-50A3EE2C1A94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF06763B-E312-43D6-B940-50A3EE2C1A94}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FF06763B-E312-43D6-B940-50A3EE2C1A94}.Debug|x64.Build.0 = Debug|Any CPU
+		{FF06763B-E312-43D6-B940-50A3EE2C1A94}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FF06763B-E312-43D6-B940-50A3EE2C1A94}.Debug|x86.Build.0 = Debug|Any CPU
+		{FF06763B-E312-43D6-B940-50A3EE2C1A94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF06763B-E312-43D6-B940-50A3EE2C1A94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF06763B-E312-43D6-B940-50A3EE2C1A94}.Release|x64.ActiveCfg = Release|Any CPU
+		{FF06763B-E312-43D6-B940-50A3EE2C1A94}.Release|x64.Build.0 = Release|Any CPU
+		{FF06763B-E312-43D6-B940-50A3EE2C1A94}.Release|x86.ActiveCfg = Release|Any CPU
+		{FF06763B-E312-43D6-B940-50A3EE2C1A94}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
