@@ -1,5 +1,5 @@
 <h1>
-    {{ groupId }} - Информационные системы и технологии (Информационные системы и технологии)
+    {{ groupId }} - {{ response.groupName }}
 </h1>
 
 <button mat-raised-button [matMenuTriggerFor]="menu" color="primary">
@@ -23,3 +23,9 @@
         <span>А больше ничего нет...</span>
     </button>
 </mat-menu>
+
+<mat-tab-group mat-align-tabs="center" >
+    <mat-tab label="{{ item.key }}" *ngFor="let item of response.lessons | keyvalue">
+        <app-lesson *ngFor="let lesson of item.value" [lesson]="lesson"></app-lesson>
+    </mat-tab>
+</mat-tab-group>
