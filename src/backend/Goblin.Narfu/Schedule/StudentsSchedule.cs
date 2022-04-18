@@ -131,10 +131,7 @@ public class StudentsSchedule : IStudentsSchedule
                 Teacher = description[4],
                 StartTime = ev.DtStart,
                 EndTime = ev.DtEnd,
-                StartEndTime = description[0].Replace(")", "")
-                                             .Replace("(", "")
-                                             .Replace("п", ")")
-                                             [3..]
+                StartEndTime = $"{ev.DtStart:HH:mm} - {ev.DtEnd:HH:mm}"
             };
 
             if(description.Length <= 6)
