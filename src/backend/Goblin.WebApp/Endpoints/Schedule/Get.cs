@@ -28,13 +28,12 @@ public class Get : Endpoint<ScheduleRequest, ScheduleResponse>
                           .GroupBy(x => GetStartOfWeek(x.StartTime));
         await SendAsync(new ScheduleResponse
         {
-            Lessons = dict.ToDictionary(x =>$"{x.Key:dd.MM.yyyy} - {x.Key.AddDays(5):dd.MM.yyyy}",
+            Lessons = dict.ToDictionary(x => x.Key,
                                         x => x.GroupBy(y => y.StartTime.Date)
-                                              .ToDictionary(y => y.Key.ToString("dddd, dd MMMM"),
-                                                            y => y.AsEnumerable())),
+                                              .ToDictionary(y => y.Key, y => y.AsEnumerable())),
             GroupId = req.GroupId,
             GroupName = _narfuApi.Students.GetGroupByRealId(req.GroupId).Name
-        });
+        }, cancellation: ct);
     }
     
     private static DateTime GetStartOfWeek(DateTime dt)
@@ -48,7 +47,6 @@ public class Get : Endpoint<ScheduleRequest, ScheduleResponse>
 
 public class ScheduleRequest
 {
-    [FromQuery]
     public int GroupId { get; set; }
 
     [FromQuery]
@@ -59,7 +57,5 @@ public class ScheduleResponse
 {
     public string GroupName { get; set; }
     public int GroupId { get; set; }
-    public Dictionary<string, Dictionary<string, IEnumerable<Lesson>>> Lessons { get; set; }
-    public DateTime StartDate { get; set; }
-    public DateTime EndDate { get; set; }
+    public Dictionary<DateTime, Dictionary<DateTime, IEnumerable<Lesson>>> Lessons { get; set; }
 }

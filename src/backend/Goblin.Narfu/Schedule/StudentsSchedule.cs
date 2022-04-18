@@ -40,7 +40,6 @@ public class StudentsSchedule : IStudentsSchedule
                                                .SetQueryParam("from", date.Value.ToString("dd.MM.yyyy"))
                                                .GetStringAsync();
 
-
             _logger.Debug("Расписание получено");
 
             return GetCalendarLessons(response).ToList();

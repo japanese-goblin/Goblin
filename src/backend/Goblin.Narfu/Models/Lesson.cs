@@ -19,6 +19,38 @@ public record Lesson
 
     public string Link { get; set; }
 
-    public bool IsExam => Type.Contains("экзамен", StringComparison.InvariantCultureIgnoreCase) ||
-                          Type.Contains("зачет", StringComparison.InvariantCultureIgnoreCase);
+    public bool IsExam => LessonType == LessonType.Exam;
+
+    public LessonType LessonType => GetLessonType();
+
+    private LessonType GetLessonType()
+    {
+        if(Type.Contains("экзамен", StringComparison.InvariantCultureIgnoreCase) ||
+           Type.Contains("зачет", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return LessonType.Exam;
+        }
+
+        if(Type.Contains("практическ", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return LessonType.Practical;
+        }
+
+        if(Type.Contains("лабораторн", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return LessonType.Laboratory;
+        }
+        
+        if(Type.Contains("лекции", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return LessonType.Lecture;
+        }
+        
+        if(Type.Contains("консультация", StringComparison.InvariantCultureIgnoreCase))
+        {
+            return LessonType.Consultation;
+        }
+
+        return LessonType.Unknown;
+    }
 }
