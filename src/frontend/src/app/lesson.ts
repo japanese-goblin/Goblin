@@ -1,3 +1,5 @@
+import { LessonType } from "./lesson-type";
+
 export interface Lesson {
     id: string;
     type: string;
@@ -10,6 +12,7 @@ export interface Lesson {
     auditory: string;
     teacher: string;
     groups: string;
+    lessonType: LessonType;
 
     link: string;
 }

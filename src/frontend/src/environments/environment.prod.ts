@@ -1,4 +1,5 @@
 export const environment = {
-  production: true,
-  apiUrl: 'http://equus-homa.herokuapp.com'
-};
+    production: true,
+    apiUrl: 'https://equus-homa.herokuapp.com'
+  };
+  

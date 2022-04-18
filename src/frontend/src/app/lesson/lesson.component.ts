@@ -17,5 +17,4 @@ export class LessonComponent implements OnInit {
 
     ngOnInit(): void {
     }
-
 }

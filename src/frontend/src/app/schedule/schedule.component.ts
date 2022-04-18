@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
 
 
 @Component({
@@ -15,7 +14,7 @@ export class ScheduleComponent implements OnInit {
     minDate: Date;
     checkoutForm = this.formBuilder.group({
         groupId: 0,
-        date: moment()
+        date: undefined
     });
 
     constructor(private formBuilder: FormBuilder, private router: Router) {
@@ -28,11 +27,12 @@ export class ScheduleComponent implements OnInit {
 
     onSubmit(): void {
         if(!this.checkoutForm.valid) {
+            console.log('invalid')
             return;
         }
 
-        let groupId = this.checkoutForm.value.groupId;
-        let date = this.checkoutForm.value.date.format("DD.MM.YYYY");
+        let groupId = this.checkoutForm.get('groupId')?.value;
+        let date = this.checkoutForm.get('date')?.value;
         this.router.navigate(['/schedule', groupId], { queryParams: { date } });
     }
 }

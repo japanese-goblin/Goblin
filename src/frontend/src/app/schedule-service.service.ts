@@ -16,7 +16,7 @@ export class ScheduleServiceService {
      }
 
     getLessons(groupId: Number | undefined, date: Date | undefined): Observable<ScheduleResponse> {
-        let requestUrl = `${this.url}/api/schedule/${groupId}`;
+        let requestUrl = `${this.url}/api/schedule/${groupId}?date=${date?.toLocaleDateString('ru-RU')}`;
         // let requestUrl = `assets/response.json`;
         return this.httpClient.get<ScheduleResponse>(requestUrl);
     }

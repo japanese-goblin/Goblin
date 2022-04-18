@@ -1,42 +1,30 @@
-<div *ngIf="!response" align="center">
-    <mat-spinner></mat-spinner>
+<div class="text-center">
+    <div class="spinner-border" style="width: 9rem; height: 9rem;" *ngIf="!response">
+        <span class="visually-hidden">Loading...</span>
+    </div>
 </div>
 
 <div *ngIf="response">
-    <h1>
+    <h4>
         {{ groupId }} - {{ response.groupName }}
-    </h1>
-    <button mat-raised-button [matMenuTriggerFor]="menu" color="primary">
-        <span>
-            Дополнительно
-        </span>
-        <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-        <button mat-menu-item>
-            <mat-icon>dialpad</mat-icon>
-            <span>Скачать файл (.ics)</span>
-        </button>
-        <button mat-menu-item>
-            <mat-icon>voicemail</mat-icon>
-            <span>Добавить в календарь</span>
-        </button>
-        <mat-divider></mat-divider>
-        <button mat-menu-item disabled="">
-            <mat-icon>notifications_off</mat-icon>
-            <span>А больше ничего нет...</span>
-        </button>
-    </mat-menu>
-
-    <mat-tab-group mat-align-tabs="center">
-        <mat-tab label="{{ weeks.key }}" *ngFor="let weeks of response.lessons | keyvalue">
-            <div *ngFor="let day of weeks.value | keyvalue" fxLayout="row wrap" fxLayout.lt-sm="column"
-                fxLayoutGap="32px" fxLayoutAlign="flex-start">
-                <div>
-                    <p>{{ day.key }}</p>
-                    <app-lesson *ngFor="let lesson of day.value" [lesson]="lesson" class="lesson-card"></app-lesson>
+    </h4>
+    <ul ngbNav #nav="ngbNav" class="nav-pills">
+        <li ngbNavItem *ngFor="let weeks of response.lessons | keyvalue">
+          <a ngbNavLink>{{ weeks.key | date:'d MMMM':'+0300':'ru' }}</a>
+          <ng-template ngbNavContent>
+            <div class="row">
+                <div class="col-lg-2" *ngFor="let day of weeks.value | keyvalue">
+                    <div class="mx-1">
+                        <div class="dayofweek">
+                            <p>{{ day.key | date:'EEEE, d MMMM':'+0300':'ru' }}</p>
+                        </div>
+                        <hr/>
+                        <app-lesson *ngFor="let lesson of day.value" [lesson]="lesson" class="lesson-card"></app-lesson>
+                    </div>
                 </div>
             </div>
-        </mat-tab>
-    </mat-tab-group>
+          </ng-template>
+        </li>
+      </ul>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
 </div>

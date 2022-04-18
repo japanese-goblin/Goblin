@@ -1,20 +1,21 @@
-<mat-toolbar color="primary">
-    <!-- <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-        <mat-icon>menu</mat-icon>
-    </button> -->
-    <a mat-button routerLink="/">Goblin</a>
-    <a mat-button routerLink="/schedule" routerLinkActive="active-link">Расписание</a>
-    <span class="example-spacer"></span>
-    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-      <mat-icon>favorite</mat-icon>
-      <span>TG</span>
-    </button>
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-      <mat-icon>share</mat-icon>
-      <span>VK</span>
-    </button>
-</mat-toolbar>
-
-<main>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="assets/goblin.svg" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            Японский гоблин
+          </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/schedule">Расписание</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<main role="main" class="pb-3 container-fluid">
     <router-outlet></router-outlet>
 </main>
