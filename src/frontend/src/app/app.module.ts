@@ -17,6 +17,7 @@ import { WeekStartEndPipe } from './week-start-end-pipe';
 
 import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
+import { ToastContainerComponent } from './toast-container/toast-container.component';
 registerLocaleData(localeRu, 'ru');
 
 @NgModule({
@@ -27,7 +28,8 @@ registerLocaleData(localeRu, 'ru');
         ScheduleDetailsComponent,
         LessonComponent,
         LessonTypeColorPipe,
-        WeekStartEndPipe
+        WeekStartEndPipe,
+        ToastContainerComponent
     ],
     imports: [
         CommonModule,

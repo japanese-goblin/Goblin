@@ -1,7 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { throwError } from 'rxjs';
 import { ScheduleResponse } from '../schedule-response';
-import { ScheduleServiceService } from '../schedule-service.service';
+import { ScheduleServiceService } from '../schedule.service';
+import { ToastService } from '../toast.service';
 
 @Component({
     selector: 'app-schedule-details',
@@ -14,16 +17,22 @@ export class ScheduleDetailsComponent implements OnInit {
     date?: Date;
     response!: ScheduleResponse;
 
-    constructor(private route: ActivatedRoute, private service: ScheduleServiceService) {
+    constructor(private route: ActivatedRoute,
+                private service: ScheduleServiceService,
+                private toastService: ToastService) {
         let queryDate = this.route.snapshot.queryParamMap.get('date');
-        console.log(queryDate);
         let date = new Date();
+        if(queryDate !== null) {
+            var pattern = /(\d{2})\.(\d{2})\.(\d{4})/;
+            date = new Date(queryDate.replace(pattern,'$3-$2-$1'));
+        }
         this.route.params.subscribe(params => {
             this.groupId = params['groupId'];
-            this.service.getLessons(this.groupId, date).subscribe(response => {
-                this.response = response;
-            });
-            // this.date = params['date'];
+            this.service.getLessons(this.groupId, date)
+                .subscribe({
+                    next: response => this.response = response,
+                    error: (e) => this.toastService.showError(e.error.title ?? e.statusText)
+                });
         });
     }
 
