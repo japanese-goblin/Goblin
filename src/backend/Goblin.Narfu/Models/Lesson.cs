@@ -25,6 +25,11 @@ public record Lesson
 
     private LessonType GetLessonType()
     {
+        if(string.IsNullOrWhiteSpace(Type))
+        {
+            return LessonType.Unknown;
+        }
+        
         if(Type.Contains("экзамен", StringComparison.InvariantCultureIgnoreCase) ||
            Type.Contains("зачет", StringComparison.InvariantCultureIgnoreCase))
         {
