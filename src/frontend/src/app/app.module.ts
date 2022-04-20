@@ -13,6 +13,7 @@ import { StartComponent } from './start/start.component';
 import { ScheduleDetailsComponent } from './schedule-details/schedule-details.component';
 import { LessonComponent } from './lesson/lesson.component';
 import { LessonTypeColorPipe } from './lesson-type-color-pipe';
+import { WeekStartEndPipe } from './week-start-end-pipe';
 
 import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
@@ -25,7 +26,8 @@ registerLocaleData(localeRu, 'ru');
         StartComponent,
         ScheduleDetailsComponent,
         LessonComponent,
-        LessonTypeColorPipe
+        LessonTypeColorPipe,
+        WeekStartEndPipe
     ],
     imports: [
         CommonModule,

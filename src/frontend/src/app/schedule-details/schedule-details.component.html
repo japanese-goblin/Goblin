@@ -10,7 +10,7 @@
     </h4>
     <ul ngbNav #nav="ngbNav" class="nav-pills">
         <li ngbNavItem *ngFor="let weeks of response.lessons | keyvalue">
-          <a ngbNavLink>{{ weeks.key | date:'d MMMM':'+0300':'ru' }}</a>
+          <a ngbNavLink>{{ weeks.key | weekStartEnd}}</a>
           <ng-template ngbNavContent>
             <div class="row">
                 <div class="col-lg-2" *ngFor="let day of weeks.value | keyvalue">
