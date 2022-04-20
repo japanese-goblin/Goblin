@@ -2,6 +2,7 @@
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
+
 /* COLORS */
 .transparent {
     background: transparent !important;
@@ -34,7 +35,11 @@
 @media (max-width: 991.98px) {
     .nav-pills {
         overflow-x: auto;
-        overflow-y:hidden;
+        overflow-y: hidden;
         flex-wrap: nowrap;
     }
+}
+
+.lesson-card {
+    font-size: 0.9rem;
 }

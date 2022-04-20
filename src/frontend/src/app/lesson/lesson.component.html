@@ -1,9 +1,9 @@
-<div class="card mb-3 timetable_sheet {{ lesson | lessonTypeColor }}">
-    <div class="card-header">
-        <span class="badge text-dark border border-dark border-2">
+<div class="card mb-3 lesson-card {{ lesson | lessonTypeColor }}">
+    <div class="card-header text-dark text-center">
+        <span class="start-0 h4 position-absolute top-0">
             {{ lesson.number }}
         </span>
-        <span class="badge text-dark">
+        <span class="text-center">
             {{ lesson.startEndTime }}
         </span>
     </div>
@@ -11,7 +11,7 @@
         <small>
             {{ lesson.type }}
         </small>
-        <p>
+        <p class="text-break">
             <b>{{ lesson.name }}</b>
         </p>
         <small class="card-text text-capitalize">
