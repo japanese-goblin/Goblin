@@ -1,10 +1,15 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'japanese-goblin';
+    title = 'japanese-goblin';
+    collapsed = true;
+    
+    toggleCollapsed(): void {
+        this.collapsed = !this.collapsed;
+    }
 }
