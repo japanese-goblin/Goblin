@@ -16,7 +16,6 @@ using Serilog;
 using Serilog.Events;
 
 const string corsName = "frontend";
-
 var builder = WebApplication.CreateBuilder(args);
 if(builder.Environment.IsDevelopment())
 {
@@ -56,27 +55,24 @@ builder.Services.AddCors(options =>
                       });
 });
 
-// builder.Services.AddHostedService<MigrationHostedService>();
 // builder.Services.AddHostedService<CreateDefaultRolesHostedService>();
-
 builder.Services.AddDataAccessLayer(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddVkLayer(builder.Configuration);
 builder.Services.AddTelegramLayer(builder.Configuration);
+builder.Services.AddMemoryCache();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddHangfire(config =>
 {
     config.UseMemoryStorage();
 });
-builder.Services.AddMemoryCache();
-builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddHangfireServer(x =>
 {
     x.WorkerCount = 4;
 });
+GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
 builder.Services.AddSwaggerDoc(shortSchemaNames: true);
 builder.Services.AddFastEndpoints();
-GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
-
 
 var app = builder.Build();
 MigrateDatabase<BotDbContext>(app);
@@ -115,11 +111,13 @@ app.UseFastEndpoints(c =>
     c.RoutingOptions = o => o.Prefix = "api";
     c.ErrorResponseBuilder = (failures, _) => failures.Select(x => x.ErrorMessage);
 });
+app.UseHangfireDashboard(); //TODO: auth filter
 if(app.Environment.IsDevelopment())
 {
     app.UseOpenApi();
     app.UseSwaggerUi3(s => s.ConfigureDefaults());
 }
+app.UseHangfireJobs();
 app.Run();
 
 void MigrateDatabase<T>(WebApplication application) where T : DbContext
