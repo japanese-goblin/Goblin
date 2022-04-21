@@ -40,20 +40,12 @@ public class StudentsSchedule : IStudentsSchedule
         }
         catch(HttpRequestException)
         {
-            // var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
-            // var response = await RequestBuilder.Create()
-            //                                    .SetQueryParam("timetable")
-            //                                    .SetQueryParam("group", siteGroupId)
-            //                                    .GetStreamAsync();
-            //
-            // _logger.Debug("Расписание получено");
-            //
-            // var allLessonsFromHtml = HtmlParser.GetAllLessonsFromHtml(response);
-
-            // return allLessonsFromHtml.Where(x => x.StartTime.Date >= date.Value.Date).ToList();
+            var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
+            var response = await _client.GetStreamAsync($"/?timetable&group={siteGroupId}");
+            _logger.Debug("Расписание получено");
+            var allLessonsFromHtml = HtmlParser.GetAllLessonsFromHtml(response);
+            return allLessonsFromHtml.Where(x => x.StartTime.Date >= date.Value.Date).ToList();
         }
-
-        return null; //TODO: polly
     }
 
     public async Task<ExamsViewModel> GetExams(int realGroupId)
