@@ -35,39 +35,43 @@ public class DebugCommand : ITextCommand
         var startTime = Process.GetCurrentProcess().StartTime;
         var uptime = DateTime.Now - startTime;
 
-        var consumerTypeCounts = await _db.BotUsers.GroupBy(x => x.ConsumerType)
-                                          .ToDictionaryAsync(x => x.Key, x => x.Count());
+        var consumerTypeCounts = _db.BotUsers.AsEnumerable()
+                                    .GroupBy(x => x.ConsumerType)
+                                    .ToDictionary(x => x.Key, x => x.Count());
 
         strBuilder.AppendFormat("Время старта: {0:F}", startTime).AppendLine()
                   .AppendFormat("Я работаю уже {0} часов {1} минут", uptime.Hours, uptime.Minutes)
                   .AppendLine()
                   .AppendFormat("Мне уже {0} дней ({1:dd.MM.yyyy})", dis.Days, birthday)
                   .AppendLine().AppendLine()
-                  .AppendFormat("Всего пользователей {0}, из них:", consumerTypeCounts.Sum(x => x.Value));
+                  .AppendFormat("Всего пользователей {0}, из них:", consumerTypeCounts.Sum(x => x.Value))
+                  .AppendLine();
         foreach(var consumerTypeCount in consumerTypeCounts)
         {
-            strBuilder.AppendFormat("\t{0} - {1}", consumerTypeCount.Key, consumerTypeCount.Value)
+            strBuilder.AppendFormat("* {0} - {1}", consumerTypeCount.Key, consumerTypeCount.Value)
                       .AppendLine();
         }
 
-        var subscriptions = await _db.BotUsers.GroupBy(x => x.ConsumerType)
+        var subscriptions = _db.BotUsers.AsEnumerable().GroupBy(x => x.ConsumerType)
                          .Select(x => new GroupUsersResponse
                          {
                              ConsumerType = x.Key,
                              ScheduleSubscriptions = x.Count(u => u.HasScheduleSubscription),
                              WeatherSubscriptions = x.Count(u => u.HasWeatherSubscription)
-                         }).ToArrayAsync();
+                         }).ToArray();
 
-        strBuilder.AppendLine("Подписки:");
+        strBuilder.AppendLine()
+                  .AppendFormat("Подписки - {0} погода, {1} расписание. Из них:",
+                                subscriptions.Sum(x => x.WeatherSubscriptions),
+                                subscriptions.Sum(x => x.ScheduleSubscriptions))
+                  .AppendLine();
         foreach(var subscription in subscriptions)
         {
-            strBuilder.AppendFormat("\t{0} - {1} погода, {2} расписание",
+            strBuilder.AppendFormat("* {0} - {1} погода, {2} расписание",
                                     subscription.ConsumerType, subscription.WeatherSubscriptions,
                                     subscription.ScheduleSubscriptions)
                       .AppendLine();
         }
-        
-        strBuilder.AppendFormat("Кодировка: {0}", Encoding.Default.BodyName);
 
         return new SuccessfulResult
         {
