@@ -5,9 +5,23 @@
 </div>
 
 <div *ngIf="response">
+    <div *ngIf="response.isFromSite">
+        <ngb-alert type="warning">
+            <b>Внимание!</b> Расписание получено напрямую с сайта - из-за этого доступно расписание только на месяц
+        </ngb-alert>
+    </div>
     <h4>
         {{ groupId }} - {{ response.groupName }}
     </h4>
+    <div ngbDropdown class="d-inline-block pb-2">
+        <button type="button" class="btn btn-primary" id="dropdownBasic1" ngbDropdownToggle>Дополнительно</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <a class="btn" ngbDropdownItem [href]="response.icsLink" target="_blank" [disabled]="!response.icsLink">Скачать файл (.ics)</a>
+            <a class="btn" ngbDropdownItem [href]="response.webCalLink" target="_blank" disabled>Добавить в календарь</a>
+            <hr/>
+            <button ngbDropdownItem disabled>А больше пока ничего и нет...</button>
+        </div>
+    </div>
     <ul ngbNav #nav="ngbNav" class="nav-pills">
         <li ngbNavItem *ngFor="let weeks of response.lessons | keyvalue">
             <a ngbNavLink>

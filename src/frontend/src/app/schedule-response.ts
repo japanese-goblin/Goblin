@@ -6,4 +6,7 @@ export interface ScheduleResponse {
     lessons: Map<Date, Map<Date, Lesson[]>>;
     startDate: Date;
     endDate: Date;
+    webCalLink: string;
+    icsLink: string;
+    isFromSite: boolean;
 }
