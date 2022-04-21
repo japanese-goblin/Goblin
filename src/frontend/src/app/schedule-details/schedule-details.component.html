@@ -10,21 +10,24 @@
     </h4>
     <ul ngbNav #nav="ngbNav" class="nav-pills">
         <li ngbNavItem *ngFor="let weeks of response.lessons | keyvalue">
-          <a ngbNavLink>{{ weeks.key | weekStartEnd}}</a>
-          <ng-template ngbNavContent>
-            <div class="row">
-                <div class="col-lg-2" *ngFor="let day of weeks.value | keyvalue">
-                    <div class="mx-1">
-                        <div class="dayofweek">
-                            <p>{{ day.key | date:'EEEE, d MMMM':'+0300':'ru' }}</p>
+            <a ngbNavLink>
+                {{ weeks.key | weekStartEnd}}
+            </a>
+            <ng-template ngbNavContent>
+                <div class="row">
+                    <div class="col-lg-2" *ngFor="let day of weeks.value | keyvalue">
+                        <div class="mx-1">
+                            <div class="dayofweek text-center">
+                                <b>{{ day.key | date:'EEEE, d MMMM':'+0300':'ru' }}</b>
+                            </div>
+                            <hr />
+                            <app-lesson *ngFor="let lesson of day.value" [lesson]="lesson" class="lesson-card">
+                            </app-lesson>
                         </div>
-                        <hr/>
-                        <app-lesson *ngFor="let lesson of day.value" [lesson]="lesson" class="lesson-card"></app-lesson>
                     </div>
                 </div>
-            </div>
-          </ng-template>
+            </ng-template>
         </li>
-      </ul>
+    </ul>
     <div [ngbNavOutlet]="nav" class="mt-2"></div>
 </div>
