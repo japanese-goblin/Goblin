@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Flurl.Http;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.ICalParser;
 using Goblin.Narfu.Models;
@@ -13,15 +14,16 @@ namespace Goblin.Narfu.Schedule;
 
 public class StudentsSchedule : IStudentsSchedule
 {
+    private readonly HttpClient _client;
     private Group[] Groups { get; }
     private readonly ILogger _logger;
 
-    public StudentsSchedule(string groupsLink)
+    public StudentsSchedule(string groupsLink, HttpClient client)
     {
-        Groups = groupsLink.GetJsonAsync<Group[]>()
-                           .GetAwaiter()
-                           .GetResult();
-
+        _client = client;
+        Groups = _client.GetFromJsonAsync<Group[]>(groupsLink)
+                        .GetAwaiter()
+                        .GetResult();
         _logger = Log.ForContext<StudentsSchedule>();
     }
 
@@ -30,35 +32,28 @@ public class StudentsSchedule : IStudentsSchedule
         try
         {
             date ??= DateTime.Today;
-
-            _logger.Debug("Получение расписания для группы {0}", realGroupId);
+            _logger.Debug("Получение расписания для группы {RealGroupId}", realGroupId);
             var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
-            var response = await RequestBuilder.Create()
-                                               .SetQueryParam("icalendar")
-                                               .SetQueryParam("oid", siteGroupId)
-                                               .SetQueryParam("cod", realGroupId)
-                                               .SetQueryParam("from", date.Value.ToString("dd.MM.yyyy"))
-                                               .GetStringAsync();
-
+            var response = await _client.GetStringAsync($"/?icalendar&oid={siteGroupId}&cod={realGroupId}&from={date.Value:dd.MM.yyyy}");
             _logger.Debug("Расписание получено");
-
             return GetCalendarLessons(response).ToList();
         }
-        catch(FlurlHttpException)
+        catch(HttpRequestException)
         {
-            var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
-            var response = await RequestBuilder.Create()
-                                               .SetQueryParam("timetable")
-                                               .SetQueryParam("group", siteGroupId)
-                                               .GetStreamAsync();
+            // var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
+            // var response = await RequestBuilder.Create()
+            //                                    .SetQueryParam("timetable")
+            //                                    .SetQueryParam("group", siteGroupId)
+            //                                    .GetStreamAsync();
+            //
+            // _logger.Debug("Расписание получено");
+            //
+            // var allLessonsFromHtml = HtmlParser.GetAllLessonsFromHtml(response);
 
-
-            _logger.Debug("Расписание получено");
-
-            var allLessonsFromHtml = HtmlParser.GetAllLessonsFromHtml(response);
-
-            return allLessonsFromHtml.Where(x => x.StartTime.Date >= date.Value.Date).ToList();
+            // return allLessonsFromHtml.Where(x => x.StartTime.Date >= date.Value.Date).ToList();
         }
+
+        return null; //TODO: polly
     }
 
     public async Task<ExamsViewModel> GetExams(int realGroupId)

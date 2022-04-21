@@ -1,7 +1,14 @@
 using System;
 using System.IO;
-using Flurl.Http.Testing;
+using System.Net;
+using System.Net.Http;
+using System.Net.Mime;
+using System.Threading;
+using System.Threading.Tasks;
 using Goblin.Narfu.Abstractions;
+using Moq;
+using Moq.Protected;
+using RichardSzalay.MockHttp;
 
 namespace Goblin.Narfu.Tests;
 
@@ -14,6 +21,8 @@ public class TestBase
 
     protected const int CorrectTeacherId = 12345;
 
+    protected const string TeacherName = "Абрамова";
+
     protected string StudentsSchedulePath => Path.Combine(DefaultPath, "StudentsSchedule.ics");
     protected string TeachersSchedulePath => Path.Combine(DefaultPath, "TeachersSchedule.html");
     protected string FindByNamePath => Path.Combine(DefaultPath, "FindTeacher.json");
@@ -25,16 +34,35 @@ public class TestBase
 
     public TestBase()
     {
-        using var http = new HttpTest();
+        var mockHttp = new MockHttpMessageHandler();
+        
+        var res = File.ReadAllText(StudentsSchedulePath);
+        mockHttp.When("*")
+                .WithQueryString("cod", CorrectGroup.ToString())
+                .Respond(MediaTypeNames.Text.Html, res);
+        
+        mockHttp.When("*")
+                .WithQueryString("cod", IncorrectGroup.ToString())
+                .Respond(MediaTypeNames.Text.Html, res);
+        mockHttp.When("*")
+                .WithQueryString("term", TeacherName)
+                .Respond(MediaTypeNames.Application.Json, File.ReadAllText(FindByNamePath));
+        
+        mockHttp.When("*")
+                .WithQueryString("lecturer", CorrectTeacherId.ToString())
+                .Respond(MediaTypeNames.Text.Html, File.ReadAllText(TeachersSchedulePath));
+        
+        mockHttp.When("http://groups/").Respond("application/json", @"[
         {
-            http.RespondWith(@"[
-{
-    ""RealId"": 271901,
-    ""SiteId"": 14068,
-    ""Name"": ""Строительство (Строительство)""
-}]
-");
-            Api = new NarfuApi("https://1.1.1.1/");
-        }
+            ""RealId"": 271901,
+            ""SiteId"": 14068,
+            ""Name"": ""Строительство (Строительство)""
+        }]");
+
+        var factory = new Mock<IHttpClientFactory>();
+        factory.Setup(p => p.CreateClient(It.IsAny<string>()))
+               .Returns(mockHttp.ToHttpClient());
+        
+        Api = new NarfuApi("http://groups/", factory.Object);
     }
 }

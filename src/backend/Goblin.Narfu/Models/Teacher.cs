@@ -1,15 +1,15 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Goblin.Narfu.Models;
 
 public class Teacher
 {
-    [JsonProperty("lecturerOid")]
+    [JsonPropertyName("lecturerOid")]
     public int Id { get; set; }
 
-    [JsonProperty("fio")]
+    [JsonPropertyName("fio")]
     public string Name { get; set; }
 
-    [JsonProperty("chair")]
+    [JsonPropertyName("chair")]
     public string Depart { get; set; }
 }

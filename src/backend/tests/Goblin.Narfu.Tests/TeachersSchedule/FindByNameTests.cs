@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Flurl.Http.Testing;
 using Xunit;
 
 namespace Goblin.Narfu.Tests.TeachersSchedule;
@@ -12,10 +11,7 @@ public class FindByNameTests : TestBase
     [Fact]
     public async Task FindByName_CorrectName_ReturnsTeachers()
     {
-        using var http = new HttpTest();
-        http.RespondWith(await File.ReadAllTextAsync(FindByNamePath));
-
-        var teachers = await Api.Teachers.FindByName("Абрамова");
+        var teachers = await Api.Teachers.FindByName(TeacherName);
         var first = teachers.First();
 
         teachers.Should()

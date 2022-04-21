@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Flurl.Http;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
@@ -12,22 +13,20 @@ namespace Goblin.Narfu.Schedule;
 
 public class TeachersSchedule : ITeacherSchedule
 {
+    private readonly HttpClient _client;
     private readonly ILogger _logger;
 
-    public TeachersSchedule()
+    public TeachersSchedule(HttpClient client)
     {
+        _client = client;
         _logger = Log.ForContext<TeachersSchedule>();
     }
 
     public async Task<IEnumerable<Lesson>> GetSchedule(int teacherId)
     {
-        _logger.Debug("Получение списка пар у преподавателя {0}", teacherId);
-        var response = await RequestBuilder.Create()
-                                           .SetQueryParam("timetable")
-                                           .SetQueryParam("lecturer", teacherId)
-                                           .GetStreamAsync();
+        _logger.Debug("Получение списка пар у преподавателя {TeacherId}", teacherId);
+        var response = await _client.GetStreamAsync($"?timetable&lecturer={teacherId}");
         _logger.Debug("Список получен");
-
         return HtmlParser.GetAllLessonsFromHtml(response);
     }
 
@@ -41,13 +40,9 @@ public class TeachersSchedule : ITeacherSchedule
 
     public async Task<Teacher[]> FindByName(string name)
     {
-        _logger.Debug("Поиск преподавателя {0}", name);
-        var teachers = await RequestBuilder.Create()
-                                           .AppendPathSegments("i", "ac.php")
-                                           .SetQueryParam("term", name)
-                                           .GetJsonAsync<Teacher[]>();
+        _logger.Debug("Поиск преподавателя {TeacherName}", name);
+        var teachers = await _client.GetFromJsonAsync<Teacher[]>($"i/ac.php?term={name}");
         _logger.Debug("Поиск завершен");
-
         return teachers;
     }
 }

@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Options;
@@ -16,6 +17,7 @@ public static class DependencyInjection
 {
     public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddHttpClient();
         AddBotFeatures(services);
         AddOptions(services, configuration);
         AddAdditions(services, configuration);
@@ -27,7 +29,7 @@ public static class DependencyInjection
         services.AddSingleton<INarfuApi, NarfuApi>(x =>
         {
             var link = configuration["Links:NarfuGroups"];
-            return new NarfuApi(link);
+            return new NarfuApi(link, x.GetService<IHttpClientFactory>());
         });
 
         services.AddSingleton<IScheduleService, ScheduleService>();
