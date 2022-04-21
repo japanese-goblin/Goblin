@@ -1,6 +1,6 @@
 using System;
 using Goblin.Application.Core.Models;
-using Goblin.Domain.Abstractions;
+using Goblin.Domain.Entities;
 
 namespace Goblin.Application.Core;
 

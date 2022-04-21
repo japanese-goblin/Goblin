@@ -46,7 +46,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "справка");
 
-        await service.ExecuteCommand<VkBotUser>(message, OnSuccess, res => null);
+        await service.ExecuteCommand(message, OnSuccess, res => null);
     }
 
     [Fact]
@@ -55,7 +55,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "абв");
 
-        await service.ExecuteCommand<VkBotUser>(message, res => null, OnFailed);
+        await service.ExecuteCommand(message, res => null, OnFailed);
     }
 
     [Fact]
@@ -64,7 +64,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "demo");
 
-        await service.ExecuteCommand<VkBotUser>(message, res => null, OnFailed);
+        await service.ExecuteCommand(message, res => null, OnFailed);
     }
 
     [Fact]
@@ -74,7 +74,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "абв");
 
-        await service.ExecuteCommand<VkBotUser>(message, res => null, res => null);
+        await service.ExecuteCommand(message, res => null, res => null);
     }
 
     [Fact]
@@ -83,7 +83,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "mailingKeyboard", string.Empty);
 
-        await service.ExecuteCommand<VkBotUser>(message, OnSuccess, res => null);
+        await service.ExecuteCommand(message, OnSuccess, res => null);
     }
 
     [Fact]
@@ -92,6 +92,6 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "asd", string.Empty);
 
-        await service.ExecuteCommand<VkBotUser>(message, res => null, OnFailed);
+        await service.ExecuteCommand(message, res => null, OnFailed);
     }
 }

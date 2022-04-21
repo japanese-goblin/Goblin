@@ -47,7 +47,7 @@ public class TelegramCallbackHandler
 
     private async Task HandleMessageEvent(Message message)
     {
-        await _commandsService.ExecuteCommand<TgBotUser>(message, OnSuccess, OnFailed);
+        await _commandsService.ExecuteCommand(message, OnSuccess, OnFailed);
 
         async Task OnSuccess(IResult res)
         {
@@ -63,7 +63,7 @@ public class TelegramCallbackHandler
     private async Task HandleCallback(CallbackQuery query)
     {
         var msg = _mapper.Map<Message>(query);
-        await _commandsService.ExecuteCommand<TgBotUser>(msg, OnAnyResult, OnAnyResult);
+        await _commandsService.ExecuteCommand(msg, OnAnyResult, OnAnyResult);
 
         async Task OnAnyResult(IResult res)
         {

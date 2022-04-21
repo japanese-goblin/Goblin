@@ -5,7 +5,7 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
-using Goblin.Domain.Abstractions;
+using Goblin.Domain.Entities;
 
 namespace Goblin.Application.Core.Commands.Merged;
 

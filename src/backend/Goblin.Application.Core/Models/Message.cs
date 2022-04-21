@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Goblin.Domain;
 using Newtonsoft.Json;
 
 namespace Goblin.Application.Core.Models;
@@ -15,6 +16,8 @@ public class Message
     public string Payload { get; set; }
 
     public bool IsConversation => UserId != ChatId;
+    
+    public ConsumerType ConsumerType { get; set; }
 
     public string[] CommandParameters
     {

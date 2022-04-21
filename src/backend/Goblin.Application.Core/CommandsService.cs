@@ -6,7 +6,9 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.DataAccess;
-using Goblin.Domain.Abstractions;
+using Goblin.Domain;
+using Goblin.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace Goblin.Application.Core;
@@ -28,12 +30,12 @@ public class CommandsService
         _logger = Log.ForContext<CommandsService>();
     }
 
-    public async Task ExecuteCommand<T>(Message msg,
+    public async Task ExecuteCommand(Message msg,
                                         Func<IResult, Task> onSuccess,
-                                        Func<IResult, Task> onFailed) where T : BotUser
+                                        Func<IResult, Task> onFailed)
     {
         IResult result;
-        var user = await GetBotUser<T>(msg.UserId);
+        var user = await GetBotUser(msg.UserId, msg.ConsumerType);
         if(!string.IsNullOrWhiteSpace(msg.Payload))
         {
             result = await ExecuteKeyboardCommand(msg, user);
@@ -106,20 +108,17 @@ public class CommandsService
         return new CommandNotFoundResult();
     }
 
-    private async Task<BotUser> GetBotUser<T>(long userId) where T : BotUser
+    private async Task<BotUser> GetBotUser(long userId, ConsumerType type)
     {
-        var user = await _context.Set<T>()
-                                 .FindAsync(userId);
-        if(!(user is null))
+        var user = await _context.BotUsers.FindAsync(userId, type);
+        if(user is not null)
         {
             return user;
         }
 
-        var entity = Activator.CreateInstance(typeof(T), userId, "", 0, false, true, false, false) as T;
-
-        user = (await _context.AddAsync(entity)).Entity;
+        var entity = new BotUser(userId);
+        user = (await _context.BotUsers.AddAsync(entity)).Entity;
         await _context.SaveChangesAsync();
-
         return user;
     }
 }

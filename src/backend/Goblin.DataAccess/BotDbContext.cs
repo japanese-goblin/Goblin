@@ -6,8 +6,7 @@ namespace Goblin.DataAccess;
 
 public class BotDbContext : DbContext
 {
-    public DbSet<TgBotUser> TgBotUsers { get; set; }
-    public DbSet<VkBotUser> VkBotUsers { get; set; }
+    public DbSet<BotUser> BotUsers { get; set; }
     public DbSet<Remind> Reminds { get; set; }
 
     public DbSet<CronJob> CronJobs { get; set; }
@@ -20,8 +19,7 @@ public class BotDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfiguration(new VkBotUserConfiguration());
-        modelBuilder.ApplyConfiguration(new TgBotUserConfiguration());
+        modelBuilder.ApplyConfiguration(new BotUserConfiguration());
         modelBuilder.ApplyConfiguration(new RemindConfiguration());
         modelBuilder.ApplyConfiguration(new CronJobConfiguration());
     }

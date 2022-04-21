@@ -7,7 +7,7 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain;
-using Goblin.Domain.Abstractions;
+using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Application.Core.Commands.Text;
@@ -34,21 +34,12 @@ public class SendToAdminCommand : ITextCommand
             return new FailedResult("Введите текст сообщения.");
         }
 
-        var message = string.Empty;
-        var adminUsers = new List<long>();
-        ISender sender = null;
-        if(user.ConsumerType == ConsumerType.Vkontakte)
-        {
-            message = $"Сообщение от {msg.UserTag}:\n{text}";
-            adminUsers = await _db.VkBotUsers.Where(x => x.IsAdmin).Select(x => x.Id).ToListAsync();
-            sender = _senders.FirstOrDefault(x => x.ConsumerType == ConsumerType.Vkontakte);
-        }
-        else if(user.ConsumerType == ConsumerType.Telegram)
-        {
-            message = $"Сообщение от {msg.UserTag}:\n{text}";
-            adminUsers = await _db.TgBotUsers.Where(x => x.IsAdmin).Select(x => x.Id).ToListAsync();
-            sender = _senders.FirstOrDefault(x => x.ConsumerType == ConsumerType.Telegram);
-        }
+        var message = $"Сообщение от {msg.UserTag}:\n{text}";
+        var adminUsers = await _db.BotUsers.Where(x => x.IsAdmin &&
+                                                       x.ConsumerType == user.ConsumerType)
+                              .Select(x => x.Id)
+                              .ToArrayAsync();
+        var sender = _senders.FirstOrDefault(x => x.ConsumerType == ConsumerType.Vkontakte);
 
         foreach(var admin in adminUsers)
         {

@@ -13,16 +13,16 @@ namespace Goblin.Application.Core.Tests;
 
 public class TestBase
 {
-    public readonly VkBotUser AdminUser;
+    public readonly BotUser AdminUser;
     public readonly BotDbContext ApplicationContext;
-    public readonly VkBotUser DefaultUser;
-    public readonly VkBotUser DefaultUserWithMaxReminds;
+    public readonly BotUser DefaultUser;
+    public readonly BotUser DefaultUserWithMaxReminds;
 
     public TestBase()
     {
-        DefaultUser = new VkBotUser(1, "Архангельск", 351917, false, true, true, true);
-        DefaultUserWithMaxReminds = new VkBotUser(2, "Архангельск", 351917, false, true, true, true);
-        AdminUser = new VkBotUser(101010, "Архангельск", 351917, true, true, true, true);
+        DefaultUser = new BotUser(1, "Архангельск", 351917, false, true, true, true);
+        DefaultUserWithMaxReminds = new BotUser(2, "Архангельск", 351917, false, true, true, true);
+        AdminUser = new BotUser(101010, "Архангельск", 351917, true, true, true, true);
 
         ApplicationContext = GetDbContext();
     }
@@ -52,9 +52,9 @@ public class TestBase
 
     private void InitDbContext(BotDbContext context)
     {
-        context.VkBotUsers.Add(DefaultUser);
-        context.VkBotUsers.Add(AdminUser);
-        context.VkBotUsers.Add(DefaultUserWithMaxReminds);
+        context.BotUsers.Add(DefaultUser);
+        context.BotUsers.Add(AdminUser);
+        context.BotUsers.Add(DefaultUserWithMaxReminds);
 
         for(var i = 0; i < AddRemindCommand.MaxRemindsCount; i++)
         {

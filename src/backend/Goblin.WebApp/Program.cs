@@ -11,6 +11,7 @@ using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
 
@@ -78,6 +79,8 @@ GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
 
 
 var app = builder.Build();
+MigrateDatabase<BotDbContext>(app);
+MigrateDatabase<IdentityUsersDbContext>(app);
 app.UseExceptionHandler(exceptionHandlerApp =>
 {
     exceptionHandlerApp.Run(async context =>
@@ -105,7 +108,6 @@ app.UseExceptionHandler(exceptionHandlerApp =>
         await context.Response.WriteAsJsonAsync(problemDetails);
     });
 });
-
 app.UseCors(corsName);
 app.UseAuthorization();
 app.UseFastEndpoints(c =>
@@ -119,3 +121,10 @@ if(app.Environment.IsDevelopment())
     app.UseSwaggerUi3(s => s.ConfigureDefaults());
 }
 app.Run();
+
+void MigrateDatabase<T>(WebApplication application) where T : DbContext
+{
+    using var scope = application.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<T>();
+    context.Database.Migrate();
+}

@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Goblin.DataAccess.Configurations;
 
-public class TgBotUserConfiguration : IEntityTypeConfiguration<TgBotUser>
+public class BotUserConfiguration : IEntityTypeConfiguration<BotUser>
 {
-       public void Configure(EntityTypeBuilder<TgBotUser> builder)
+       public void Configure(EntityTypeBuilder<BotUser> builder)
        {
-              builder.HasKey(x => x.Id);
+              builder.HasKey(x => new { x.Id, x.ConsumerType });
               builder.Property(x => x.Id)
                      .ValueGeneratedNever();
 

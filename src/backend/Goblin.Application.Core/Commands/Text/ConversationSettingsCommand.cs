@@ -8,7 +8,6 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain;
-using Goblin.Domain.Abstractions;
 using Goblin.Domain.Entities;
 using Goblin.Narfu.Abstractions;
 using Goblin.OpenWeatherMap.Abstractions;

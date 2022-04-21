@@ -7,7 +7,6 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Options;
 using Goblin.DataAccess;
 using Goblin.Domain;
-using Goblin.Domain.Abstractions;
 using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -37,44 +36,35 @@ public class ScheduleTask
 
     public async Task Execute()
     {
-        Func<string, IEnumerable<long>, ConsumerType, Task> send = async (text, userIds, consumer) =>
+        var consumersGroup = _db.BotUsers.AsNoTracking().Where(x => x.HasWeatherSubscription)
+                                .ToArray()
+                                .GroupBy(x => x.ConsumerType);
+        foreach(var consumerGroup in consumersGroup)
         {
-            var sender = _senders.FirstOrDefault(x => x.ConsumerType == consumer);
-            await sender.SendToMany(userIds, text);
-        };
-
-        await SendSchedule<VkBotUser>(send);
-        await SendSchedule<TgBotUser>(send);
-    }
-
-    private async Task SendSchedule<T>(Func<string, IEnumerable<long>, ConsumerType, Task> func) where T : BotUser
-    {
-        var grouped = _db.Set<T>()
-                         .AsNoTracking()
-                         .Where(x => x.HasScheduleSubscription)
-                         .ToArray()
-                         .GroupBy(x => x.NarfuGroup);
-        foreach(var group in grouped)
-        {
-            var result = await _scheduleService.GetSchedule(group.Key, DateTime.Today);
-            if(!result.IsSuccessful && _mailingOptions.IsVacations)
+            var sender = _senders.FirstOrDefault(x => x.ConsumerType == consumerGroup.Key);
+            var groupedByCity = consumerGroup.GroupBy(x => x.NarfuGroup);
+            foreach(var group in groupedByCity)
             {
-                continue;
-            }
-
-            foreach(var chunk in group.Chunk(Defaults.ChunkLimit))
-            {
-                try
+                var result = await _scheduleService.GetSchedule(group.Key, DateTime.Today);
+                if(!result.IsSuccessful && _mailingOptions.IsVacations)
                 {
-                    var ids = chunk.Select(x => x.Id);
-                    await func(result.Message, ids, chunk.FirstOrDefault().ConsumerType); //TODO:
+                    continue;
                 }
-                catch(Exception ex)
+                
+                foreach(var chunk in group.Chunk(Defaults.ChunkLimit))
                 {
-                    _logger.Error(ex, "Ошибка при отправке ежедневного расписания");
-                }
+                    try
+                    {
+                        var ids = chunk.Select(x => x.Id);
+                        await sender.SendToMany(ids, result.Message);
+                    }
+                    catch(Exception ex)
+                    {
+                        _logger.Error(ex, "Ошибка при отправке ежедневной погоды");
+                    }
 
-                await Task.Delay(TimeSpan.FromSeconds(1.5));
+                    await Task.Delay(TimeSpan.FromSeconds(1.5));
+                }
             }
         }
     }

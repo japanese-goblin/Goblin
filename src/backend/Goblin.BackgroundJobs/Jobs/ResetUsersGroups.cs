@@ -1,7 +1,5 @@
 using System.Threading.Tasks;
 using Goblin.DataAccess;
-using Goblin.Domain.Abstractions;
-using Goblin.Domain.Entities;
 using Goblin.Narfu.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,13 +18,12 @@ public class ResetUsersGroups
 
     public async Task Execute()
     {
-        await CheckAndRemoveUserGroups<VkBotUser>();
-        await CheckAndRemoveUserGroups<TgBotUser>();
+        await CheckAndRemoveUserGroups();
     }
 
-    public async Task CheckAndRemoveUserGroups<T>() where T : BotUser
+    public async Task CheckAndRemoveUserGroups()
     {
-        var users = await _context.Set<T>().ToArrayAsync();
+        var users = await _context.BotUsers.ToArrayAsync();
         foreach(var user in users)
         {
             if(_narfuApi.Students.IsCorrectGroup(user.NarfuGroup))

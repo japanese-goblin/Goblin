@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Goblin.Application.Core.Options;
 using Goblin.DataAccess;
+using Goblin.Domain;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -43,7 +44,7 @@ public class StartupTasks
         var today = DateTime.Today;
         var inactiveTime = TimeSpan.FromDays(75);
 
-        var vkUsers = await _db.VkBotUsers.ToArrayAsync();
+        var vkUsers = await _db.BotUsers.Where(x => x.ConsumerType == ConsumerType.Vkontakte).ToArrayAsync();
         var getConversationResult = await _api.Messages.GetConversationsAsync(new GetConversationsParams
         {
             Count = 1
@@ -67,7 +68,7 @@ public class StartupTasks
                                              .ToArray();
 
             var usersToRemove = vkUsers.Where(x => inactiveUsers.Contains(x.Id));
-            _db.VkBotUsers.RemoveRange(usersToRemove);
+            _db.BotUsers.RemoveRange(usersToRemove);
         }
 
         await _db.SaveChangesAsync();
