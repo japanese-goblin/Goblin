@@ -23,7 +23,7 @@ public class Vk : Endpoint<VkRequest>
 
     public override void Configure()
     {
-        Post("/api/callback/vk");
+        Post("/callback/vk");
         AllowAnonymous();
     }
 

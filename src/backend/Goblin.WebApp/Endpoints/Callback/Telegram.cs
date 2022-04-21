@@ -25,7 +25,7 @@ public class Telegram : Endpoint<TelegramRequest>
 
     public override void Configure()
     {
-        Post("/api/callback/tg/{SecretKey}");
+        Post("/callback/tg/{SecretKey}");
         AllowAnonymous();
     }
 

@@ -85,31 +85,34 @@ app.UseExceptionHandler(exceptionHandlerApp =>
         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
         context.Response.ContentType = MediaTypeNames.Application.Json;
 
+        var problemDetails = new ProblemDetails
+        {
+            Status = StatusCodes.Status500InternalServerError
+        };
+        
         if(builder.Environment.IsProduction())
         {
-            await context.Response.WriteAsJsonAsync(new ProblemDetails
-            {
-                Title = "Internal server error",
-                Status = StatusCodes.Status500InternalServerError,
-                Detail = "Internal server error was occurred. Please, try again later."
-            });
+            problemDetails.Title = "Внутренняя ошибка сервера";
+            problemDetails.Detail = "Возникла непредвиденная ошибка. Пожалуйста, попробуйте позже.";
         }
         else
         {
             var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>()!;
-            await context.Response.WriteAsJsonAsync(new ProblemDetails
-            {
-                Title = exceptionHandlerFeature.Error.Message,
-                Status = StatusCodes.Status500InternalServerError,
-                Detail = exceptionHandlerFeature.Error.StackTrace
-            });
+            problemDetails.Title = exceptionHandlerFeature.Error.Message;
+            problemDetails.Detail = exceptionHandlerFeature.Error.StackTrace;
         }
+
+        await context.Response.WriteAsJsonAsync(problemDetails);
     });
 });
 
 app.UseCors(corsName);
 app.UseAuthorization();
-app.UseFastEndpoints();
+app.UseFastEndpoints(c =>
+{
+    c.RoutingOptions = o => o.Prefix = "api";
+    c.ErrorResponseBuilder = (failures, _) => failures.Select(x => x.ErrorMessage);
+});
 if(app.Environment.IsDevelopment())
 {
     app.UseOpenApi();

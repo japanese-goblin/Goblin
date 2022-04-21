@@ -55,9 +55,9 @@ public class StudentsSchedule : IStudentsSchedule
 
             _logger.Debug("Расписание получено");
 
-            var allLessonsFromHtml = HtmlParser.GetAllLessonsFromHtml(response).ToList();
+            var allLessonsFromHtml = HtmlParser.GetAllLessonsFromHtml(response);
 
-            return allLessonsFromHtml.Where(x => x.StartTime.Date >= date.Value.Date);
+            return allLessonsFromHtml.Where(x => x.StartTime.Date >= date.Value.Date).ToList();
         }
     }
 
