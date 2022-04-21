@@ -40,7 +40,7 @@ public class FindTeacherCommandTests : TestBase
         return mockApi.Object;
     }
 
-    private INarfuApi GetNarfuApiWithFlurlException()
+    private INarfuApi GetNarfuApiWithHttpException()
     {
         const string endPoint = "https://localhost";
         var mockApi = new Mock<INarfuApi>();
@@ -81,7 +81,7 @@ public class FindTeacherCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_SiteIsUnavailable()
     {
-        var command = new FindTeacherCommand(GetNarfuApiWithFlurlException());
+        var command = new FindTeacherCommand(GetNarfuApiWithHttpException());
         var text = $"{command.Aliases[0]} Петров Пётр Петрович";
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 

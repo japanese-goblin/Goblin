@@ -43,6 +43,6 @@ public class GetScheduleTests : TestBase
 
     //    Func<Task> func = async () => await Api.Students.GetSchedule(CorrectGroup);
 
-    //    await func.Should().ThrowAsync<FlurlHttpException>();
+    //    await func.Should().ThrowAsync<HttpRequestException>();
     //}
 }

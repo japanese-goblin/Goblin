@@ -25,7 +25,7 @@ public class ExamsCommandTests : TestBase
         return mockApi.Object;
     }
 
-    private INarfuApi GetNarfuApiWithFlurlException()
+    private INarfuApi GetNarfuApiWithHttpException()
     {
         const string endPoint = "https://localhost";
         var mockApi = new Mock<INarfuApi>();
@@ -70,7 +70,7 @@ public class ExamsCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_SiteIsUnavailable()
     {
-        var command = new ExamsCommand(GetNarfuApiWithFlurlException());
+        var command = new ExamsCommand(GetNarfuApiWithHttpException());
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);

@@ -34,7 +34,7 @@ public class TeacherScheduleCommandTests : TestBase
         return mockApi.Object;
     }
 
-    private INarfuApi GetNarfuApiWithFlurlException()
+    private INarfuApi GetNarfuApiWithHttpException()
     {
         const string endPoint = "https://localhost";
         var mockApi = new Mock<INarfuApi>();
@@ -69,7 +69,7 @@ public class TeacherScheduleCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_SiteIsUnavailable()
     {
-        var command = new TeacherScheduleCommand(GetNarfuApiWithFlurlException());
+        var command = new TeacherScheduleCommand(GetNarfuApiWithHttpException());
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "12345");
 
         var result = await command.Execute(message, DefaultUser);
