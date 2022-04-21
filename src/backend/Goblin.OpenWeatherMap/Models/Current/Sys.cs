@@ -1,28 +1,27 @@
 ﻿using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
 
 namespace Goblin.OpenWeatherMap.Models.Current;
 
 public class Sys
 {
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public int Type { get; set; }
 
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
 
-    [JsonProperty("message")]
+    [JsonPropertyName("message")]
     public double Message { get; set; }
 
-    [JsonProperty("country")]
+    [JsonPropertyName("country")]
     public string Country { get; set; }
 
-    [JsonProperty("sunrise")]
-    [JsonConverter(typeof(UnixDateTimeConverter))]
+    [JsonPropertyName("sunrise")]
+    [JsonConverter(typeof(UnixTimeConverter))]
     public DateTimeOffset Sunrise { get; set; }
 
-    [JsonProperty("sunset")]
-    [JsonConverter(typeof(UnixDateTimeConverter))]
+    [JsonPropertyName("sunset")]
+    [JsonConverter(typeof(UnixTimeConverter))]
     public DateTimeOffset Sunset { get; set; }
 }

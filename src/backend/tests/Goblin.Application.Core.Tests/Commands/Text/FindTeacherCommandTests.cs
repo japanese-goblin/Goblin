@@ -3,8 +3,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Flurl;
-using Flurl.Http;
 using Goblin.Application.Core.Commands.Text;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
@@ -47,11 +45,7 @@ public class FindTeacherCommandTests : TestBase
         const string endPoint = "https://localhost";
         var mockApi = new Mock<INarfuApi>();
         mockApi.Setup(x => x.Teachers.FindByName(It.IsAny<string>()))
-               .ThrowsAsync(new FlurlHttpException(new FlurlCall()
-               {
-                   Request = new FlurlRequest(new Url(endPoint)),
-                   HttpRequestMessage = new HttpRequestMessage(HttpMethod.Get, endPoint)
-               }));
+               .ThrowsAsync(new HttpRequestException());
 
         return mockApi.Object;
     }

@@ -1,6 +1,6 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
@@ -46,7 +46,7 @@ public class ExamsCommand : IKeyboardCommand, ITextCommand
                 Message = str
             };
         }
-        catch(FlurlHttpException)
+        catch(HttpRequestException)
         {
             return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
         }

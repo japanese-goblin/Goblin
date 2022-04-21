@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
 
 namespace Goblin.OpenWeatherMap.Models.Daily;
 
@@ -10,68 +9,68 @@ public class DailyWeatherListItem
     /// <summary>
     /// Дата погоды
     /// </summary>
-    [JsonProperty("dt")]
-    [JsonConverter(typeof(UnixDateTimeConverter))]
+    [JsonPropertyName("dt")]
+    [JsonConverter(typeof(UnixTimeConverter))]
     public DateTimeOffset UnixTime { get; set; }
 
     /// <summary>
     /// Температура
     /// </summary>
-    [JsonProperty("temp")]
+    [JsonPropertyName("temp")]
     public Temperature Temperature { get; set; }
 
     /// <summary>
     /// Температура с учётом человеческих ощущений
     /// </summary>
-    [JsonProperty("feels_like")]
+    [JsonPropertyName("feels_like")]
     public FeelsLike FeelsLike { get; set; }
 
     /// <summary>
     /// Атмосферное давление
     /// </summary>
-    [JsonProperty("pressure")]
+    [JsonPropertyName("pressure")]
     public double Pressure { get; set; }
 
     /// <summary>
     /// Влажность
     /// </summary>
-    [JsonProperty("humidity")]
+    [JsonPropertyName("humidity")]
     public long Humidity { get; set; }
 
     /// <summary>
     /// Внутреннее описание погоды
     /// </summary>
-    [JsonProperty("weather")]
+    [JsonPropertyName("weather")]
     public Weather[] Weather { get; set; }
 
     /// <summary>
     /// Скорость ветра
     /// </summary>
-    [JsonProperty("speed")]
+    [JsonPropertyName("speed")]
     public double WindSpeed { get; set; }
 
     /// <summary>
     /// Направление ветра, в градусах
     /// </summary>
-    [JsonProperty("deg")]
+    [JsonPropertyName("deg")]
     public long WindDeg { get; set; }
 
     /// <summary>
     /// Облачность, в %
     /// </summary>
-    [JsonProperty("clouds")]
+    [JsonPropertyName("clouds")]
     public long Cloudiness { get; set; }
 
     /// <summary>
     /// Количество дождя, в миллиметрах
     /// </summary>
-    [JsonProperty("rain", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("rain")]
     public double? Rain { get; set; }
 
     /// <summary>
     /// Количество снега, в миллиметрах
     /// </summary>
-    [JsonProperty("snow", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("snow")]
     public double? Snow { get; set; }
 
     public override string ToString()

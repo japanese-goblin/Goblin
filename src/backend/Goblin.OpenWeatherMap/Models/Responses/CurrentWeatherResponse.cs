@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Text;
+using System.Text.Json.Serialization;
 using Goblin.OpenWeatherMap.Models.Current;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Goblin.OpenWeatherMap.Models.Responses;
 
@@ -11,92 +10,92 @@ public class CurrentWeatherResponse
     /// <summary>
     /// Координаты
     /// </summary>
-    [JsonProperty("coord")]
+    [JsonPropertyName("coord")]
     public Coordinates Coordinates { get; set; }
 
     /// <summary>
     /// Внутреннее описание погоды
     /// </summary>
-    [JsonProperty("weather")]
+    [JsonPropertyName("weather")]
     public Weather[] Info { get; set; }
 
     /// <summary>
     /// Внутренний параметр (возможно, откуда берутся данные)
     /// </summary>
-    [JsonProperty("base")]
+    [JsonPropertyName("base")]
     public string Base { get; set; }
 
     /// <summary>
     /// Данные о текущей погоде
     /// </summary>
-    [JsonProperty("main")]
+    [JsonPropertyName("main")]
     public CurrentWeatherData Weather { get; set; }
 
     /// <summary>
     /// Дальность видимости (в метрах)
     /// </summary>
-    [JsonProperty("visibility")]
+    [JsonPropertyName("visibility")]
     public double Visibility { get; set; }
 
     /// <summary>
     /// Информация о ветре
     /// </summary>
-    [JsonProperty("wind")]
+    [JsonPropertyName("wind")]
     public Wind Wind { get; set; }
 
     /// <summary>
     /// Информация об облаках
     /// </summary>
-    [JsonProperty("clouds")]
+    [JsonPropertyName("clouds")]
     public Clouds Clouds { get; set; }
 
     /// <summary>
     /// Информация о дожде
     /// </summary>
-    [JsonProperty("rain", NullValueHandling = NullValueHandling.Ignore)]
-    public Rain Rain { get; set; }
+    [JsonPropertyName("rain")]
+    public Precipitation Rain { get; set; }
 
     /// <summary>
     /// Информация о снеге
     /// </summary>
-    [JsonProperty("snow", NullValueHandling = NullValueHandling.Ignore)]
-    public Snow Snow { get; set; }
+    [JsonPropertyName("snow")]
+    public Precipitation Snow { get; set; }
 
     /// <summary>
     /// Время получения погоды со станции
     /// </summary>
-    [JsonProperty("dt")]
-    [JsonConverter(typeof(UnixDateTimeConverter))]
+    [JsonPropertyName("dt")]
+    [JsonConverter(typeof(UnixTimeConverter))]
     public DateTimeOffset UnixTime { get; set; }
 
     /// <summary>
     /// Системная информация
     /// </summary>
-    [JsonProperty("sys")]
+    [JsonPropertyName("sys")]
     public Sys OtherInfo { get; set; }
 
     /// <summary>
     /// Идентификатор горожа
     /// </summary>
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int CityId { get; set; }
 
     /// <summary>
     /// Название города
     /// </summary>
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string CityName { get; set; }
 
     /// <summary>
     /// Код ответа
     /// </summary>
-    [JsonProperty("cod")]
+    [JsonPropertyName("cod")]
     public int ResponseCode { get; set; }
 
     /// <summary>
     /// Разница между местным временем и UTC в секундах
     /// </summary>
-    [JsonProperty("timezone")]
+    [JsonPropertyName("timezone")]
     public int TimezoneDifference { get; set; }
 
     public override string ToString()

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Goblin.OpenWeatherMap.Models;
 
@@ -7,12 +7,12 @@ public class Coordinates
     /// <summary>
     /// Долгота
     /// </summary>
-    [JsonProperty("lon")]
+    [JsonPropertyName("lon")]
     public double Longitude { get; set; }
 
     /// <summary>
     /// Широта
     /// </summary>
-    [JsonProperty("lat")]
+    [JsonPropertyName("lat")]
     public double Latitude { get; set; }
 }

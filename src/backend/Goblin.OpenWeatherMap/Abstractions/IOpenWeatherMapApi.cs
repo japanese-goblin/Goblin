@@ -12,7 +12,7 @@ public interface IOpenWeatherMapApi
     /// </summary>
     /// <param name="city">Город, в котором нужно получить погоду</param>
     /// <returns>Данные о погоде в указанном городе</returns>
-    /// <exception cref="Flurl.Http.FlurlHttpException">Сервер вернул не успешный код</exception>
+    /// <exception cref="System.Net.Http.HttpRequestException">Сервер вернул не успешный код</exception>
     public Task<CurrentWeatherResponse> GetCurrentWeather(string city);
 
     /// <summary>
@@ -21,7 +21,7 @@ public interface IOpenWeatherMapApi
     /// <param name="city">Город</param>
     /// <param name="date">Дата для получения погоды</param>
     /// <returns>Данные о погоде на указанный день</returns>
-    /// <exception cref="Flurl.Http.FlurlHttpException">Сервер вернул не успешный код</exception>
+    /// <exception cref="System.Net.Http.HttpRequestException">Сервер вернул не успешный код</exception>
     /// <exception cref="ArgumentException">Погода на указанную дату не найдена</exception>
     public Task<DailyWeatherListItem> GetDailyWeatherAt(string city, DateTime date);
 

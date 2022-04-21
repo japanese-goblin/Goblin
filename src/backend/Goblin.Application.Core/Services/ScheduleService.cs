@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
@@ -36,7 +36,7 @@ public class ScheduleService : IScheduleService
                 Keyboard = DefaultKeyboards.GetScheduleKeyboard()
             };
         }
-        catch(FlurlHttpException)
+        catch(HttpRequestException)
         {
             return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
         }

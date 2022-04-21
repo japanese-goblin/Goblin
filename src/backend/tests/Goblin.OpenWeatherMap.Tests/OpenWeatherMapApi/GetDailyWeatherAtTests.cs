@@ -1,9 +1,7 @@
 using System;
-using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Flurl.Http;
-using Flurl.Http.Testing;
 using Xunit;
 
 namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi;
@@ -16,8 +14,6 @@ public class GetDailyWeatherAtTests : TestBase
     public async Task GetDailyWeatherAt_CorrectCityAndDate_ReturnsModel()
     {
         var correctDate = new DateTimeOffset(2019, 09, 28, 9, 0, 0, TimeSpan.Zero);
-        using var http = new HttpTest();
-        http.RespondWith(await File.ReadAllTextAsync(DailyWeatherPath));
 
         var weather = await Api.GetDailyWeatherAt(CorrectCity, _date);
 
@@ -48,22 +44,14 @@ public class GetDailyWeatherAtTests : TestBase
     [Fact]
     public async Task GetDailyWeatherAt_IncorrectCity_ThrowsException()
     {
-        using var http = new HttpTest();
-        http.RespondWith(string.Empty, 404);
-
         Func<Task> func = async () => await Api.GetDailyWeatherAt(IncorrectCity, _date);
-
-        await func.Should().ThrowAsync<FlurlHttpException>();
+        await func.Should().ThrowAsync<HttpRequestException>();
     }
 
     [Fact]
     public async Task GetDailyWeatherAt_IncorrectDate_ThrowsException()
     {
-        using var http = new HttpTest();
-        http.RespondWith(await File.ReadAllTextAsync(DailyWeatherPath));
-
-        Func<Task> func = async () => await Api.GetDailyWeatherAt(IncorrectCity, _date.AddDays(17));
-
+        Func<Task> func = async () => await Api.GetDailyWeatherAt(CorrectCity, _date.AddDays(17));
         await func.Should().ThrowAsync<ArgumentException>();
     }
 }

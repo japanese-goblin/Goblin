@@ -1,9 +1,7 @@
 using System;
-using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Flurl.Http;
-using Flurl.Http.Testing;
 using Xunit;
 
 namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi;
@@ -16,8 +14,6 @@ public class GetCurrentWeatherTests : TestBase
         var correctDate = new DateTimeOffset(2019, 09, 28, 09, 17, 58, TimeSpan.Zero);
         var correctSunriseDate = new DateTimeOffset(2019, 09, 28, 03, 25, 23, TimeSpan.Zero);
         var correctSunsetDate = new DateTimeOffset(2019, 09, 28, 15, 15, 14, TimeSpan.Zero);
-        using var http = new HttpTest();
-        http.RespondWith(await File.ReadAllTextAsync(CurrentWeatherPath));
 
         var weather = await Api.GetCurrentWeather(CorrectCity);
 
@@ -59,11 +55,7 @@ public class GetCurrentWeatherTests : TestBase
     [Fact]
     public async Task GetCurrentWeather_IncorrectCity_ThrowsException()
     {
-        using var http = new HttpTest();
-        http.RespondWith(string.Empty, 404);
-
         Func<Task> func = async () => await Api.GetCurrentWeather(IncorrectCity);
-
-        await func.Should().ThrowAsync<FlurlHttpException>();
+        await func.Should().ThrowAsync<HttpRequestException>();
     }
 }

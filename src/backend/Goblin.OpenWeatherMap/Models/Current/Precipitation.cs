@@ -1,18 +1,18 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Goblin.OpenWeatherMap.Models.Current;
 
-public class Rain
+public class Precipitation
 {
     /// <summary>
     /// Количество осадков за последний час
     /// </summary>
-    [JsonProperty("1h", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("1h")]
     public double? ForLastOneHour { get; set; }
 
     /// <summary>
     /// Количество осадков за последние три часа
     /// </summary>
-    [JsonProperty("3h", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("3h")]
     public double? ForLastThreeHours { get; set; }
 }

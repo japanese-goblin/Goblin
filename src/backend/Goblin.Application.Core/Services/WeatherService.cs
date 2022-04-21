@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
@@ -51,9 +51,9 @@ public class WeatherService : IWeatherService
                 Message = result
             };
         }
-        catch(FlurlHttpException ex)
+        catch(HttpRequestException ex)
         {
-            if(ex.StatusCode == (int) HttpStatusCode.NotFound)
+            if(ex.StatusCode == HttpStatusCode.NotFound)
             {
                 return new FailedResult($"Город \"{city}\" не найден");
             }
@@ -101,9 +101,9 @@ public class WeatherService : IWeatherService
                 Message = result
             };
         }
-        catch(FlurlHttpException ex)
+        catch(HttpRequestException ex)
         {
-            if(ex.StatusCode == (int) HttpStatusCode.NotFound)
+            if(ex.StatusCode == HttpStatusCode.NotFound)
             {
                 var result = SetNotFoundCacheValue(city);
                 return new FailedResult(result);

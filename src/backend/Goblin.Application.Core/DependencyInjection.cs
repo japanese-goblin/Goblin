@@ -25,7 +25,10 @@ public static class DependencyInjection
 
     private static void AddAdditions(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSingleton<IOpenWeatherMapApi, OpenWeatherMapApi>(x => new OpenWeatherMapApi(configuration["OWM:AccessToken"]));
+        services.AddSingleton<IOpenWeatherMapApi, OpenWeatherMapApi>(x =>
+        {
+            return new OpenWeatherMapApi(configuration["OWM:AccessToken"], x.GetService<IHttpClientFactory>());
+        });
         services.AddSingleton<INarfuApi, NarfuApi>(x =>
         {
             var link = configuration["Links:NarfuGroups"];

@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
@@ -18,15 +20,12 @@ public class GetScheduleTests : TestBase
                .HaveCount(27);
     }
 
-    //
-    // [Fact]
-    // public async Task GetSchedule_IncorrectId_ReturnsLessons()
-    // {
-    //     using var http = new HttpTest();
-    //     http.RespondWith(string.Empty, (int) HttpStatusCode.NotFound);
-    //
-    //     Func<Task> func = async () => await Api.Teachers.GetSchedule(CorrectTeacherId);
-    //
-    //     await func.Should().ThrowAsync<FlurlHttpException>();
-    // }
+    
+    [Fact]
+    public async Task GetSchedule_IncorrectId_ReturnsLessons()
+    {
+        Func<Task> func = async () => await Api.Teachers.GetSchedule(5);
+    
+        await func.Should().ThrowAsync<HttpRequestException>();
+    }
 }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Goblin.OpenWeatherMap.Models.Current;
 
@@ -7,18 +7,18 @@ public class Wind
     /// <summary>
     /// Направление ветра (в градусах)
     /// </summary>
-    [JsonProperty("deg")]
+    [JsonPropertyName("deg")]
     public double Degrees { get; set; }
 
     /// <summary>
     /// Порыв ветра
     /// </summary>
-    [JsonProperty("gust", NullValueHandling = NullValueHandling.Ignore)]
+    [JsonPropertyName("gust")]
     public double? Gust { get; set; }
 
     /// <summary>
     /// Скорость ветра
     /// </summary>
-    [JsonProperty("speed")]
+    [JsonPropertyName("speed")]
     public double Speed { get; set; }
 }

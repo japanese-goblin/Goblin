@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Goblin.OpenWeatherMap.Models.Current;
 
@@ -7,6 +7,6 @@ public class Clouds
     /// <summary>
     /// Процент облачности
     /// </summary>
-    [JsonProperty("all")]
+    [JsonPropertyName("all")]
     public int Cloudiness { get; set; }
 }

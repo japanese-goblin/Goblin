@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace Goblin.OpenWeatherMap.Models.Daily;
 
@@ -7,36 +7,36 @@ public class Temperature
     /// <summary>
     /// Температура утром
     /// </summary>
-    [JsonProperty("morn")]
+    [JsonPropertyName("morn")]
     public double Morning { get; set; }
 
     /// <summary>
     /// Температура днём
     /// </summary>
-    [JsonProperty("day")]
+    [JsonPropertyName("day")]
     public double Day { get; set; }
 
     /// <summary>
     /// Температура вечером
     /// </summary>
-    [JsonProperty("eve")]
+    [JsonPropertyName("eve")]
     public double Evening { get; set; }
 
     /// <summary>
     /// Температура ночью
     /// </summary>
-    [JsonProperty("night")]
+    [JsonPropertyName("night")]
     public double Night { get; set; }
 
     /// <summary>
     /// Минимальная температура за день
     /// </summary>
-    [JsonProperty("min")]
+    [JsonPropertyName("min")]
     public double Min { get; set; }
 
     /// <summary>
     /// Максимальная температура за день
     /// </summary>
-    [JsonProperty("max")]
+    [JsonPropertyName("max")]
     public double Max { get; set; }
 }

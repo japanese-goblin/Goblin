@@ -1,6 +1,6 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Flurl.Http;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
@@ -44,7 +44,7 @@ public class TeacherScheduleCommand : IKeyboardCommand
                 Message = schedule.ToString()
             };
         }
-        catch(FlurlHttpException)
+        catch(HttpRequestException)
         {
             return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
         }
