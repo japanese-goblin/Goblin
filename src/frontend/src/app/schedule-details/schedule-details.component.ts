@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ScheduleResponse } from '../schedule-response';
 import { ScheduleServiceService } from '../schedule.service';
 import { ToastService } from '../toast.service';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+
 
 @Component({
     selector: 'app-schedule-details',
@@ -19,7 +21,8 @@ export class ScheduleDetailsComponent implements OnInit {
 
     constructor(private route: ActivatedRoute,
                 private service: ScheduleServiceService,
-                private toastService: ToastService) {
+                private toastService: ToastService,
+                private sanitizer: DomSanitizer) {
         let queryDate = this.route.snapshot.queryParamMap.get('date');
         let date = new Date();
         if(queryDate !== null && !queryDate.match(this.pattern)) {
@@ -48,5 +51,9 @@ export class ScheduleDetailsComponent implements OnInit {
     }
 
     ngOnInit(): void {
+    }
+
+    sanitize(text: string): SafeUrl {
+        return this.sanitizer.bypassSecurityTrustUrl(text);
     }
 }

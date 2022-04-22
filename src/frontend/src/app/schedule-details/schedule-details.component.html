@@ -17,7 +17,7 @@
         <button type="button" class="btn btn-primary" id="dropdownBasic1" ngbDropdownToggle>Дополнительно</button>
         <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
             <a class="btn" ngbDropdownItem [href]="response.icsLink" target="_blank" [disabled]="!response.icsLink">Скачать файл (.ics)</a>
-            <a class="btn" ngbDropdownItem [href]="response.webCalLink" target="_blank" disabled>Добавить в календарь</a>
+            <a class="btn" ngbDropdownItem [href]="this.sanitize(response.webCalLink)" target="_blank" [disabled]="!response.webCalLink">Добавить в календарь</a>
             <hr/>
             <button ngbDropdownItem disabled>А больше пока ничего и нет...</button>
         </div>
