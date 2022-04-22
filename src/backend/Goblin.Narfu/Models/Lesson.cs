@@ -2,7 +2,7 @@ using System;
 
 namespace Goblin.Narfu.Models;
 
-public record Lesson
+public class Lesson : IEquatable<Lesson>
 {
     public string Id { get; set; }
 
@@ -57,5 +57,45 @@ public record Lesson
         }
 
         return LessonType.Unknown;
+    }
+
+    public bool Equals(Lesson other)
+    {
+        if(ReferenceEquals(null, other))
+        {
+            return false;
+        }
+
+        if(ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return Type == other.Type && Name == other.Name && Number == other.Number && Auditory == other.Auditory && Teacher == other.Teacher && Groups == other.Groups;
+    }
+
+    public override bool Equals(object obj)
+    {
+        if(ReferenceEquals(null, obj))
+        {
+            return false;
+        }
+
+        if(ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if(obj.GetType() != this.GetType())
+        {
+            return false;
+        }
+
+        return Equals((Lesson)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Type, Name, Number, Auditory, Teacher, Groups);
     }
 }

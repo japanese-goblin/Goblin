@@ -113,7 +113,7 @@ public class StudentsSchedule : IStudentsSchedule
                 Auditory = address[1],
                 Number = number,
                 Groups = description[1].Substring(3),
-                Name = ev.Summary,
+                Name = ev.Summary.Replace(".", ". "),
                 Type = description[3],
                 Teacher = description[4],
                 StartTime = ev.DtStart,
@@ -133,6 +133,6 @@ public class StudentsSchedule : IStudentsSchedule
             }
 
             return lesson;
-        });
+        }).Distinct();
     }
 }
