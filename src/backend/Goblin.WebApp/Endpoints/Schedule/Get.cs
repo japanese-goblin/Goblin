@@ -29,17 +29,25 @@ public class Get : Endpoint<ScheduleRequest, ScheduleResponse>
             await SendErrorsAsync(cancellation: ct);
             return;
         }
-        
-        var lessons = (await _narfuApi.Students.GetSchedule(req.GroupId, req.Date)).ToList();
-        await SendAsync(new ScheduleResponse
+
+        try
         {
-            IsFromSite = lessons.Any(x => string.IsNullOrEmpty(x.Id)),
-            Lessons = MagicWithLessons(lessons),
-            GroupId = req.GroupId,
-            GroupName = group.Name,
-            IcsLink = _narfuApi.Students.GenerateScheduleLink(req.GroupId),
-            WebCalLink = _narfuApi.Students.GenerateScheduleLink(req.GroupId, true),
-        }, cancellation: ct);
+            var lessons = (await _narfuApi.Students.GetSchedule(req.GroupId, req.Date)).ToList();
+            await SendAsync(new ScheduleResponse
+            {
+                IsFromSite = lessons.Any(x => string.IsNullOrEmpty(x.Id)),
+                Lessons = MagicWithLessons(lessons),
+                GroupId = req.GroupId,
+                GroupName = group.Name,
+                IcsLink = _narfuApi.Students.GenerateScheduleLink(req.GroupId),
+                WebCalLink = _narfuApi.Students.GenerateScheduleLink(req.GroupId, true),
+            }, cancellation: ct);
+        }
+        catch(TaskCanceledException)
+        {
+            AddError("Сайт расписания САФУ временно недоступен. Попробуйте позже");
+            await SendErrorsAsync(cancellation: ct);
+        }
     }
     
     private static DateTime GetStartOfWeek(DateTime dt)
