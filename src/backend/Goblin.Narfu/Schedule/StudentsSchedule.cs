@@ -112,7 +112,7 @@ public class StudentsSchedule : IStudentsSchedule
                 Address = address[0],
                 Auditory = address[1],
                 Number = number,
-                Groups = description[1].Substring(3),
+                Groups = description[1][3..],
                 Name = ev.Summary.Replace(".", ". "),
                 Type = description[3],
                 Teacher = description[4],
