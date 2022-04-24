@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net.Mime;
 using FastEndpoints;
 using FastEndpoints.Swagger;
@@ -14,6 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
+
+SetDefaultLocale();
 
 const string corsName = "frontend";
 var builder = WebApplication.CreateBuilder(args);
@@ -125,4 +128,13 @@ void MigrateDatabase<T>(WebApplication application) where T : DbContext
     using var scope = application.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<T>();
     context.Database.Migrate();
+}
+
+ void SetDefaultLocale()
+{
+    var culture = new CultureInfo("ru-RU");
+    CultureInfo.CurrentCulture = culture;
+    CultureInfo.CurrentUICulture = culture;
+    CultureInfo.DefaultThreadCurrentCulture = culture;
+    CultureInfo.DefaultThreadCurrentUICulture = culture;
 }
