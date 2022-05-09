@@ -12,13 +12,14 @@ import { ScheduleComponent } from './schedule/schedule.component';
 import { StartComponent } from './start/start.component';
 import { ScheduleDetailsComponent } from './schedule-details/schedule-details.component';
 import { LessonComponent } from './lesson/lesson.component';
-import { LessonTypeColorPipe } from './lesson-type-color-pipe';
-import { WeekStartEndPipe } from './week-start-end-pipe';
+import { LessonTypeColorPipe } from './pipes/lesson-type-color-pipe';
+import { WeekStartEndPipe } from './pipes/week-start-end-pipe';
 
 import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
 import { ToastContainerComponent } from './toast-container/toast-container.component';
 import { AuthInterceptor } from './auth.interceptor';
+import { AuthComponent } from './auth/auth.component';
 registerLocaleData(localeRu, 'ru');
 
 @NgModule({
@@ -30,7 +31,8 @@ registerLocaleData(localeRu, 'ru');
         LessonComponent,
         LessonTypeColorPipe,
         WeekStartEndPipe,
-        ToastContainerComponent
+        ToastContainerComponent,
+        AuthComponent
     ],
     imports: [
         CommonModule,

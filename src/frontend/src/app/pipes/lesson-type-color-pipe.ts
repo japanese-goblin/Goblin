@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Lesson } from './lesson';
-import { LessonType } from './lesson-type';
+import { Lesson } from '../models/lesson';
+import { LessonType } from '../models/lesson-type';
 
 @Pipe({ name: 'lessonTypeColor' })
 export class LessonTypeColorPipe implements PipeTransform {

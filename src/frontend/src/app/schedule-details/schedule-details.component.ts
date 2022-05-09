@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ScheduleResponse } from '../schedule-response';
-import { ScheduleServiceService } from '../schedule.service';
+import { ScheduleResponse } from '../models/schedule-response';
+import { ScheduleServiceService } from '../services/schedule.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 

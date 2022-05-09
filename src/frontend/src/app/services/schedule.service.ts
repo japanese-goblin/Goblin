@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { ScheduleResponse } from './schedule-response';
-import { environment } from '../environments/environment';
+import { ScheduleResponse } from '../models/schedule-response';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
