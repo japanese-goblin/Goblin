@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { ScheduleComponent } from './schedule/schedule.component';
@@ -18,6 +18,7 @@ import { WeekStartEndPipe } from './week-start-end-pipe';
 import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
 import { ToastContainerComponent } from './toast-container/toast-container.component';
+import { AuthInterceptor } from './auth.interceptor';
 registerLocaleData(localeRu, 'ru');
 
 @NgModule({
@@ -45,7 +46,9 @@ registerLocaleData(localeRu, 'ru');
 
         NgbNavModule
     ],
-    providers: [],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
