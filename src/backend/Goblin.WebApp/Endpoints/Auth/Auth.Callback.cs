@@ -28,15 +28,16 @@ public class AuthCallbackEndpoint : Endpoint<AuthEndpointRequest>
         var info = await _signInManager.GetExternalLoginInfoAsync();
         if(info == null)
         {
-            // ErrorMessage = "Error loading external login information.";
-            // return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+            AddError("Error loading external login information");
+            await SendErrorsAsync(cancellation: ct);
+            return;
         }
 
         // Sign in the user with this external login provider if the user already has a login.
         var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false, true);
         if(result.Succeeded)
         {
-            Log.Information("{0} logged in with {1} provider.", info.Principal.Identity.Name, info.LoginProvider);
+            Logger.LogInformation("{0} logged in with {1} provider.", info.Principal.Identity.Name, info.LoginProvider);
 
             await SendRedirectAsync(req.ReturnUrl, cancellation: ct);
             return;
@@ -50,11 +51,12 @@ public class AuthCallbackEndpoint : Endpoint<AuthEndpointRequest>
             var createResult = await _userManager.CreateAsync(user);
             if(createResult.Succeeded)
             {
+                await _userManager.AddToRoleAsync(user, RoleNames.User);
                 var loginResult = await _userManager.AddLoginAsync(user, info);
                 if(loginResult.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, false);
-                    Log.Information("User created an account using {0} provider.", info.LoginProvider);
+                    Logger.LogInformation("User created an account using {Provider} provider.", info.LoginProvider);
                 }
             }
         }
