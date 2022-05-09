@@ -11,6 +11,7 @@ using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -76,6 +77,24 @@ builder.Services.AddHangfireServer(x =>
 GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
 builder.Services.AddSwaggerDoc(shortSchemaNames: true);
 builder.Services.AddFastEndpoints();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+       .AddEntityFrameworkStores<IdentityUsersDbContext>();
+builder.Services.AddAuthentication()
+       .AddGitHub("github", options =>
+       {
+           options.ClientId = builder.Configuration["Github:ClientId"];
+           options.ClientSecret = builder.Configuration["Github:ClientSecret"];
+
+           options.Scope.Add("user:email");
+       });
+builder.Services.ConfigureApplicationCookie(o =>
+{
+    o.Events.OnRedirectToLogin = ctx =>
+    {
+        ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return Task.CompletedTask;
+    };
+});
 
 var app = builder.Build();
 MigrateDatabase<BotDbContext>(app);
@@ -108,6 +127,7 @@ app.UseExceptionHandler(exceptionHandlerApp =>
     });
 });
 app.UseCors(corsName);
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseFastEndpoints(c =>
 {
@@ -130,7 +150,7 @@ void MigrateDatabase<T>(WebApplication application) where T : DbContext
     context.Database.Migrate();
 }
 
- void SetDefaultLocale()
+void SetDefaultLocale()
 {
     var culture = new CultureInfo("ru-RU");
     CultureInfo.CurrentCulture = culture;
