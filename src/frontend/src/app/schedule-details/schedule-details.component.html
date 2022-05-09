@@ -34,9 +34,10 @@
                             <div class="dayofweek text-center">
                                 <b>{{ day.key | date:'EEEE, d MMMM':'+0300':'ru' }}</b>
                             </div>
-                            <hr />
+                            <hr class="d-lg-block d-none"/>
                             <app-lesson *ngFor="let lesson of day.value" [lesson]="lesson" class="lesson-card">
                             </app-lesson>
+                            <hr class="d-lg-none"/>
                         </div>
                     </div>
                 </div>
