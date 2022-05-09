@@ -7,13 +7,18 @@ import {
 } from '@angular/common/http';
 import { ToastService } from './services/toast.service';
 import { tap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
     constructor(private toastService: ToastService) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler) {
-        return next.handle(request).pipe(tap({
+        const apiReq = request.clone({
+            url: `${environment.apiUrl}/${request.url}`,
+            withCredentials: true
+        });
+        return next.handle(apiReq).pipe(tap({
             error: (e: HttpErrorResponse) => {
                 if (e.status == 0) {
                     this.toastService.showError("Сервер временно недоступен. Попробуйте позже.");

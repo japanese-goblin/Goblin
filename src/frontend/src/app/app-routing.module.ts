@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthComponent } from './auth/auth.component';
 import { ScheduleDetailsComponent } from './schedule-details/schedule-details.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { StartComponent } from './start/start.component';
@@ -16,6 +17,10 @@ const appRoutes: Routes = [
     {
         path: 'schedule/:groupId',
         component: ScheduleDetailsComponent
+    },
+    {
+        path: 'auth',
+        component: AuthComponent
     }
     // { path: '**', component: PageNotFoundComponent } //TODO:
 ];
