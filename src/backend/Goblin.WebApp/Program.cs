@@ -95,6 +95,7 @@ builder.Services.ConfigureApplicationCookie(o =>
         return Task.CompletedTask;
     };
 });
+builder.Services.AddHostedService<CreateDefaultRolesHostedService>();
 
 var app = builder.Build();
 MigrateDatabase<BotDbContext>(app);
