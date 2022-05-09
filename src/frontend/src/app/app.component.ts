@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -11,5 +12,11 @@ export class AppComponent {
     
     toggleCollapsed(): void {
         this.collapsed = !this.collapsed;
+    }
+
+    authUrl: string;
+    constructor() {
+        let checkAuthRoute = `${window.origin}/auth`
+        this.authUrl = `${environment.apiUrl}/auth?returnUrl=${checkAuthRoute}`
     }
 }
