@@ -1,41 +1,31 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import {Observable} from "rxjs/internal/Observable";
+import {catchError, map, of, shareReplay} from "rxjs";
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private authorized: boolean;
-    private isAdmin: boolean;
-
+    public cache$: Observable<boolean> | undefined; //TOdo:
+    
     constructor(private httpClient: HttpClient) {
-        this.authorized = false;
-        this.isAdmin = false;
-        this.Check();
     }
 
-    private Check(): void {
-        this.httpClient.get<Array<string>>("auth/check").subscribe({
-            next: response => {
-                this.authorized = response.length > 0;
-                this.isAdmin = response.includes("admin")
-            },
-            error: () => {
-                this.authorized = false;
-                this.isAdmin = false;
-            }
-        });
-    }
+    public IsAdmin(): Observable<boolean> {
+        if (!this.cache$) {
+            this.cache$ = this.requestCheck().pipe(
+              shareReplay(1)
+            );
+        }
 
-    public get Authorized(): boolean {
-        return this.authorized;
+        return this.cache$;
     }
-
-    public set Authorized(val: boolean) {
-        this.authorized = val;
-    }
-
-    public get IsAdmin(): boolean {
-        return this.authorized;
+    
+    private requestCheck(): Observable<boolean> {
+        return this.httpClient.get<Array<string>>("auth/check").pipe(
+          map(response => response.length > 0 && response.includes("admin")),
+          catchError(error => of(false))
+        );
     }
 }

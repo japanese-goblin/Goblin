@@ -13,8 +13,13 @@
                     <a class="nav-link" routerLink="/schedule" routerLinkActive="active">Расписание</a>
                 </li>
             </ul>
+            <a [href]="this.authUrl" class="btn btn-link nav-link" *ngIf="!(isAdmin | async)">
+                Вход
+            </a>
+            <a class="btn btn-link nav-link" routerLink="/admin" routerLinkActive="active" *ngIf="isAdmin | async">
+                Админка
+            </a>
         </div>
-        <a [href]="this.authUrl" class="btn btn-primary">LOGIN</a>
     </div>
 </nav>
 <main role="main" class="pb-3 container-fluid">

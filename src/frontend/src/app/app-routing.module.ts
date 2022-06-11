@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthComponent } from './auth/auth.component';
+import { AuthGuard } from './auth.guard';
 import { ScheduleDetailsComponent } from './schedule-details/schedule-details.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { StartComponent } from './start/start.component';
+import {HomeComponent} from "./admin/home/home.component";
 
 const appRoutes: Routes = [
     {
@@ -19,8 +20,9 @@ const appRoutes: Routes = [
         component: ScheduleDetailsComponent
     },
     {
-        path: 'auth',
-        component: AuthComponent
+        path: 'admin',
+        component: HomeComponent,
+        canActivate: [AuthGuard]
     }
     // { path: '**', component: PageNotFoundComponent } //TODO:
 ];

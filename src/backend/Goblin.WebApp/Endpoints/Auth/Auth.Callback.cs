@@ -38,7 +38,6 @@ public class AuthCallbackEndpoint : Endpoint<AuthEndpointRequest>
         if(result.Succeeded)
         {
             Logger.LogInformation("{0} logged in with {1} provider.", info.Principal.Identity.Name, info.LoginProvider);
-
             await SendRedirectAsync(req.ReturnUrl, cancellation: ct);
             return;
         }

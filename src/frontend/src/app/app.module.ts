@@ -19,7 +19,7 @@ import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
 import { ToastContainerComponent } from './toast-container/toast-container.component';
 import { AuthInterceptor } from './auth.interceptor';
-import { AuthComponent } from './auth/auth.component';
+import { HomeComponent } from './admin/home/home.component';
 registerLocaleData(localeRu, 'ru');
 
 @NgModule({
@@ -32,7 +32,7 @@ registerLocaleData(localeRu, 'ru');
         LessonTypeColorPipe,
         WeekStartEndPipe,
         ToastContainerComponent,
-        AuthComponent
+        HomeComponent
     ],
     imports: [
         CommonModule,
@@ -49,7 +49,11 @@ registerLocaleData(localeRu, 'ru');
         NgbNavModule
     ],
     providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        }
     ],
     bootstrap: [AppComponent]
 })

@@ -8,7 +8,6 @@ namespace Goblin.WebApp.Endpoints.Admin.Messages;
 
 public class Send : Endpoint<SendRequest>
 {
-
     public override void Configure()
     {
         Post("admin/messages/send");

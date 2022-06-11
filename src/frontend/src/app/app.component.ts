@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import {AuthService} from "./services/auth.service";
+import {Observable} from "rxjs/internal/Observable";
 
 @Component({
     selector: 'app-root',
@@ -9,14 +11,16 @@ import { environment } from 'src/environments/environment';
 export class AppComponent {
     title = 'japanese-goblin';
     collapsed = true;
-    
-    toggleCollapsed(): void {
-        this.collapsed = !this.collapsed;
+    authUrl: string;
+    isAdmin: Observable<boolean>;
+
+    constructor(public authService: AuthService) {
+        let checkAuthRoute = `${window.origin}/`
+        this.isAdmin = this.authService.IsAdmin();
+        this.authUrl = `${environment.apiUrl}/auth?returnUrl=${checkAuthRoute}`
     }
 
-    authUrl: string;
-    constructor() {
-        let checkAuthRoute = `${window.origin}/auth`
-        this.authUrl = `${environment.apiUrl}/auth?returnUrl=${checkAuthRoute}`
+    toggleCollapsed(): void {
+        this.collapsed = !this.collapsed;
     }
 }
