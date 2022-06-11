@@ -5,6 +5,8 @@ import { ScheduleDetailsComponent } from './schedule-details/schedule-details.co
 import { ScheduleComponent } from './schedule/schedule.component';
 import { StartComponent } from './start/start.component';
 import {HomeComponent} from "./admin/home/home.component";
+import {VkComponent} from "./admin/users/vk/vk.component";
+import {TgComponent} from "./admin/users/tg/tg.component";
 
 const appRoutes: Routes = [
     {
@@ -22,7 +24,17 @@ const appRoutes: Routes = [
     {
         path: 'admin',
         component: HomeComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
+        children: [
+            {
+                path: 'users/vk',
+                component: VkComponent
+            },
+            {
+                path: 'users/telegram',
+                component: TgComponent
+            }
+        ]
     }
     // { path: '**', component: PageNotFoundComponent } //TODO:
 ];

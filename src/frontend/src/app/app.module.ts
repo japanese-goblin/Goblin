@@ -1,25 +1,26 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
-import { CommonModule } from '@angular/common';
-import { ScheduleComponent } from './schedule/schedule.component';
-import { StartComponent } from './start/start.component';
-import { ScheduleDetailsComponent } from './schedule-details/schedule-details.component';
-import { LessonComponent } from './lesson/lesson.component';
-import { LessonTypeColorPipe } from './pipes/lesson-type-color-pipe';
-import { WeekStartEndPipe } from './pipes/week-start-end-pipe';
-
-import { registerLocaleData } from '@angular/common';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {NgbModule, NgbNavModule} from '@ng-bootstrap/ng-bootstrap';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {CommonModule, registerLocaleData} from '@angular/common';
+import {ScheduleComponent} from './schedule/schedule.component';
+import {StartComponent} from './start/start.component';
+import {ScheduleDetailsComponent} from './schedule-details/schedule-details.component';
+import {LessonComponent} from './lesson/lesson.component';
+import {LessonTypeColorPipe} from './pipes/lesson-type-color-pipe';
+import {WeekStartEndPipe} from './pipes/week-start-end-pipe';
 import localeRu from '@angular/common/locales/ru';
-import { ToastContainerComponent } from './toast-container/toast-container.component';
-import { AuthInterceptor } from './auth.interceptor';
-import { HomeComponent } from './admin/home/home.component';
+import {ToastContainerComponent} from './toast-container/toast-container.component';
+import {AuthInterceptor} from './auth.interceptor';
+import {HomeComponent} from './admin/home/home.component';
+import {VkComponent} from './admin/users/vk/vk.component';
+import {TableComponent} from "./admin/users/table/table.component";
+import { TgComponent } from './admin/users/tg/tg.component';
+
 registerLocaleData(localeRu, 'ru');
 
 @NgModule({
@@ -32,7 +33,11 @@ registerLocaleData(localeRu, 'ru');
         LessonTypeColorPipe,
         WeekStartEndPipe,
         ToastContainerComponent,
-        HomeComponent
+        //admin
+        HomeComponent,
+        VkComponent,
+        TableComponent,
+        TgComponent,
     ],
     imports: [
         CommonModule,
@@ -57,4 +62,5 @@ registerLocaleData(localeRu, 'ru');
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
