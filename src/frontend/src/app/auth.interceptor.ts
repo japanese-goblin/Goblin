@@ -27,7 +27,8 @@ export class AuthInterceptor implements HttpInterceptor {
                     this.toastService.showError(e.error.join("\n"));
                 }
                 else if (e.status == 401) {
-                    this.toastService.showError("Unauthorized");
+                    console.log('Unauthorized');
+                    // this.toastService.showError("Unauthorized");
                 }
                 else {
                     this.toastService.showError(e.error.title ?? e.statusText);
