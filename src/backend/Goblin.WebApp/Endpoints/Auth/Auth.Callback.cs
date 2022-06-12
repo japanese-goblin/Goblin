@@ -32,12 +32,25 @@ public class AuthCallbackEndpoint : Endpoint<AuthEndpointRequest>
             await SendErrorsAsync(cancellation: ct);
             return;
         }
+        
 
         // Sign in the user with this external login provider if the user already has a login.
         var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false, true);
         if(result.Succeeded)
         {
             Logger.LogInformation("{0} logged in with {1} provider.", info.Principal.Identity.Name, info.LoginProvider);
+            //TODO: ???
+            foreach(var cookie in HttpContext.Response.GetTypedHeaders().SetCookie)
+            {
+                HttpContext.Response.Cookies.Delete(cookie.Name.Value);
+                HttpContext.Response.Cookies.Append(cookie.Name.Value, cookie.Value.Value, new CookieOptions()
+                {
+                    SameSite = SameSiteMode.None,
+                    Secure = !Env.IsDevelopment(),
+                    IsEssential = true
+                });
+            }
+
             await SendRedirectAsync(req.ReturnUrl, cancellation: ct);
             return;
         }

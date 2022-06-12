@@ -53,10 +53,14 @@ builder.Services.AddHttpLogging(x =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsName,
-                      policy  =>
+                      policy =>
                       {
                           var cors = builder.Configuration.GetSection("CORS").Get<string[]>();
-                          policy.WithOrigins(cors);
+                          policy.WithOrigins(cors)
+                                .AllowCredentials()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                          policy.SetIsOriginAllowed(origin => true);
                       });
 });
 
@@ -112,7 +116,7 @@ app.UseExceptionHandler(exceptionHandlerApp =>
         {
             Status = StatusCodes.Status500InternalServerError
         };
-        
+
         if(builder.Environment.IsProduction())
         {
             problemDetails.Title = "Внутренняя ошибка сервера";
@@ -148,7 +152,9 @@ if(app.Environment.IsDevelopment())
     app.UseOpenApi();
     app.UseSwaggerUi3(s => s.ConfigureDefaults());
 }
+
 app.UseHangfireJobs();
+
 app.Run();
 
 void MigrateDatabase<T>(WebApplication application) where T : DbContext
