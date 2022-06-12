@@ -20,6 +20,7 @@ import {HomeComponent} from './admin/home/home.component';
 import {VkComponent} from './admin/users/vk/vk.component';
 import {TableComponent} from "./admin/users/table/table.component";
 import { TgComponent } from './admin/users/tg/tg.component';
+import { MessagesComponent } from './admin/messages/messages.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -38,6 +39,7 @@ registerLocaleData(localeRu, 'ru');
         VkComponent,
         TableComponent,
         TgComponent,
+        MessagesComponent,
     ],
     imports: [
         CommonModule,

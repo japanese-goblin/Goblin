@@ -7,6 +7,7 @@ import { StartComponent } from './start/start.component';
 import {HomeComponent} from "./admin/home/home.component";
 import {VkComponent} from "./admin/users/vk/vk.component";
 import {TgComponent} from "./admin/users/tg/tg.component";
+import {MessagesComponent} from "./admin/messages/messages.component";
 
 const appRoutes: Routes = [
     {
@@ -33,6 +34,10 @@ const appRoutes: Routes = [
             {
                 path: 'users/telegram',
                 component: TgComponent
+            },
+            {
+                path: 'messages',
+                component: MessagesComponent
             }
         ]
     }

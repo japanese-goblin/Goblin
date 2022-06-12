@@ -15,48 +15,31 @@ public class Send : Endpoint<SendRequest>
 
     public override Task HandleAsync(SendRequest req, CancellationToken ct)
     {
-        //TODO: send to selected users
-        BackgroundJob.Enqueue<SendToUsersTasks>(x => x.SendToAll(req.Message, req.Attachments,
-                                                                 req.SendStartKeyboard, req.ConsumerType));
+        if(!req.UserId.HasValue)
+        {
+            BackgroundJob.Enqueue<SendToUsersTasks>(x => x.SendToAll(req.Message, req.Attachments,
+                                                                     req.SendStartKeyboard, req.ConsumerType));
+            return SendOkAsync(ct);
+        }
+
+        BackgroundJob.Enqueue<SendToUsersTasks>(x => x.SendToId(req.UserId.Value, req.Message, req.Attachments, req.ConsumerType));
         return SendOkAsync(ct);
-        // if (req.ConsumerType == ConsumerType.AllInOne)
-        // {
-        //     var groups = _context.BotUsers.AsEnumerable()
-        //                         .Select(x => new { x.Id, x.ConsumerType })
-        //                         .ToArray();
-        //     foreach (var groupedUsers in groups)
-        //     {
-        //         var sender = _senders.First(x => x.ConsumerType == groupedUsers.ConsumerType);
-        //         await sender.SendToMany(groups.Select(x => x.Id), req.Message);
-        //     }
-        // }
-        // else
-        // {
-        //     var sender = _senders.First(x => x.ConsumerType == req.ConsumerType);
-        //     var users = req.UserIds.Any() ?
-        //         req.UserIds :
-        //         _context.BotUsers.Where(x => x.ConsumerType == req.ConsumerType)
-        //                 .Select(x => x.Id)
-        //                 .ToArray();
-        //     
-        //     await sender.SendToMany(users, req.Message);
-        // }
     }
 }
 
 public class SendRequest
 {
-    public long[] UserIds { get; set; }
+    public long? UserId { get; set; }
 
     public ConsumerType ConsumerType { get; set; }
     public string Message { get; set; }
 
-    public string[] Attachments { get; set; }
+    public ICollection<string> Attachments { get; set; }
     public bool SendStartKeyboard { get; set; }
 
     public SendRequest()
     {
-        UserIds = Array.Empty<long>();
+        Attachments = Array.Empty<string>();
     }
 }
 
@@ -64,10 +47,6 @@ public class SendRequestValidator : Validator<SendRequest>
 {
     public SendRequestValidator()
     {
-        RuleFor(x => x.UserIds).NotNull()
-                               .NotEmpty()
-                               .When(x => x.ConsumerType != ConsumerType.AllInOne);
-        RuleFor(x => x.ConsumerType).NotEmpty();
         RuleFor(x => x.Message).NotEmpty();
     }
 }

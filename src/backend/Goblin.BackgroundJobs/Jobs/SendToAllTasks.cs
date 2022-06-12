@@ -21,7 +21,7 @@ public class SendToUsersTasks
         Log.ForContext<SendToUsersTasks>();
     }
 
-    public async Task SendToAll(string text, string[] attachments, bool isSendKeyboard, ConsumerType type)
+    public async Task SendToAll(string text, ICollection<string> attachments, bool isSendKeyboard, ConsumerType type)
     {
         var keyboard = isSendKeyboard ? DefaultKeyboards.GetDefaultKeyboard() : null;
         if(type == ConsumerType.AllInOne)
@@ -40,5 +40,11 @@ public class SendToUsersTasks
             var sender = _senders.FirstOrDefault(x => x.ConsumerType == type);
             await sender.SendToMany(users, text, keyboard, attachments);
         }
+    }
+    
+    public async Task SendToId(long chatId, string text, ICollection<string> attachments, ConsumerType type)
+    {
+        var sender = _senders.FirstOrDefault(x => x.ConsumerType == type);
+        await sender.Send(chatId, text, attachments: attachments);
     }
 }
