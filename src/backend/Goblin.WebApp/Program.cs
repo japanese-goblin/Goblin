@@ -7,6 +7,7 @@ using Goblin.Application.Telegram;
 using Goblin.Application.Vk;
 using Goblin.DataAccess;
 using Goblin.WebApp;
+using Goblin.WebApp.Filters;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Diagnostics;
@@ -59,7 +60,7 @@ builder.Services.AddCors(options =>
                       });
 });
 
-// builder.Services.AddHostedService<CreateDefaultRolesHostedService>();
+builder.Services.AddHostedService<CreateDefaultRolesHostedService>();
 builder.Services.AddDataAccessLayer(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddVkLayer(builder.Configuration);
@@ -130,12 +131,18 @@ app.UseExceptionHandler(exceptionHandlerApp =>
 app.UseCors(corsName);
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseHangfireDashboard("/Admin/HangFire", new DashboardOptions
+{
+    Authorization = new[] { new AuthFilter() },
+    AppPath = "/",
+    StatsPollingInterval = 10000,
+    DisplayStorageConnectionString = false
+});
 app.UseFastEndpoints(c =>
 {
     c.RoutingOptions = o => o.Prefix = "api";
     c.ErrorResponseBuilder = (failures, _) => failures.Select(x => x.ErrorMessage);
 });
-app.UseHangfireDashboard(); //TODO: auth filter
 if(app.Environment.IsDevelopment())
 {
     app.UseOpenApi();
