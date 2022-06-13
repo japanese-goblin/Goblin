@@ -116,7 +116,10 @@ public class CommandsService
             return user;
         }
 
-        var entity = new BotUser(userId);
+        var entity = new BotUser(userId)
+        {
+            ConsumerType = type
+        };
         user = (await _context.BotUsers.AddAsync(entity)).Entity;
         await _context.SaveChangesAsync();
         return user;
