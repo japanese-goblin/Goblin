@@ -101,6 +101,10 @@ builder.Services.ConfigureApplicationCookie(o =>
     };
 });
 builder.Services.AddHostedService<CreateDefaultRolesHostedService>();
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+});
 
 var app = builder.Build();
 MigrateDatabase<BotDbContext>(app);
@@ -132,6 +136,7 @@ app.UseExceptionHandler(exceptionHandlerApp =>
         await context.Response.WriteAsJsonAsync(problemDetails);
     });
 });
+app.UseResponseCompression();
 app.UseCors(corsName);
 app.UseAuthentication();
 app.UseAuthorization();
