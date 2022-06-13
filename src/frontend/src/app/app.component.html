@@ -14,12 +14,6 @@
                 </li>
             </ul>
             <ul class="navbar-nav">
-                <li class="nav-item" *ngIf="!(isAdmin | async)">
-                    <a [href]="this.authUrl" class="navbar-nav btn btn-link nav-link">
-                        Вход
-                    </a>
-                </li>
-
                 <li class="nav-item" *ngIf="isAdmin | async">
                     <a class="btn btn-link nav-link" routerLink="/admin" routerLinkActive="active">
                         Админка
