@@ -1,18 +1,27 @@
-<ul>
-    <li>Users
-        <ul>
-            <li>
-                <a routerLink="/admin/users/vk">VK</a>
+<div class="row">
+    <div class="col-lg-2">
+        <h1>Админка</h1>
+        <ul class="list-group">
+            <li class="list-group-item">
+                Юзеры
+                <ul>
+                    <li>
+                        <a routerLink="/admin/users/vk">VK</a>
+                    </li>
+                    <li>
+                        <a routerLink="/admin/users/telegram">Telegram</a>
+                    </li>
+                </ul>
             </li>
-            <a routerLink="/admin/users/telegram">Telegram</a>
+            <li class="list-group-item">
+                <a routerLink="/admin/messages">Сообщения</a>
+            </li>
+            <li class="list-group-item">Напоминалки</li>
+            <li class="list-group-item">CRON</li>
+            <li class="list-group-item">Hangfire</li>
         </ul>
-    </li>
-    <li>
-        <a routerLink="/admin/messages">Сообщения</a>
-    </li>
-    <li>Напоминалки</li>
-    <li>CRON</li>
-    <li>Hangfire</li>
-</ul>
-<hr/>
-<router-outlet></router-outlet>
+    </div>
+    <div class="col">
+        <router-outlet></router-outlet>
+    </div>
+</div>
