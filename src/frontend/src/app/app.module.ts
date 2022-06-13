@@ -21,6 +21,7 @@ import {VkComponent} from './admin/users/vk/vk.component';
 import {TableComponent} from "./admin/users/table/table.component";
 import { TgComponent } from './admin/users/tg/tg.component';
 import { MessagesComponent } from './admin/messages/messages.component';
+import { ExternalLinksComponent } from './external-links/external-links.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -40,6 +41,7 @@ registerLocaleData(localeRu, 'ru');
         TableComponent,
         TgComponent,
         MessagesComponent,
+        ExternalLinksComponent,
     ],
     imports: [
         CommonModule,
