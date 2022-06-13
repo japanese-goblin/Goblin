@@ -18,6 +18,7 @@ public class GetUsers : Endpoint<GetUsersRequest, ItemsResponse<BotUserDto>>
     public override void Configure()
     {
         Get("/admin/users");
+        Roles(RoleNames.Admin);
     }
 
     public override async Task HandleAsync(GetUsersRequest req, CancellationToken ct)

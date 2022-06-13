@@ -11,6 +11,7 @@ public class Send : Endpoint<SendRequest>
     public override void Configure()
     {
         Post("admin/messages/send");
+        Roles(RoleNames.Admin);
     }
 
     public override Task HandleAsync(SendRequest req, CancellationToken ct)
