@@ -22,6 +22,8 @@ import {TableComponent} from "./admin/users/table/table.component";
 import {TgComponent} from './admin/users/tg/tg.component';
 import {MessagesComponent} from './admin/messages/messages.component';
 import {NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule} from "ngx-google-analytics";
+import {UrlSerializer} from "@angular/router";
+import {LowerCaseUrlSerializer} from "./lower-case-url-serializer";
 
 registerLocaleData(localeRu, 'ru');
 
@@ -59,6 +61,10 @@ registerLocaleData(localeRu, 'ru');
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
             multi: true
+        },
+        {
+            provide: UrlSerializer,
+            useClass: LowerCaseUrlSerializer
         }
     ],
     bootstrap: [AppComponent]
