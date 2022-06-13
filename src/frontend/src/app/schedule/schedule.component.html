@@ -5,7 +5,7 @@
             <div class="col-lg-5">
                 <div class="form-floating mb-3">
                     <input autofocus="" class="form-control" id="groupId" formControlName="groupId" min="100000" required="true"
-                           type="number">
+                           type="number" aria-label="Номер группы">
                     <label for="groupId">Номер группы</label>
                     <small *ngIf="checkoutForm.invalid" class="form-text text-danger">
                         Номер группы должен быть больше 100000
@@ -14,7 +14,7 @@
             </div>
             <div class="col-lg-5">
                 <div class="form-floating mb-3">
-                    <input class="form-control" formControlName="date" id="date" min="2021-09-01" type="date">
+                    <input class="form-control" formControlName="date" id="date" min="2021-09-01" type="date" aria-label="Дата получения расписания">
                     <label for="date">Дата</label>
                     <small class="form-text text-muted">
                         (если не указана, то с сегодняшнего дня)
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="col-lg-2">
-                <button [disabled]="checkoutForm.invalid" class="btn btn-primary" type="submit">
+                <button [disabled]="checkoutForm.invalid" class="btn btn-primary" type="submit" aria-label="Показать расписание">
                     Посмотреть
                 </button>
             </div>

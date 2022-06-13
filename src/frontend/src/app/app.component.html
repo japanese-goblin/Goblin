@@ -4,7 +4,8 @@
             <img src="assets/goblin.svg" alt="" width="30" height="30" class="d-inline-block align-text-top">
             Японский гоблин
         </a>
-        <button class="navbar-toggler" type="button" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed">
+        <button class="navbar-toggler" type="button" (click)="collapse.toggle()"
+                [attr.aria-expanded]="!isCollapsed" aria-label="Открыть меню">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="navbar-collapse" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
