@@ -19,8 +19,10 @@
         <small class="card-text text-capitalize">
             {{ lesson.teacher }}
         </small>
-        <div class="dropdown-divider"></div>
-        <p class="card-text font-italic">{{ lesson.groups }}</p>
+        <div *ngIf="lesson.groups">
+            <div class="dropdown-divider"></div>
+            <p class="card-text font-italic">{{ lesson.groups }}</p>
+        </div>
     </div>
     <div class="card-footer">
         <p>
