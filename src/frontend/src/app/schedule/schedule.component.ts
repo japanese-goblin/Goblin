@@ -20,6 +20,7 @@ export class ScheduleComponent implements OnInit {
     constructor(private formBuilder: FormBuilder, private router: Router) {
         const thisYear = new Date().getFullYear();
         this.minDate = new Date(thisYear - 1, 8, 1);
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     }
 
     ngOnInit(): void {
