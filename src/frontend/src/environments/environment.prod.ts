@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://equus-homa.herokuapp.com'
+    apiUrl: 'https://goblin-safu.herokuapp.com'
   };
   
