@@ -1,5 +1,5 @@
 <div class="text-center">
-    <div class="spinner-border" style="width: 9rem; height: 9rem;" *ngIf="!response">
+    <div *ngIf="!response" class="spinner-border" style="width: 9rem; height: 9rem;">
         <span class="visually-hidden">Loading...</span>
     </div>
 </div>
@@ -7,29 +7,34 @@
 <div *ngIf="response">
     <div *ngIf="response.isFromSite">
         <ngb-alert type="warning">
-            <b>Внимание!</b> Расписание получено напрямую с сайта - из-за этого доступно расписание только на месяц
+            <b>Внимание!</b> Сайт САФУ работает некорректно - расписание получено на ближайший месяц. Попробуйте позже.
         </ngb-alert>
     </div>
     <h4>
         {{ groupId }} - {{ response.groupName }}
     </h4>
-    <div ngbDropdown class="d-inline-block pb-2">
-        <button type="button" class="btn btn-primary" id="dropdownBasic1" ngbDropdownToggle>Дополнительно</button>
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-            <a class="btn" ngbDropdownItem [href]="response.icsLink" target="_blank" [disabled]="!response.icsLink">Скачать файл (.ics)</a>
-            <a class="btn" ngbDropdownItem [href]="this.sanitize(response.webCalLink)" target="_blank" [disabled]="!response.webCalLink">Добавить в календарь</a>
+    <div class="d-inline-block pb-2" ngbDropdown>
+        <button class="btn btn-primary" id="dropdownBasic1" ngbDropdownToggle type="button">Дополнительно</button>
+        <div aria-labelledby="dropdownBasic1" ngbDropdownMenu>
+            <a [disabled]="!response.icsLink || response.isFromSite" [href]="response.icsLink" class="btn" ngbDropdownItem
+               target="_blank">
+                Скачать файл (.ics)
+            </a>
+            <a [disabled]="!response.webCalLink" [href]="this.sanitize(response.webCalLink)" class="btn" ngbDropdownItem
+               target="_blank">
+                Добавить в календарь</a>
             <hr/>
-            <button ngbDropdownItem disabled>А больше пока ничего и нет...</button>
+            <button disabled ngbDropdownItem>А больше пока ничего и нет...</button>
         </div>
     </div>
-    <ul ngbNav #nav="ngbNav" class="nav-pills">
-        <li ngbNavItem *ngFor="let weeks of response.lessons | keyvalue">
+    <ul #nav="ngbNav" class="nav-pills" ngbNav>
+        <li *ngFor="let weeks of response.lessons | keyvalue" ngbNavItem>
             <a ngbNavLink>
                 {{ weeks.key | weekStartEnd}}
             </a>
             <ng-template ngbNavContent>
                 <div class="row">
-                    <div class="col-lg-2" *ngFor="let day of weeks.value | keyvalue">
+                    <div *ngFor="let day of weeks.value | keyvalue" class="col-lg-2">
                         <div class="mx-1">
                             <div class="dayofweek text-center">
                                 <b>{{ day.key | date:'EEEE, d MMMM':'+0300':'ru' }}</b>
