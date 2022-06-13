@@ -130,13 +130,20 @@ public class VkCallbackHandler
         await _commandsService.ExecuteCommand(mappedToMessage, OnSuccess, OnFailed);
         async Task OnSuccess(IResult res)
         {
-            await _vkApi.Messages.EditAsync(new MessageEditParams()
+            try
             {
-                PeerId = messageEvent.PeerId.GetValueOrDefault(0),
-                ConversationMessageId = messageEvent.ConversationMessageId,
-                Keyboard = KeyboardConverter.FromCoreToVk(res.Keyboard, true),
-                Message = res.Message
-            });
+                await _vkApi.Messages.EditAsync(new MessageEditParams()
+                {
+                    PeerId = messageEvent.PeerId.GetValueOrDefault(0),
+                    ConversationMessageId = messageEvent.ConversationMessageId,
+                    Keyboard = KeyboardConverter.FromCoreToVk(res.Keyboard, true),
+                    Message = res.Message
+                });
+            }
+            catch
+            {
+                await _sender.Send(messageEvent.PeerId.GetValueOrDefault(0), res.Message, res.Keyboard);
+            }
         }
 
         async Task OnFailed(IResult res)
