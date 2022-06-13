@@ -112,6 +112,10 @@ public class WeatherService : IWeatherService
             _logger.Error(ex, "Ошибка при получении погоды на текущий момент");
             return new FailedResult(DefaultErrors.WeatherSiteIsUnavailable);
         }
+        catch(ArgumentException ex)
+        {
+            return new FailedResult(ex.Message);
+        }
         catch(Exception ex)
         {
             _logger.Fatal(ex, "Ошибка при получении погоды на день");

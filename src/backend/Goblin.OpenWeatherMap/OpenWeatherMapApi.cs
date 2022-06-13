@@ -57,9 +57,7 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
             
         if(weather is null)
         {
-            var msg = $"Погода на {date:dd.MM.yyyy} в городе {city} не найдена.";
-            _logger.Warning(msg);
-            throw new ArgumentException(msg);
+            throw new ArgumentException($"Погода на {date:dd.MM.yyyy} в городе {city} не найдена.");
         }
 
         _logger.Debug("Погода получена");
