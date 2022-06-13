@@ -12,7 +12,7 @@ export class AppComponent {
     title = 'japanese-goblin';
     authUrl: string;
     isAdmin: Observable<boolean>;
-    public isCollapsed = false;
+    public isCollapsed = true;
 
     constructor(public authService: AuthService) {
         let checkAuthRoute = `${window.origin}/`
