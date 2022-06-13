@@ -10,17 +10,13 @@ import {Observable} from "rxjs/internal/Observable";
 })
 export class AppComponent {
     title = 'japanese-goblin';
-    collapsed = true;
     authUrl: string;
     isAdmin: Observable<boolean>;
+    public isCollapsed = false;
 
     constructor(public authService: AuthService) {
         let checkAuthRoute = `${window.origin}/`
         this.isAdmin = this.authService.IsAdmin();
         this.authUrl = `${environment.apiUrl}/auth?returnUrl=${checkAuthRoute}`
-    }
-
-    toggleCollapsed(): void {
-        this.collapsed = !this.collapsed;
     }
 }

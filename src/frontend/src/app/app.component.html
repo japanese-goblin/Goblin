@@ -4,16 +4,16 @@
             <img src="assets/goblin.svg" alt="" width="30" height="30" class="d-inline-block align-text-top">
             Японский гоблин
         </a>
-        <button class="navbar-toggler" type="button" (click)="toggleCollapsed()">
+        <button class="navbar-toggler" type="button" (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div [ngClass]="{'collapse': collapsed, 'navbar-collapse': true}">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+        <div class="navbar-collapse" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">-->
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/schedule" routerLinkActive="active">Расписание</a>
                 </li>
             </ul>
-            <a [href]="this.authUrl" class="btn btn-link nav-link" *ngIf="!(isAdmin | async)">
+            <a [href]="this.authUrl" class="navbar-nav btn btn-link nav-link" *ngIf="!(isAdmin | async)">
                 Вход
             </a>
             <a class="btn btn-link nav-link" routerLink="/admin" routerLinkActive="active" *ngIf="isAdmin | async">
