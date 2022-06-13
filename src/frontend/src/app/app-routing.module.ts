@@ -11,16 +11,18 @@ import {MessagesComponent} from "./admin/messages/messages.component";
 
 const appRoutes: Routes = [
     {
-        path: 'schedule',
-        component: ScheduleComponent
-    },
-    {
         path: '',
         component: StartComponent
     },
     {
-        path: 'schedule/:groupId',
-        component: ScheduleDetailsComponent
+        path: 'schedule',
+        component: ScheduleComponent,
+        children: [
+            {
+                path: ':groupId',
+                component: ScheduleDetailsComponent
+            }
+        ]
     },
     {
         path: 'admin',
