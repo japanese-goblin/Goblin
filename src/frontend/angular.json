@@ -107,6 +107,9 @@
           "options": {
             "browserTarget": "japanese-goblin:build"
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }

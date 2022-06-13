@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng deploy --base-href=https://equuskk.github.io/Goblin/ --branch=frontend --build-target=prod"
+    "deploy": "ng deploy --base-href=https://equuskk.github.io/Goblin/ --branch=frontend"
   },
   "private": true,
   "dependencies": {
