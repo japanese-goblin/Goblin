@@ -1,8 +1,0 @@
-@using Goblin.Application.Core.Options
-@using Microsoft.Extensions.Options
-@inject IOptions<LinksOptions> _links
-
-<div class="btn-group btn-group-lg" role="group">
-    <a class="btn btn-success" href="@_links.Value.Vk" target="_blank">ВКонтакте</a>
-    <a class="btn btn-success" href="@_links.Value.Telegram" target="_blank">Telegram</a>
-</div>

@@ -11,21 +11,18 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: goblin
     networks:
-      - bridge_network
+      - goblin_network
   goblin:
     image: goblin
     hostname: goblin
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: src/backend
     ports:
       - "5177:5177"
     networks:
-      - bridge_network
+      - goblin_network
     env_file:
       - .env
 
 networks:
-  bridge_network:
-    name: bridge_network
-    driver: bridge
+  goblin_network:
