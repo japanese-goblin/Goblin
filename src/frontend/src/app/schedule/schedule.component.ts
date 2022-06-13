@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder} from '@angular/forms';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -13,7 +13,7 @@ export class ScheduleComponent implements OnInit {
 
     minDate: Date;
     checkoutForm = this.formBuilder.group({
-        groupId: 0,
+        groupId: undefined,
         date: undefined
     });
 
@@ -27,13 +27,12 @@ export class ScheduleComponent implements OnInit {
     }
 
     onSubmit(): void {
-        if(!this.checkoutForm.valid) {
-            console.log('invalid')
+        if (!this.checkoutForm.valid) {
             return;
         }
 
         let groupId = this.checkoutForm.get('groupId')?.value;
         let date = this.checkoutForm.get('date')?.value;
-        this.router.navigate(['/schedule', groupId], { queryParams: { date } });
+        this.router.navigate(['/schedule', groupId], {queryParams: {date}});
     }
 }

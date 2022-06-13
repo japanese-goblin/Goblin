@@ -16,6 +16,7 @@ export class ScheduleDetailsComponent implements OnInit {
     date?: Date;
     response!: ScheduleResponse;
     pattern: RegExp = /(\d{2})\.(\d{2})\.(\d{4})/;
+    isFromCache: boolean = false;
 
     constructor(private route: ActivatedRoute,
                 private service: ScheduleServiceService,
@@ -30,7 +31,14 @@ export class ScheduleDetailsComponent implements OnInit {
             this.groupId = params['groupId'];
             this.service.getLessons(this.groupId, date)
                 .subscribe({
-                    next: response => this.response = response
+                    next: response => {
+                        this.response = response;
+                        localStorage.setItem(`schedule_${this.groupId}`, JSON.stringify(response));
+                    },
+                    error: r => {
+                        this.isFromCache = true;
+                        this.response = JSON.parse(localStorage.getItem(`schedule_${this.groupId}`) ?? "{}");
+                    }
                 });
         });
     }

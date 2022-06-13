@@ -4,11 +4,11 @@
         <form (ngSubmit)="onSubmit()" [formGroup]="checkoutForm" class="form row g-3">
             <div class="col-lg-5">
                 <div class="form-floating mb-3">
-                    <input autofocus="" class="form-control" id="groupId" formControlName="groupId" min="100000" required="true"
+                    <input class="form-control" id="groupId" formControlName="groupId" min="100000" required="true"
                            type="number" aria-label="Номер группы">
                     <label for="groupId">Номер группы</label>
                     <small *ngIf="checkoutForm.invalid" class="form-text text-danger">
-                        Номер группы должен быть больше 100000
+                        Номер группы должен состоять из 6 цифр
                     </small>
                 </div>
             </div>
