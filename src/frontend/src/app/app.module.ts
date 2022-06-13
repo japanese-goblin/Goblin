@@ -24,6 +24,7 @@ import {MessagesComponent} from './admin/messages/messages.component';
 import {NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule} from "ngx-google-analytics";
 import {UrlSerializer} from "@angular/router";
 import {LowerCaseUrlSerializer} from "./lower-case-url-serializer";
+import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -42,6 +43,7 @@ registerLocaleData(localeRu, 'ru');
         TableComponent,
         TgComponent,
         MessagesComponent,
+        PageNotFoundComponent,
     ],
     imports: [
         CommonModule,
