@@ -19,8 +19,9 @@ import {AuthInterceptor} from './auth.interceptor';
 import {HomeComponent} from './admin/home/home.component';
 import {VkComponent} from './admin/users/vk/vk.component';
 import {TableComponent} from "./admin/users/table/table.component";
-import { TgComponent } from './admin/users/tg/tg.component';
-import { MessagesComponent } from './admin/messages/messages.component';
+import {TgComponent} from './admin/users/tg/tg.component';
+import {MessagesComponent} from './admin/messages/messages.component';
+import {NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule} from "ngx-google-analytics";
 
 registerLocaleData(localeRu, 'ru');
 
@@ -34,7 +35,6 @@ registerLocaleData(localeRu, 'ru');
         LessonTypeColorPipe,
         WeekStartEndPipe,
         ToastContainerComponent,
-        //admin
         HomeComponent,
         VkComponent,
         TableComponent,
@@ -47,13 +47,12 @@ registerLocaleData(localeRu, 'ru');
         AppRoutingModule,
         NgbModule,
         NgbNavModule,
-
         FormsModule,
         ReactiveFormsModule,
-
         HttpClientModule,
-
-        NgbNavModule
+        NgbNavModule,
+        NgxGoogleAnalyticsModule.forRoot('G-XP0G1G0E7J'),
+        NgxGoogleAnalyticsRouterModule.forRoot({exclude: ['/admin/*']})
     ],
     providers: [
         {
