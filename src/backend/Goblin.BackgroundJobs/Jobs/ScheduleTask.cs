@@ -6,8 +6,6 @@ using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Options;
 using Goblin.DataAccess;
-using Goblin.Domain;
-using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -36,21 +34,22 @@ public class ScheduleTask
 
     public async Task Execute()
     {
-        var consumersGroup = _db.BotUsers.AsNoTracking().Where(x => x.HasWeatherSubscription)
+        var consumersGroup = _db.BotUsers.AsNoTracking()
+                                .Where(x => x.HasScheduleSubscription)
                                 .ToArray()
                                 .GroupBy(x => x.ConsumerType);
         foreach(var consumerGroup in consumersGroup)
         {
             var sender = _senders.FirstOrDefault(x => x.ConsumerType == consumerGroup.Key);
-            var groupedByCity = consumerGroup.GroupBy(x => x.NarfuGroup);
-            foreach(var group in groupedByCity)
+            var groupedByGroup = consumerGroup.GroupBy(x => x.NarfuGroup);
+            foreach(var group in groupedByGroup)
             {
                 var result = await _scheduleService.GetSchedule(group.Key, DateTime.Today);
                 if(!result.IsSuccessful && _mailingOptions.IsVacations)
                 {
                     continue;
                 }
-                
+
                 foreach(var chunk in group.Chunk(Defaults.ChunkLimit))
                 {
                     try
