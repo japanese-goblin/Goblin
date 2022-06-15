@@ -25,21 +25,9 @@ export class Schedule {
     }
     
     public generateLink(group: Group, isWebCal: boolean, date: string): string {
-        const base = `${this.Endpoint}?icalendar`
+        const base = `ruz.narfu.ru?icalendar`
         let protocol = isWebCal ? "webcal" : "https";
         return `${protocol}://${base}&oid=${group.SiteId}&cod=${group.RealId}&from=${date}`
-        
-        /*
-        const string url = "ruz.narfu.ru/?icalendar";
-
-        var protocol = isWebCal ? "webcal" : "https";
-
-        var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
-
-        var todayDate = DateTime.Today.ToString("dd.MM.yyyy");
-
-        return $"{protocol}://{url}&oid={siteGroupId}&cod={realGroupId}&from={todayDate}";
-         */
     }
 
     private async getLessonsFromHtml(group: Group): Promise<Lesson[]> {
