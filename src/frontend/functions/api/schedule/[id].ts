@@ -23,14 +23,17 @@ export async function onRequest(context: any): Promise<Response> {
 
     let date = getDate(request);
 
-    // let group = await getGroup(groupId, env);
-    // if (!group) {
-    //     return new Response(JSON.stringify(["Неправильный номер группы"]), {
-    //         headers: {
-    //             'content-type': 'application/json'
-    //         }
-    //     });
-    // }
+    let group = await getGroup(groupId, env);
+    if (!group) {
+        const KV = env.Goblin as KVNamespace;
+        let kvGroups = await KV.get('Groups');
+        let narfuGroups = JSON.parse(kvGroups!) as Group[];
+        return new Response(JSON.stringify(narfuGroups), {
+            headers: {
+                'content-type': 'application/json'
+            }
+        });
+    }
 
     let schedule = new Schedule();
     let lessons = await schedule.getLessons({RealId: groupId, SiteId: 15085, Name: ''}, date); //TODO:
