@@ -95,11 +95,7 @@ export class Schedule {
     private getStartOfTheDay(date: Date) {
         date.setHours(0, 0, 0, 0);
 
-        return date.toLocaleDateString('ru', {
-            year: "numeric",
-            month: "2-digit",
-            day: "numeric"
-        });
+        return date.toISOString();
     }
 
     private getStartOfTheWeek(date: Date) {
