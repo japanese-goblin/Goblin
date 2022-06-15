@@ -1,6 +1,7 @@
 ﻿import {Schedule} from "../../services/schedule";
+import {Group} from "../../services/group";
 
-export async function onRequest(context: any) {
+export async function onRequest(context: any): Promise<Response> {
     // Contents of context object
     const {
         request, // same as existing Worker API
@@ -11,8 +12,28 @@ export async function onRequest(context: any) {
         data, // arbitrary space for passing data between middlewares
     } = context;
 
+    let groupId = params.id;
+    if (!groupId || isNaN(groupId)) {
+        return new Response(JSON.stringify(["Нужно указать номер группы (например, 351017)"]), {
+            headers: {
+                'content-type': 'application/json'
+            }
+        });
+    }
+
+    let date = getDate(request);
+
+    // let group = await getGroup(groupId, env);
+    // if (!group) {
+    //     return new Response(JSON.stringify(["Неправильный номер группы"]), {
+    //         headers: {
+    //             'content-type': 'application/json'
+    //         }
+    //     });
+    // }
+
     let schedule = new Schedule();
-    let lessons = await schedule.getLessons({RealId: 351017, SiteId: 15085, Name: ''}); //TODO:
+    let lessons = await schedule.getLessons({RealId: groupId, SiteId: 15085, Name: ''}, date); //TODO:
     let response = {
         groupName: "test",
         groupId: 12356,
@@ -27,4 +48,23 @@ export async function onRequest(context: any) {
             'content-type': 'application/json'
         }
     });
+}
+
+function getDate(request: any) {
+    const {searchParams} = new URL(request.url);
+
+    return searchParams.get("date") ??
+        new Date().toLocaleDateString('ru', {
+            year: "numeric",
+            month: "2-digit",
+            day: "numeric"
+        });
+}
+
+async function getGroup(groupId: number, env: any) {
+    const KV = env.Goblin as KVNamespace;
+    let kvGroups = await KV.get('Groups');
+    console.log(kvGroups);
+    let narfuGroups = JSON.parse(kvGroups!) as Group[] || [] as Group[];
+    return narfuGroups.find((x) => x.RealId == groupId);
 }

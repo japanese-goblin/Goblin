@@ -7,8 +7,7 @@ import {parse} from 'node-html-parser'
 export class Schedule {
     Endpoint: string = "https://ruz.narfu.ru/"
 
-    async getLessons(group: Group, date: Date = new Date()): Promise<Record<string, Record<string, Lesson[]>>> {
-        let dateString = date.toLocaleDateString('ru-RU');
+    async getLessons(group: Group, dateString: string): Promise<Record<string, Record<string, Lesson[]>>> {
         let url = `${this.Endpoint}?icalendar&oid=${group.SiteId}&cod=${group.RealId}&from=${dateString}`;
         let response = await fetch(url);
         let lessons;
