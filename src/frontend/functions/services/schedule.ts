@@ -7,21 +7,42 @@ import {parse} from 'node-html-parser'
 export class Schedule {
     Endpoint: string = "https://ruz.narfu.ru/"
 
-    async getLessons(group: Group, dateString: string): Promise<Record<string, Record<string, Lesson[]>>> {
+    public async getLessons(group: Group, dateString: string): Promise<{ isFromSite: boolean; responseLessons: Record<string, Record<string, Lesson[]>> }> {
         let url = `${this.Endpoint}?icalendar&oid=${group.SiteId}&cod=${group.RealId}&from=${dateString}`;
         let response = await fetch(url);
         let lessons;
+        let isFromSite = false;
         if (response.status != 200) {
             lessons = await this.getLessonsFromHtml(group);
+            isFromSite = true;
         } else {
             lessons = this.getLessonsFromCalendar(await response.text());
         }
         let uniqueLessons = [...new Map(lessons.map(l => [l.type + l.name + l.number + l.auditory + l.teacher + l.groups, l])).values()]
 
-        return this.formatLessons(uniqueLessons);
+        let responseLessons = this.formatLessons(uniqueLessons)
+        return {isFromSite, responseLessons};
+    }
+    
+    public generateLink(group: Group, isWebCal: boolean, date: string): string {
+        const base = `${this.Endpoint}?icalendar`
+        let protocol = isWebCal ? "webcal" : "https";
+        return `${protocol}://${base}&oid=${group.SiteId}&cod=${group.RealId}&from=${date}`
+        
+        /*
+        const string url = "ruz.narfu.ru/?icalendar";
+
+        var protocol = isWebCal ? "webcal" : "https";
+
+        var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
+
+        var todayDate = DateTime.Today.ToString("dd.MM.yyyy");
+
+        return $"{protocol}://{url}&oid={siteGroupId}&cod={realGroupId}&from={todayDate}";
+         */
     }
 
-    async getLessonsFromHtml(group: Group): Promise<Lesson[]> {
+    private async getLessonsFromHtml(group: Group): Promise<Lesson[]> {
         const regex = /\s{2,}|\\n|\\t/gm;
 
         let url = `${this.Endpoint}?timetable&group=${group.SiteId}`;
@@ -52,7 +73,7 @@ export class Schedule {
         });
     }
 
-    getLessonsFromCalendar(text: string): Lesson[] {
+    private getLessonsFromCalendar(text: string): Lesson[] {
         let calendar = new Calendar(text);
         let events = calendar.events.sort((a, b) => a.dtStart.getTime() - b.dtStart.getTime());
         return events.map(ev => {
@@ -70,7 +91,7 @@ export class Schedule {
         })
     }
 
-    convertDateTime(dateTime: string): Date {
+    private convertDateTime(dateTime: string): Date {
         let splittedDate = dateTime.split(' ')[0].split('.');
         let day = Number(splittedDate[0]);
         let month = Number(splittedDate[1]) - 1;
@@ -83,7 +104,7 @@ export class Schedule {
         return new Date(year, month, day, hour, minute, 0);
     }
 
-    getStartOfTheDay(date: Date) {
+    private getStartOfTheDay(date: Date) {
         date.setHours(0, 0, 0, 0);
 
         return date.toLocaleDateString('ru', {
@@ -93,7 +114,7 @@ export class Schedule {
         });
     }
 
-    getStartOfTheWeek(date: Date) {
+    private getStartOfTheWeek(date: Date) {
 
         const day = date.getDay(); // get day of week
         const firstDayOfTheWeek = 1;
@@ -106,7 +127,7 @@ export class Schedule {
         return this.getStartOfTheDay(newDate);
     }
 
-    formatLessons(lessons: Lesson[]): Record<string, Record<string, Lesson[]>> {
+    private formatLessons(lessons: Lesson[]): Record<string, Record<string, Lesson[]>> {
         const formattedLessons = {} as any;
 
         for (let i = 0; i < lessons.length; i++) {
@@ -115,8 +136,6 @@ export class Schedule {
             const lessonDay = lesson.startTime;
             const lessonDayDate = this.getStartOfTheDay(lessonDay);
             const lessonWeekDate = this.getStartOfTheWeek(lessonDay);
-
-            // console.log(lessonDayDate, lessonWeekDate);
 
             if (!formattedLessons.hasOwnProperty(lessonWeekDate)) {
                 formattedLessons[lessonWeekDate] = {};

@@ -36,14 +36,14 @@ export async function onRequest(context: any): Promise<Response> {
     }
 
     let schedule = new Schedule();
-    let lessons = await schedule.getLessons(group, date);
+    let {isFromSite, responseLessons} = await schedule.getLessons(group, date);
     let response = {
         groupName: group.Name,
         groupId: group.RealId,
-        lessons: lessons,
-        webCalLink: "webcal://ruz.narfu.ru/?icalendar&oid=15086&cod=351018&from=14.06.2022",
-        icsLink: "https://ruz.narfu.ru/?icalendar&oid=15086&cod=351018&from=14.06.2022",
-        isFromSite: true
+        lessons: responseLessons,
+        webCalLink: schedule.generateLink(group, true, date),
+        icsLink:  schedule.generateLink(group, false, date),
+        isFromSite: isFromSite
     }
 
     return new Response(JSON.stringify(response), {
