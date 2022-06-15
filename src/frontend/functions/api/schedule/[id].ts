@@ -36,10 +36,10 @@ export async function onRequest(context: any): Promise<Response> {
     }
 
     let schedule = new Schedule();
-    let lessons = await schedule.getLessons({RealId: groupId, SiteId: 15085, Name: ''}, date); //TODO:
+    let lessons = await schedule.getLessons(group, date);
     let response = {
-        groupName: "test",
-        groupId: 12356,
+        groupName: group.Name,
+        groupId: group.RealId,
         lessons: lessons,
         webCalLink: "webcal://ruz.narfu.ru/?icalendar&oid=15086&cod=351018&from=14.06.2022",
         icsLink: "https://ruz.narfu.ru/?icalendar&oid=15086&cod=351018&from=14.06.2022",
