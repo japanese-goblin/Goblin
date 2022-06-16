@@ -23,28 +23,23 @@ export async function onRequest(context: any): Promise<Response> {
 
     let date = getDate(request);
 
-    // let group = await getGroup(groupId, env);
-    // if (!group) {
-    //     const KV = env.Goblin as KVNamespace;
-    //     let kvGroups = await KV.get('Groups');
-    //     let narfuGroups = JSON.parse(kvGroups!) as Group[];
-    //     return new Response(JSON.stringify(narfuGroups), {
-    //         headers: {
-    //             'content-type': 'application/json'
-    //         }
-    //     });
-    // }
+    let group = await getGroup(groupId, env);
+    if (!group) {
+        const KV = env.Goblin as KVNamespace;
+        let kvGroups = await KV.get('Groups');
+        let narfuGroups = JSON.parse(kvGroups!) as Group[];
+        return new Response(JSON.stringify(narfuGroups), {
+            headers: {
+                'content-type': 'application/json'
+            }
+        });
+    }
 
-    let group = {
-        RealId: 351017,
-        SiteId: 15085,
-        Name: "test"
-    } as Group;
     let schedule = new Schedule();
     let {isFromSite, responseLessons} = await schedule.getLessons(group, date);
     let response = {
-        groupName: '',
-        groupId: 351017,
+        groupName: group.Name,
+        groupId: group.RealId,
         lessons: responseLessons,
         webCalLink: schedule.generateLink(group, true, date),
         icsLink:  schedule.generateLink(group, false, date),
