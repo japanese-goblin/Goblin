@@ -45,7 +45,7 @@ export class Schedule {
             let time = lessonNode.querySelector('.time_para')?.innerText.replace(regex, "") ?? '';
             let number = Number(lessonNode.querySelector('.num_para')?.innerText);
             let group = lessonNode.querySelector('.group')?.innerText ?? '';
-            let discipline = lessonNode.querySelector('.discipline')?.innerText ?? '';
+            let discipline = lessonNode.querySelector('.discipline')?.childNodes[0].textContent.slice(0, -2) ?? '';
             let type = lessonNode.querySelector('.kindOfWork')?.innerText ?? '';
             let teacher = lessonNode.querySelector('.discipline>nobr')?.innerText ?? '';
             let startEnd = lessonNode.querySelector('.time_para')?.innerText.replace(regex, "").replace("&ndash;", " - ") ?? '';
@@ -57,7 +57,7 @@ export class Schedule {
             let startTime = this.convertDateTime(`${date} ${lessonStartTime}`);
             let endTime = this.convertDateTime(`${date} ${lessonEndTime}`);
 
-            return new Lesson('', type, discipline, startTime, endTime, startEnd, number, adr[0], adr[1], teacher, group, LessonType.exam, link)
+            return new Lesson('', type, discipline, startTime, endTime, startEnd, number, adr[0], adr[1], teacher, group, link)
         });
     }
 
@@ -75,7 +75,7 @@ export class Schedule {
 
             return new Lesson(ev.uid, description[3], ev.summary.replaceAll(".", ". "),
                 ev.dtStart, ev.dtEnd, "", number, address[0], address[1],
-                description[4], description[1].slice(3), LessonType.consultation, undefined);
+                description[4], description[1].slice(3), undefined);
         })
     }
 
