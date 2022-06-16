@@ -20,7 +20,7 @@ export class Lesson {
                 number: number, address: string, aud: string, teacher: string, group: string, link: string | undefined) {
         this.id = id;
         this.type = type;
-        this.name = name;
+        this.name = name.replace('. ', '.').replace('.', '. ');
         this.startTime = start;
         this.endTime = end;
         this.startEndTime = startend;
