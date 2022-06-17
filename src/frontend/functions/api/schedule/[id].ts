@@ -2,6 +2,9 @@
 import {Group} from "../../services/group";
 
 export async function onRequest(context: any): Promise<Response> {
+    const defaultResponseHeaders = {
+        'content-type': 'application/json'
+    };
     // Contents of context object
     const {
         request, // same as existing Worker API
@@ -15,9 +18,7 @@ export async function onRequest(context: any): Promise<Response> {
     let groupId = params.id;
     if (!groupId || isNaN(groupId)) {
         return new Response(JSON.stringify(["Нужно указать номер группы (например, 351017)"]), {
-            headers: {
-                'content-type': 'application/json'
-            }
+            headers: defaultResponseHeaders
         });
     }
 
@@ -25,13 +26,11 @@ export async function onRequest(context: any): Promise<Response> {
 
     let group = await getGroup(groupId, env);
     if (!group) {
-        const KV = env.Goblin as KVNamespace;
+        const KV = context.env.MYNAMESPACE.get as KVNamespace;
         let kvGroups = await KV.get('Groups');
         let narfuGroups = JSON.parse(kvGroups!) as Group[];
         return new Response(JSON.stringify(narfuGroups), {
-            headers: {
-                'content-type': 'application/json'
-            }
+            headers: defaultResponseHeaders
         });
     }
 
@@ -47,9 +46,7 @@ export async function onRequest(context: any): Promise<Response> {
     }
 
     return new Response(JSON.stringify(response), {
-        headers: {
-            'content-type': 'application/json'
-        }
+        headers: defaultResponseHeaders
     });
 }
 

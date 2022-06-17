@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { ScheduleResponse } from '../models/schedule-response';
+import {environment} from "../../environments/environment";
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +12,7 @@ export class ScheduleServiceService {
     }
 
     getLessons(groupId: Number | undefined, date: Date | undefined): Observable<ScheduleResponse> {
-        let requestUrl = `/api/schedule/${groupId}?date=${date?.toLocaleDateString('ru-RU')}`;
+        let requestUrl = `${environment.apiUrl}/api/schedule/${groupId}?date=${date?.toLocaleDateString('ru-RU')}`;
         return this.httpClient.get<ScheduleResponse>(requestUrl);
     }
 }
