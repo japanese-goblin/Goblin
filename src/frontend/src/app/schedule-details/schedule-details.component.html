@@ -18,8 +18,11 @@
     <h4>
         {{ groupId }} - {{ response.groupName }}
     </h4>
-    <div class="d-inline-block pb-2" ngbDropdown>
-        <button class="btn btn-primary" ngbDropdownToggle type="button" [disabled]="response.isFromSite">
+    <h1 *ngIf="!response.lessons.size && !this.isFromCache" class="text-center">
+        Данные о расписании в указанный период отсутствуют в системе
+    </h1>
+    <div class="d-inline-block pb-2" ngbDropdown *ngIf="!response.isFromSite">
+        <button class="btn btn-primary" ngbDropdownToggle type="button">
             В календарь
         </button>
         <div ngbDropdownMenu>
