@@ -12,7 +12,7 @@ export class Schedule {
         let lessons;
         let isFromSite = false;
         if (response.status != 200) {
-            lessons = await this.getLessonsFromHtml(group);
+            lessons = await this.getLessonsFromHtml(group, dateString);
             isFromSite = true;
         } else {
             lessons = this.getLessonsFromCalendar(await response.text());
@@ -68,8 +68,10 @@ export class Schedule {
         return `${protocol}://${base}&oid=${group.SiteId}&cod=${group.RealId}&from=${date}`
     }
 
-    private async getLessonsFromHtml(group: Group): Promise<Lesson[]> {
+    private async getLessonsFromHtml(group: Group, dateString: string): Promise<Lesson[]> {
         const regex = /\s{2,}|\\n|\\t/gm;
+        let fromDateSplit = dateString.split('.').map(x => Number(x));
+        let fromDate = new Date(fromDateSplit[2], fromDateSplit[1] - 1, fromDateSplit[0]);        
 
         let url = `${this.Endpoint}?timetable&group=${group.SiteId}`;
         let response = await fetch(url);
@@ -101,7 +103,7 @@ export class Schedule {
                 finalAddress, auditory.slice(5), teacher, group, link);
             
             return lesson;
-        });
+        }).filter(x => x.startTime > fromDate);
     }
 
     private getLessonsFromCalendar(text: string): Lesson[] {
