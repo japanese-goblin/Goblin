@@ -95,7 +95,7 @@ export class Schedule {
             let startTime = this.convertDateTime(`${date} ${lessonStartTime}`);
             let endTime = this.convertDateTime(`${date} ${lessonEndTime}`);
 
-            let lesson = new Lesson('', type, discipline, startTime, endTime, startEnd, number, adr[0], adr[1], teacher, group, link);
+            let lesson = new Lesson('', type, discipline, startTime, endTime, startEnd, number, adr[0].slice(5), adr[1], teacher, group, link);
 
             console.log(date, number);
             
