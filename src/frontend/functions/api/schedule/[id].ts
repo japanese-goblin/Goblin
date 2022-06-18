@@ -18,7 +18,8 @@ export async function onRequest(context: any): Promise<Response> {
     let groupId = params.id;
     if (!groupId || isNaN(groupId)) {
         return new Response(JSON.stringify(["Нужно указать номер группы (например, 351017)"]), {
-            headers: defaultResponseHeaders
+            headers: defaultResponseHeaders,
+            status: 400
         });
     }
 
@@ -27,7 +28,8 @@ export async function onRequest(context: any): Promise<Response> {
     let group = await getGroup(groupId, env);
     if (!group) {
         return new Response(JSON.stringify(["Группа не найдена"]), {
-            headers: defaultResponseHeaders
+            headers: defaultResponseHeaders,
+            status: 400
         });
     }
 
