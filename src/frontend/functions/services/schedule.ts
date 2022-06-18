@@ -28,6 +28,7 @@ export class Schedule {
         let dates = uniqueLessons.map(x => x.startTime.getTime());
         let firstDay = new Date(Math.min(...dates));
         let lastDay = new Date(Math.max(...dates));
+        // @ts-ignore //TODO:
         let diffInDays = (lastDay - firstDay) / (1000 * 60 * 60 * 24);
         for (let i = 0; i <= diffInDays; i++) {
             let day = this.addDays(firstDay, i);
@@ -79,7 +80,9 @@ export class Schedule {
         let lessonItems = domParser.querySelectorAll('.timetable_sheet.hidden-xs.hidden-sm');
         return lessonItems.filter(x => x.childNodes.length > 3).map(lessonNode => {
             let date = lessonNode.parentNode.querySelector('.dayofweek')?.innerText.replace(regex, "").split(',')[1] ?? '';
-            let adr = lessonNode.querySelector('.auditorium')?.innerText.replace(regex, "").replace("&nbsp;", " ").split(',') ?? ['', ''];
+            // @ts-ignore //TODO:
+            let [auditory, ...address] = lessonNode.querySelector('.auditorium')?.innerText.replace(regex, "").replace("&nbsp;", " ").split(',');
+            let finalAddress = address.join(', ');
             let time = lessonNode.querySelector('.time_para')?.innerText.replace(regex, "") ?? '';
             let number = Number(lessonNode.querySelector('.num_para')?.innerText);
             let group = lessonNode.querySelector('.group')?.innerText ?? '';
@@ -95,9 +98,8 @@ export class Schedule {
             let startTime = this.convertDateTime(`${date} ${lessonStartTime}`);
             let endTime = this.convertDateTime(`${date} ${lessonEndTime}`);
 
-            let lesson = new Lesson('', type, discipline, startTime, endTime, startEnd, number, adr[0].slice(5), adr[1], teacher, group, link);
-
-            console.log(date, number);
+            let lesson = new Lesson('', type, discipline, startTime, endTime, startEnd, number,
+                finalAddress, auditory.slice(5), teacher, group, link);
             
             return lesson;
         });
