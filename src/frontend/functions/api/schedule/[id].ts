@@ -26,10 +26,7 @@ export async function onRequest(context: any): Promise<Response> {
 
     let group = await getGroup(groupId, env);
     if (!group) {
-        const KV = context.env.MYNAMESPACE.get as KVNamespace;
-        let kvGroups = await KV.get('Groups');
-        let narfuGroups = JSON.parse(kvGroups!) as Group[];
-        return new Response(JSON.stringify(narfuGroups), {
+        return new Response(JSON.stringify(["Группа не найдена"]), {
             headers: defaultResponseHeaders
         });
     }
