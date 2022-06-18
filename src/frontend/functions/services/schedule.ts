@@ -1,7 +1,6 @@
 import {Group} from "./group";
 import {Calendar} from "./ical/calendar";
 import {Lesson} from "./lesson";
-import {LessonType} from "./lesson_type";
 import {parse} from 'node-html-parser'
 
 export class Schedule {
@@ -18,10 +17,49 @@ export class Schedule {
         } else {
             lessons = this.getLessonsFromCalendar(await response.text());
         }
-        let uniqueLessons = [...new Map(lessons.map(l => [l.type + l.name + l.number + l.auditory + l.teacher + l.groups, l])).values()]
+        let uniqueLessons = this.manupulate(lessons);
 
         let responseLessons = this.formatLessons(uniqueLessons)
         return {isFromSite, responseLessons};
+    }
+    
+    private manupulate(lessons: Lesson[]): Lesson[] {
+        let uniqueLessons = [...new Map(lessons.map(l => [l.type + l.name + l.number + l.auditory + l.teacher + l.groups + l.startTime, l])).values()]
+        let dates = uniqueLessons.map(x => x.startTime.getTime());
+        let firstDay = new Date(Math.min(...dates));
+        let lastDay = new Date(Math.max(...dates));
+        let diffInDays = (lastDay - firstDay) / (1000 * 60 * 60 * 24);
+        for (let i = 0; i <= diffInDays; i++) {
+            let day = this.addDays(firstDay, i);
+            if(day.getDay() == 0) {
+                continue;
+            }
+            
+            let lessonsAtDay = uniqueLessons.filter(x => x.startTime.toDateString() == day.toDateString());
+            if(lessonsAtDay.length == 0) {
+                uniqueLessons.push({
+                    name: 'Выходной',
+                    startTime: day,
+                    number: 1
+                } as Lesson)
+                continue;
+            }
+            
+            let maxLessonNumber = Math.max.apply(null, lessonsAtDay.map(x => x.number));
+            console.log(maxLessonNumber);
+            for (let lessonNumber = 1; lessonNumber <= maxLessonNumber; lessonNumber++) {
+                let isPreviousBreak = !lessonsAtDay.filter(x => x.number == lessonNumber -1)[0]?.address && lessonNumber > 1;
+                if(lessonsAtDay.filter(x => x.number == lessonNumber).length == 0 && !isPreviousBreak) {
+                    uniqueLessons.push({
+                        startTime: day,
+                        number: lessonNumber,
+                        name: lessonNumber == 1 ? "Здоровый сон" : "Перерыв"
+                    } as Lesson)
+                }
+            }
+        }
+        
+        return uniqueLessons.sort((a, b) => a.number - b.number);
     }
     
     public generateLink(group: Group, isWebCal: boolean, date: string): string {
@@ -57,7 +95,11 @@ export class Schedule {
             let startTime = this.convertDateTime(`${date} ${lessonStartTime}`);
             let endTime = this.convertDateTime(`${date} ${lessonEndTime}`);
 
-            return new Lesson('', type, discipline, startTime, endTime, startEnd, number, adr[0], adr[1], teacher, group, link)
+            let lesson = new Lesson('', type, discipline, startTime, endTime, startEnd, number, adr[0], adr[1], teacher, group, link);
+
+            console.log(date, number);
+            
+            return lesson;
         });
     }
 
@@ -133,5 +175,11 @@ export class Schedule {
         }
 
         return formattedLessons as Record<string, Record<string, Lesson[]>>;
+    }
+
+    private addDays(date: Date, days: number): Date {
+        let result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
     }
 }
