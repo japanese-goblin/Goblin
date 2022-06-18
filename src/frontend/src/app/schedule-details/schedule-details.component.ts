@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ScheduleResponse } from '../models/schedule-response';
-import { ScheduleServiceService } from '../services/schedule.service';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {ScheduleResponse} from '../models/schedule-response';
+import {ScheduleServiceService} from '../services/schedule.service';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 
 
 @Component({
@@ -37,7 +37,10 @@ export class ScheduleDetailsComponent implements OnInit {
                     },
                     error: r => {
                         this.isFromCache = true;
-                        this.response = JSON.parse(localStorage.getItem(`schedule_${this.groupId}`) ?? "{}");
+                        let fromStorage = localStorage.getItem(`schedule_${this.groupId}`);
+                        if(fromStorage) {
+                            this.response = JSON.parse(fromStorage ?? "{}");                            
+                        }
                     }
                 });
         });
