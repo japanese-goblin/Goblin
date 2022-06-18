@@ -18,9 +18,11 @@
     <h4>
         {{ groupId }} - {{ response.groupName }}
     </h4>
-    <div class="d-inline-block pb-2" ngbDropdown>
-        <button class="btn btn-primary" id="dropdownBasic1" ngbDropdownToggle type="button">Дополнительно</button>
-        <div aria-labelledby="dropdownBasic1" ngbDropdownMenu>
+    <div class="d-inline-block pb-2" ngbDropdown *ngIf="!response.isFromSite">
+        <button class="btn btn-primary" ngbDropdownToggle type="button">
+            В календарь
+        </button>
+        <div ngbDropdownMenu>
             <a [disabled]="!response.icsLink || response.isFromSite" [href]="response.icsLink" class="btn" ngbDropdownItem
                target="_blank">
                 Скачать файл (.ics)

@@ -7,15 +7,13 @@ import {
 } from '@angular/common/http';
 import { ToastService } from './services/toast.service';
 import { tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 
 @Injectable()
-export class AuthInterceptor implements HttpInterceptor {
+export class HttpToastInterceptor implements HttpInterceptor {
     constructor(private toastService: ToastService) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler) {
         const apiReq = request.clone({
-            url: `${environment.apiUrl}/${request.url}`,
             withCredentials: true
         });
         return next.handle(apiReq).pipe(tap({
