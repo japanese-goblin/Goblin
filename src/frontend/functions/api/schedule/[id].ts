@@ -63,7 +63,6 @@ function getDate(request: any) {
 async function getGroup(groupId: number, env: any) {
     const KV = env.Goblin as KVNamespace;
     let kvGroups = await KV.get('Groups');
-    console.log(kvGroups);
     let narfuGroups = JSON.parse(kvGroups!) as Group[] || [] as Group[];
     return narfuGroups.find((x) => x.RealId == groupId);
 }

@@ -47,7 +47,6 @@ export class Schedule {
             }
             
             let maxLessonNumber = Math.max.apply(null, lessonsAtDay.map(x => x.number));
-            console.log(maxLessonNumber);
             for (let lessonNumber = 1; lessonNumber <= maxLessonNumber; lessonNumber++) {
                 let isPreviousBreak = !lessonsAtDay.filter(x => x.number == lessonNumber -1)[0]?.address && lessonNumber > 1;
                 if(lessonsAtDay.filter(x => x.number == lessonNumber).length == 0 && !isPreviousBreak) {
