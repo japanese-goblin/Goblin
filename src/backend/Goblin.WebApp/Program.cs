@@ -149,8 +149,8 @@ app.UseHangfireDashboard("/Admin/HangFire", new DashboardOptions
 });
 app.UseFastEndpoints(c =>
 {
-    c.RoutingOptions = o => o.Prefix = "api";
-    c.ErrorResponseBuilder = (failures, _) => failures.Select(x => x.ErrorMessage);
+    c.Endpoints.RoutePrefix = "api";
+    c.Errors.ResponseBuilder = (failures, _) => failures.Select(x => x.ErrorMessage);
 });
 if(app.Environment.IsDevelopment())
 {
