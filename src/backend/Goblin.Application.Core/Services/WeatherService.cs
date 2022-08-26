@@ -38,7 +38,7 @@ public class WeatherService : IWeatherService
     {
         try
         {
-            var key = GetFullCurrentCacheKey(city);
+            var key = GetCurrentCacheKey(city);
             if(!_cache.TryGetValue<string>(key, out var result))
             {
                 var weather = await _weatherMapApi.GetCurrentWeather(city);
@@ -72,7 +72,7 @@ public class WeatherService : IWeatherService
     {
         try
         {
-            var key = GetFullDailyCacheKey(city, date);
+            var key = GetDailyCacheKey(city, date);
             if(!_cache.TryGetValue<string>(key, out var result))
             {
                 var weather = await _weatherMapApi.GetDailyWeatherAt(city, date);
@@ -132,17 +132,17 @@ public class WeatherService : IWeatherService
         return result;
     }
 
-    private string GetFullCurrentCacheKey(string city)
+    private static string GetCurrentCacheKey(string city)
     {
         return $"{NowCacheKey}_{city}";
     }
 
-    private string GetFullDailyCacheKey(string city, DateTime date)
+    private static string GetDailyCacheKey(string city, DateTime date)
     {
         return $"{DailyCacheKey}_{city}_{date:dd.MM.yyyy}";
     }
 
-    private string GetNotFoundCacheKey(string city)
+    private static string GetNotFoundCacheKey(string city)
     {
         return $"{NotFoundCacheKey}_{city}";
     }
