@@ -46,7 +46,7 @@ public class TelegramSender : ISender
                 }
                 catch(Exception e)
                 {
-                    _logger.Error(e, "Ошибка при отправке сообщения");
+                    _logger.Error(e, "Ошибка при отправке сообщения {UserId}", id);
                 }
             }
 
