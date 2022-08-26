@@ -5,8 +5,9 @@ using AutoMapper;
 using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Telegram.Converters;
+using Goblin.DataAccess;
 using Goblin.Domain;
-using Goblin.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -20,15 +21,19 @@ public class TelegramCallbackHandler
     private readonly TelegramBotClient _botClient;
     private readonly CommandsService _commandsService;
     private readonly IMapper _mapper;
+    private readonly BotDbContext _context;
     private readonly ISender _sender;
 
-    public TelegramCallbackHandler(TelegramBotClient botClient, CommandsService commandsService,
+    public TelegramCallbackHandler(TelegramBotClient botClient,
+                                   CommandsService commandsService,
                                    IMapper mapper,
-                                   IEnumerable<ISender> senders)
+                                   IEnumerable<ISender> senders,
+                                   BotDbContext context)
     {
         _botClient = botClient;
         _commandsService = commandsService;
         _mapper = mapper;
+        _context = context;
         _sender = senders.First(x => x.ConsumerType == ConsumerType.Telegram);
     }
 
@@ -42,6 +47,11 @@ public class TelegramCallbackHandler
         else if(update.Type == UpdateType.CallbackQuery)
         {
             await HandleCallback(update.CallbackQuery);
+        }
+        else if(update.Type == UpdateType.MyChatMember &&
+                update.MyChatMember?.NewChatMember.Status == ChatMemberStatus.Kicked)
+        {
+            await HandleBotKick(update.MyChatMember);
         }
     }
 
@@ -74,6 +84,16 @@ public class TelegramCallbackHandler
                 await _botClient.EditMessageReplyMarkupAsync(new ChatId(query.From.Id), query.Message.MessageId,
                                                              KeyboardConverter.FromCoreToTg(res.Keyboard) as InlineKeyboardMarkup);
             }
+        }
+    }
+
+    private async Task HandleBotKick(ChatMemberUpdated updateMyChatMember)
+    {
+        var user = await _context.BotUsers.FirstOrDefaultAsync(x => x.Id == updateMyChatMember.From.Id);
+        if(user is not null)
+        {
+            _context.BotUsers.Remove(user);
+            await _context.SaveChangesAsync();
         }
     }
 }
