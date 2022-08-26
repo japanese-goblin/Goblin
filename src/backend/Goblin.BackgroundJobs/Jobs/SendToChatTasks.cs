@@ -80,17 +80,13 @@ public class SendToChatTasks
 
     private async Task SendSchedule(long id, int group, Func<string, Task> send)
     {
-        if(DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
+        if(DateTime.Today.DayOfWeek == DayOfWeek.Sunday || _mailingOptions.IsVacations)
         {
             return;
         }
 
         _logger.Information("Отправка расписания в {0}", id);
         var result = await _scheduleService.GetSchedule(group, DateTime.Now);
-        if(!result.IsSuccessful && _mailingOptions.IsVacations)
-        {
-            return;
-        }
 
         await send(result.Message);
     }

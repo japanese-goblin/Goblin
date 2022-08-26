@@ -34,6 +34,11 @@ public class ScheduleTask
 
     public async Task Execute()
     {
+        if(_mailingOptions.IsVacations)
+        {
+            return;
+        }
+
         var consumersGroup = _db.BotUsers.AsNoTracking()
                                 .Where(x => x.HasScheduleSubscription)
                                 .ToArray()
@@ -45,10 +50,6 @@ public class ScheduleTask
             foreach(var group in groupedByGroup)
             {
                 var result = await _scheduleService.GetSchedule(group.Key, DateTime.Today);
-                if(!result.IsSuccessful && _mailingOptions.IsVacations)
-                {
-                    continue;
-                }
 
                 foreach(var chunk in group.Chunk(Defaults.ChunkLimit))
                 {
