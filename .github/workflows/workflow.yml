@@ -33,5 +33,3 @@ jobs:
         working-directory: ${{env.working-directory}}
       - run: npm run build --if-present --prod
         working-directory: ${{env.working-directory}}
-      - run: npm run deploy
-        working-directory: ${{env.working-directory}}
