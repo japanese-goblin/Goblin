@@ -4,15 +4,15 @@ on: [ push, pull_request ]
 
 jobs:
   backend-build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
       - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v1.9.0
+        uses: actions/setup-dotnet@v2.1.0
         with:
-          dotnet-version: 6.0.100
+          dotnet-version: 6.0.400
       - name: Build with dotnet
-        run: dotnet build src/backend/Goblin.sln --configuration Release
+        run: dotnet build src/Goblin.sln --configuration Release
       - name: Run tests
-        run: dotnet test src/backend/Goblin.sln
+        run: dotnet test src/Goblin.sln
