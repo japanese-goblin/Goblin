@@ -13,10 +13,9 @@ services:
     networks:
       - goblin_network
   goblin:
-    image: goblin
     hostname: goblin
     build:
-      context: src/backend
+      context: src/
     ports:
       - "5177:5177"
     networks:
