@@ -44,7 +44,7 @@ public class TeacherScheduleCommand : IKeyboardCommand
                 Message = schedule.ToString()
             };
         }
-        catch(HttpRequestException)
+        catch(Exception ex) when (ex is HttpRequestException or TaskCanceledException)
         {
             return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
         }

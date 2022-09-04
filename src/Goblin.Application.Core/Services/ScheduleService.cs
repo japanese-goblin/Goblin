@@ -36,7 +36,7 @@ public class ScheduleService : IScheduleService
                 Keyboard = DefaultKeyboards.GetScheduleKeyboard()
             };
         }
-        catch(HttpRequestException)
+        catch(Exception ex) when (ex is HttpRequestException or TaskCanceledException)
         {
             return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
         }

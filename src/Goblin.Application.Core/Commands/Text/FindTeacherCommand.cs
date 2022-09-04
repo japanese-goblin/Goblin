@@ -62,7 +62,7 @@ public class FindTeacherCommand : ITextCommand
                 Keyboard = keyboard
             };
         }
-        catch(HttpRequestException)
+        catch(Exception ex) when (ex is HttpRequestException or TaskCanceledException)
         {
             return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
         }

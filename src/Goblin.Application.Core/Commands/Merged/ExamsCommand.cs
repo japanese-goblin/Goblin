@@ -46,13 +46,13 @@ public class ExamsCommand : IKeyboardCommand, ITextCommand
                 Message = str
             };
         }
-        catch(HttpRequestException)
+        catch(Exception ex) when (ex is HttpRequestException or TaskCanceledException)
         {
             return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
         }
         catch(Exception ex)
         {
-            Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении экзаменов");
+            Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении расписания на день");
             return new FailedResult(DefaultErrors.NarfuUnexpectedError);
         }
     }
