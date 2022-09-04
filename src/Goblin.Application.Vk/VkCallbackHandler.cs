@@ -52,11 +52,11 @@ public class VkCallbackHandler
     {
         if(upd.Secret != _options.SecretKey)
         {
-            _logger.Warning("Пришло событие с неправильным секретным ключом ({0})", upd.Secret);
+            _logger.Warning("Пришло событие с неправильным секретным ключом ({SecretKey})", upd.Secret);
             return;
         }
 
-        _logger.Debug("Обработка события с типом {0}", upd.Type);
+        _logger.Debug("Обработка события с типом {UpdateType}", upd.Type);
 
         if(upd.Type == GroupUpdateType.MessageNew)
         {
@@ -86,11 +86,11 @@ public class VkCallbackHandler
         }
         else
         {
-            _logger.Fatal("Обработчик для события {0} не найден", upd.Type);
+            _logger.Fatal("Обработчик для события {UpdateType} не найден", upd.Type);
             throw new ArgumentOutOfRangeException(nameof(upd.Type), "Отсутствует обработчик события");
         }
 
-        _logger.Information("Обработка события {0} завершена", upd.Type);
+        _logger.Information("Обработка события {UpdateType} завершена", upd.Type);
 
         void ExtractUserIdFromConversation(Message msg)
         {
@@ -165,7 +165,7 @@ public class VkCallbackHandler
                                          "Если тебе что-то не понравилось или ты не разобрался с ботом, то всегда можешь написать " +
                                          "администрации об этом через команду 'админ *сообщение*' (подробнее смотри в справке).";
 
-        _logger.Information("Пользователь id{0} покинул группу", leave.UserId);
+        _logger.Information("Пользователь id{UserId} покинул группу", leave.UserId);
         await SendMessageToAdmins(leave.UserId.Value, "отписался :С");
 
         if(leave.IsSelf.HasValue && !leave.IsSelf.Value)
@@ -182,7 +182,7 @@ public class VkCallbackHandler
                                         "Если у тебя возникнут вопросы, то ты всегда можешь связаться с администрацией бота " +
                                         "при помощи команды 'админ *сообщение*' (подробнее смотри в справке)";
 
-        _logger.Information("Пользователь id{0} вступил в группу", join.UserId);
+        _logger.Information("Пользователь id{UserId} вступил в группу", join.UserId);
         await SendMessageToAdmins(join.UserId.Value, "подписался!");
 
         if(join.JoinType.HasValue && join.JoinType != GroupJoinType.Join)

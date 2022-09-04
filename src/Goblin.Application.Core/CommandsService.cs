@@ -80,9 +80,9 @@ public class CommandsService
                 continue;
             }
 
-            _logger.Debug("Выполнение команды {0}", command.GetType());
+            _logger.Debug("Выполнение команды {CommandType}", command.GetType());
             var result = await command.Execute(msg, user);
-            _logger.Debug("Команда вернула {0} результат", result.GetType());
+            _logger.Debug("Команда вернула {ResultType} результат", result.GetType());
 
             return result;
         }
@@ -101,7 +101,7 @@ public class CommandsService
                 continue;
             }
 
-            _logger.Debug("Выполнение команды с клавиатуры {0}", command.GetType());
+            _logger.Debug("Выполнение команды с клавиатуры {CommandType}", command.GetType());
             return await command.Execute(msg, user);
         }
 

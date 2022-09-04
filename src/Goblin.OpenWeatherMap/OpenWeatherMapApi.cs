@@ -35,7 +35,7 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
     /// <inheritdoc />
     public async Task<CurrentWeatherResponse> GetCurrentWeather(string city)
     {
-        _logger.Debug("Получение погоды на текущий момент в городе {0}", city);
+        _logger.Debug("Получение погоды на текущий момент в городе {City}", city);
         var response = await _client.GetFromJsonAsync<CurrentWeatherResponse>(GetWithDefaultQueryParams($"weather?q={city}"));
         _logger.Debug("Погода получена");
 
@@ -45,7 +45,7 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
     /// <inheritdoc />
     public async Task<DailyWeatherListItem> GetDailyWeatherAt(string city, DateTime date)
     {
-        _logger.Debug("Получение погоды на день в городе {0} на дату {1:dd.MM.yyyy}", city, date);
+        _logger.Debug("Получение погоды на день в городе {City} на дату {WeatherDate:dd.MM.yyyy}", city, date);
         var response = await _client.GetFromJsonAsync<DailyWeatherResponse>(GetWithDefaultQueryParams($"forecast/daily?q={city}&cnt=4"));
 
         // разница между указанной и полученной меньше одного дня
@@ -68,7 +68,7 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
     /// <inheritdoc />
     public async Task<bool> IsCityExists(string city)
     {
-        _logger.Debug("Проверка на существование города {0}", city);
+        _logger.Debug("Проверка на существование города {City}", city);
         var response = await _client.SendAsync(new HttpRequestMessage(HttpMethod.Head, GetWithDefaultQueryParams($"weather/?q={city}")));
         return response.IsSuccessStatusCode;
     }
@@ -79,6 +79,6 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
         const string units = "metric";
 
         var queries = $"units={units}&lang={language}&appid={_token}";
-        return path.Contains("?") ? $"{path}&{queries}" : $"?{path}&{queries}";
+        return path.Contains('?') ? $"{path}&{queries}" : $"?{path}&{queries}";
     }
 }

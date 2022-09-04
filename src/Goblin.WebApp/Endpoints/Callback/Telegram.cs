@@ -33,7 +33,7 @@ public class Telegram : Endpoint<TelegramRequest>
     {
         if(!_options.SecretKey.Equals(req.SecretKey))
         {
-            _logger.Warning("Пришло событие с неправильным секретным ключом: {0}", req.SecretKey);
+            _logger.Warning("Пришло событие с неправильным секретным ключом: {RequestSecretKey}", req.SecretKey);
             await SendNotFoundAsync(ct);
             return;
         }

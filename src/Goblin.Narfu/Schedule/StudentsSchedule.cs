@@ -32,7 +32,7 @@ public class StudentsSchedule : IStudentsSchedule
         try
         {
             date ??= DateTime.Today;
-            _logger.Debug("Получение расписания для группы {RealGroupId}", realGroupId);
+            _logger.Debug("Получение расписания для группы {GroupId}", realGroupId);
             var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
             var response = await _client.GetStringAsync($"/?icalendar&oid={siteGroupId}&cod={realGroupId}&from={date.Value:dd.MM.yyyy}");
             _logger.Debug("Расписание получено");
@@ -50,7 +50,7 @@ public class StudentsSchedule : IStudentsSchedule
 
     public async Task<ExamsViewModel> GetExams(int realGroupId)
     {
-        _logger.Debug("Получение списка экзаменов для группы {0}", realGroupId);
+        _logger.Debug("Получение списка экзаменов для группы {GroupId}", realGroupId);
         var schedule = await GetSchedule(realGroupId);
         var exams = schedule.Where(x => x.IsExam);
         _logger.Debug("Список экзаменов получен");
@@ -60,7 +60,7 @@ public class StudentsSchedule : IStudentsSchedule
 
     public async Task<LessonsViewModel> GetScheduleAtDate(int realGroupId, DateTime date)
     {
-        _logger.Debug("Получение расписания для группы {0} на {1:dd.MM.yyyy}", realGroupId, date);
+        _logger.Debug("Получение расписания для группы {GroupId} на {ScheduleDate:dd.MM.yyyy}", realGroupId, date);
         var lessons = await GetSchedule(realGroupId);
         return new LessonsViewModel(lessons.Where(x => x.StartTime.Date == date.Date), date);
     }

@@ -29,7 +29,7 @@ public class CreateDefaultRolesHostedService : IHostedService
                 return;
             }
 
-            Log.ForContext<CreateDefaultRolesHostedService>().Information("Создание {0} роли", role);
+            Log.ForContext<CreateDefaultRolesHostedService>().Information("Создание {RoleName} роли", role);
             await manager.CreateAsync(new IdentityRole(role));
         }
     }
