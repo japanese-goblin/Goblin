@@ -37,7 +37,7 @@ public class SendToChatTasks
 
     public async Task Execute(long chatId, ConsumerType consumerType, CronType cronType, string city, int group, string text)
     {
-        var sender = _senders.FirstOrDefault(x => x.ConsumerType == consumerType);
+        var sender = _senders.First(x => x.ConsumerType == consumerType);
         await Send(responseText => sender.Send(chatId, responseText));
 
         async Task Send(Func<string, Task> func)

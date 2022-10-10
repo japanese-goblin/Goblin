@@ -47,7 +47,7 @@ public class SendRemindTasks
         foreach(var remind in reminds)
         {
             var message = $"Напоминаю:\n{remind.Text}";
-            var sender = _senders.FirstOrDefault(x => x.ConsumerType == remind.ConsumerType);
+            var sender = _senders.First(x => x.ConsumerType == remind.ConsumerType);
             if(sender is null)
             {
                 throw new ArgumentNullException($"sender for '{remind.ConsumerType}' not found", nameof(sender));

@@ -45,7 +45,7 @@ public class ScheduleTask
                                 .GroupBy(x => x.ConsumerType);
         foreach(var consumerGroup in consumersGroup)
         {
-            var sender = _senders.FirstOrDefault(x => x.ConsumerType == consumerGroup.Key);
+            var sender = _senders.First(x => x.ConsumerType == consumerGroup.Key);
             var groupedByGroup = consumerGroup.GroupBy(x => x.NarfuGroup);
             foreach(var group in groupedByGroup)
             {

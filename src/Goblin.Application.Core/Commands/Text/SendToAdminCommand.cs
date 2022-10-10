@@ -39,7 +39,7 @@ public class SendToAdminCommand : ITextCommand
                                                        x.ConsumerType == user.ConsumerType)
                               .Select(x => x.Id)
                               .ToArrayAsync();
-        var sender = _senders.FirstOrDefault(x => x.ConsumerType == ConsumerType.Vkontakte);
+        var sender = _senders.First(x => x.ConsumerType == ConsumerType.Vkontakte);
 
         foreach(var admin in adminUsers)
         {

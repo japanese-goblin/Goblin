@@ -34,7 +34,7 @@ public class WeatherTask
                          .GroupBy(x => x.ConsumerType);
         foreach(var consumerGroup in consumersGroup)
         {
-            var sender = _senders.FirstOrDefault(x => x.ConsumerType == consumerGroup.Key);
+            var sender = _senders.First(x => x.ConsumerType == consumerGroup.Key);
             var groupedByCity = consumerGroup.GroupBy(x => x.WeatherCity);
             foreach(var group in groupedByCity)
             {
