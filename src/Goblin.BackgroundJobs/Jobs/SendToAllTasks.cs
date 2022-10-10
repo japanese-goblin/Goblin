@@ -26,7 +26,7 @@ public class SendToUsersTasks
         var keyboard = isSendKeyboard ? DefaultKeyboards.GetDefaultKeyboard() : null;
         if(type == ConsumerType.AllInOne)
         {
-            var groupedByConsumerType = _db.BotUsers.GroupBy(x => x.ConsumerType);
+            var groupedByConsumerType = _db.BotUsers.AsEnumerable().GroupBy(x => x.ConsumerType);
             foreach(var consumersGroup in groupedByConsumerType)
             {
                 var users = consumersGroup.Select(x => x.Id).AsEnumerable();
