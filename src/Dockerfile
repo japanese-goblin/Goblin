@@ -3,6 +3,9 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 ENV ASPNETCORE_URLS=http://+:80;https://+:80
+ENV Kestrel__Endpoints__HttpsFromPem__Url=https://0.0.0.0:443
+ENV Kestrel__Endpoints__HttpsFromPem__Certificate__KeyPath=certs/private.cert
+ENV Kestrel__Endpoints__HttpsFromPem__Certificate__Path=certs/public.cert
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
