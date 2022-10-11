@@ -1,4 +1,4 @@
-name: Build & publish
+name: Build & test
 
 on:
   push:
@@ -18,9 +18,9 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.400
-      - name: dotnet restore
+      - name: Restore nuget packages
         run: dotnet restore src/Goblin.sln
-      - name: Build with dotnet
+      - name: Build
         run: dotnet build src/Goblin.sln --configuration Release --no-restore
       - name: Run tests
         run: dotnet test src/Goblin.sln --no-restore
