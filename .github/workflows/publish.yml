@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - test-workflow
+      - test-workflow-1
 
 jobs:
   backend-build:
