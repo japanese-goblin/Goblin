@@ -1,0 +1,27 @@
+name: Build & publish
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+
+jobs:
+  backend-build:
+    runs-on: ubuntu-22.04
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.400
+      - name: Restore nuget packages
+        run: dotnet restore src/Goblin.sln
+      - name: Build
+        run: dotnet build src/Goblin.sln --configuration Release --no-restore
+      - name: Run tests
+        run: dotnet test src/Goblin.sln --no-restore
