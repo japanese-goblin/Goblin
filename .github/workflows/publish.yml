@@ -1,4 +1,4 @@
-name: Build pipeline
+name: Build & publish
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v2.1.0
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.400
       - name: dotnet restore
