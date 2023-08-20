@@ -70,7 +70,7 @@ public class ExamsCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_SiteIsUnavailable()
     {
-        var command = new ExamsCommand(GetNarfuApi(), Mock.Of<ILogger<ExamsCommand>>());
+        var command = new ExamsCommand(GetNarfuApiWithHttpException(), Mock.Of<ILogger<ExamsCommand>>());
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
@@ -81,7 +81,7 @@ public class ExamsCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_UnknownError()
     {
-        var command = new ExamsCommand(GetNarfuApi(), Mock.Of<ILogger<ExamsCommand>>());
+        var command = new ExamsCommand(GetNarfuApiWithException(), Mock.Of<ILogger<ExamsCommand>>());
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
