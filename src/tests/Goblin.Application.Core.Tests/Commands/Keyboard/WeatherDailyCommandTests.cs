@@ -5,23 +5,22 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Commands.Keyboard;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace Goblin.Application.Core.Tests.Commands.Keyboard;
 
 public class WeatherDailyCommandTests : TestBase
 {
-    private IWeatherService GetWeatherService()
+    private static IWeatherService GetWeatherService()
     {
-        var mock = new Mock<IWeatherService>();
-        mock.Setup(x => x.GetDailyWeather(It.IsAny<string>(), It.IsAny<DateTime>()))
-            .ReturnsAsync(new SuccessfulResult
+        var mock = Substitute.For<IWeatherService>();
+        mock.GetDailyWeather(Arg.Any<string>(), Arg.Any<DateTime>())
+            .Returns(new SuccessfulResult
             {
                 Message = "weather"
             });
-
-        return mock.Object;
+        return mock;
     }
 
     [Fact]

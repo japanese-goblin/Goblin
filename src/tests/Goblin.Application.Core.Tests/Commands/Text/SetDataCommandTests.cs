@@ -6,7 +6,7 @@ using Goblin.Application.Core.Results.Success;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.OpenWeatherMap.Abstractions;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace Goblin.Application.Core.Tests.Commands.Text;
@@ -29,28 +29,27 @@ public class SetDataCommandTests : TestBase
         result.Message.Should().NotBeNullOrEmpty();
     }
 
-    private INarfuApi GetNarfuApi(bool response = true)
+    private static INarfuApi GetNarfuApi(bool response = true)
     {
-        var mockApi = new Mock<INarfuApi>();
-        mockApi.Setup(x => x.Students.IsCorrectGroup(It.IsAny<int>()))
+        var mockApi = Substitute.For<INarfuApi>();
+        mockApi.Students.IsCorrectGroup(Arg.Any<int>())
                .Returns(response);
-        mockApi.Setup(x => x.Students.GetGroupByRealId(It.IsAny<int>()))
+        mockApi.Students.GetGroupByRealId(Arg.Any<int>())
                .Returns(new Group
                {
                    Name = "name",
                    RealId = 1,
                    SiteId = 1
                });
-
-        return mockApi.Object;
+        return mockApi;
     }
 
-    private IOpenWeatherMapApi GetWeatherApi(bool response = true)
+    private static IOpenWeatherMapApi GetWeatherApi(bool response = true)
     {
-        var mockWeather = new Mock<IOpenWeatherMapApi>();
-        mockWeather.Setup(x => x.IsCityExists(It.IsAny<string>()))
-                   .ReturnsAsync(response);
-        return mockWeather.Object;
+        var mockWeather = Substitute.For<IOpenWeatherMapApi>();
+        mockWeather.IsCityExists(Arg.Any<string>())
+                   .Returns(response);
+        return mockWeather;
     }
 
     [Fact]

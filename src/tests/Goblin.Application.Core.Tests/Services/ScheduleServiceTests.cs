@@ -9,28 +9,27 @@ using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
 using Microsoft.Extensions.Logging;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace Goblin.Application.Core.Tests.Services;
 
 public class ScheduleServiceTests : TestBase
 {
-    private INarfuApi GetNarfuApi(bool response = true)
+    private static INarfuApi GetNarfuApi(bool response = true)
     {
-        var mock = new Mock<INarfuApi>();
-        mock.Setup(x => x.Students.IsCorrectGroup(It.IsAny<int>()))
+        var mock = Substitute.For<INarfuApi>();
+        mock.Students.IsCorrectGroup(Arg.Any<int>())
             .Returns(response);
-        mock.Setup(x => x.Students.GetScheduleAtDate(It.IsAny<int>(), It.IsAny<DateTime>()))
-            .ReturnsAsync(new LessonsViewModel(new List<Lesson>(), DateTime.Today));
-
-        return mock.Object;
+        mock.Students.GetScheduleAtDate(Arg.Any<int>(), Arg.Any<DateTime>())
+            .Returns(new LessonsViewModel(new List<Lesson>(), DateTime.Today));
+        return mock;
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfulResult()
     {
-        var service = new ScheduleService(GetNarfuApi(), Mock.Of<ILogger<ScheduleService>>());
+        var service = new ScheduleService(GetNarfuApi(), Substitute.For<ILogger<ScheduleService>>());
 
         var result = await service.GetSchedule(DefaultUser.NarfuGroup, DateTime.Today);
 
@@ -43,7 +42,7 @@ public class ScheduleServiceTests : TestBase
     public async Task ShouldReturnFailedResult_Because_UserGroupIsZero()
     {
         DefaultUser.SetNarfuGroup(0);
-        var service = new ScheduleService(GetNarfuApi(false), Mock.Of<ILogger<ScheduleService>>());
+        var service = new ScheduleService(GetNarfuApi(false), Substitute.For<ILogger<ScheduleService>>());
 
         var result = await service.GetSchedule(DefaultUser.NarfuGroup, DateTime.Today);
 
