@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Telegram.Converters;
@@ -20,19 +19,14 @@ public class TelegramCallbackHandler
 {
     private readonly TelegramBotClient _botClient;
     private readonly CommandsService _commandsService;
-    private readonly IMapper _mapper;
     private readonly BotDbContext _context;
     private readonly ISender _sender;
 
-    public TelegramCallbackHandler(TelegramBotClient botClient,
-                                   CommandsService commandsService,
-                                   IMapper mapper,
-                                   IEnumerable<ISender> senders,
-                                   BotDbContext context)
+    public TelegramCallbackHandler(TelegramBotClient botClient, CommandsService commandsService,
+                                   IEnumerable<ISender> senders, BotDbContext context)
     {
         _botClient = botClient;
         _commandsService = commandsService;
-        _mapper = mapper;
         _context = context;
         _sender = senders.First(x => x.ConsumerType == ConsumerType.Telegram);
     }
@@ -41,8 +35,7 @@ public class TelegramCallbackHandler
     {
         if(update.Type == UpdateType.Message)
         {
-            var msg = _mapper.Map<Message>(update.Message);
-            await HandleMessageEvent(msg);
+            await HandleMessageEvent(update.Message.MapToBotMessage());
         }
         else if(update.Type == UpdateType.CallbackQuery)
         {
@@ -72,8 +65,7 @@ public class TelegramCallbackHandler
 
     private async Task HandleCallback(CallbackQuery query)
     {
-        var msg = _mapper.Map<Message>(query);
-        await _commandsService.ExecuteCommand(msg, OnAnyResult, OnAnyResult);
+        await _commandsService.ExecuteCommand(query.MapToBotMessage(), OnAnyResult, OnAnyResult);
 
         async Task OnAnyResult(IResult res)
         {

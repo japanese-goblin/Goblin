@@ -12,4 +12,5 @@
       <ProjectReference Include="..\Goblin.Application.Core\Goblin.Application.Core.csproj" />
     </ItemGroup>
 
+
 </Project>
