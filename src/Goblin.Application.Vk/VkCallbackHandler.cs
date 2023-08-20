@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using AutoMapper;
 using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Vk.Converters;
@@ -27,20 +26,17 @@ public class VkCallbackHandler
     private readonly CommandsService _commandsService;
     private readonly BotDbContext _db;
     private readonly ILogger _logger;
-    private readonly IMapper _mapper;
     private readonly VkOptions _options;
     private readonly IVkApi _vkApi;
     private readonly ISender _sender;
 
     public VkCallbackHandler(CommandsService commandsService, BotDbContext db, IVkApi vkApi,
-                             IEnumerable<ISender> senders, IOptions<VkOptions> options,
-                             IMapper mapper, ILogger<VkCallbackHandler> logger)
+                             IEnumerable<ISender> senders, IOptions<VkOptions> options, ILogger<VkCallbackHandler> logger)
     {
         _commandsService = commandsService;
         _db = db;
         _vkApi = vkApi;
         _sender = senders.First(x => x.ConsumerType == ConsumerType.Vkontakte);
-        _mapper = mapper;
         _options = options.Value;
         _logger = logger;
     }
@@ -65,7 +61,7 @@ public class VkCallbackHandler
                 return;
             }
 
-            var msg = _mapper.Map<Message>(upd.MessageNew.Message);
+            var msg = upd.MessageNew.Message.MapToBotMessage();
             ExtractUserIdFromConversation(msg);
             await MessageNew(msg);
         }
@@ -123,7 +119,7 @@ public class VkCallbackHandler
 
     private async Task MessageEvent(MessageEvent messageEvent)
     {
-        var mappedToMessage = _mapper.Map<Message>(messageEvent);
+        var mappedToMessage = messageEvent.MapToBotMessage();
         await _commandsService.ExecuteCommand(mappedToMessage, OnSuccess, OnFailed);
         async Task OnSuccess(IResult res)
         {

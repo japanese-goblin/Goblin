@@ -62,7 +62,6 @@ builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddVkLayer(builder.Configuration);
 builder.Services.AddTelegramLayer(builder.Configuration);
 builder.Services.AddMemoryCache();
-builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddHangfire(config =>
 {
     config.UseMemoryStorage();
