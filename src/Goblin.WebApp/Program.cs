@@ -8,6 +8,7 @@ using Goblin.Application.Vk;
 using Goblin.DataAccess;
 using Goblin.WebApp;
 using Goblin.WebApp.Extensions;
+using Goblin.WebApp.HostedServices;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Diagnostics;
@@ -19,7 +20,6 @@ using Serilog.Events;
 
 SetDefaultLocale();
 
-const string corsName = "frontend";
 var builder = WebApplication.CreateBuilder(args);
 if(builder.Environment.IsDevelopment())
 {
@@ -70,6 +70,7 @@ builder.Services.AddFastEndpoints();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
        .AddEntityFrameworkStores<IdentityUsersDbContext>();
 builder.Services.AddHostedService<CreateDefaultRolesHostedService>();
+builder.Services.AddHostedService<AddHangfireJobsHostedService>();
 
 var app = builder.Build();
 app.MigrateDatabase<BotDbContext>();
@@ -111,8 +112,6 @@ if(app.Environment.IsDevelopment())
     app.UseOpenApi();
     app.UseSwaggerUi3(s => s.ConfigureDefaults());
 }
-
-app.UseHangfireJobs();
 
 app.Run();
 

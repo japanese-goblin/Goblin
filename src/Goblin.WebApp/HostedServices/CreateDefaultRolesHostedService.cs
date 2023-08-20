@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Goblin.WebApp;
+namespace Goblin.WebApp.HostedServices;
 
 public class CreateDefaultRolesHostedService : IHostedService
 {
