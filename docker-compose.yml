@@ -17,7 +17,7 @@ services:
     build:
       context: src/
     ports:
-      - "5177:5177"
+      - "5177:80"
     networks:
       - goblin_network
     env_file:
