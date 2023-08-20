@@ -10,12 +10,12 @@ using VkNet.Utils;
 
 namespace Goblin.WebApp.Endpoints.Callback;
 
-public class Vk : Endpoint<VkRequest>
+public class VkCallbackEndpoint : Endpoint<VkRequest>
 {
     private readonly VkCallbackHandler _handler;
     private readonly VkOptions _vkOptions;
 
-    public Vk(VkCallbackHandler handler, IOptions<VkOptions> vkOptions)
+    public VkCallbackEndpoint(VkCallbackHandler handler, IOptions<VkOptions> vkOptions)
     {
         _handler = handler;
         _vkOptions = vkOptions.Value;
