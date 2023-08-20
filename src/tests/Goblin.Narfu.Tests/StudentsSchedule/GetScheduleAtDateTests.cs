@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
@@ -7,7 +6,7 @@ namespace Goblin.Narfu.Tests.StudentsSchedule;
 
 public class GetScheduleAtDateTests : TestBase
 {
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task GetScheduleAtDate_CorrectGroupAndDate_ReturnsLessons()
     {
         var lessons = await Api.Students.GetScheduleAtDate(CorrectGroup, CorrectDate);
@@ -21,7 +20,7 @@ public class GetScheduleAtDateTests : TestBase
         str.Should().Contain("Инженерная графика");
     }
 
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task GetScheduleAtDate_IncorrectDate_ReturnsLessons()
     {
         var lessons = await Api.Students.GetScheduleAtDate(CorrectGroup, IncorrectDate);

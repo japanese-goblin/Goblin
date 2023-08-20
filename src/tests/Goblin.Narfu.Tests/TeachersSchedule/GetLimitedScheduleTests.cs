@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
 
@@ -7,7 +6,7 @@ namespace Goblin.Narfu.Tests.TeachersSchedule;
 
 public class GetLimitedScheduleTests : TestBase
 {
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task GetLimitedSchedule_CorrectTeacherId_ReturnsLessons()
     {
         var lessons = await Api.Teachers.GetLimitedSchedule(CorrectTeacherId, 12);

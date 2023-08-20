@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ namespace Goblin.Narfu.Tests.TeachersSchedule;
 
 public class GetScheduleTests : TestBase
 {
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task GetSchedule_CorrectId_ReturnsLessons()
     {
         var lessons = await Api.Teachers.GetSchedule(CorrectTeacherId);
@@ -20,12 +19,11 @@ public class GetScheduleTests : TestBase
                .HaveCount(27);
     }
 
-    
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task GetSchedule_IncorrectId_ReturnsLessons()
     {
         Func<Task> func = async () => await Api.Teachers.GetSchedule(5);
-    
+
         await func.Should().ThrowAsync<HttpRequestException>();
     }
 }

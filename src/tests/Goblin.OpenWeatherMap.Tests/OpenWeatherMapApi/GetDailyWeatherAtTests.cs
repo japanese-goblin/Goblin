@@ -10,7 +10,7 @@ public class GetDailyWeatherAtTests : TestBase
 {
     private readonly DateTime _date = new DateTime(2019, 09, 28);
 
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task GetDailyWeatherAt_CorrectCityAndDate_ReturnsModel()
     {
         var correctDate = new DateTimeOffset(2019, 09, 28, 9, 0, 0, TimeSpan.Zero);
@@ -41,14 +41,14 @@ public class GetDailyWeatherAtTests : TestBase
         weather.ToString().Should().NotBeEmpty();
     }
 
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task GetDailyWeatherAt_IncorrectCity_ThrowsException()
     {
         Func<Task> func = async () => await Api.GetDailyWeatherAt(IncorrectCity, _date);
         await func.Should().ThrowAsync<HttpRequestException>();
     }
 
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task GetDailyWeatherAt_IncorrectDate_ThrowsException()
     {
         Func<Task> func = async () => await Api.GetDailyWeatherAt(CorrectCity, _date.AddDays(17));

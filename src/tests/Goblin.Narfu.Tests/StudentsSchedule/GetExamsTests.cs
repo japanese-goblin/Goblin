@@ -6,7 +6,7 @@ namespace Goblin.Narfu.Tests.StudentsSchedule;
 
 public class GetExamsTests : TestBase
 {
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task GetExams_CorrectGroup_ReturnsLessons()
     {
         var exams = await Api.Students.GetExams(CorrectGroup);

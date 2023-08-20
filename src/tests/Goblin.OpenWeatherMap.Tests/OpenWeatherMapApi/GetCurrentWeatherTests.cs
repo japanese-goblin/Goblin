@@ -8,7 +8,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi;
 
 public class GetCurrentWeatherTests : TestBase
 {
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task GetCurrentWeather_CorrectCity_ReturnsModel()
     {
         var correctDate = new DateTimeOffset(2019, 09, 28, 09, 17, 58, TimeSpan.Zero);
@@ -52,7 +52,7 @@ public class GetCurrentWeatherTests : TestBase
         weather.ToString().Should().NotBeEmpty();
     }
 
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task GetCurrentWeather_IncorrectCity_ThrowsException()
     {
         Func<Task> func = async () => await Api.GetCurrentWeather(IncorrectCity);

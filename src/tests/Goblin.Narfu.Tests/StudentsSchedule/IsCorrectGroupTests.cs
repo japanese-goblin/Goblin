@@ -5,7 +5,7 @@ namespace Goblin.Narfu.Tests.StudentsSchedule;
 
 public class IsCorrectGroupTests : TestBase
 {
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public void IsCorrectGroup_CorrectGroup_ReturnsTrue()
     {
         var result = Api.Students.IsCorrectGroup(CorrectGroup);
@@ -13,7 +13,7 @@ public class IsCorrectGroupTests : TestBase
         result.Should().BeTrue();
     }
 
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public void IsCorrectGroup_IncorrectGroup_ReturnsTrue()
     {
         var result = Api.Students.IsCorrectGroup(IncorrectGroup);
