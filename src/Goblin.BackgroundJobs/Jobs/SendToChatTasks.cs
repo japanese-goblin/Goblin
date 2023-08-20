@@ -10,8 +10,6 @@ using Goblin.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Serilog;
-using ILogger = Serilog.ILogger;
 
 namespace Goblin.BackgroundJobs.Jobs;
 

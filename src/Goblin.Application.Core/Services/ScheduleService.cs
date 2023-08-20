@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Goblin.Narfu;
 using Goblin.Narfu.Abstractions;
 using Microsoft.Extensions.Logging;
-using Serilog;
 
 namespace Goblin.Application.Core.Services;
 
