@@ -13,7 +13,6 @@ using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpLogging;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Serilog.Events;
@@ -67,14 +66,10 @@ builder.Services.AddHangfireServer(x =>
 GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
 builder.Services.AddSwaggerDoc(shortSchemaNames: true);
 builder.Services.AddFastEndpoints();
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-       .AddEntityFrameworkStores<IdentityUsersDbContext>();
-builder.Services.AddHostedService<CreateDefaultRolesHostedService>();
 builder.Services.AddHostedService<AddHangfireJobsHostedService>();
 
 var app = builder.Build();
 app.MigrateDatabase<BotDbContext>();
-app.MigrateDatabase<IdentityUsersDbContext>();
 app.UseExceptionHandler(exceptionHandlerApp =>
 {
     exceptionHandlerApp.Run(async context =>
