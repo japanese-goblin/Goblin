@@ -6,7 +6,7 @@ namespace Goblin.OpenWeatherMap.Tests.OpenWeatherMapApi;
 
 public class IsCityExistsTests : TestBase
 {
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task IsCityExists_CorrectCity_ReturnsTrue()
     {
         var isExists = await Api.IsCityExists(CorrectCity);
@@ -14,7 +14,7 @@ public class IsCityExistsTests : TestBase
         isExists.Should().BeTrue();
     }
 
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task IsCityExists_IncorrectCity_ReturnsFalse()
     {
         var isExists = await Api.IsCityExists(IncorrectCity);

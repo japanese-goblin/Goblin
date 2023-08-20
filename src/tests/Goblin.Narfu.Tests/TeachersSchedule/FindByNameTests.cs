@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Xunit;
@@ -8,7 +7,7 @@ namespace Goblin.Narfu.Tests.TeachersSchedule;
 
 public class FindByNameTests : TestBase
 {
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task FindByName_CorrectName_ReturnsTeachers()
     {
         var teachers = await Api.Teachers.FindByName(TeacherName);

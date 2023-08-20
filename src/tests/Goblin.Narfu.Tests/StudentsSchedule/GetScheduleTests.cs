@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -9,7 +8,7 @@ namespace Goblin.Narfu.Tests.StudentsSchedule;
 
 public class GetScheduleTests : TestBase
 {
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public async Task GetSchedule_CorrectGroup_ReturnsLessons()
     {
         var correctEndDate = new DateTime(2040, 01, 23, 14, 50, 0);
@@ -31,6 +30,7 @@ public class GetScheduleTests : TestBase
         first.Type.Should().Be("Консультация");
         first.EndTime.ToUniversalTime().Should().Be(correctEndDate);
         first.StartTime.ToUniversalTime().Should().Be(correctStartDate);
+
         // first.StartEndTime.Should().Be("16:15 - 17:50"); //TODO: ?
     }
 

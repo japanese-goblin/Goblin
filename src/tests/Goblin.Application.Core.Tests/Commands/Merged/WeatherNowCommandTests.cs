@@ -4,23 +4,22 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Commands.Merged;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace Goblin.Application.Core.Tests.Commands.Merged;
 
 public class WeatherNowCommandTests : TestBase
 {
-    private IWeatherService GetWeatherService()
+    private static IWeatherService GetWeatherService()
     {
-        var mock = new Mock<IWeatherService>();
-        mock.Setup(x => x.GetCurrentWeather(It.IsAny<string>()))
-            .ReturnsAsync(new SuccessfulResult
+        var mock = Substitute.For<IWeatherService>();
+        mock.GetCurrentWeather(Arg.Any<string>())
+            .Returns(new SuccessfulResult
             {
                 Message = "weather"
             });
-
-        return mock.Object;
+        return mock;
     }
 
     [Fact]

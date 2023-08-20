@@ -5,26 +5,26 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Commands.Keyboard;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace Goblin.Application.Core.Tests.Commands.Keyboard;
 
 public class ScheduleCommandTests : TestBase
 {
-    private readonly DateTime DateTime = new DateTime(2150, 02, 02);
+    private readonly DateTime _dateTime = new DateTime(2150, 02, 02);
 
-    private IScheduleService GetScheduleService()
+    private static IScheduleService GetScheduleService()
     {
-        var mock = new Mock<IScheduleService>();
-        mock.Setup(x => x.GetSchedule(It.IsAny<int>(), It.IsAny<DateTime>()))
-            .ReturnsAsync(new SuccessfulResult
+        var mock = Substitute.For<IScheduleService>();
+        mock.GetSchedule(Arg.Any<int>(), Arg.Any<DateTime>())
+            .Returns(new SuccessfulResult
             {
                 Message = "Расписание",
                 Keyboard = DefaultKeyboards.GetScheduleKeyboard()
             });
 
-        return mock.Object;
+        return mock;
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class ScheduleCommandTests : TestBase
     {
         DefaultUser.SetNarfuGroup(0);
         var command = new ScheduleCommand(GetScheduleService());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, DateTime.ToString("d"));
+        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, _dateTime.ToString("d"));
 
         var result = await command.Execute(message, DefaultUser);
         result.Should().BeOfType<FailedResult>();
@@ -43,7 +43,7 @@ public class ScheduleCommandTests : TestBase
     public async Task ShouldReturnSuccessfulResult()
     {
         var command = new ScheduleCommand(GetScheduleService());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, DateTime.ToString("d"));
+        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, _dateTime.ToString("d"));
 
         var result = await command.Execute(message, DefaultUser);
         result.Should().BeOfType<SuccessfulResult>();

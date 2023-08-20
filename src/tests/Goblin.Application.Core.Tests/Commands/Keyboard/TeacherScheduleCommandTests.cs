@@ -9,38 +9,36 @@ using Goblin.Application.Core.Results.Success;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
-using Moq;
+using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace Goblin.Application.Core.Tests.Commands.Keyboard;
 
 public class TeacherScheduleCommandTests : TestBase
 {
-    private INarfuApi GetNarfuApi()
+    private static INarfuApi GetNarfuApi()
     {
-        var mockApi = new Mock<INarfuApi>();
-        mockApi.Setup(x => x.Teachers.GetLimitedSchedule(It.IsAny<int>(), It.IsAny<int>()))
-               .ReturnsAsync(new TeacherLessonsViewModel(new List<Lesson>(), DateTime.Today));
-
-        return mockApi.Object;
+        var mockApi = Substitute.For<INarfuApi>();
+        mockApi.Teachers.GetLimitedSchedule(Arg.Any<int>(), Arg.Any<int>())
+               .Returns(new TeacherLessonsViewModel(new List<Lesson>(), DateTime.Today));
+        return mockApi;
     }
 
     private INarfuApi GetNarfuApiWithException()
     {
-        var mockApi = new Mock<INarfuApi>();
-        mockApi.Setup(x => x.Teachers.GetLimitedSchedule(It.IsAny<int>(), It.IsAny<int>()))
+        var mockApi = Substitute.For<INarfuApi>();
+        mockApi.Teachers.GetLimitedSchedule(Arg.Any<int>(), Arg.Any<int>())
                .ThrowsAsync(new Exception());
-
-        return mockApi.Object;
+        return mockApi;
     }
 
-    private INarfuApi GetNarfuApiWithHttpException()
+    private static INarfuApi GetNarfuApiWithHttpException()
     {
-        var mockApi = new Mock<INarfuApi>();
-        mockApi.Setup(x => x.Teachers.GetLimitedSchedule(It.IsAny<int>(), It.IsAny<int>()))
+        var mockApi = Substitute.For<INarfuApi>();
+        mockApi.Teachers.GetLimitedSchedule(Arg.Any<int>(), Arg.Any<int>())
                .ThrowsAsync(new HttpRequestException());
-
-        return mockApi.Object;
+        return mockApi;
     }
 
     [Fact]

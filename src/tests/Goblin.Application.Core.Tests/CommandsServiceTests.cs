@@ -5,7 +5,7 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Commands.Merged;
 using Goblin.Application.Core.Tests.Models;
 using Microsoft.Extensions.Logging;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace Goblin.Application.Core.Tests;
@@ -15,7 +15,7 @@ public class CommandsServiceTests : TestBase
     private CommandsService GetService()
     {
         var service = new CommandsService(GetTextCommands(), GetKeyboardCommands(), ApplicationContext,
-                                          Mock.Of<ILogger<CommandsService>>());
+                                          Substitute.For<ILogger<CommandsService>>());
 
         return service;
 

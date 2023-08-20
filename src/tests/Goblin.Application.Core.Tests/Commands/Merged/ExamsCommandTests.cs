@@ -10,44 +10,42 @@ using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
 using Microsoft.Extensions.Logging;
-using Moq;
+using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace Goblin.Application.Core.Tests.Commands.Merged;
 
 public class ExamsCommandTests : TestBase
 {
-    private INarfuApi GetNarfuApi()
+    private static INarfuApi GetNarfuApi()
     {
-        var mockApi = new Mock<INarfuApi>();
-        mockApi.Setup(x => x.Students.GetExams(It.IsAny<int>()))
-               .ReturnsAsync(new ExamsViewModel(new List<Lesson>(), DateTime.Today));
-
-        return mockApi.Object;
+        var mock = Substitute.For<INarfuApi>();
+        mock.Students.GetExams(Arg.Any<int>())
+            .Returns(new ExamsViewModel(new List<Lesson>(), DateTime.Today));
+        return mock;
     }
 
-    private INarfuApi GetNarfuApiWithHttpException()
+    private static INarfuApi GetNarfuApiWithHttpException()
     {
-        var mockApi = new Mock<INarfuApi>();
-        mockApi.Setup(x => x.Students.GetExams(It.IsAny<int>()))
-               .ThrowsAsync(new HttpRequestException());
-
-        return mockApi.Object;
+        var mock = Substitute.For<INarfuApi>();
+        mock.Students.GetExams(Arg.Any<int>())
+            .ThrowsAsync(new HttpRequestException());
+        return mock;
     }
 
-    private INarfuApi GetNarfuApiWithException()
+    private static INarfuApi GetNarfuApiWithException()
     {
-        var mockApi = new Mock<INarfuApi>();
-        mockApi.Setup(x => x.Students.GetExams(It.IsAny<int>()))
-               .ThrowsAsync(new Exception());
-
-        return mockApi.Object;
+        var mock = Substitute.For<INarfuApi>();
+        mock.Students.GetExams(Arg.Any<int>())
+            .ThrowsAsync(new Exception());
+        return mock;
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfulResult()
     {
-        var command = new ExamsCommand(GetNarfuApi(), Mock.Of<ILogger<ExamsCommand>>());
+        var command = new ExamsCommand(GetNarfuApi(), Substitute.For<ILogger<ExamsCommand>>());
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
@@ -59,7 +57,7 @@ public class ExamsCommandTests : TestBase
     public async Task ShouldReturnFailedResult_Because_UserGroupIsZero()
     {
         DefaultUser.SetNarfuGroup(0);
-        var command = new ExamsCommand(GetNarfuApi(), Mock.Of<ILogger<ExamsCommand>>());
+        var command = new ExamsCommand(GetNarfuApi(), Substitute.For<ILogger<ExamsCommand>>());
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
@@ -70,7 +68,7 @@ public class ExamsCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_SiteIsUnavailable()
     {
-        var command = new ExamsCommand(GetNarfuApiWithHttpException(), Mock.Of<ILogger<ExamsCommand>>());
+        var command = new ExamsCommand(GetNarfuApiWithHttpException(), Substitute.For<ILogger<ExamsCommand>>());
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
@@ -81,7 +79,7 @@ public class ExamsCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_UnknownError()
     {
-        var command = new ExamsCommand(GetNarfuApiWithException(), Mock.Of<ILogger<ExamsCommand>>());
+        var command = new ExamsCommand(GetNarfuApiWithException(), Substitute.For<ILogger<ExamsCommand>>());
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);

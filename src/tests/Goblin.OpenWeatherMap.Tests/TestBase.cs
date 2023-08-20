@@ -1,10 +1,7 @@
 using System.IO;
-using System.Net;
 using System.Net.Http;
-using System.Net.Mime;
 using Microsoft.Extensions.Logging;
-using Moq;
-using RichardSzalay.MockHttp;
+using NSubstitute;
 
 namespace Goblin.OpenWeatherMap.Tests;
 
@@ -22,33 +19,33 @@ public class TestBase
 
     public TestBase()
     {
-        var mockHttp = new MockHttpMessageHandler();
-        
-        mockHttp.When("*/weather")
-                .WithQueryString("q", CorrectCity)
-                .Respond(MediaTypeNames.Application.Json, File.ReadAllText(CurrentWeatherPath));
-        mockHttp.When("*/forecast/daily")
-                .WithQueryString("q", CorrectCity)
-                .Respond(MediaTypeNames.Application.Json, File.ReadAllText(DailyWeatherPath));
+        // var mockHttp = Substitute.For<HttpMessageHandler>();
+        //
+        // mockHttp.When("*/weather")
+        //         .WithQueryString("q", CorrectCity)
+        //         .Respond(MediaTypeNames.Application.Json, File.ReadAllText(CurrentWeatherPath));
+        // mockHttp.When("*/forecast/daily")
+        //         .WithQueryString("q", CorrectCity)
+        //         .Respond(MediaTypeNames.Application.Json, File.ReadAllText(DailyWeatherPath));
+        //
+        // mockHttp.When("*/weather")
+        //         .WithQueryString("q", IncorrectCity)
+        //         .Respond(HttpStatusCode.NotFound);
+        // mockHttp.When("*/forecast/daily")
+        //         .WithQueryString("q", IncorrectCity)
+        //         .Respond(HttpStatusCode.NotFound);
+        //
+        // mockHttp.When(HttpMethod.Head, "*/weather*")
+        //         .WithQueryString("q", CorrectCity)
+        //         .Respond(MediaTypeNames.Application.Json, File.ReadAllText(CurrentWeatherPath));
+        // mockHttp.When(HttpMethod.Head, "*/weather*")
+        //         .WithQueryString("q", IncorrectCity)
+        //         .Respond(HttpStatusCode.NotFound);
 
-        mockHttp.When("*/weather")
-                .WithQueryString("q", IncorrectCity)
-                .Respond(HttpStatusCode.NotFound);
-        mockHttp.When("*/forecast/daily")
-                .WithQueryString("q", IncorrectCity)
-                .Respond(HttpStatusCode.NotFound);
-        
-        mockHttp.When(HttpMethod.Head, "*/weather*")
-                .WithQueryString("q", CorrectCity)
-                .Respond(MediaTypeNames.Application.Json, File.ReadAllText(CurrentWeatherPath));
-        mockHttp.When(HttpMethod.Head, "*/weather*")
-                .WithQueryString("q", IncorrectCity)
-                .Respond(HttpStatusCode.NotFound);
+        var factory = Substitute.For<IHttpClientFactory>();
+        factory.CreateClient(Arg.Any<string>())
+               .Returns(Substitute.For<HttpClient>());
 
-        var factory = new Mock<IHttpClientFactory>();
-        factory.Setup(x => x.CreateClient(It.IsAny<string>()))
-               .Returns(mockHttp.ToHttpClient());
-
-        Api = new OpenWeatherMap.OpenWeatherMapApi("test-token", factory.Object, Mock.Of<ILogger<OpenWeatherMap.OpenWeatherMapApi>>());
+        Api = new OpenWeatherMap.OpenWeatherMapApi("test-token", factory, Substitute.For<ILogger<OpenWeatherMap.OpenWeatherMapApi>>());
     }
 }

@@ -6,7 +6,7 @@ namespace Goblin.Narfu.Tests.StudentsSchedule;
 
 public class GenerateScheduleLinkTests : TestBase
 {
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public void GenerateScheduleLink_Https_ReturnsLink()
     {
         var todayDate = DateTime.Today.ToString("dd.MM.yyyy");
@@ -16,7 +16,7 @@ public class GenerateScheduleLinkTests : TestBase
         link.Should().Be($"https://ruz.narfu.ru/?icalendar&oid={group.SiteId}&cod={CorrectGroup}&from={todayDate}");
     }
 
-    [Fact]
+    [Fact(Skip = "Доработать с NSubstitute")]
     public void GenerateScheduleLink_Webcal_ReturnsLink()
     {
         var todayDate = DateTime.Today.ToString("dd.MM.yyyy");

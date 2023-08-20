@@ -1,11 +1,9 @@
 using System;
 using System.IO;
 using System.Net.Http;
-using System.Net.Mime;
 using Goblin.Narfu.Abstractions;
 using Microsoft.Extensions.Logging;
-using Moq;
-using RichardSzalay.MockHttp;
+using NSubstitute;
 
 namespace Goblin.Narfu.Tests;
 
@@ -31,36 +29,36 @@ public class TestBase
 
     public TestBase()
     {
-        var mockHttp = new MockHttpMessageHandler();
-        
-        var res = File.ReadAllText(StudentsSchedulePath);
-        mockHttp.When("*")
-                .WithQueryString("cod", CorrectGroup.ToString())
-                .Respond(MediaTypeNames.Text.Html, res);
-        
-        mockHttp.When("*")
-                .WithQueryString("cod", IncorrectGroup.ToString())
-                .Respond(MediaTypeNames.Text.Html, res);
-        mockHttp.When("*")
-                .WithQueryString("term", TeacherName)
-                .Respond(MediaTypeNames.Application.Json, File.ReadAllText(FindByNamePath));
-        
-        mockHttp.When("*")
-                .WithQueryString("lecturer", CorrectTeacherId.ToString())
-                .Respond(MediaTypeNames.Text.Html, File.ReadAllText(TeachersSchedulePath));
-        
-        mockHttp.When("http://groups/").Respond("application/json", @"[
-        {
-            ""RealId"": 271901,
-            ""SiteId"": 14068,
-            ""Name"": ""Строительство (Строительство)""
-        }]");
+        // var mockHttp = Substitute.ForHttpMessageHandler();
+        //
+        // var res = File.ReadAllText(StudentsSchedulePath);
+        // mockHttp.When("*")
+        //         .WithQueryString("cod", CorrectGroup.ToString())
+        //         .Respond(MediaTypeNames.Text.Html, res);
+        //
+        // mockHttp.When("*")
+        //         .WithQueryString("cod", IncorrectGroup.ToString())
+        //         .Respond(MediaTypeNames.Text.Html, res);
+        // mockHttp.When("*")
+        //         .WithQueryString("term", TeacherName)
+        //         .Respond(MediaTypeNames.Application.Json, File.ReadAllText(FindByNamePath));
+        //
+        // mockHttp.When("*")
+        //         .WithQueryString("lecturer", CorrectTeacherId.ToString())
+        //         .Respond(MediaTypeNames.Text.Html, File.ReadAllText(TeachersSchedulePath));
+        //
+        // mockHttp.When("http://groups/").Respond("application/json", @"[
+        // {
+        //     ""RealId"": 271901,
+        //     ""SiteId"": 14068,
+        //     ""Name"": ""Строительство (Строительство)""
+        // }]");
 
-        var factory = new Mock<IHttpClientFactory>();
-        factory.Setup(p => p.CreateClient(It.IsAny<string>()))
-               .Returns(mockHttp.ToHttpClient());
+        var factory = Substitute.For<IHttpClientFactory>();
+        factory.CreateClient(Arg.Any<string>())
+               .Returns(Substitute.For<HttpClient>());
 
-        Api = new NarfuApi("http://groups/", factory.Object,
-                           Mock.Of<ILogger<Schedule.TeachersSchedule>>(), Mock.Of<ILogger<Schedule.StudentsSchedule>>());
+        Api = new NarfuApi("http://groups/", factory,
+                           Substitute.For<ILogger<Schedule.TeachersSchedule>>(), Substitute.For<ILogger<Schedule.StudentsSchedule>>());
     }
 }
