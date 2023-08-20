@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using Goblin.Application.Core;
 using Goblin.DataAccess;
 using Goblin.Domain;
-using Microsoft.EntityFrameworkCore;
-using Serilog;
 
 namespace Goblin.BackgroundJobs.Jobs;
 

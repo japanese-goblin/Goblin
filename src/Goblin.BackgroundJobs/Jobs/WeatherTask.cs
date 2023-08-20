@@ -5,12 +5,8 @@ using System.Threading.Tasks;
 using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
 using Goblin.DataAccess;
-using Goblin.Domain;
-using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Serilog;
-using ILogger = Serilog.ILogger;
 
 namespace Goblin.BackgroundJobs.Jobs;
 
