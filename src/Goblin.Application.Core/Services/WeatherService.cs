@@ -7,7 +7,7 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.OpenWeatherMap.Abstractions;
 using Microsoft.Extensions.Caching.Memory;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core.Services;
 
@@ -16,22 +16,20 @@ public class WeatherService : IWeatherService
     private const string DailyCacheKey = "Weather_Daily";
     private const string NowCacheKey = "Weather_Now";
     private const string NotFoundCacheKey = "Weather_NotFound";
+    
+    private static readonly TimeSpan CurrentWeatherExpireTime = TimeSpan.FromMinutes(10);
+    private static readonly TimeSpan DailyWeatherExpireTime = TimeSpan.FromHours(3);
+    private static readonly TimeSpan NotFoundExpireTime = TimeSpan.FromMinutes(15);
+    
     private readonly IMemoryCache _cache;
-    private readonly TimeSpan _currentWeatherExpireTime;
-
-    private readonly TimeSpan _dailyWeatherExpireTime;
-    private readonly ILogger _logger;
-    private readonly TimeSpan _notFoundExpireTime;
+    private readonly ILogger<WeatherService> _logger;
     private readonly IOpenWeatherMapApi _weatherMapApi;
 
-    public WeatherService(IOpenWeatherMapApi weatherMapApi, IMemoryCache cache)
+    public WeatherService(IOpenWeatherMapApi weatherMapApi, IMemoryCache cache, ILogger<WeatherService> logger)
     {
         _weatherMapApi = weatherMapApi;
         _cache = cache;
-        _dailyWeatherExpireTime = TimeSpan.FromHours(3);
-        _notFoundExpireTime = TimeSpan.FromMinutes(15);
-        _currentWeatherExpireTime = TimeSpan.FromMinutes(10);
-        _logger = Log.ForContext<WeatherService>();
+        _logger = logger;
     }
 
     public async Task<IResult> GetCurrentWeather(string city)
@@ -43,7 +41,7 @@ public class WeatherService : IWeatherService
             {
                 var weather = await _weatherMapApi.GetCurrentWeather(city);
                 result = weather.ToString();
-                _cache.Set(key, result, _currentWeatherExpireTime);
+                _cache.Set(key, result, CurrentWeatherExpireTime);
             }
 
             return new SuccessfulResult
@@ -58,12 +56,12 @@ public class WeatherService : IWeatherService
                 return new FailedResult($"Город \"{city}\" не найден");
             }
 
-            _logger.Error(ex, "Ошибка при получении погоды на текущий момент");
+            _logger.LogError(ex, "Ошибка при получении погоды на текущий момент");
             return new FailedResult(DefaultErrors.WeatherSiteIsUnavailable);
         }
         catch(Exception ex)
         {
-            _logger.Fatal(ex, "Ошибка при получении погоды на текущий момент");
+            _logger.LogError(ex, "Ошибка при получении погоды на текущий момент");
             return new FailedResult(DefaultErrors.WeatherUnexpectedError);
         }
     }
@@ -93,7 +91,7 @@ public class WeatherService : IWeatherService
 
                 result = $"Погода в городе {city} на {formattedDate}:\n{weather}";
 
-                _cache.Set(key, result, _dailyWeatherExpireTime);
+                _cache.Set(key, result, DailyWeatherExpireTime);
             }
 
             return new SuccessfulResult
@@ -109,7 +107,7 @@ public class WeatherService : IWeatherService
                 return new FailedResult(result);
             }
 
-            _logger.Error(ex, "Ошибка при получении погоды на текущий момент");
+            _logger.LogError(ex, "Ошибка при получении погоды на текущий момент");
             return new FailedResult(DefaultErrors.WeatherSiteIsUnavailable);
         }
         catch(ArgumentException ex)
@@ -118,7 +116,7 @@ public class WeatherService : IWeatherService
         }
         catch(Exception ex)
         {
-            _logger.Fatal(ex, "Ошибка при получении погоды на день");
+            _logger.LogError(ex, "Ошибка при получении погоды на день");
             return new FailedResult(DefaultErrors.WeatherUnexpectedError);
         }
     }
@@ -128,7 +126,7 @@ public class WeatherService : IWeatherService
         var key = GetNotFoundCacheKey(city);
         var result = $"Город \"{city}\" не найден";
 
-        _cache.Set(key, result, _notFoundExpireTime);
+        _cache.Set(key, result, NotFoundExpireTime);
         return result;
     }
 

@@ -9,6 +9,7 @@ using Goblin.Application.Core.Results.Success;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -46,7 +47,7 @@ public class ExamsCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnSuccessfulResult()
     {
-        var command = new ExamsCommand(GetNarfuApi());
+        var command = new ExamsCommand(GetNarfuApi(), Mock.Of<ILogger<ExamsCommand>>());
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
@@ -58,7 +59,7 @@ public class ExamsCommandTests : TestBase
     public async Task ShouldReturnFailedResult_Because_UserGroupIsZero()
     {
         DefaultUser.SetNarfuGroup(0);
-        var command = new ExamsCommand(GetNarfuApi());
+        var command = new ExamsCommand(GetNarfuApi(), Mock.Of<ILogger<ExamsCommand>>());
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
@@ -69,7 +70,7 @@ public class ExamsCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_SiteIsUnavailable()
     {
-        var command = new ExamsCommand(GetNarfuApiWithHttpException());
+        var command = new ExamsCommand(GetNarfuApi(), Mock.Of<ILogger<ExamsCommand>>());
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
@@ -80,7 +81,7 @@ public class ExamsCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_UnknownError()
     {
-        var command = new ExamsCommand(GetNarfuApiWithException());
+        var command = new ExamsCommand(GetNarfuApi(), Mock.Of<ILogger<ExamsCommand>>());
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);

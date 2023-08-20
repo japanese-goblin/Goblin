@@ -10,8 +10,8 @@ using Goblin.Application.Vk.Converters;
 using Goblin.Application.Vk.Options;
 using Goblin.DataAccess;
 using Goblin.Domain;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Serilog;
 using VkNet.Abstractions;
 using VkNet.Enums;
 using VkNet.Enums.SafetyEnums;
@@ -32,12 +32,9 @@ public class VkCallbackHandler
     private readonly IVkApi _vkApi;
     private readonly ISender _sender;
 
-    public VkCallbackHandler(CommandsService commandsService,
-                             BotDbContext db,
-                             IVkApi vkApi,
-                             IEnumerable<ISender> senders,
-                             IOptions<VkOptions> options,
-                             IMapper mapper)
+    public VkCallbackHandler(CommandsService commandsService, BotDbContext db, IVkApi vkApi,
+                             IEnumerable<ISender> senders, IOptions<VkOptions> options,
+                             IMapper mapper, ILogger<VkCallbackHandler> logger)
     {
         _commandsService = commandsService;
         _db = db;
@@ -45,18 +42,18 @@ public class VkCallbackHandler
         _sender = senders.First(x => x.ConsumerType == ConsumerType.Vkontakte);
         _mapper = mapper;
         _options = options.Value;
-        _logger = Log.ForContext<VkCallbackHandler>();
+        _logger = logger;
     }
 
     public async Task Handle(GroupUpdate upd)
     {
         if(upd.Secret != _options.SecretKey)
         {
-            _logger.Warning("Пришло событие с неправильным секретным ключом ({SecretKey})", upd.Secret);
+            _logger.LogWarning("Пришло событие с неправильным секретным ключом ({SecretKey})", upd.Secret);
             return;
         }
 
-        _logger.Debug("Обработка события с типом {UpdateType}", upd.Type);
+        _logger.LogDebug("Обработка события с типом {UpdateType}", upd.Type);
 
         if(upd.Type == GroupUpdateType.MessageNew)
         {
@@ -86,11 +83,11 @@ public class VkCallbackHandler
         }
         else
         {
-            _logger.Fatal("Обработчик для события {UpdateType} не найден", upd.Type);
+            _logger.LogCritical("Обработчик для события {UpdateType} не найден", upd.Type);
             throw new ArgumentOutOfRangeException(nameof(upd.Type), "Отсутствует обработчик события");
         }
 
-        _logger.Information("Обработка события {UpdateType} завершена", upd.Type);
+        _logger.LogInformation("Обработка события {UpdateType} завершена", upd.Type);
 
         void ExtractUserIdFromConversation(Message msg)
         {
@@ -109,9 +106,9 @@ public class VkCallbackHandler
 
     private async Task MessageNew(Message message)
     {
-        _logger.Debug("Обработка сообщения");
+        _logger.LogDebug("Обработка сообщения");
         await _commandsService.ExecuteCommand(message, OnSuccess, OnFailed);
-        _logger.Information("Обработка сообщения завершена");
+        _logger.LogDebug("Обработка сообщения завершена");
 
         async Task OnSuccess(IResult res)
         {
@@ -165,7 +162,7 @@ public class VkCallbackHandler
                                          "Если тебе что-то не понравилось или ты не разобрался с ботом, то всегда можешь написать " +
                                          "администрации об этом через команду 'админ *сообщение*' (подробнее смотри в справке).";
 
-        _logger.Information("Пользователь id{UserId} покинул группу", leave.UserId);
+        _logger.LogInformation("Пользователь id{UserId} покинул группу", leave.UserId);
         await SendMessageToAdmins(leave.UserId.Value, "отписался :С");
 
         if(leave.IsSelf.HasValue && !leave.IsSelf.Value)
@@ -182,7 +179,7 @@ public class VkCallbackHandler
                                         "Если у тебя возникнут вопросы, то ты всегда можешь связаться с администрацией бота " +
                                         "при помощи команды 'админ *сообщение*' (подробнее смотри в справке)";
 
-        _logger.Information("Пользователь id{UserId} вступил в группу", join.UserId);
+        _logger.LogInformation("Пользователь id{UserId} вступил в группу", join.UserId);
         await SendMessageToAdmins(join.UserId.Value, "подписался!");
 
         if(join.JoinType.HasValue && join.JoinType != GroupJoinType.Join)

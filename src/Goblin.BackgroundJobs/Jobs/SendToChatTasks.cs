@@ -8,8 +8,10 @@ using Goblin.Application.Core.Options;
 using Goblin.DataAccess;
 using Goblin.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Goblin.BackgroundJobs.Jobs;
 
@@ -20,19 +22,18 @@ public class SendToChatTasks
     private readonly IWeatherService _weatherService;
     private readonly IEnumerable<ISender> _senders;
     private readonly MailingOptions _mailingOptions;
-    private readonly ILogger _logger;
+    private readonly ILogger<SendToChatTasks> _logger;
 
     public SendToChatTasks(IScheduleService scheduleService, IWeatherService weatherService,
-                           IEnumerable<ISender> senders,
-                           IOptions<MailingOptions> mailingOptions,
-                           BotDbContext context)
+                           IEnumerable<ISender> senders, IOptions<MailingOptions> mailingOptions,
+                           BotDbContext context, ILogger<SendToChatTasks> logger)
     {
         _scheduleService = scheduleService;
         _weatherService = weatherService;
         _senders = senders;
         _context = context;
         _mailingOptions = mailingOptions.Value;
-        _logger = Log.ForContext<SendToChatTasks>();
+        _logger = logger;
     }
 
     public async Task Execute(long chatId, ConsumerType consumerType, CronType cronType, string city, int group, string text)
@@ -72,7 +73,7 @@ public class SendToChatTasks
 
     private async Task SendWeather(long id, string city, Func<string, Task> send)
     {
-        _logger.Information("Отправка погоды в {0}", id);
+        _logger.LogInformation("Отправка погоды в {0}", id);
         var result = await _weatherService.GetDailyWeather(city, DateTime.Today);
 
         await send(result.Message);
@@ -85,7 +86,7 @@ public class SendToChatTasks
             return;
         }
 
-        _logger.Information("Отправка расписания в {0}", id);
+        _logger.LogInformation("Отправка расписания в {0}", id);
         var result = await _scheduleService.GetSchedule(group, DateTime.Now);
 
         await send(result.Message);

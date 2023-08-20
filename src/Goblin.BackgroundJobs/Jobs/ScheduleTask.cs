@@ -7,29 +7,30 @@ using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Options;
 using Goblin.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Serilog;
 
 namespace Goblin.BackgroundJobs.Jobs;
 
 public class ScheduleTask
 {
     private readonly BotDbContext _db;
-    private readonly ILogger _logger;
     private readonly IScheduleService _scheduleService;
     private readonly IEnumerable<ISender> _senders;
+    private readonly ILogger<ScheduleTask> _logger;
     private readonly MailingOptions _mailingOptions;
 
-    public ScheduleTask(BotDbContext db,
-                        IScheduleService scheduleService,
-                        IEnumerable<ISender> senders,
-                        IOptions<MailingOptions> mailingOptions)
+    private static readonly TimeSpan DelayBetweenSends = TimeSpan.FromSeconds(1.5);
+
+    public ScheduleTask(BotDbContext db, IScheduleService scheduleService,
+                        IEnumerable<ISender> senders, IOptions<MailingOptions> mailingOptions,
+                        ILogger<ScheduleTask> logger)
     {
         _db = db;
         _scheduleService = scheduleService;
         _senders = senders;
+        _logger = logger;
         _mailingOptions = mailingOptions.Value;
-        _logger = Log.ForContext<ScheduleTask>();
     }
 
     public async Task Execute()
@@ -60,10 +61,10 @@ public class ScheduleTask
                     }
                     catch(Exception ex)
                     {
-                        _logger.Error(ex, "Ошибка при отправке ежедневной погоды");
+                        _logger.LogError(ex, "Ошибка при отправке ежедневной погоды");
                     }
 
-                    await Task.Delay(TimeSpan.FromSeconds(1.5));
+                    await Task.Delay(DelayBetweenSends);
                 }
             }
         }

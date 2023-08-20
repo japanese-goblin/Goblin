@@ -8,7 +8,7 @@ using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Entities;
 using Goblin.Narfu;
 using Goblin.Narfu.Abstractions;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core.Commands.Merged;
 
@@ -20,10 +20,12 @@ public class ExamsCommand : IKeyboardCommand, ITextCommand
     public string[] Aliases => new[] { "экзамены", "экзы" };
 
     private readonly INarfuApi _api;
+    private readonly ILogger<ExamsCommand> _logger;
 
-    public ExamsCommand(INarfuApi api)
+    public ExamsCommand(INarfuApi api, ILogger<ExamsCommand> logger)
     {
         _api = api;
+        _logger = logger;
     }
 
     public async Task<IResult> Execute(Message msg, BotUser user)
@@ -52,7 +54,7 @@ public class ExamsCommand : IKeyboardCommand, ITextCommand
         }
         catch(Exception ex)
         {
-            Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении расписания на день");
+            _logger.LogError(ex, "Ошибка при получении расписания на день");
             return new FailedResult(DefaultErrors.NarfuUnexpectedError);
         }
     }

@@ -8,6 +8,7 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -52,7 +53,7 @@ public class FindTeacherCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_FoundedALotOfTeachers()
     {
-        var command = new FindTeacherCommand(GetNarfuApi(10));
+        var command = new FindTeacherCommand(GetNarfuApi(10), Mock.Of<ILogger<FindTeacherCommand>>());
         var text = $"{command.Aliases[0]} Петров Пётр Петрович";
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
@@ -66,7 +67,7 @@ public class FindTeacherCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_ParameterIsEmpty()
     {
-        var command = new FindTeacherCommand(GetNarfuApi());
+        var command = new FindTeacherCommand(GetNarfuApi(), Mock.Of<ILogger<FindTeacherCommand>>());
         var text = $"{command.Aliases[0]} ";
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
@@ -80,7 +81,7 @@ public class FindTeacherCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_SiteIsUnavailable()
     {
-        var command = new FindTeacherCommand(GetNarfuApiWithHttpException());
+        var command = new FindTeacherCommand(GetNarfuApiWithHttpException(), Mock.Of<ILogger<FindTeacherCommand>>());
         var text = $"{command.Aliases[0]} Петров Пётр Петрович";
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
@@ -94,7 +95,7 @@ public class FindTeacherCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_TeachersNotFound()
     {
-        var command = new FindTeacherCommand(GetNarfuApi(0));
+        var command = new FindTeacherCommand(GetNarfuApi(0), Mock.Of<ILogger<FindTeacherCommand>>());
         var text = $"{command.Aliases[0]} Петров Пётр Петрович";
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
@@ -108,7 +109,7 @@ public class FindTeacherCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_UnknownError()
     {
-        var command = new FindTeacherCommand(GetNarfuApiWithException());
+        var command = new FindTeacherCommand(GetNarfuApiWithException(), Mock.Of<ILogger<FindTeacherCommand>>());
         var text = $"{command.Aliases[0]} Петров Пётр Петрович";
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
@@ -122,7 +123,7 @@ public class FindTeacherCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnSuccessfulResult()
     {
-        var command = new FindTeacherCommand(GetNarfuApi());
+        var command = new FindTeacherCommand(GetNarfuApi(), Mock.Of<ILogger<FindTeacherCommand>>());
         var text = $"{command.Aliases[0]} Иванов Иван Иванович";
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 

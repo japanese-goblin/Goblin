@@ -6,6 +6,7 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Narfu;
 using Goblin.Narfu.Abstractions;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace Goblin.Application.Core.Services;
@@ -13,10 +14,12 @@ namespace Goblin.Application.Core.Services;
 public class ScheduleService : IScheduleService
 {
     private readonly INarfuApi _narfuApi;
+    private readonly ILogger<ScheduleService> _logger;
 
-    public ScheduleService(INarfuApi narfuApi)
+    public ScheduleService(INarfuApi narfuApi, ILogger<ScheduleService> logger)
     {
         _narfuApi = narfuApi;
+        _logger = logger;
     }
 
     public async Task<IResult> GetSchedule(int narfuGroup, DateTime date)
@@ -42,7 +45,7 @@ public class ScheduleService : IScheduleService
         }
         catch(Exception ex)
         {
-            Log.ForContext<NarfuApi>().Fatal(ex, "Ошибка при получении расписания на день");
+            _logger.LogError(ex, "Ошибка при получении расписания на день");
             return new FailedResult(DefaultErrors.NarfuUnexpectedError);
         }
     }

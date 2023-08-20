@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Goblin.Narfu.Schedule;
 
@@ -16,17 +16,17 @@ public class TeachersSchedule : ITeacherSchedule
     private readonly HttpClient _client;
     private readonly ILogger _logger;
 
-    public TeachersSchedule(HttpClient client)
+    public TeachersSchedule(HttpClient client, ILogger<TeachersSchedule> logger)
     {
         _client = client;
-        _logger = Log.ForContext<TeachersSchedule>();
+        _logger = logger;
     }
 
     public async Task<IEnumerable<Lesson>> GetSchedule(int teacherId)
     {
-        _logger.Debug("Получение списка пар у преподавателя {TeacherId}", teacherId);
+        _logger.LogDebug("Получение списка пар у преподавателя {TeacherId}", teacherId);
         var response = await _client.GetStreamAsync($"?timetable&lecturer={teacherId}");
-        _logger.Debug("Список получен");
+        _logger.LogDebug("Список получен");
         return HtmlParser.GetAllLessonsFromHtml(response);
     }
 
@@ -40,9 +40,9 @@ public class TeachersSchedule : ITeacherSchedule
 
     public async Task<Teacher[]> FindByName(string name)
     {
-        _logger.Debug("Поиск преподавателя {TeacherName}", name);
+        _logger.LogDebug("Поиск преподавателя {TeacherName}", name);
         var teachers = await _client.GetFromJsonAsync<Teacher[]>($"i/ac.php?term={name}");
-        _logger.Debug("Поиск завершен");
+        _logger.LogDebug("Поиск завершен");
         return teachers;
     }
 }

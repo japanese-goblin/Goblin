@@ -8,7 +8,9 @@ using Goblin.DataAccess;
 using Goblin.Domain;
 using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Goblin.BackgroundJobs.Jobs;
 
@@ -16,15 +18,16 @@ public class WeatherTask
 {
     private readonly BotDbContext _db;
     private readonly IEnumerable<ISender> _senders;
-    private readonly ILogger _logger;
+    private readonly ILogger<WeatherTask> _logger;
     private readonly IWeatherService _weatherService;
 
-    public WeatherTask(IWeatherService weatherService, BotDbContext db, IEnumerable<ISender> senders)
+    public WeatherTask(IWeatherService weatherService, BotDbContext db,
+                       IEnumerable<ISender> senders, ILogger<WeatherTask> logger)
     {
         _weatherService = weatherService;
         _db = db;
         _senders = senders;
-        _logger = Log.ForContext<WeatherTask>();
+        _logger = logger;
     }
 
     public async Task Execute()
@@ -49,7 +52,7 @@ public class WeatherTask
                     }
                     catch(Exception ex)
                     {
-                        _logger.Error(ex, "Ошибка при отправке ежедневной погоды");
+                        _logger.LogError(ex, "Ошибка при отправке ежедневной погоды");
                     }
 
                     await Task.Delay(TimeSpan.FromSeconds(1.5));

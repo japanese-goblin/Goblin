@@ -18,7 +18,6 @@ public class SendToUsersTasks
     {
         _db = db;
         _senders = senders;
-        Log.ForContext<SendToUsersTasks>();
     }
 
     public async Task SendToAll(string text, ICollection<string> attachments, bool isSendKeyboard, ConsumerType type)

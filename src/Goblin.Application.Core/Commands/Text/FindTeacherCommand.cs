@@ -8,7 +8,7 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Domain.Entities;
 using Goblin.Narfu.Abstractions;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core.Commands.Text;
 
@@ -17,10 +17,12 @@ public class FindTeacherCommand : ITextCommand
     public bool IsAdminCommand => false;
     public string[] Aliases => new[] { "препод" };
     private readonly INarfuApi _narfuApi;
+    private readonly ILogger<FindTeacherCommand> _logger;
 
-    public FindTeacherCommand(INarfuApi narfuApi)
+    public FindTeacherCommand(INarfuApi narfuApi, ILogger<FindTeacherCommand> logger)
     {
         _narfuApi = narfuApi;
+        _logger = logger;
     }
 
     public async Task<IResult> Execute(Message msg, BotUser user)
@@ -68,7 +70,7 @@ public class FindTeacherCommand : ITextCommand
         }
         catch(Exception ex)
         {
-            Log.ForContext<FindTeacherCommand>().Fatal(ex, "Ошибка при поиске преподавателя");
+            _logger.LogError(ex, "Ошибка при поиске преподавателя");
             return new FailedResult(DefaultErrors.NarfuUnexpectedError);
         }
     }
