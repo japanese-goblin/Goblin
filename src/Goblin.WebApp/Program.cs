@@ -7,14 +7,13 @@ using Goblin.Application.Telegram;
 using Goblin.Application.Vk;
 using Goblin.DataAccess;
 using Goblin.WebApp;
-using Goblin.WebApp.Filters;
+using Goblin.WebApp.Extensions;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
 
@@ -50,21 +49,7 @@ builder.Services.AddHttpLogging(x =>
 {
     x.LoggingFields = HttpLoggingFields.All;
 });
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(corsName,
-                      policy =>
-                      {
-                          var cors = builder.Configuration.GetSection("CORS").Get<string[]>();
-                          policy.WithOrigins(cors)
-                                .AllowCredentials()
-                                .AllowAnyHeader()
-                                .AllowAnyMethod();
-                          policy.SetIsOriginAllowed(origin => true);
-                      });
-});
 
-builder.Services.AddHostedService<CreateDefaultRolesHostedService>();
 builder.Services.AddDataAccessLayer(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddVkLayer(builder.Configuration);
@@ -84,31 +69,11 @@ builder.Services.AddSwaggerDoc(shortSchemaNames: true);
 builder.Services.AddFastEndpoints();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
        .AddEntityFrameworkStores<IdentityUsersDbContext>();
-builder.Services.AddAuthentication()
-       .AddGitHub("github", options =>
-       {
-           options.ClientId = builder.Configuration["Github:ClientId"];
-           options.ClientSecret = builder.Configuration["Github:ClientSecret"];
-
-           options.Scope.Add("user:email");
-       });
-builder.Services.ConfigureApplicationCookie(o =>
-{
-    o.Events.OnRedirectToLogin = ctx =>
-    {
-        ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
-        return Task.CompletedTask;
-    };
-});
 builder.Services.AddHostedService<CreateDefaultRolesHostedService>();
-builder.Services.AddResponseCompression(options =>
-{
-    options.EnableForHttps = true;
-});
 
 var app = builder.Build();
-MigrateDatabase<BotDbContext>(app);
-MigrateDatabase<IdentityUsersDbContext>(app);
+app.MigrateDatabase<BotDbContext>();
+app.MigrateDatabase<IdentityUsersDbContext>();
 app.UseExceptionHandler(exceptionHandlerApp =>
 {
     exceptionHandlerApp.Run(async context =>
@@ -136,17 +101,6 @@ app.UseExceptionHandler(exceptionHandlerApp =>
         await context.Response.WriteAsJsonAsync(problemDetails);
     });
 });
-app.UseResponseCompression();
-app.UseCors(corsName);
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseHangfireDashboard("/Admin/HangFire", new DashboardOptions
-{
-    Authorization = new[] { new AuthFilter() },
-    AppPath = "/",
-    StatsPollingInterval = 10000,
-    DisplayStorageConnectionString = false
-});
 app.UseFastEndpoints(c =>
 {
     c.RoutingOptions = ro => ro.Prefix = "api";
@@ -161,13 +115,6 @@ if(app.Environment.IsDevelopment())
 app.UseHangfireJobs();
 
 app.Run();
-
-void MigrateDatabase<T>(WebApplication application) where T : DbContext
-{
-    using var scope = application.Services.CreateScope();
-    var context = scope.ServiceProvider.GetRequiredService<T>();
-    context.Database.Migrate();
-}
 
 void SetDefaultLocale()
 {
