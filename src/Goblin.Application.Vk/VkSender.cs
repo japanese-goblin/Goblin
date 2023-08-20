@@ -7,7 +7,7 @@ using Goblin.Application.Core;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Vk.Converters;
 using Goblin.Domain;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using VkNet.Abstractions;
 using VkNet.Model;
 using VkNet.Model.Attachments;
@@ -36,10 +36,10 @@ public class VkSender : ISender
     private readonly ILogger _logger;
     private readonly RandomNumberGenerator _randomGenerator;
 
-    public VkSender(IVkApi vkApi)
+    public VkSender(IVkApi vkApi, ILogger<VkSender> logger)
     {
         _vkApi = vkApi;
-        _logger = Log.ForContext<VkSender>();
+        _logger = logger;
         _randomGenerator = RandomNumberGenerator.Create();
     }
 
@@ -79,7 +79,7 @@ public class VkSender : ISender
             }
             catch(Exception e)
             {
-                _logger.Error(e, "Ошибка при отправке сообщения");
+                _logger.LogError(e, "Ошибка при отправке сообщения");
             }
         }
     }

@@ -2,8 +2,9 @@
 
 services:
   postgres:
+    container_name: goblin-postgres
     hostname: postgres
-    image: postgres:14.1
+    image: postgres:15.4
     ports:
       - "51946:5432"
     environment:
@@ -13,11 +14,12 @@ services:
     networks:
       - goblin_network
   goblin:
+    container_name: goblin-web-app
     hostname: goblin
     build:
       context: src/
     ports:
-      - "5177:5177"
+      - "5177:80"
     networks:
       - goblin_network
     env_file:

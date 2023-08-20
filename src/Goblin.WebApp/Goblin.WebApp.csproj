@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>aspnet-Goblin.WebApp-95AE0A73-EA7F-4F39-A40F-E4A2BC756DF4</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,6 +24,15 @@
         <ProjectReference Include="..\Goblin.Application.Vk\Goblin.Application.Vk.csproj" />
         <ProjectReference Include="..\Goblin.BackgroundJobs\Goblin.BackgroundJobs.csproj" />
         <ProjectReference Include="..\Goblin.DataAccess\Goblin.DataAccess.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+      <Content Include="..\Dockerfile">
+        <Link>Dockerfile</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

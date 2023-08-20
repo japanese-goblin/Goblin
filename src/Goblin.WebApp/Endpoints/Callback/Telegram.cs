@@ -4,23 +4,22 @@ using Goblin.Application.Telegram.Options;
 using Hangfire;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Serilog;
 using Telegram.Bot.Types;
-using ILogger = Serilog.ILogger;
 
 namespace Goblin.WebApp.Endpoints.Callback;
 
-public class Telegram : Endpoint<TelegramRequest>
+public class TelegramCallbackEndpoint : Endpoint<TelegramRequest>
 {
     private readonly TelegramCallbackHandler _handler;
     private readonly TelegramOptions _options;
     private readonly ILogger _logger;
 
-    public Telegram(IOptions<TelegramOptions> options, TelegramCallbackHandler handler)
+    public TelegramCallbackEndpoint(IOptions<TelegramOptions> options, TelegramCallbackHandler handler,
+                                    ILogger<TelegramCallbackEndpoint> logger)
     {
         _handler = handler;
         _options = options.Value;
-        _logger = Log.ForContext<Telegram>();
+        _logger = logger;
     }
 
     public override void Configure()
@@ -33,7 +32,7 @@ public class Telegram : Endpoint<TelegramRequest>
     {
         if(!_options.SecretKey.Equals(req.SecretKey))
         {
-            _logger.Warning("Пришло событие с неправильным секретным ключом: {RequestSecretKey}", req.SecretKey);
+            _logger.LogWarning("Пришло событие с неправильным секретным ключом: {RequestSecretKey}", req.SecretKey);
             await SendNotFoundAsync(ct);
             return;
         }

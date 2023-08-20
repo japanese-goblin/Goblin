@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Serilog;
 
 namespace Goblin.WebApp;
 
@@ -12,10 +11,12 @@ public class CreateDefaultRolesHostedService : IHostedService
     };
 
     private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<CreateDefaultRolesHostedService> _logger;
 
-    public CreateDefaultRolesHostedService(IServiceProvider serviceProvider)
+    public CreateDefaultRolesHostedService(IServiceProvider serviceProvider, ILogger<CreateDefaultRolesHostedService> logger)
     {
         _serviceProvider = serviceProvider;
+        _logger = logger;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
@@ -29,7 +30,7 @@ public class CreateDefaultRolesHostedService : IHostedService
                 return;
             }
 
-            Log.ForContext<CreateDefaultRolesHostedService>().Information("Создание {RoleName} роли", role);
+            _logger.LogInformation("Создание {RoleName} роли", role);
             await manager.CreateAsync(new IdentityRole(role));
         }
     }

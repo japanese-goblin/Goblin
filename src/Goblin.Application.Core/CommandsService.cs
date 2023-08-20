@@ -8,8 +8,7 @@ using Goblin.Application.Core.Results.Failed;
 using Goblin.DataAccess;
 using Goblin.Domain;
 using Goblin.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core;
 
@@ -20,14 +19,13 @@ public class CommandsService
     private readonly ILogger _logger;
     private readonly IEnumerable<ITextCommand> _textCommands;
 
-    public CommandsService(IEnumerable<ITextCommand> textCommands,
-                           IEnumerable<IKeyboardCommand> keyboardCommands,
-                           BotDbContext context)
+    public CommandsService(IEnumerable<ITextCommand> textCommands, IEnumerable<IKeyboardCommand> keyboardCommands,
+                           BotDbContext context, ILogger<CommandsService> logger)
     {
         _textCommands = textCommands;
         _keyboardCommands = keyboardCommands;
         _context = context;
-        _logger = Log.ForContext<CommandsService>();
+        _logger = logger;
     }
 
     public async Task ExecuteCommand(Message msg,
@@ -65,7 +63,7 @@ public class CommandsService
 
     private async Task<IResult> ExecuteTextCommand(Message msg, BotUser user)
     {
-        _logger.Debug("Обработка текстовой команды");
+        _logger.LogDebug("Обработка текстовой команды");
         var cmdName = msg.CommandName;
 
         foreach(var command in _textCommands)
@@ -80,9 +78,9 @@ public class CommandsService
                 continue;
             }
 
-            _logger.Debug("Выполнение команды {CommandType}", command.GetType());
+            _logger.LogDebug("Выполнение команды {CommandType}", command.GetType());
             var result = await command.Execute(msg, user);
-            _logger.Debug("Команда вернула {ResultType} результат", result.GetType());
+            _logger.LogDebug("Команда вернула {ResultType} результат", result.GetType());
 
             return result;
         }
@@ -92,7 +90,7 @@ public class CommandsService
 
     private async Task<IResult> ExecuteKeyboardCommand(Message msg, BotUser user)
     {
-        _logger.Debug("Обработка команды с клавиатуры");
+        _logger.LogDebug("Обработка команды с клавиатуры");
         var record = msg.ParsedPayload.First();
         foreach(var command in _keyboardCommands)
         {
@@ -101,7 +99,7 @@ public class CommandsService
                 continue;
             }
 
-            _logger.Debug("Выполнение команды с клавиатуры {CommandType}", command.GetType());
+            _logger.LogDebug("Выполнение команды с клавиатуры {CommandType}", command.GetType());
             return await command.Execute(msg, user);
         }
 

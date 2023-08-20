@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Goblin.OpenWeatherMap.Abstractions;
 using Goblin.OpenWeatherMap.Models.Daily;
 using Goblin.OpenWeatherMap.Models.Responses;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Goblin.OpenWeatherMap;
 
@@ -16,10 +16,9 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
     private readonly string _token;
     private readonly HttpClient _client;
 
-    public OpenWeatherMapApi(string token, IHttpClientFactory factory)
+    public OpenWeatherMapApi(string token, IHttpClientFactory factory, ILogger<OpenWeatherMapApi> logger)
     {
-        _logger = Log.ForContext<OpenWeatherMapApi>();
-        _logger.Debug("Инициализация {Class}", nameof(OpenWeatherMapApi));
+        _logger = logger;
         
         if(string.IsNullOrWhiteSpace(token))
         {
@@ -35,9 +34,9 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
     /// <inheritdoc />
     public async Task<CurrentWeatherResponse> GetCurrentWeather(string city)
     {
-        _logger.Debug("Получение погоды на текущий момент в городе {City}", city);
+        _logger.LogDebug("Получение погоды на текущий момент в городе {City}", city);
         var response = await _client.GetFromJsonAsync<CurrentWeatherResponse>(GetWithDefaultQueryParams($"weather?q={city}"));
-        _logger.Debug("Погода получена");
+        _logger.LogDebug("Погода получена");
 
         return response;
     }
@@ -45,7 +44,7 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
     /// <inheritdoc />
     public async Task<DailyWeatherListItem> GetDailyWeatherAt(string city, DateTime date)
     {
-        _logger.Debug("Получение погоды на день в городе {City} на дату {WeatherDate:dd.MM.yyyy}", city, date);
+        _logger.LogDebug("Получение погоды на день в городе {City} на дату {WeatherDate:dd.MM.yyyy}", city, date);
         var response = await _client.GetFromJsonAsync<DailyWeatherResponse>(GetWithDefaultQueryParams($"forecast/daily?q={city}&cnt=4"));
 
         // разница между указанной и полученной меньше одного дня
@@ -60,7 +59,7 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
             throw new ArgumentException($"Погода на {date:dd.MM.yyyy} в городе {city} не найдена.");
         }
 
-        _logger.Debug("Погода получена");
+        _logger.LogDebug("Погода получена");
 
         return weather;
     }
@@ -68,7 +67,7 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
     /// <inheritdoc />
     public async Task<bool> IsCityExists(string city)
     {
-        _logger.Debug("Проверка на существование города {City}", city);
+        _logger.LogDebug("Проверка на существование города {City}", city);
         var response = await _client.SendAsync(new HttpRequestMessage(HttpMethod.Head, GetWithDefaultQueryParams($"weather/?q={city}")));
         return response.IsSuccessStatusCode;
     }

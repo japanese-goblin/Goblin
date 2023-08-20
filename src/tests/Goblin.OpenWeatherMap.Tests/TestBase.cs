@@ -2,6 +2,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mime;
+using Microsoft.Extensions.Logging;
 using Moq;
 using RichardSzalay.MockHttp;
 
@@ -14,8 +15,8 @@ public class TestBase
     protected const string CorrectCity = "Moscow";
     protected const string IncorrectCity = "City17";
 
-    protected string CurrentWeatherPath => Path.Combine(DefaultPath, "current_weather.json");
-    protected string DailyWeatherPath => Path.Combine(DefaultPath, "daily_weather.json");
+    private static string CurrentWeatherPath => Path.Combine(DefaultPath, "current_weather.json");
+    private static string DailyWeatherPath => Path.Combine(DefaultPath, "daily_weather.json");
 
     protected OpenWeatherMap.OpenWeatherMapApi Api { get; init; }
 
@@ -48,6 +49,6 @@ public class TestBase
         factory.Setup(x => x.CreateClient(It.IsAny<string>()))
                .Returns(mockHttp.ToHttpClient());
 
-        Api = new OpenWeatherMap.OpenWeatherMapApi("test-token", factory.Object);
+        Api = new OpenWeatherMap.OpenWeatherMapApi("test-token", factory.Object, Mock.Of<ILogger<OpenWeatherMap.OpenWeatherMapApi>>());
     }
 }

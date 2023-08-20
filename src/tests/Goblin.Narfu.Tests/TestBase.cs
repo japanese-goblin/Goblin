@@ -1,13 +1,10 @@
 using System;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Net.Mime;
-using System.Threading;
-using System.Threading.Tasks;
 using Goblin.Narfu.Abstractions;
+using Microsoft.Extensions.Logging;
 using Moq;
-using Moq.Protected;
 using RichardSzalay.MockHttp;
 
 namespace Goblin.Narfu.Tests;
@@ -62,7 +59,8 @@ public class TestBase
         var factory = new Mock<IHttpClientFactory>();
         factory.Setup(p => p.CreateClient(It.IsAny<string>()))
                .Returns(mockHttp.ToHttpClient());
-        
-        Api = new NarfuApi("http://groups/", factory.Object);
+
+        Api = new NarfuApi("http://groups/", factory.Object,
+                           Mock.Of<ILogger<Schedule.TeachersSchedule>>(), Mock.Of<ILogger<Schedule.StudentsSchedule>>());
     }
 }

@@ -8,6 +8,7 @@ using Goblin.Application.Core.Services;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -29,7 +30,7 @@ public class ScheduleServiceTests : TestBase
     [Fact]
     public async Task ShouldReturnSuccessfulResult()
     {
-        var service = new ScheduleService(GetNarfuApi());
+        var service = new ScheduleService(GetNarfuApi(), Mock.Of<ILogger<ScheduleService>>());
 
         var result = await service.GetSchedule(DefaultUser.NarfuGroup, DateTime.Today);
 
@@ -42,7 +43,7 @@ public class ScheduleServiceTests : TestBase
     public async Task ShouldReturnFailedResult_Because_UserGroupIsZero()
     {
         DefaultUser.SetNarfuGroup(0);
-        var service = new ScheduleService(GetNarfuApi(false));
+        var service = new ScheduleService(GetNarfuApi(false), Mock.Of<ILogger<ScheduleService>>());
 
         var result = await service.GetSchedule(DefaultUser.NarfuGroup, DateTime.Today);
 

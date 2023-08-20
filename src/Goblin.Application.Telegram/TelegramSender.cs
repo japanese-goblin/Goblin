@@ -6,7 +6,7 @@ using Goblin.Application.Core;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Telegram.Converters;
 using Goblin.Domain;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using Telegram.Bot;
 
 namespace Goblin.Application.Telegram;
@@ -19,10 +19,10 @@ public class TelegramSender : ISender
     private readonly TelegramBotClient _botClient;
     private readonly ILogger _logger;
 
-    public TelegramSender(TelegramBotClient botClient)
+    public TelegramSender(TelegramBotClient botClient, ILogger<TelegramSender> logger)
     {
         _botClient = botClient;
-        _logger = Log.ForContext<TelegramSender>();
+        _logger = logger;
     }
 
     public Task Send(long chatId, string message, CoreKeyboard keyboard = null, IEnumerable<string> attachments = null)
@@ -46,7 +46,7 @@ public class TelegramSender : ISender
                 }
                 catch(Exception e)
                 {
-                    _logger.Error(e, "Ошибка при отправке сообщения {UserId}", id);
+                    _logger.LogError(e, "Ошибка при отправке сообщения {UserId}", id);
                 }
             }
 

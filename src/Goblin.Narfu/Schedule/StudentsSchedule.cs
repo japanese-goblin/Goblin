@@ -8,7 +8,7 @@ using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.ICalParser;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Goblin.Narfu.Schedule;
 
@@ -18,13 +18,13 @@ public class StudentsSchedule : IStudentsSchedule
     private Group[] Groups { get; }
     private readonly ILogger _logger;
 
-    public StudentsSchedule(string groupsLink, HttpClient client)
+    public StudentsSchedule(string groupsLink, HttpClient client, ILogger<StudentsSchedule> logger)
     {
         _client = client;
         Groups = _client.GetFromJsonAsync<Group[]>(groupsLink)
                         .GetAwaiter()
                         .GetResult();
-        _logger = Log.ForContext<StudentsSchedule>();
+        _logger = logger;
     }
 
     public async Task<IEnumerable<Lesson>> GetSchedule(int realGroupId, DateTime? date = default)
@@ -32,17 +32,17 @@ public class StudentsSchedule : IStudentsSchedule
         try
         {
             date ??= DateTime.Today;
-            _logger.Debug("Получение расписания для группы {GroupId}", realGroupId);
+            _logger.LogDebug("Получение расписания для группы {GroupId}", realGroupId);
             var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
             var response = await _client.GetStringAsync($"/?icalendar&oid={siteGroupId}&cod={realGroupId}&from={date.Value:dd.MM.yyyy}");
-            _logger.Debug("Расписание получено");
+            _logger.LogDebug("Расписание получено");
             return GetCalendarLessons(response).ToList();
         }
         catch(HttpRequestException)
         {
             var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
             var response = await _client.GetStreamAsync($"/?timetable&group={siteGroupId}");
-            _logger.Debug("Расписание получено");
+            _logger.LogDebug("Расписание получено");
             var allLessonsFromHtml = HtmlParser.GetAllLessonsFromHtml(response);
             return allLessonsFromHtml.Where(x => x.StartTime.Date >= date.Value.Date).ToList();
         }
@@ -50,17 +50,17 @@ public class StudentsSchedule : IStudentsSchedule
 
     public async Task<ExamsViewModel> GetExams(int realGroupId)
     {
-        _logger.Debug("Получение списка экзаменов для группы {GroupId}", realGroupId);
+        _logger.LogDebug("Получение списка экзаменов для группы {GroupId}", realGroupId);
         var schedule = await GetSchedule(realGroupId);
         var exams = schedule.Where(x => x.IsExam);
-        _logger.Debug("Список экзаменов получен");
+        _logger.LogDebug("Список экзаменов получен");
 
         return new ExamsViewModel(exams, DateTime.Today);
     }
 
     public async Task<LessonsViewModel> GetScheduleAtDate(int realGroupId, DateTime date)
     {
-        _logger.Debug("Получение расписания для группы {GroupId} на {ScheduleDate:dd.MM.yyyy}", realGroupId, date);
+        _logger.LogDebug("Получение расписания для группы {GroupId} на {ScheduleDate:dd.MM.yyyy}", realGroupId, date);
         var lessons = await GetSchedule(realGroupId);
         return new LessonsViewModel(lessons.Where(x => x.StartTime.Date == date.Date), date);
     }

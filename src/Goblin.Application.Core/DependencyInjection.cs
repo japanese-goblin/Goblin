@@ -6,10 +6,12 @@ using Goblin.Application.Core.Options;
 using Goblin.Application.Core.Services;
 using Goblin.Narfu;
 using Goblin.Narfu.Abstractions;
+using Goblin.Narfu.Schedule;
 using Goblin.OpenWeatherMap;
 using Goblin.OpenWeatherMap.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core;
 
@@ -27,12 +29,14 @@ public static class DependencyInjection
     {
         services.AddSingleton<IOpenWeatherMapApi, OpenWeatherMapApi>(x =>
         {
-            return new OpenWeatherMapApi(configuration["OWM:AccessToken"], x.GetService<IHttpClientFactory>());
+            return new OpenWeatherMapApi(configuration["OWM:AccessToken"], x.GetService<IHttpClientFactory>(),
+                                         x.GetService<ILogger<OpenWeatherMapApi>>());
         });
         services.AddSingleton<INarfuApi, NarfuApi>(x =>
         {
             var link = configuration["Links:NarfuGroups"];
-            return new NarfuApi(link, x.GetService<IHttpClientFactory>());
+            return new NarfuApi(link, x.GetService<IHttpClientFactory>(), x.GetService<ILogger<TeachersSchedule>>(),
+                                x.GetService<ILogger<StudentsSchedule>>());
         });
 
         services.AddSingleton<IScheduleService, ScheduleService>();
