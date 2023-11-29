@@ -48,10 +48,6 @@ public class SendRemindTasks
         {
             var message = $"Напоминаю:\n{remind.Text}";
             var sender = _senders.First(x => x.ConsumerType == remind.ConsumerType);
-            if(sender is null)
-            {
-                throw new ArgumentNullException($"sender for '{remind.ConsumerType}' not found", nameof(sender));
-            }
 
             await sender.Send(remind.ChatId, message);
 
