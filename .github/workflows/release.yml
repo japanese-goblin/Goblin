@@ -17,7 +17,7 @@ jobs:
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 8.0.0
+          dotnet-version: 8.0
       - name: Restore nuget packages
         run: dotnet restore src/Goblin.sln
       - name: Build
