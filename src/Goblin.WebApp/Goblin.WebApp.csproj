@@ -1,38 +1,35 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>aspnet-Goblin.WebApp-95AE0A73-EA7F-4F39-A40F-E4A2BC756DF4</UserSecretsId>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-        <PackageReference Include="Sentry.Serilog" Version="3.41.3" />
-        <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
+    <PackageReference Include="Sentry.Serilog" Version="3.41.3"/>
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Goblin.Application.Telegram\Goblin.Application.Telegram.csproj" />
-        <ProjectReference Include="..\Goblin.Application.Vk\Goblin.Application.Vk.csproj" />
-        <ProjectReference Include="..\Goblin.BackgroundJobs\Goblin.BackgroundJobs.csproj" />
-        <ProjectReference Include="..\Goblin.DataAccess\Goblin.DataAccess.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Goblin.Application.Telegram\Goblin.Application.Telegram.csproj"/>
+    <ProjectReference Include="..\Goblin.Application.Vk\Goblin.Application.Vk.csproj"/>
+    <ProjectReference Include="..\Goblin.BackgroundJobs\Goblin.BackgroundJobs.csproj"/>
+    <ProjectReference Include="..\Goblin.DataAccess\Goblin.DataAccess.csproj"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-      <Content Include="..\Dockerfile">
-        <Link>Dockerfile</Link>
-      </Content>
-    </ItemGroup>
-
-
+  <ItemGroup>
+    <Content Include="..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
+    <Content Include="..\Dockerfile">
+      <Link>Dockerfile</Link>
+    </Content>
+  </ItemGroup>
 
 
 </Project>
