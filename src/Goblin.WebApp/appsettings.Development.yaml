@@ -1,0 +1,13 @@
+Serilog:
+  MinimumLevel:
+    Default: 'Debug'
+    Override:
+      System.Net.Http.HttpClient: 'Information'
+      Microsoft.EntityFrameworkCore.Database.Command: 'Information'
+
+Application:
+  EnableSwagger: true
+
+ConnectionStrings: 
+  DefaultConnection: "Host=localhost;Port=51946;Database=goblin;User ID=postgres;Password=postgres;Pooling=true;"
+

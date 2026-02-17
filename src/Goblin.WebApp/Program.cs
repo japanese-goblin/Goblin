@@ -14,10 +14,8 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi;
 using Newtonsoft.Json;
 using Serilog;
-using Serilog.Events;
 using Telegram.Bot.Types;
 using VkNet.Enums.StringEnums;
 using VkNet.Model;
@@ -29,29 +27,17 @@ if(builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddUserSecrets<Program>();
 }
-builder.Configuration
-       .AddJsonFile("appsettings.Secrets.json", true)
+
+builder.Configuration.AddYamlFile("appsettings.yaml", false)
+       .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", true)
+       .AddYamlFile("appsettings.secrets.yaml", true)
        .AddEnvironmentVariables();
 
-builder.Host.ConfigureLogging(config =>
-       {
-           config.ClearProviders();
-       })
-       .UseSerilog((hostingContext, loggerConfiguration) =>
-       {
-           loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration);
-           if(!hostingContext.HostingEnvironment.IsDevelopment())
-           {
-               loggerConfiguration
-                       .WriteTo.Sentry(o =>
-                       {
-                           o.MinimumBreadcrumbLevel = LogEventLevel.Information;
-                           o.MinimumEventLevel = LogEventLevel.Warning;
-                           o.Dsn = hostingContext.Configuration["Sentry:Dsn"];
-                           o.Environment = hostingContext.HostingEnvironment.EnvironmentName;
-                       });
-           }
-       });
+builder.Services.AddSerilog(p =>
+{
+    p.ReadFrom.Configuration(builder.Configuration);
+});
+
 builder.Services.AddHttpLogging(x =>
 {
     x.LoggingFields = HttpLoggingFields.All;

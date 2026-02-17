@@ -1,0 +1,40 @@
+AllowedHosts: '*'
+
+Serilog:
+  Enrich: [ 'FromLogContext' ]
+  MinimumLevel:
+    Default: 'Warning'
+    Override:
+      Microsoft.AspNetCore: 'Warning'
+      Microsoft.EntityFrameworkCore: 'Warning'
+      System.Net.Http.HttpClient: 'Warning'
+  WriteTo:
+    - Name: 'Console'
+      Args:
+        OutputTemplate: '[{Timestamp:HH:mm:ss}] [{Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}'
+
+Application:
+  EnableSwagger: false
+
+Telegram:
+  AccessToken:
+  SecretKey:
+
+Vk:
+  AccessToken:
+  SecretKey:
+  ConfirmationCode:
+
+OWM:
+  AccessToken:
+
+Mailing:
+  IsVacations: false
+  Schedule:
+    Hour: 6
+    Minute: 5
+    IsEnabled: true
+  Weather:
+    Hour: 6
+    Minute: 30
+    IsEnabled: true
