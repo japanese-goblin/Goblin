@@ -34,7 +34,8 @@ public static class DependencyInjection
         });
         services.AddSingleton<INarfuApi, NarfuApi>(x =>
         {
-            return new NarfuApi(x.GetService<IHttpClientFactory>(), x.GetService<ILogger<TeachersSchedule>>(),
+            var link = configuration["Links:NarfuGroups"];
+            return new NarfuApi(link, x.GetService<IHttpClientFactory>(), x.GetService<ILogger<TeachersSchedule>>(),
                                 x.GetService<ILogger<StudentsSchedule>>());
         });
 

@@ -18,11 +18,12 @@ public class StudentsSchedule : IStudentsSchedule
     private Group[] Groups { get; }
     private readonly ILogger _logger;
 
-    public StudentsSchedule(HttpClient client, ILogger<StudentsSchedule> logger)
+    public StudentsSchedule(string groupsLink, HttpClient client, ILogger<StudentsSchedule> logger)
     {
         _client = client;
-        // TODO: get from cache
-        Groups = [];
+        Groups = _client.GetFromJsonAsync<Group[]>(groupsLink)
+                        .GetAwaiter()
+                        .GetResult();
         _logger = logger;
     }
 

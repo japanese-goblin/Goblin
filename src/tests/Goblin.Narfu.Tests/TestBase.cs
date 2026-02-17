@@ -58,7 +58,7 @@ public class TestBase
         factory.CreateClient(Arg.Any<string>())
                .Returns(Substitute.For<HttpClient>());
 
-        Api = new NarfuApi(factory,
+        Api = new NarfuApi("http://groups/", factory,
                            Substitute.For<ILogger<Schedule.TeachersSchedule>>(), Substitute.For<ILogger<Schedule.StudentsSchedule>>());
     }
 }
