@@ -100,8 +100,11 @@ app.UseExceptionHandler(exceptionHandlerApp =>
     });
 });
 app.MapPost("/api/callback/vk",
-            ([FromBody] GroupUpdate requestModel, [FromServices] VkCallbackHandler handler, [FromServices] IOptions<VkOptions> vkOptions) =>
+            async (HttpRequest httpRequest, [FromServices] VkCallbackHandler handler, [FromServices] IOptions<VkOptions> vkOptions) =>
             {
+                var rawRequestBody = await new StreamReader(httpRequest.Body).ReadToEndAsync();
+                var requestModel = JsonConvert.DeserializeObject<GroupUpdate>(rawRequestBody)!;
+
                 if(requestModel.Type.Value == GroupUpdateType.Confirmation)
                 {
                     return Results.Ok(vkOptions.Value.ConfirmationCode);
