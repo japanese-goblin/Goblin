@@ -2,9 +2,7 @@ using System.Globalization;
 using System.Net.Mime;
 using Goblin.Application.Core;
 using Goblin.Application.Telegram;
-using Goblin.Application.Telegram.Options;
 using Goblin.Application.Vk;
-using Goblin.Application.Vk.Options;
 using Goblin.DataAccess;
 using Goblin.WebApp.Extensions;
 using Goblin.WebApp.HostedServices;
@@ -13,20 +11,11 @@ using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Serilog;
-using Telegram.Bot.Types;
-using VkNet.Enums.StringEnums;
-using VkNet.Model;
 
 SetDefaultLocale();
 
 var builder = WebApplication.CreateBuilder(args);
-if(builder.Environment.IsDevelopment())
-{
-    builder.Configuration.AddUserSecrets<Program>();
-}
 
 builder.Configuration.AddYamlFile("appsettings.yaml", false)
        .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", true)
@@ -60,15 +49,7 @@ GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
 builder.Services.AddHostedService<AddHangfireJobsHostedService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
-
-// builder.Services.AddSwaggerGen(c =>
-// {
-//     c.SwaggerDoc("v1", new OpenApiInfo
-//     {
-//         Title = "Japanese Goblin",
-//         Version = "v1"
-//     });
-// });
+builder.Services.AddControllers();
 
 var app = builder.Build();
 app.MigrateDatabase<BotDbContext>();
@@ -99,38 +80,6 @@ app.UseExceptionHandler(exceptionHandlerApp =>
         await context.Response.WriteAsJsonAsync(problemDetails);
     });
 });
-app.MapPost("/api/callback/vk",
-            async (HttpRequest httpRequest, [FromServices] VkCallbackHandler handler, [FromServices] IOptions<VkOptions> vkOptions) =>
-            {
-                var rawRequestBody = await new StreamReader(httpRequest.Body).ReadToEndAsync();
-                var requestModel = JsonConvert.DeserializeObject<GroupUpdate>(rawRequestBody)!;
-
-                if(requestModel.Type.Value == GroupUpdateType.Confirmation)
-                {
-                    return Results.Ok(vkOptions.Value.ConfirmationCode);
-                }
-
-                BackgroundJob.Enqueue(() => handler.Handle(requestModel));
-
-                return Results.Ok("ok");
-            });
-app.MapPost("/api/callback/tg/{SecretKey}", async (string secretKey, HttpRequest httpRequest,
-                                                   [FromServices] IOptions<TelegramOptions> options,
-                                                   [FromServices] TelegramCallbackHandler handler) =>
-{
-    if(!options.Value.SecretKey.Equals(secretKey))
-    {
-        //TODO: logging
-        return Results.NotFound();
-    }
-
-    var rawRequestBody = await new StreamReader(httpRequest.Body).ReadToEndAsync();
-    var request = JsonConvert.DeserializeObject<Update>(rawRequestBody)!;
-
-    BackgroundJob.Enqueue(() => handler.Handle(request));
-
-    return Results.Ok();
-});
 
 if(app.Environment.IsDevelopment())
 {
@@ -140,6 +89,8 @@ if(app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/openapi/v1.json", $"{builder.Environment.ApplicationName} v1");
     });
 }
+
+app.MapControllers();
 
 app.Run();
 
