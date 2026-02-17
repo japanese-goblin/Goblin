@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0-bookworm-slim  AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
@@ -25,7 +25,14 @@ FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Goblin.WebApp.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS final
+# Добавляем нужные библиотеки
+RUN apk add --no-cache \
+    icu-libs \
+    krb5-libs \
+    libgdiplus \
+    zlib \
+    && rm -rf /var/cache/apk/*
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Goblin.WebApp.dll"]
