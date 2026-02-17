@@ -15,6 +15,9 @@ Serilog:
 
 Application:
   EnableSwagger: false
+  
+Links:
+  NarfuGroups: "https://gist.githubusercontent.com/equuskk/4ed7dd35907405dcab7519c663941e56/raw/89a35585a72b8a980ef87ccaa43bd6d2a9f263d3/narfu-groups.json"
 
 Telegram:
   AccessToken:
