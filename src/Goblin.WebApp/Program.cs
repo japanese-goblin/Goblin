@@ -29,6 +29,9 @@ if(builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddUserSecrets<Program>();
 }
+builder.Configuration
+       .AddJsonFile("appsettings.Secrets.json", true)
+       .AddEnvironmentVariables();
 
 builder.Host.ConfigureLogging(config =>
        {

@@ -102,3 +102,6 @@ testem.log
 Thumbs.db
 
 /.vscode
+
+
+appsettings.Secrets.*
