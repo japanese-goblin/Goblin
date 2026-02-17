@@ -1,4 +1,5 @@
 ﻿using Goblin.Application.Core;
+using Goblin.Application.Telegram.HostedServices;
 using Goblin.Application.Telegram.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -22,8 +23,11 @@ public static class DependencyInjection
             var optionsAccessor = sp.GetRequiredService<IOptions<TelegramOptions>>();
             return new TelegramBotClient(optionsAccessor.Value.AccessToken);
         });
-        services.AddScoped<TelegramCallbackHandler>();
 
+        services.AddScoped<TelegramCallbackHandler>();
         services.AddScoped<ISender, TelegramSender>();
+
+        services.AddSingleton<TelegramEventsDispatcher>();
+        services.AddHostedService<TelegramChannelReaderHostedService>();
     }
 }

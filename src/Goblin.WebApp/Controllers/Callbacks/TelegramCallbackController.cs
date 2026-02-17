@@ -1,6 +1,5 @@
 ﻿using Goblin.Application.Telegram;
 using Goblin.Application.Telegram.Options;
-using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -10,7 +9,7 @@ namespace Goblin.WebApp.Controllers.Callbacks;
 
 [ApiController]
 [Route("/api/callback/tg")]
-public class TelegramCallbackController(IOptions<TelegramOptions> optionsAccessor, TelegramCallbackHandler handler) : ControllerBase
+public class TelegramCallbackController(IOptions<TelegramOptions> optionsAccessor, TelegramEventsDispatcher dispatcher) : ControllerBase
 {
     private readonly TelegramOptions _options = optionsAccessor.Value;
 
@@ -26,8 +25,7 @@ public class TelegramCallbackController(IOptions<TelegramOptions> optionsAccesso
         var rawRequestBody = await new StreamReader(Request.Body).ReadToEndAsync();
         var request = JsonConvert.DeserializeObject<Update>(rawRequestBody)!;
 
-        BackgroundJob.Enqueue(() => handler.Handle(request));
-
+        await dispatcher.Publish(request);
         return Ok();
     }
 }
