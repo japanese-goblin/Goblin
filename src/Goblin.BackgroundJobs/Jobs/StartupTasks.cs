@@ -8,8 +8,8 @@ using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using VkNet.Abstractions;
-using VkNet.Enums.SafetyEnums;
-using VkNet.Model.RequestParams;
+using VkNet.Enums.StringEnums;
+using VkNet.Model;
 
 namespace Goblin.BackgroundJobs.Jobs;
 

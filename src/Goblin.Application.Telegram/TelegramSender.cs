@@ -29,7 +29,7 @@ public class TelegramSender : ISender
     {
         message = TrimText(message);
         var replyMarkup = KeyboardConverter.FromCoreToTg(keyboard);
-        return _botClient.SendTextMessageAsync(chatId, message, replyMarkup: replyMarkup);
+        return _botClient.SendMessage(chatId, message, replyMarkup: replyMarkup);
     }
 
     public async Task SendToMany(IEnumerable<long> chatIds, string message, CoreKeyboard keyboard = null,

@@ -69,12 +69,12 @@ public class TelegramCallbackHandler
 
         async Task OnAnyResult(IResult res)
         {
-            await _botClient.AnswerCallbackQueryAsync(query.Id);
-            await _botClient.EditMessageTextAsync(new ChatId(query.From.Id), query.Message.MessageId, res.Message);
+            await _botClient.AnswerCallbackQuery(query.Id);
+            await _botClient.EditMessageText(new ChatId(query.From.Id), query.Message.MessageId, res.Message);
             if(res.Keyboard.IsInline)
             {
-                await _botClient.EditMessageReplyMarkupAsync(new ChatId(query.From.Id), query.Message.MessageId,
-                                                             KeyboardConverter.FromCoreToTg(res.Keyboard) as InlineKeyboardMarkup);
+                await _botClient.EditMessageReplyMarkup(new ChatId(query.From.Id), query.Message.MessageId,
+                                                        KeyboardConverter.FromCoreToTg(res.Keyboard) as InlineKeyboardMarkup);
             }
         }
     }

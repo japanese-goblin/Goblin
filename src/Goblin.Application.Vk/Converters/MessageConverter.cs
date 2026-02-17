@@ -1,6 +1,6 @@
-﻿using Goblin.Application.Core.Models;
-using Goblin.Domain;
-using VkNet.Model.GroupUpdate;
+﻿using Goblin.Domain;
+using VkNet.Model;
+using Message = Goblin.Application.Core.Models.Message;
 
 namespace Goblin.Application.Vk.Converters;
 

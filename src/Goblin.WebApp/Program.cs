@@ -6,7 +6,6 @@ using Goblin.Application.Telegram.Options;
 using Goblin.Application.Vk;
 using Goblin.Application.Vk.Options;
 using Goblin.DataAccess;
-using Goblin.WebApp;
 using Goblin.WebApp.Extensions;
 using Goblin.WebApp.HostedServices;
 using Hangfire;
@@ -15,15 +14,13 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Serilog;
 using Serilog.Events;
 using Telegram.Bot.Types;
-using VkNet.Enums.SafetyEnums;
-using VkNet.Model.GroupUpdate;
-using VkNet.Utils;
+using VkNet.Enums.StringEnums;
+using VkNet.Model;
 
 SetDefaultLocale();
 
@@ -73,14 +70,16 @@ builder.Services.AddHangfireServer(x =>
 GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
 builder.Services.AddHostedService<AddHangfireJobsHostedService>();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Japanese Goblin",
-        Version = "v1"
-    });
-});
+builder.Services.AddOpenApi();
+
+// builder.Services.AddSwaggerGen(c =>
+// {
+//     c.SwaggerDoc("v1", new OpenApiInfo
+//     {
+//         Title = "Japanese Goblin",
+//         Version = "v1"
+//     });
+// });
 
 var app = builder.Build();
 app.MigrateDatabase<BotDbContext>();
@@ -112,17 +111,14 @@ app.UseExceptionHandler(exceptionHandlerApp =>
     });
 });
 app.MapPost("/api/callback/vk",
-            async (HttpRequest httpRequest, [FromServices] VkCallbackHandler handler, [FromServices] IOptions<VkOptions> vkOptions) =>
+            ([FromBody] GroupUpdate requestModel, [FromServices] VkCallbackHandler handler, [FromServices] IOptions<VkOptions> vkOptions) =>
             {
-                var rawRequestBody = await new StreamReader(httpRequest.Body).ReadToEndAsync();
-                var vkResponse = new VkResponse(JToken.Parse(rawRequestBody));
-                var response = GroupUpdate.FromJson(vkResponse);
-                if(response.Type == GroupUpdateType.Confirmation)
+                if(requestModel.Type.Value == GroupUpdateType.Confirmation)
                 {
                     return Results.Ok(vkOptions.Value.ConfirmationCode);
                 }
 
-                BackgroundJob.Enqueue(() => handler.Handle(response));
+                BackgroundJob.Enqueue(() => handler.Handle(requestModel));
 
                 return Results.Ok("ok");
             });
@@ -146,9 +142,11 @@ app.MapPost("/api/callback/tg/{SecretKey}", async (string secretKey, HttpRequest
 
 if(app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json",
-                                            $"{builder.Environment.ApplicationName} v1"));
+    app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", $"{builder.Environment.ApplicationName} v1");
+    });
 }
 
 app.Run();

@@ -6,7 +6,7 @@ namespace Goblin.Application.Telegram.Converters;
 
 public static class KeyboardConverter
 {
-    public static IReplyMarkup FromCoreToTg(CoreKeyboard coreKeyboard)
+    public static ReplyMarkup FromCoreToTg(CoreKeyboard coreKeyboard)
     {
         if(coreKeyboard is null)
         {
@@ -17,7 +17,7 @@ public static class KeyboardConverter
 
         return coreKeyboard.IsInline ? GenerateInlineKeyboard() : GenerateReplyKeyboard();
 
-        IReplyMarkup GenerateReplyKeyboard()
+        ReplyMarkup GenerateReplyKeyboard()
         {
             var tgButtonsList = new List<List<KeyboardButton>>();
             var currentLine = new List<KeyboardButton>();
@@ -42,7 +42,7 @@ public static class KeyboardConverter
             return keyboard;
         }
 
-        IReplyMarkup GenerateInlineKeyboard()
+        InlineKeyboardMarkup GenerateInlineKeyboard()
         {
             var tgButtonsList = new List<List<InlineKeyboardButton>>();
             var currentLine = new List<InlineKeyboardButton>();
