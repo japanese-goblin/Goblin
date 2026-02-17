@@ -13,10 +13,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VkNet.Abstractions;
 using VkNet.Enums;
-using VkNet.Enums.SafetyEnums;
+using VkNet.Enums.StringEnums;
 using VkNet.Model;
-using VkNet.Model.GroupUpdate;
-using VkNet.Model.RequestParams;
 using Message = Goblin.Application.Core.Models.Message;
 
 namespace Goblin.Application.Vk;
@@ -36,6 +34,7 @@ public class VkCallbackHandler
         _commandsService = commandsService;
         _db = db;
         _vkApi = vkApi;
+        // TODO: keyed service
         _sender = senders.First(x => x.ConsumerType == ConsumerType.Vkontakte);
         _options = options.Value;
         _logger = logger;
@@ -43,39 +42,61 @@ public class VkCallbackHandler
 
     public async Task Handle(GroupUpdate upd)
     {
-        if(upd.Secret != _options.SecretKey)
+        if(upd.Secret.Value != _options.SecretKey)
         {
             _logger.LogWarning("Пришло событие с неправильным секретным ключом ({SecretKey})", upd.Secret);
             return;
         }
 
-        _logger.LogDebug("Обработка события с типом {UpdateType}", upd.Type);
+        _logger.LogDebug("Обработка события с типом {UpdateType}", upd.Type.Value);
 
-        if(upd.Type == GroupUpdateType.MessageNew)
+        if(upd.Type.Value == GroupUpdateType.MessageNew)
         {
-            if(upd.MessageNew.Message.Action?.Type == MessageAction.ChatInviteUser)
+            if(upd.Instance is not MessageNew messageNew)
             {
-                await _sender.Send(upd.MessageNew.Message.PeerId.Value,
+                _logger.LogWarning("Не удалось преобразовать обновление {GroupUpdateType}", upd.Type.Value);
+                return;
+            }
+
+            if(messageNew.Message.Action?.Type == MessageAction.ChatInviteUser)
+            {
+                await _sender.Send(messageNew.Message.PeerId.Value,
                                    "Здравствуйте!\n" +
                                    "Подробности по настройке бота для бесед здесь: vk.com/@japanese.goblin-conversations");
                 return;
             }
 
-            var msg = upd.MessageNew.Message.MapToBotMessage();
+            var msg = messageNew.Message.MapToBotMessage();
             ExtractUserIdFromConversation(msg);
             await MessageNew(msg);
         }
-        else if(upd.Type == GroupUpdateType.MessageEvent)
+        else if(upd.Type.Value == GroupUpdateType.MessageEvent)
         {
-            await MessageEvent(upd.MessageEvent);
+            if(upd.Instance is not MessageEvent messageEvent)
+            {
+                _logger.LogWarning("Не удалось преобразовать обновление {GroupUpdateType}", upd.Type.Value);
+                return;
+            }
+
+            await MessageEvent(messageEvent);
         }
-        else if(upd.Type == GroupUpdateType.GroupLeave)
+        else if(upd.Type.Value == GroupUpdateType.GroupLeave)
         {
-            await GroupLeave(upd.GroupLeave);
+            if(upd.Instance is not GroupLeave groupLeaveEvent)
+            {
+                _logger.LogWarning("Не удалось преобразовать обновление {GroupUpdateType}", upd.Type.Value);
+                return;
+            }
+            await GroupLeave(groupLeaveEvent);
         }
-        else if(upd.Type == GroupUpdateType.GroupJoin)
+        else if(upd.Type.Value == GroupUpdateType.GroupJoin)
         {
-            await GroupJoin(upd.GroupJoin);
+            if(upd.Instance is not GroupJoin groupJoinEvent)
+            {
+                _logger.LogWarning("Не удалось преобразовать обновление {GroupUpdateType}", upd.Type.Value);
+                return;
+            }
+            await GroupJoin(groupJoinEvent);
         }
         else
         {
@@ -83,7 +104,7 @@ public class VkCallbackHandler
             throw new ArgumentOutOfRangeException(nameof(upd.Type), "Отсутствует обработчик события");
         }
 
-        _logger.LogInformation("Обработка события {UpdateType} завершена", upd.Type);
+        _logger.LogInformation("Обработка события {UpdateType} завершена", upd.Type.Value);
 
         void ExtractUserIdFromConversation(Message msg)
         {
@@ -121,6 +142,7 @@ public class VkCallbackHandler
     {
         var mappedToMessage = messageEvent.MapToBotMessage();
         await _commandsService.ExecuteCommand(mappedToMessage, OnSuccess, OnFailed);
+
         async Task OnSuccess(IResult res)
         {
             try
@@ -146,13 +168,13 @@ public class VkCallbackHandler
                                                               messageEvent.PeerId.GetValueOrDefault(0),
                                                               new EventData()
                                                               {
-                                                                  Type = MessageEventType.SnowSnackbar,
+                                                                  Type = MessageEventType.ShowSnackbar,
                                                                   Text = res.Message
                                                               });
         }
     }
 
-    public async Task GroupLeave(GroupLeave leave)
+    private async Task GroupLeave(GroupLeave leave)
     {
         const string groupLeaveMessage = "Очень жаль, что ты решил отписаться от группы 😢\n" +
                                          "Если тебе что-то не понравилось или ты не разобрался с ботом, то всегда можешь написать " +
@@ -169,7 +191,7 @@ public class VkCallbackHandler
         await TrySendMessageToUser(leave.UserId.Value, groupLeaveMessage);
     }
 
-    public async Task GroupJoin(GroupJoin join)
+    private async Task GroupJoin(GroupJoin join)
     {
         const string groupJoinMessage = "Спасибо за подписку! ❤\n" +
                                         "Если у тебя возникнут вопросы, то ты всегда можешь связаться с администрацией бота " +

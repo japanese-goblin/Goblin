@@ -1,21 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Goblin.DataAccess\Goblin.DataAccess.csproj" />
-      <ProjectReference Include="..\Goblin.Domain\Goblin.Domain.csproj" />
-      <ProjectReference Include="..\Goblin.Narfu\Goblin.Narfu.csproj" />
-      <ProjectReference Include="..\Goblin.OpenWeatherMap\Goblin.OpenWeatherMap.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Goblin.DataAccess\Goblin.DataAccess.csproj"/>
+    <ProjectReference Include="..\Goblin.Domain\Goblin.Domain.csproj"/>
+    <ProjectReference Include="..\Goblin.Narfu\Goblin.Narfu.csproj"/>
+    <ProjectReference Include="..\Goblin.OpenWeatherMap\Goblin.OpenWeatherMap.csproj"/>
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.0" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.3" />
+  </ItemGroup>
 
 </Project>

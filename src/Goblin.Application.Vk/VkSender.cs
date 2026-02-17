@@ -10,8 +10,6 @@ using Goblin.Domain;
 using Microsoft.Extensions.Logging;
 using VkNet.Abstractions;
 using VkNet.Model;
-using VkNet.Model.Attachments;
-using VkNet.Model.RequestParams;
 
 namespace Goblin.Application.Vk;
 

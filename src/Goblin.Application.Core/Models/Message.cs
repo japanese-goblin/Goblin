@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Goblin.Domain;
-using Newtonsoft.Json;
 
 namespace Goblin.Application.Core.Models;
 
@@ -30,5 +30,5 @@ public class Message
 
     public string CommandName => Text.ToLower().Split(' ').FirstOrDefault();
 
-    public Dictionary<string, string> ParsedPayload => JsonConvert.DeserializeObject<Dictionary<string, string>>(Payload);
+    public Dictionary<string, string> ParsedPayload => JsonSerializer.Deserialize<Dictionary<string, string>>(Payload);
 }

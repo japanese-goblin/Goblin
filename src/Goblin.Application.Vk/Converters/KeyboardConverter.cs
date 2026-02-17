@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Goblin.Application.Core.Models;
-using VkNet.Enums.SafetyEnums;
-using VkNet.Model.Keyboard;
+using VkNet.Enums.StringEnums;
+using VkNet.Model;
 
 namespace Goblin.Application.Vk.Converters;
 

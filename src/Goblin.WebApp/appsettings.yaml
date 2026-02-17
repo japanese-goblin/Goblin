@@ -1,0 +1,43 @@
+AllowedHosts: '*'
+
+Serilog:
+  Enrich: [ 'FromLogContext' ]
+  MinimumLevel:
+    Default: 'Warning'
+    Override:
+      Microsoft.AspNetCore: 'Warning'
+      Microsoft.EntityFrameworkCore: 'Warning'
+      System.Net.Http.HttpClient: 'Warning'
+  WriteTo:
+    - Name: 'Console'
+      Args:
+        OutputTemplate: '[{Timestamp:HH:mm:ss}] [{Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}'
+
+Application:
+  EnableSwagger: false
+  
+Links:
+  NarfuGroups: "https://gist.githubusercontent.com/equuskk/4ed7dd35907405dcab7519c663941e56/raw/89a35585a72b8a980ef87ccaa43bd6d2a9f263d3/narfu-groups.json"
+
+Telegram:
+  AccessToken:
+  SecretKey:
+
+Vk:
+  AccessToken:
+  SecretKey:
+  ConfirmationCode:
+
+OWM:
+  AccessToken:
+
+Mailing:
+  IsVacations: false
+  Schedule:
+    Hour: 6
+    Minute: 5
+    IsEnabled: true
+  Weather:
+    Hour: 6
+    Minute: 30
+    IsEnabled: true

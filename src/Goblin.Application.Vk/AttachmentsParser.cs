@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using VkNet.Model;
-using VkNet.Model.Attachments;
 
 namespace Goblin.Application.Vk;
 

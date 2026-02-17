@@ -9,7 +9,6 @@ using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain;
 using Goblin.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Application.Core.Commands.Text;
 

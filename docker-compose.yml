@@ -1,10 +1,8 @@
-﻿version: '3.9'
-
-services:
+﻿services:
   postgres:
     container_name: goblin-postgres
     hostname: postgres
-    image: postgres:15.4
+    image: postgres:18
     ports:
       - "51946:5432"
     environment:
@@ -13,8 +11,9 @@ services:
       POSTGRES_DB: goblin
     networks:
       - goblin_network
+
   goblin:
-    container_name: goblin-web-app
+    container_name: goblin-server
     hostname: goblin
     build:
       context: src/
