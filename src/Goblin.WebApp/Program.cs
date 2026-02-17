@@ -57,7 +57,7 @@ builder.Services.AddHttpLogging(x =>
 builder.Services.AddDataAccessLayer(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddVkLayer(builder.Configuration);
-builder.Services.AddTelegramLayer(builder.Configuration);
+builder.Services.AddTelegramLayer();
 builder.Services.AddMemoryCache();
 builder.Services.AddHangfire(config =>
 {
