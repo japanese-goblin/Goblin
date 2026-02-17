@@ -34,6 +34,7 @@ public class VkCallbackHandler
         _commandsService = commandsService;
         _db = db;
         _vkApi = vkApi;
+        // TODO: keyed service
         _sender = senders.First(x => x.ConsumerType == ConsumerType.Vkontakte);
         _options = options.Value;
         _logger = logger;
@@ -47,7 +48,7 @@ public class VkCallbackHandler
             return;
         }
 
-        _logger.LogDebug("Обработка события с типом {UpdateType}", upd.Type);
+        _logger.LogDebug("Обработка события с типом {UpdateType}", upd.Type.Value);
 
         if(upd.Type.Value == GroupUpdateType.MessageNew)
         {
@@ -103,7 +104,7 @@ public class VkCallbackHandler
             throw new ArgumentOutOfRangeException(nameof(upd.Type), "Отсутствует обработчик события");
         }
 
-        _logger.LogInformation("Обработка события {UpdateType} завершена", upd.Type);
+        _logger.LogInformation("Обработка события {UpdateType} завершена", upd.Type.Value);
 
         void ExtractUserIdFromConversation(Message msg)
         {
@@ -173,7 +174,7 @@ public class VkCallbackHandler
         }
     }
 
-    public async Task GroupLeave(GroupLeave leave)
+    private async Task GroupLeave(GroupLeave leave)
     {
         const string groupLeaveMessage = "Очень жаль, что ты решил отписаться от группы 😢\n" +
                                          "Если тебе что-то не понравилось или ты не разобрался с ботом, то всегда можешь написать " +
@@ -190,7 +191,7 @@ public class VkCallbackHandler
         await TrySendMessageToUser(leave.UserId.Value, groupLeaveMessage);
     }
 
-    public async Task GroupJoin(GroupJoin join)
+    private async Task GroupJoin(GroupJoin join)
     {
         const string groupJoinMessage = "Спасибо за подписку! ❤\n" +
                                         "Если у тебя возникнут вопросы, то ты всегда можешь связаться с администрацией бота " +

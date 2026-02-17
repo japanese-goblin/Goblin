@@ -1,4 +1,5 @@
 using Goblin.Application.Core;
+using Goblin.Application.Vk.HostedServices;
 using Goblin.Application.Vk.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,7 +33,9 @@ public static class DependencyInjection
         });
 
         services.AddScoped<VkCallbackHandler>();
-
         services.AddScoped<ISender, VkSender>();
+
+        services.AddSingleton<VkEventsDispatcher>();
+        services.AddHostedService<VkChannelReaderHostedService>();
     }
 }

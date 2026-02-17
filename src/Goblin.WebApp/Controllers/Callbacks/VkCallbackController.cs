@@ -11,7 +11,7 @@ namespace Goblin.WebApp.Controllers.Callbacks;
 
 [ApiController]
 [Route("/api/callback/vk")]
-public class VkCallbackController(IOptions<VkOptions> optionsAccessor, VkCallbackHandler handler) : ControllerBase
+public class VkCallbackController(IOptions<VkOptions> optionsAccessor, VkEventsDispatcher vkEventsDispatcher) : ControllerBase
 {
     private readonly VkOptions _options = optionsAccessor.Value;
 
@@ -26,7 +26,7 @@ public class VkCallbackController(IOptions<VkOptions> optionsAccessor, VkCallbac
             return Ok(_options.ConfirmationCode);
         }
 
-        BackgroundJob.Enqueue(() => handler.Handle(requestModel));
+        await vkEventsDispatcher.Publish(requestModel);
 
         return Ok("ok");
     }
