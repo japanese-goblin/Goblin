@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Goblin.DataAccess.Migrations.BotDb
+namespace Goblin.DataAccess.Migrations
 {
     [DbContext(typeof(BotDbContext))]
     partial class BotDbContextModelSnapshot : ModelSnapshot
@@ -17,7 +17,7 @@ namespace Goblin.DataAccess.Migrations.BotDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("ProductVersion", "10.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -63,7 +63,7 @@ namespace Goblin.DataAccess.Migrations.BotDb
 
                     b.HasKey("Id", "ConsumerType");
 
-                    b.ToTable("BotUsers");
+                    b.ToTable("BotUsers", (string)null);
                 });
 
             modelBuilder.Entity("Goblin.Domain.Entities.CronJob", b =>
@@ -109,7 +109,7 @@ namespace Goblin.DataAccess.Migrations.BotDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("CronJobs");
+                    b.ToTable("CronJobs", (string)null);
                 });
 
             modelBuilder.Entity("Goblin.Domain.Entities.Remind", b =>
@@ -138,7 +138,7 @@ namespace Goblin.DataAccess.Migrations.BotDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reminds");
+                    b.ToTable("Reminds", (string)null);
                 });
 
             modelBuilder.Entity("Goblin.Domain.Entities.CronJob", b =>
@@ -165,7 +165,7 @@ namespace Goblin.DataAccess.Migrations.BotDb
 
                             b1.HasKey("CronJobId");
 
-                            b1.ToTable("CronJobs");
+                            b1.ToTable("CronJobs", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CronJobId");

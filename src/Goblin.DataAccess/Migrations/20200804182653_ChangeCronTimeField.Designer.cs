@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Goblin.DataAccess.Migrations.BotDb
+namespace Goblin.DataAccess.Migrations
 {
     [DbContext(typeof(BotDbContext))]
-    [Migration("20200804204806_AddTextToCronJob")]
-    partial class AddTextToCronJob
+    [Migration("20200804182653_ChangeCronTimeField")]
+    partial class ChangeCronTimeField
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,11 +36,6 @@ namespace Goblin.DataAccess.Migrations.BotDb
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
 
-                    b.Property<int>("CronType")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(2);
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -49,12 +44,6 @@ namespace Goblin.DataAccess.Migrations.BotDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasDefaultValue(0);
-
-                    b.Property<string>("Text")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("character varying(500)")
-                        .HasMaxLength(500)
-                        .HasDefaultValue("");
 
                     b.Property<string>("WeatherCity")
                         .ValueGeneratedOnAdd()

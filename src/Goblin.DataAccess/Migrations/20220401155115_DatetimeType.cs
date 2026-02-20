@@ -2,7 +2,7 @@
 
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Goblin.DataAccess.Migrations.BotDb;
+namespace Goblin.DataAccess.Migrations;
 
 public partial class DatetimeType : Migration
 {
