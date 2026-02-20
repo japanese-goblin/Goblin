@@ -1,54 +1,23 @@
-using System.Globalization;
 using System.Net.Mime;
 using Goblin.Application.Core;
 using Goblin.Application.Telegram;
 using Goblin.Application.Vk;
 using Goblin.DataAccess;
 using Goblin.WebApp.Extensions;
-using Goblin.WebApp.HostedServices;
-using Hangfire;
-using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
-
-SetDefaultLocale();
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddYamlFile("appsettings.yaml", false)
-       .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", true)
-       .AddYamlFile("appsettings.secrets.yaml", true)
-       .AddEnvironmentVariables();
-
-builder.Services.AddSerilog(p =>
-{
-    p.ReadFrom.Configuration(builder.Configuration);
-});
-
-builder.Services.AddHttpLogging(x =>
-{
-    x.LoggingFields = HttpLoggingFields.All;
-});
+builder.RegisterLogging()
+       .RegisterSwagger()
+       .RegisterHangfire();
 
 builder.Services.AddDataAccessLayer(builder.Configuration);
-builder.Services.AddApplication(builder.Configuration);
-builder.Services.AddVkLayer(builder.Configuration);
+builder.Services.AddApplication();
+builder.Services.AddVkLayer();
 builder.Services.AddTelegramLayer();
 builder.Services.AddMemoryCache();
-builder.Services.AddHangfire(config =>
-{
-    config.UseMemoryStorage();
-});
-builder.Services.AddHangfireServer(x =>
-{
-    x.WorkerCount = 4;
-});
-GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
-builder.Services.AddHostedService<AddHangfireJobsHostedService>();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -93,12 +62,3 @@ if(app.Environment.IsDevelopment())
 app.MapControllers();
 
 app.Run();
-
-void SetDefaultLocale()
-{
-    var culture = new CultureInfo("ru-RU");
-    CultureInfo.CurrentCulture = culture;
-    CultureInfo.CurrentUICulture = culture;
-    CultureInfo.DefaultThreadCurrentCulture = culture;
-    CultureInfo.DefaultThreadCurrentUICulture = culture;
-}

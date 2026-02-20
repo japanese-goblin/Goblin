@@ -2,11 +2,11 @@
 
 namespace Goblin.WebApp.Extensions;
 
-public static class IHostExtensions
+internal static class WebApplicationExtensions
 {
-    public static void MigrateDatabase<T>(this IHost host) where T : DbContext
+    public static void MigrateDatabase<T>(this WebApplication app) where T : DbContext
     {
-        using var scope = host.Services.CreateScope();
+        using var scope = app.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<T>();
         context.Database.Migrate();
     }
