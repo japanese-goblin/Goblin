@@ -35,7 +35,7 @@ public class SendRemindTasks
 
     private async Task SendRemindsFromArray(Remind[] reminds)
     {
-        if(!reminds.Any())
+        if(reminds.Length == 0)
         {
             return;
         }

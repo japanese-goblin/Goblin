@@ -163,20 +163,18 @@ public class ConversationSettingsCommand : ITextCommand
         return CommandExecutionResult.Success($"Город успешно установлен на {city}");
     }
 
-    private async Task<CommandExecutionResult> SetGroup(long chatId, string group, ConsumerType consumerType)
+    private async Task<CommandExecutionResult> SetGroup(long chatId, string realGroupId, ConsumerType consumerType)
     {
-        if(!int.TryParse(group, out var intGroup))
+        if(!int.TryParse(realGroupId, out var intGroup))
         {
             return CommandExecutionResult.Failed("Укажите корректный номер группы.");
         }
 
-        var isExists = _narfuApi.Students.IsCorrectGroup(intGroup);
-        if(!isExists)
+        var group = _narfuApi.Students.GetGroupByRealId(intGroup);
+        if(group is null)
         {
             return CommandExecutionResult.Failed($"Группа с номером {intGroup} не найдена.");
         }
-
-        var groupName = _narfuApi.Students.GetGroupByRealId(intGroup).Name;
 
         var job = await _context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId);
         if(job is null)
@@ -193,7 +191,7 @@ public class ConversationSettingsCommand : ITextCommand
 
         await _context.SaveChangesAsync();
 
-        return CommandExecutionResult.Success($"Группа успешно установлена на {intGroup} ({groupName})");
+        return CommandExecutionResult.Success($"Группа успешно установлена на {intGroup} ({group.Name})");
     }
 
     private async Task<CommandExecutionResult> RemoveMailing(long chatId, string whatToRemove, ConsumerType consumerType)

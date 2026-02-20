@@ -57,7 +57,7 @@ public class Lesson : IEquatable<Lesson>
         return LessonType.Unknown;
     }
 
-    public bool Equals(Lesson other)
+    public bool Equals(Lesson? other)
     {
         if(ReferenceEquals(null, other))
         {
@@ -73,7 +73,7 @@ public class Lesson : IEquatable<Lesson>
                Teacher == other.Teacher && Groups == other.Groups;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if(ReferenceEquals(null, obj))
         {

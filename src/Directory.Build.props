@@ -10,6 +10,7 @@
 
     <!-- TODO: -->
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+<!--    <WarningsAsErrors>CA1860;</WarningsAsErrors>-->
   </PropertyGroup>
 
   <ItemGroup>

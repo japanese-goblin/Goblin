@@ -12,7 +12,7 @@ public class ExamsViewModel : LessonsViewModel
     public override string ToString()
     {
         var exams = Lessons.Where(x => x.StartTime.Date > Date.Date).ToArray();
-        if(!exams.Any())
+        if(exams.Length == 0)
         {
             return "На данный момент список экзаменов отсутствует";
         }

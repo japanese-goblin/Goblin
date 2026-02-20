@@ -38,6 +38,6 @@ public class TeachersSchedule : ITeacherSchedule
         _logger.LogDebug("Поиск преподавателя {TeacherName}", name);
         var teachers = await _client.GetFromJsonAsync<Teacher[]>($"i/ac.php?term={name}");
         _logger.LogDebug("Поиск завершен");
-        return teachers;
+        return teachers ?? [];
     }
 }

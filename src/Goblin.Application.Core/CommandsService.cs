@@ -76,7 +76,7 @@ public class CommandsService
 
             _logger.LogDebug("Выполнение команды {CommandType}", command.GetType());
             var result = await command.Execute(msg, user);
-            _logger.LogDebug("Команда вернула {ResultType} результат", result.GetType());
+            _logger.LogDebug("Команда вернула результат: {IsExecutionSuccess}", result.IsSuccessful);
 
             return result;
         }

@@ -11,9 +11,7 @@ public interface IStudentsSchedule
 
     public Task<ExamsViewModel> GetExams(int realGroupId);
 
-    public bool IsCorrectGroup(int realGroupId);
+    public Group? GetGroupByRealId(int realGroupId);
 
-    public Group GetGroupByRealId(int realGroupId);
-
-    public string GenerateScheduleLink(int realGroupId, bool isWebCal = false);
+    // public string GenerateScheduleLink(int realGroupId, bool isWebCal = false);
 }

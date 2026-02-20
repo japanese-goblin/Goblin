@@ -5,7 +5,7 @@ namespace Goblin.Application.Telegram.Converters;
 
 public static class KeyboardConverter
 {
-    public static ReplyMarkup FromCoreToTg(CoreKeyboard coreKeyboard)
+    public static ReplyMarkup? FromCoreToTg(CoreKeyboard? coreKeyboard)
     {
         if(coreKeyboard is null)
         {

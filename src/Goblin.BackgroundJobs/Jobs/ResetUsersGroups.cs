@@ -30,7 +30,8 @@ public class ResetUsersGroups
                 continue;
             }
 
-            if(_narfuApi.Students.IsCorrectGroup(user.NarfuGroup.Value))
+            var group = _narfuApi.Students.GetGroupByRealId(user.NarfuGroup.Value);
+            if(group is null)
             {
                 continue;
             }

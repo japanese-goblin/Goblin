@@ -6,7 +6,7 @@ internal class OpenWeatherMapApiOptionsValidate : IValidateOptions<OpenWeatherMa
 {
     private static readonly TimeSpan MinimalTimeout = TimeSpan.FromSeconds(1);
 
-    public ValidateOptionsResult Validate(string name, OpenWeatherMapApiOptions options)
+    public ValidateOptionsResult Validate(string? name, OpenWeatherMapApiOptions options)
     {
         var errors = ValidateInternal(options).ToList();
         if(errors.Count > 0)

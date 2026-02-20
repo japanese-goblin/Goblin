@@ -6,7 +6,7 @@ namespace Goblin.Application.Vk.Converters;
 
 public static class KeyboardConverter
 {
-    public static MessageKeyboard FromCoreToVk(CoreKeyboard coreKeyboard, bool isInlineKeyboardAllowed = false)
+    public static MessageKeyboard? FromCoreToVk(CoreKeyboard? coreKeyboard, bool isInlineKeyboardAllowed = false)
     {
         if(coreKeyboard is null)
         {

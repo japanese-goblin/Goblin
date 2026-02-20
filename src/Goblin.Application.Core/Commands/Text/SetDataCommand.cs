@@ -48,24 +48,22 @@ public class SetDataCommand : ITextCommand
                                              "Пример использования: установить город Москва / установить группу 123456");
     }
 
-    private async Task<CommandExecutionResult> SetGroup(string group, BotUser user)
+    private async Task<CommandExecutionResult> SetGroup(string groupId, BotUser user)
     {
-        if(!int.TryParse(group, out var intGroup))
+        if(!int.TryParse(groupId, out var intGroup))
         {
             return CommandExecutionResult.Failed("Укажите корректный номер группы.");
         }
 
-        var isExists = _narfu.Students.IsCorrectGroup(intGroup);
-        if(!isExists)
+        var group = _narfu.Students.GetGroupByRealId(intGroup);
+        if(group is null)
         {
             return CommandExecutionResult.Failed($"Группа с номером {intGroup} не найдена.");
         }
 
-        var groupName = _narfu.Students.GetGroupByRealId(intGroup).Name;
-
-        user.SetNarfuGroup(intGroup);
+        user.SetNarfuGroup(group.RealId);
         await _db.SaveChangesAsync();
-        return CommandExecutionResult.Success($"Группа успешно установлена на {intGroup} ({groupName})");
+        return CommandExecutionResult.Success($"Группа успешно установлена на {group.RealId} ({group.Name})");
     }
 
     private async Task<CommandExecutionResult> SetCity(string city, BotUser user)

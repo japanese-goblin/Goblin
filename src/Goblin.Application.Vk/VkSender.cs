@@ -37,7 +37,7 @@ public class VkSender : ISender
         _randomGenerator = RandomNumberGenerator.Create();
     }
 
-    public Task Send(long chatId, string message, CoreKeyboard keyboard = null, IEnumerable<string> attachments = null)
+    public Task Send(long chatId, string message, CoreKeyboard? keyboard = null, IReadOnlyCollection<string>? attachments = null)
     {
         message = TrimText(message);
 
@@ -51,8 +51,8 @@ public class VkSender : ISender
         });
     }
 
-    public async Task SendToMany(IEnumerable<long> chatIds, string message, CoreKeyboard keyboard = null,
-                                 IEnumerable<string> attachments = null)
+    public async Task SendToMany(IReadOnlyCollection<long> chatIds, string message, CoreKeyboard? keyboard = null,
+                                 IReadOnlyCollection<string>? attachments = null)
     {
         message = TrimText(message);
 
@@ -90,7 +90,7 @@ public class VkSender : ISender
         return $"{text[..limit]}...";
     }
 
-    private IEnumerable<MediaAttachment> ConvertAttachments(IEnumerable<string> attachments)
+    private List<MediaAttachment>? ConvertAttachments(IEnumerable<string>? attachments)
     {
         if(attachments is null)
         {
@@ -113,7 +113,7 @@ public class VkSender : ISender
                                attach.Id = long.Parse(data[1]);
                                return attach;
                            }).ToArray();
-            if(!selected.Any())
+            if(selected.Length == 0)
             {
                 continue;
             }
@@ -121,7 +121,7 @@ public class VkSender : ISender
             attachmentList.AddRange(selected);
         }
 
-        return attachmentList.Any() ? attachmentList : null;
+        return attachmentList.Count == 0 ? null : attachmentList;
     }
 
     private int GetRandomId()

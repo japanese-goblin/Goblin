@@ -27,7 +27,7 @@ public class FindTeacherCommand : ITextCommand
         try
         {
             var findResult = await _narfuApi.Teachers.FindByName(teacherName);
-            if(!findResult.Any())
+            if(findResult.Length == 0)
             {
                 return CommandExecutionResult.Failed("Преподаватель с такими данными не найден.");
             }

@@ -26,15 +26,13 @@ public class SetDataCommandTests : TestBase
     private static INarfuApi GetNarfuApi(bool response = true)
     {
         var mockApi = Substitute.For<INarfuApi>();
-        mockApi.Students.IsCorrectGroup(Arg.Any<int>())
-               .Returns(response);
         mockApi.Students.GetGroupByRealId(Arg.Any<int>())
-               .Returns(new Group
+               .Returns(response ? new Group
                {
                    Name = "name",
                    RealId = 1,
                    SiteId = 1
-               });
+               } : null);
         return mockApi;
     }
 

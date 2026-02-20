@@ -57,7 +57,7 @@ public class ScheduleTask
                 {
                     try
                     {
-                        var ids = chunk.Select(x => x.Id);
+                        var ids = chunk.Select(x => x.Id).ToList();
                         await sender.SendToMany(ids, result.Message);
                     }
                     catch(Exception ex)

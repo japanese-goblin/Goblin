@@ -40,7 +40,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "справка");
 
-        await service.ExecuteCommand(message, OnSuccess, res => null);
+        await service.ExecuteCommand(message, OnSuccess, _ => Task.CompletedTask);
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "абв");
 
-        await service.ExecuteCommand(message, res => null, OnFailed);
+        await service.ExecuteCommand(message, _ => Task.CompletedTask, OnFailed);
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "demo");
 
-        await service.ExecuteCommand(message, res => null, OnFailed);
+        await service.ExecuteCommand(message, _ => Task.CompletedTask, OnFailed);
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "абв");
 
-        await service.ExecuteCommand(message, res => null, res => null);
+        await service.ExecuteCommand(message, _ => Task.CompletedTask, _ => Task.CompletedTask);
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "mailingKeyboard", string.Empty);
 
-        await service.ExecuteCommand(message, OnSuccess, res => null);
+        await service.ExecuteCommand(message, OnSuccess, _ => Task.CompletedTask);
     }
 
     [Fact]
@@ -86,6 +86,6 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "asd", string.Empty);
 
-        await service.ExecuteCommand(message, res => null, OnFailed);
+        await service.ExecuteCommand(message, _ => Task.CompletedTask, OnFailed);
     }
 }

@@ -4,6 +4,7 @@ using Goblin.Application.Vk.Converters;
 using Goblin.Application.Vk.Options;
 using Goblin.DataAccess;
 using Goblin.Domain;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VkNet.Abstractions;
@@ -220,9 +221,10 @@ public class VkCallbackHandler
 
     private async Task SendMessageToAdmins(long userId, string message)
     {
-        var admins = _db.BotUsers.Where(x => x.IsAdmin &&
+        var admins = await _db.BotUsers.Where(x => x.IsAdmin &&
                                              x.ConsumerType == ConsumerType.Vkontakte)
-                        .Select(x => x.Id);
+                        .Select(x => x.Id)
+                        .ToListAsync();
         var vkUser = (await _vkApi.Users.GetAsync([userId])).First();
         var userName = $"{vkUser.FirstName} {vkUser.LastName}";
         await _sender.SendToMany(admins, $"@id{userId} ({userName}) {message}");

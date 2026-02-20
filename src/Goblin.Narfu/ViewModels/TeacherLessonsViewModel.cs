@@ -12,7 +12,7 @@ public class TeacherLessonsViewModel : LessonsViewModel
     public override string ToString()
     {
         var selected = Lessons.ToArray();
-        if(!selected.Any())
+        if(selected.Length == 0)
         {
             return "На данный момент у этого преподавателя нет пар";
         }

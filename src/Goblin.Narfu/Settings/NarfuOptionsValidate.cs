@@ -6,7 +6,7 @@ internal class NarfuOptionsValidate : IValidateOptions<NarfuApiOptions>
 {
     private static readonly TimeSpan MinimalTimeout = TimeSpan.FromSeconds(1);
 
-    public ValidateOptionsResult Validate(string name, NarfuApiOptions options)
+    public ValidateOptionsResult Validate(string? name, NarfuApiOptions options)
     {
         var errors = ValidateInternal(options).ToList();
         if(errors.Count > 0)

@@ -22,20 +22,20 @@ public class StudentsSchedule : IStudentsSchedule
         _logger = logger;
     }
 
-    public async Task<IEnumerable<Lesson>> GetSchedule(int realGroupId, DateTime? date = default)
+    public async Task<IEnumerable<Lesson>> GetSchedule(int realGroupId, DateTime? date = null)
     {
+        date ??= DateTime.Today;
+        var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
+
         try
         {
-            date ??= DateTime.Today;
             _logger.LogDebug("Получение расписания для группы {GroupId}", realGroupId);
-            var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
             var response = await _client.GetStringAsync($"/?icalendar&oid={siteGroupId}&cod={realGroupId}&from={date.Value:dd.MM.yyyy}");
             _logger.LogDebug("Расписание получено");
             return GetCalendarLessons(response).ToList();
         }
         catch(HttpRequestException)
         {
-            var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
             var response = await _client.GetStreamAsync($"/?timetable&group={siteGroupId}");
             _logger.LogDebug("Расписание получено");
             var allLessonsFromHtml = HtmlParser.GetAllLessonsFromHtml(response);
@@ -60,28 +60,23 @@ public class StudentsSchedule : IStudentsSchedule
         return new LessonsViewModel(lessons.Where(x => x.StartTime.Date == date.Date), date);
     }
 
-    public bool IsCorrectGroup(int realGroupId)
-    {
-        return Groups.Any(x => x.RealId == realGroupId);
-    }
-
-    public Group GetGroupByRealId(int realGroupId)
+    public Group? GetGroupByRealId(int realGroupId)
     {
         return Groups.FirstOrDefault(x => x.RealId == realGroupId);
     }
 
-    public string GenerateScheduleLink(int realGroupId, bool isWebCal = false)
-    {
-        const string url = "ruz.narfu.ru/?icalendar";
-
-        var protocol = isWebCal ? "webcal" : "https";
-
-        var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
-
-        var todayDate = DateTime.Today.ToString("dd.MM.yyyy");
-
-        return $"{protocol}://{url}&oid={siteGroupId}&cod={realGroupId}&from={todayDate}";
-    }
+    // public string GenerateScheduleLink(int realGroupId, bool isWebCal = false)
+    // {
+    //     const string url = "ruz.narfu.ru/?icalendar";
+    //
+    //     var protocol = isWebCal ? "webcal" : "https";
+    //
+    //     var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
+    //
+    //     var todayDate = DateTime.Today.ToString("dd.MM.yyyy");
+    //
+    //     return $"{protocol}://{url}&oid={siteGroupId}&cod={realGroupId}&from={todayDate}";
+    // }
 
     public IEnumerable<Lesson> GetCalendarLessons(string response)
     {

@@ -16,7 +16,8 @@ public class ScheduleService : IScheduleService
 
     public async Task<CommandExecutionResult> GetSchedule(int narfuGroup, DateTime date)
     {
-        if(!_narfuApi.Students.IsCorrectGroup(narfuGroup))
+        var group = _narfuApi.Students.GetGroupByRealId(narfuGroup);
+        if(group is null)
         {
             return CommandExecutionResult.Failed($"Группа {narfuGroup} не найдена");
         }

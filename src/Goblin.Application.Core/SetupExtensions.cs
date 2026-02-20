@@ -13,7 +13,6 @@ public static class SetupExtensions
 
     public static void AddApplication(this IServiceCollection services)
     {
-        services.AddHttpClient();
         AddBotFeatures(services);
         AddOptions(services);
         AddAdditions(services);
