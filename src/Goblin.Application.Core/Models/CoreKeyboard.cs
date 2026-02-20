@@ -12,10 +12,7 @@ public class CoreKeyboard
 
     public CoreKeyboard(bool isOneTime = true)
     {
-        Buttons = new List<List<CoreKeyboardButton>>
-        {
-            new List<CoreKeyboardButton>()
-        };
+        Buttons = [[]];
         IsOneTime = isOneTime;
     }
 
@@ -34,7 +31,7 @@ public class CoreKeyboard
 
     public CoreKeyboard AddLine()
     {
-        Buttons.Add(new List<CoreKeyboardButton>());
+        Buttons.Add([]);
 
         return this;
     }

@@ -22,7 +22,7 @@ public class Message
         get
         {
             var data = Text.ToLower().Split(' ');
-            return data.Length <= 1 ? new[] { string.Empty } : data[1..];
+            return data.Length <= 1 ? [string.Empty] : data[1..];
         }
     }
 

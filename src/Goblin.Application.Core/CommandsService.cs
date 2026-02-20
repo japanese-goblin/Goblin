@@ -1,15 +1,14 @@
-using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Core.Models;
-using Goblin.Application.Core.Results.Failed;
 using Goblin.DataAccess;
 using Goblin.Domain;
-using Goblin.Domain.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core;
 
 public class CommandsService
 {
+    private const string CommandNotFoundMessage = "Команда не найдена. Проверьте правильность написания команды. " +
+                                                  "Если вы хотите отключить подобные ошибки, то, пожалуйста, напишите команду 'мут'";
+
     private readonly BotDbContext _context;
     private readonly IEnumerable<IKeyboardCommand> _keyboardCommands;
     private readonly ILogger _logger;
@@ -25,10 +24,10 @@ public class CommandsService
     }
 
     public async Task ExecuteCommand(Message msg,
-                                     Func<IResult, Task> onSuccess,
-                                     Func<IResult, Task> onFailed)
+                                     Func<CommandExecutionResult, Task> onSuccess,
+                                     Func<CommandExecutionResult, Task> onFailed)
     {
-        IResult result;
+        CommandExecutionResult result;
         var user = await GetBotUser(msg.UserId, msg.ConsumerType);
         if(!string.IsNullOrWhiteSpace(msg.Payload))
         {
@@ -43,12 +42,13 @@ public class CommandsService
 
         if(!result.IsSuccessful)
         {
-            if(result is CommandNotFoundResult && !user.IsErrorsEnabled)
+            // если команда не найдена, и у пользователя отключены ошибки
+            if(result is { IsSuccessful: false } && !user.IsErrorsEnabled)
             {
-                // если команда не найдена, и у пользователя отключены ошибки
                 return;
             }
 
+            result.Message = $"❌ Ошибка: {result.Message}";
             await onFailed(result);
         }
         else
@@ -57,7 +57,7 @@ public class CommandsService
         }
     }
 
-    private async Task<IResult> ExecuteTextCommand(Message msg, BotUser user)
+    private async Task<CommandExecutionResult> ExecuteTextCommand(Message msg, BotUser user)
     {
         _logger.LogDebug("Обработка текстовой команды");
         var cmdName = msg.CommandName;
@@ -81,10 +81,10 @@ public class CommandsService
             return result;
         }
 
-        return new CommandNotFoundResult();
+        return CommandExecutionResult.Failed(CommandNotFoundMessage);
     }
 
-    private async Task<IResult> ExecuteKeyboardCommand(Message msg, BotUser user)
+    private async Task<CommandExecutionResult> ExecuteKeyboardCommand(Message msg, BotUser user)
     {
         _logger.LogDebug("Обработка команды с клавиатуры");
         var record = msg.ParsedPayload.First();
@@ -99,7 +99,7 @@ public class CommandsService
             return await command.Execute(msg, user);
         }
 
-        return new CommandNotFoundResult();
+        return CommandExecutionResult.Failed(CommandNotFoundMessage);
     }
 
     private async Task<BotUser> GetBotUser(long userId, ConsumerType type)

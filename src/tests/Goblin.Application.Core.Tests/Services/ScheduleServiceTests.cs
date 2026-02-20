@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using Goblin.Application.Core.Services;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
@@ -30,7 +28,7 @@ public class ScheduleServiceTests : TestBase
 
         var result = await service.GetSchedule(DefaultUser.NarfuGroup, DateTime.Today);
 
-        result.Should().BeOfType<SuccessfulResult>();
+        result.IsSuccessful.Should().BeTrue();
         result.Message.Should().NotBeNullOrWhiteSpace();
         result.Keyboard.Should().NotBeNull();
     }
@@ -43,7 +41,7 @@ public class ScheduleServiceTests : TestBase
 
         var result = await service.GetSchedule(DefaultUser.NarfuGroup, DateTime.Today);
 
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrWhiteSpace();
     }
 }

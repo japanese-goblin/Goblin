@@ -1,7 +1,5 @@
 ﻿using FluentAssertions;
 using Goblin.Application.Core.Commands.Text;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using Xunit;
 
 namespace Goblin.Application.Core.Tests.Commands.Text;
@@ -16,7 +14,7 @@ public class ChooseCommandTests : TestBase
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<SuccessfulResult>();
+        result.IsSuccessful.Should().BeTrue();
         result.Message.Should().NotBeNullOrEmpty();
     }
 
@@ -28,7 +26,7 @@ public class ChooseCommandTests : TestBase
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrEmpty();
     }
 }

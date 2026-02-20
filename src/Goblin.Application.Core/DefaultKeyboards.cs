@@ -1,6 +1,3 @@
-using Goblin.Application.Core.Models;
-using Goblin.Domain.Entities;
-
 namespace Goblin.Application.Core;
 
 public static class DefaultKeyboards

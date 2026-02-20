@@ -1,6 +1,5 @@
 using System.Text.RegularExpressions;
 using Goblin.Application.Core;
-using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Vk.Converters;
 using Goblin.Application.Vk.Options;
 using Goblin.DataAccess;
@@ -126,12 +125,12 @@ public class VkCallbackHandler
         await _commandsService.ExecuteCommand(message, OnSuccess, OnFailed);
         _logger.LogDebug("Обработка сообщения завершена");
 
-        async Task OnSuccess(IResult res)
+        async Task OnSuccess(CommandExecutionResult res)
         {
             await _sender.Send(message.ChatId, res.Message, res.Keyboard);
         }
 
-        async Task OnFailed(IResult res)
+        async Task OnFailed(CommandExecutionResult res)
         {
             await _sender.Send(message.ChatId, res.Message, res.Keyboard);
         }
@@ -142,7 +141,7 @@ public class VkCallbackHandler
         var mappedToMessage = messageEvent.MapToBotMessage();
         await _commandsService.ExecuteCommand(mappedToMessage, OnSuccess, OnFailed);
 
-        async Task OnSuccess(IResult res)
+        async Task OnSuccess(CommandExecutionResult res)
         {
             try
             {
@@ -160,7 +159,7 @@ public class VkCallbackHandler
             }
         }
 
-        async Task OnFailed(IResult res)
+        async Task OnFailed(CommandExecutionResult res)
         {
             await _vkApi.Messages.SendMessageEventAnswerAsync(messageEvent.EventId,
                                                               messageEvent.UserId.GetValueOrDefault(0),
@@ -224,7 +223,7 @@ public class VkCallbackHandler
         var admins = _db.BotUsers.Where(x => x.IsAdmin &&
                                              x.ConsumerType == ConsumerType.Vkontakte)
                         .Select(x => x.Id);
-        var vkUser = (await _vkApi.Users.GetAsync(new[] { userId })).First();
+        var vkUser = (await _vkApi.Users.GetAsync([userId])).First();
         var userName = $"{vkUser.FirstName} {vkUser.LastName}";
         await _sender.SendToMany(admins, $"@id{userId} ({userName}) {message}");
     }

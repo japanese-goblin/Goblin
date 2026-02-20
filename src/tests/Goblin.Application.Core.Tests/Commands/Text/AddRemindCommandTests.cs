@@ -1,7 +1,5 @@
 ﻿using FluentAssertions;
 using Goblin.Application.Core.Commands.Text;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using Xunit;
 
 namespace Goblin.Application.Core.Tests.Commands.Text;
@@ -17,7 +15,7 @@ public class AddRemindCommandTests : TestBase
 
         var result = await command.Execute(message, DefaultUser);
 
-        result.Should().BeOfType<SuccessfulResult>();
+        result.IsSuccessful.Should().BeTrue();
         result.Message.Should().NotBeNullOrEmpty();
     }
 
@@ -30,8 +28,8 @@ public class AddRemindCommandTests : TestBase
 
         var result = await command.Execute(message, DefaultUser);
 
-        result.Should().BeOfType<FailedResult>("Некорректная дата");
-        result.Message.Should().NotBeNullOrEmpty();
+        result.IsSuccessful.Should().BeFalse();
+        result.Message.Should().Be("Некорректная дата или время");
     }
 
     [Fact]
@@ -43,8 +41,8 @@ public class AddRemindCommandTests : TestBase
 
         var result = await command.Execute(message, DefaultUser);
 
-        result.Should().BeOfType<FailedResult>("Дата меньше текущей");
-        result.Message.Should().NotBeNullOrEmpty();
+        result.IsSuccessful.Should().BeFalse();
+        result.Message.Should().Be("Дата напоминания меньше текущей");
     }
 
     [Fact]
@@ -56,8 +54,8 @@ public class AddRemindCommandTests : TestBase
 
         var result = await command.Execute(message, DefaultUser);
 
-        result.Should().BeOfType<FailedResult>("Нужно указать три параметра");
-        result.Message.Should().NotBeNullOrEmpty();
+        result.IsSuccessful.Should().BeFalse();
+        result.Message.Should().Be("Укажите дату, время и текст напоминания (11.11.2011 11:11 текст)");
     }
 
     [Fact]
@@ -69,7 +67,7 @@ public class AddRemindCommandTests : TestBase
 
         var result = await command.Execute(message, DefaultUserWithMaxReminds);
 
-        result.Should().BeOfType<FailedResult>("У пользователя максимум напоминаний");
-        result.Message.Should().NotBeNullOrEmpty();
+        result.IsSuccessful.Should().BeFalse();
+        result.Message.Should().Be("Вы уже достигли максимального количества напоминаний (8)");
     }
 }

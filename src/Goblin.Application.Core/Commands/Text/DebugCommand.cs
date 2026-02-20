@@ -1,18 +1,15 @@
 using System.Diagnostics;
 using System.Text;
-using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Core.Models;
-using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain;
-using Goblin.Domain.Entities;
 
 namespace Goblin.Application.Core.Commands.Text;
 
 public class DebugCommand : ITextCommand
 {
     public bool IsAdminCommand => true;
-    public string[] Aliases => new[] { "дебуг", "дебаг" };
+
+    public string[] Aliases => ["дебуг", "дебаг"];
 
     private readonly BotDbContext _db;
 
@@ -21,7 +18,7 @@ public class DebugCommand : ITextCommand
         _db = db;
     }
 
-    public Task<IResult> Execute(Message msg, BotUser user)
+    public Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
         var strBuilder = new StringBuilder();
 
@@ -69,10 +66,7 @@ public class DebugCommand : ITextCommand
                       .AppendLine();
         }
 
-        return Task.FromResult(new SuccessfulResult
-        {
-            Message = strBuilder.ToString()
-        } as IResult);
+        return Task.FromResult(CommandExecutionResult.Success(strBuilder.ToString()));
     }
 
     private class GroupUsersResponse

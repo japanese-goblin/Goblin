@@ -1,17 +1,12 @@
-using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Core.Models;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
-using Goblin.Domain.Entities;
-
 namespace Goblin.Application.Core.Commands.Text;
 
 public class ChooseCommand : ITextCommand
 {
     public bool IsAdminCommand => false;
-    public string[] Aliases => new[] { "выбери", "рандом" };
 
-    public Task<IResult> Execute(Message msg, BotUser user)
+    public string[] Aliases => ["выбери", "рандом"];
+
+    public Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
         var param = string.Join(' ', msg.CommandParameters);
         var split = Split(param);
@@ -19,15 +14,12 @@ public class ChooseCommand : ITextCommand
         if(split.Length < 2)
         {
             const string text = "Введите два или более предложений, разделенных следующими символами: ',' и 'или'";
-            return Task.FromResult<IResult>(new FailedResult(text));
+            return Task.FromResult(CommandExecutionResult.Failed(text));
         }
 
         var random = GetRandom(0, split.Length);
 
-        return Task.FromResult<IResult>(new SuccessfulResult
-        {
-            Message = $"Я выбираю это: {split[random]}"
-        });
+        return Task.FromResult(CommandExecutionResult.Success($"Я выбираю это: {split[random]}"));
     }
 
     private static int GetRandom(int start, int end)
@@ -37,6 +29,6 @@ public class ChooseCommand : ITextCommand
 
     private static string[] Split(string str)
     {
-        return str.Split(new[] { ",", ", ", " или " }, StringSplitOptions.RemoveEmptyEntries);
+        return str.Split([",", ", ", " или "], StringSplitOptions.RemoveEmptyEntries);
     }
 }

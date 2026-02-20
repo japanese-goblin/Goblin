@@ -1,8 +1,6 @@
 ﻿using FluentAssertions;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Commands.Keyboard;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using NSubstitute;
 using Xunit;
 
@@ -16,11 +14,7 @@ public class ScheduleCommandTests : TestBase
     {
         var mock = Substitute.For<IScheduleService>();
         mock.GetSchedule(Arg.Any<int>(), Arg.Any<DateTime>())
-            .Returns(new SuccessfulResult
-            {
-                Message = "Расписание",
-                Keyboard = DefaultKeyboards.GetScheduleKeyboard()
-            });
+            .Returns(CommandExecutionResult.Success("Расписание", DefaultKeyboards.GetScheduleKeyboard()));
 
         return mock;
     }
@@ -33,7 +27,7 @@ public class ScheduleCommandTests : TestBase
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, _dateTime.ToString("d"));
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrEmpty();
     }
 
@@ -44,7 +38,7 @@ public class ScheduleCommandTests : TestBase
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, _dateTime.ToString("d"));
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<SuccessfulResult>();
+        result.IsSuccessful.Should().BeTrue();
         result.Message.Should().NotBeNullOrEmpty();
         result.Keyboard.Should().NotBeNull();
     }

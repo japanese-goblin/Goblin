@@ -1,6 +1,3 @@
-using Goblin.Application.Core.Models;
-using Goblin.Domain.Entities;
-
 namespace Goblin.Application.Core.Abstractions;
 
 public interface ITextCommand
@@ -9,5 +6,5 @@ public interface ITextCommand
 
     string[] Aliases { get; }
 
-    Task<IResult> Execute(Message msg, BotUser user);
+    Task<CommandExecutionResult> Execute(Message msg, BotUser user);
 }

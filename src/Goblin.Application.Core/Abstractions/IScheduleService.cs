@@ -2,5 +2,5 @@
 
 public interface IScheduleService
 {
-    public Task<IResult> GetSchedule(int narfuGroup, DateTime date);
+    public Task<CommandExecutionResult> GetSchedule(int narfuGroup, DateTime date);
 }

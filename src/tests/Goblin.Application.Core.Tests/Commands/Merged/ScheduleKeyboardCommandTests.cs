@@ -1,7 +1,5 @@
 ﻿using FluentAssertions;
 using Goblin.Application.Core.Commands.Merged;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using Xunit;
 
 namespace Goblin.Application.Core.Tests.Commands.Merged;
@@ -15,7 +13,7 @@ public class ScheduleKeyboardCommandTests : TestBase
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<SuccessfulResult>();
+        result.IsSuccessful.Should().BeTrue();
         result.Message.Should().NotBeNullOrEmpty();
         result.Keyboard.Should().NotBeNull();
     }
@@ -28,7 +26,7 @@ public class ScheduleKeyboardCommandTests : TestBase
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrEmpty();
     }
 }

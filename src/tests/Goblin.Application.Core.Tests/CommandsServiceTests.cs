@@ -17,24 +17,18 @@ public class CommandsServiceTests : TestBase
 
         return service;
 
-        IEnumerable<IKeyboardCommand> GetKeyboardCommands()
-        {
-            return new IKeyboardCommand[] { new MailingKeyboardCommand(), new ScheduleKeyboardCommand() };
-        }
+        IEnumerable<IKeyboardCommand> GetKeyboardCommands() => [new MailingKeyboardCommand(), new ScheduleKeyboardCommand()];
 
-        IEnumerable<ITextCommand> GetTextCommands()
-        {
-            return new ITextCommand[] { new HelpCommand(), new StartCommand(), new FakeAdminCommand() };
-        }
+        IEnumerable<ITextCommand> GetTextCommands() => [new HelpCommand(), new StartCommand(), new FakeAdminCommand()];
     }
 
-    private Task OnSuccess(IResult res)
+    private Task OnSuccess(CommandExecutionResult res)
     {
         res.IsSuccessful.Should().BeTrue();
         return Task.CompletedTask;
     }
 
-    private Task OnFailed(IResult res)
+    private Task OnFailed(CommandExecutionResult res)
     {
         res.IsSuccessful.Should().BeFalse();
         return Task.CompletedTask;

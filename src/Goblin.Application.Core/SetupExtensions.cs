@@ -1,5 +1,4 @@
 using System.Reflection;
-using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Options;
 using Goblin.Application.Core.Services;
 using Goblin.Narfu;
@@ -30,8 +29,8 @@ public static class DependencyInjection
 
     private static void AddBotFeatures(IServiceCollection services)
     {
-        services.RegisterAllTypes<ITextCommand>(new[] { typeof(DependencyInjection).Assembly }, ServiceLifetime.Scoped);
-        services.RegisterAllTypes<IKeyboardCommand>(new[] { typeof(DependencyInjection).Assembly }, ServiceLifetime.Scoped);
+        services.RegisterAllTypes<ITextCommand>([typeof(DependencyInjection).Assembly], ServiceLifetime.Scoped);
+        services.RegisterAllTypes<IKeyboardCommand>([typeof(DependencyInjection).Assembly], ServiceLifetime.Scoped);
 
         services.AddScoped<CommandsService>();
     }

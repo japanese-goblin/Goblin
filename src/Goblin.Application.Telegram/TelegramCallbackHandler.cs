@@ -1,5 +1,4 @@
 ﻿using Goblin.Application.Core;
-using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Telegram.Converters;
 using Goblin.DataAccess;
 using Goblin.Domain;
@@ -49,12 +48,12 @@ public class TelegramCallbackHandler
     {
         await _commandsService.ExecuteCommand(message, OnSuccess, OnFailed);
 
-        async Task OnSuccess(IResult res)
+        async Task OnSuccess(CommandExecutionResult res)
         {
             await _sender.Send(message.ChatId, res.Message, res.Keyboard);
         }
 
-        async Task OnFailed(IResult res)
+        async Task OnFailed(CommandExecutionResult res)
         {
             await _sender.Send(message.ChatId, res.Message);
         }
@@ -64,7 +63,7 @@ public class TelegramCallbackHandler
     {
         await _commandsService.ExecuteCommand(query.MapToBotMessage(), OnAnyResult, OnAnyResult);
 
-        async Task OnAnyResult(IResult res)
+        async Task OnAnyResult(CommandExecutionResult res)
         {
             await _botClient.AnswerCallbackQuery(query.Id);
             await _botClient.EditMessageText(new ChatId(query.From.Id), query.Message.MessageId, res.Message);

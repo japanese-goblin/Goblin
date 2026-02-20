@@ -1,11 +1,6 @@
 using System.Text;
-using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Core.Models;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain;
-using Goblin.Domain.Entities;
 using Goblin.Narfu.Abstractions;
 using Goblin.OpenWeatherMap.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +10,8 @@ namespace Goblin.Application.Core.Commands.Text;
 public class ConversationSettingsCommand : ITextCommand
 {
     public bool IsAdminCommand => false;
-    public string[] Aliases => new[] { "настройки", "настройка", "настроить" };
+
+    public string[] Aliases => ["настройки", "настройка", "настроить"];
 
     private readonly IOpenWeatherMapApi _openWeatherMapApi;
     private readonly INarfuApi _narfuApi;
@@ -28,11 +24,11 @@ public class ConversationSettingsCommand : ITextCommand
         _context = context;
     }
 
-    public async Task<IResult> Execute(Message msg, BotUser user)
+    public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
         if(!msg.IsConversation)
         {
-            return new FailedResult("Команда доступна только в беседах");
+            return CommandExecutionResult.Failed("Команда доступна только в беседах");
         }
 
         if(msg.CommandParameters.Any(string.IsNullOrEmpty))
@@ -43,7 +39,7 @@ public class ConversationSettingsCommand : ITextCommand
         var parameters = msg.Text.Split(' ', 3)[1..];
         if(parameters.Length != 2)
         {
-            return new FailedResult("Команда принимает лишь два параметра (слова, разделенных пробелами)");
+            return CommandExecutionResult.Failed("Команда принимает лишь два параметра (слова, разделенных пробелами)");
         }
 
         var whatToSet = parameters[0];
@@ -69,16 +65,16 @@ public class ConversationSettingsCommand : ITextCommand
             return await RemoveMailing(msg.ChatId, data, user.ConsumerType);
         }
 
-        return new FailedResult("Данный параметр не поддерживается");
+        return CommandExecutionResult.Failed("Данный параметр не поддерживается");
     }
 
-    private async Task<IResult> GenerateCronInfo(long chatId, ConsumerType consumerType)
+    private async Task<CommandExecutionResult> GenerateCronInfo(long chatId, ConsumerType consumerType)
     {
         var job = await _context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId &&
                                                                    x.ConsumerType == consumerType);
         if(job is null)
         {
-            return new FailedResult("Рассылка для данной беседы не настроена");
+            return CommandExecutionResult.Failed("Рассылка для данной беседы не настроена");
         }
 
         var strBuilder = new StringBuilder($"Информация по беседе #{chatId}:");
@@ -108,15 +104,15 @@ public class ConversationSettingsCommand : ITextCommand
 
         strBuilder.AppendFormat("Время рассылки: {0}:{1}", job.Time.Hour, job.Time.Minute);
 
-        return new SuccessfulResult(strBuilder.ToString());
+        return CommandExecutionResult.Success(strBuilder.ToString());
     }
 
-    private async Task<IResult> SetTime(long chatId, string time, ConsumerType consumerType)
+    private async Task<CommandExecutionResult> SetTime(long chatId, string time, ConsumerType consumerType)
     {
         var splittedTime = time.Split(':');
         if(splittedTime.Length != 2)
         {
-            return new FailedResult("Укажите время в формате часы:минуты (например, 11:30)");
+            return CommandExecutionResult.Failed("Укажите время в формате часы:минуты (например, 11:30)");
         }
 
         try
@@ -134,20 +130,20 @@ public class ConversationSettingsCommand : ITextCommand
             }
 
             await _context.SaveChangesAsync();
-            return new SuccessfulResult($"Время успешно установлено на {time}");
+            return CommandExecutionResult.Success($"Время успешно установлено на {time}");
         }
         catch(Exception e)
         {
-            return new FailedResult(e.Message);
+            return CommandExecutionResult.Failed(e.Message);
         }
     }
 
-    private async Task<IResult> SetCity(long chatId, string city, ConsumerType consumerType)
+    private async Task<CommandExecutionResult> SetCity(long chatId, string city, ConsumerType consumerType)
     {
         var isCityExist = await _openWeatherMapApi.IsCityExists(city);
         if(!isCityExist)
         {
-            return new FailedResult("Указанный город не найден");
+            return CommandExecutionResult.Failed("Указанный город не найден");
         }
 
         var job = await _context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId);
@@ -164,20 +160,20 @@ public class ConversationSettingsCommand : ITextCommand
 
         await _context.SaveChangesAsync();
 
-        return new SuccessfulResult($"Город успешно установлен на {city}");
+        return CommandExecutionResult.Success($"Город успешно установлен на {city}");
     }
 
-    private async Task<IResult> SetGroup(long chatId, string group, ConsumerType consumerType)
+    private async Task<CommandExecutionResult> SetGroup(long chatId, string group, ConsumerType consumerType)
     {
         if(!int.TryParse(group, out var intGroup))
         {
-            return new FailedResult("Укажите корректный номер группы.");
+            return CommandExecutionResult.Failed("Укажите корректный номер группы.");
         }
 
         var isExists = _narfuApi.Students.IsCorrectGroup(intGroup);
         if(!isExists)
         {
-            return new FailedResult($"Группа с номером {intGroup} не найдена.");
+            return CommandExecutionResult.Failed($"Группа с номером {intGroup} не найдена.");
         }
 
         var groupName = _narfuApi.Students.GetGroupByRealId(intGroup).Name;
@@ -197,10 +193,10 @@ public class ConversationSettingsCommand : ITextCommand
 
         await _context.SaveChangesAsync();
 
-        return new SuccessfulResult($"Группа успешно установлена на {intGroup} ({groupName})");
+        return CommandExecutionResult.Success($"Группа успешно установлена на {intGroup} ({groupName})");
     }
 
-    private async Task<IResult> RemoveMailing(long chatId, string whatToRemove, ConsumerType consumerType)
+    private async Task<CommandExecutionResult> RemoveMailing(long chatId, string whatToRemove, ConsumerType consumerType)
     {
         if(whatToRemove.Contains("расписани", StringComparison.InvariantCultureIgnoreCase))
         {
@@ -210,7 +206,7 @@ public class ConversationSettingsCommand : ITextCommand
             job.CronType &= ~CronType.Schedule;
             await _context.SaveChangesAsync();
 
-            return new SuccessfulResult("Рассылка расписания удалена. Установите группу для возобновления рассылки.");
+            return CommandExecutionResult.Success("Рассылка расписания удалена. Установите группу для возобновления рассылки.");
         }
 
         if(whatToRemove.Contains("погод", StringComparison.InvariantCultureIgnoreCase))
@@ -221,9 +217,9 @@ public class ConversationSettingsCommand : ITextCommand
             job.CronType &= ~CronType.Weather;
             await _context.SaveChangesAsync();
 
-            return new SuccessfulResult("Рассылка погоды удалена. Установите город для возобновления рассылки.");
+            return CommandExecutionResult.Success("Рассылка погоды удалена. Установите город для возобновления рассылки.");
         }
 
-        return new FailedResult($"Параметр '{whatToRemove}' отсутствует. Пожалуйста, прочитайте справку.");
+        return CommandExecutionResult.Failed($"Параметр '{whatToRemove}' отсутствует. Пожалуйста, прочитайте справку.");
     }
 }

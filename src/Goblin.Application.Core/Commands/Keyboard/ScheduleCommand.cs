@@ -1,13 +1,9 @@
-using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Core.Models;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Domain.Entities;
-
 namespace Goblin.Application.Core.Commands.Keyboard;
 
 public class ScheduleCommand : IKeyboardCommand
 {
     public string Trigger => "schedule";
+
     private readonly IScheduleService _api;
 
     public ScheduleCommand(IScheduleService api)
@@ -15,11 +11,11 @@ public class ScheduleCommand : IKeyboardCommand
         _api = api;
     }
 
-    public async Task<IResult> Execute(Message msg, BotUser user)
+    public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
         if(user.NarfuGroup == 0)
         {
-            return new FailedResult(DefaultErrors.GroupNotSet);
+            return CommandExecutionResult.Failed(DefaultErrors.GroupNotSet);
         }
 
         var date = msg.ParsedPayload[Trigger];

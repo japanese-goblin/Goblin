@@ -1,5 +1,4 @@
-﻿using Goblin.Application.Core.Models;
-using Goblin.Domain;
+﻿using Goblin.Domain;
 
 namespace Goblin.Application.Core;
 

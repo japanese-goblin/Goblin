@@ -1,7 +1,4 @@
 ﻿using System.Net;
-using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using Goblin.OpenWeatherMap.Abstractions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -29,7 +26,7 @@ public class WeatherService : IWeatherService
         _logger = logger;
     }
 
-    public async Task<IResult> GetCurrentWeather(string city)
+    public async Task<CommandExecutionResult> GetCurrentWeather(string city)
     {
         try
         {
@@ -41,29 +38,26 @@ public class WeatherService : IWeatherService
                 _cache.Set(key, result, CurrentWeatherExpireTime);
             }
 
-            return new SuccessfulResult
-            {
-                Message = result
-            };
+            return CommandExecutionResult.Success(result);
         }
         catch(HttpRequestException ex)
         {
             if(ex.StatusCode == HttpStatusCode.NotFound)
             {
-                return new FailedResult($"Город \"{city}\" не найден");
+                return CommandExecutionResult.Failed($"Город \"{city}\" не найден");
             }
 
             _logger.LogError(ex, "Ошибка при получении погоды на текущий момент");
-            return new FailedResult(DefaultErrors.WeatherSiteIsUnavailable);
+            return CommandExecutionResult.Failed(DefaultErrors.WeatherSiteIsUnavailable);
         }
         catch(Exception ex)
         {
             _logger.LogError(ex, "Ошибка при получении погоды на текущий момент");
-            return new FailedResult(DefaultErrors.WeatherUnexpectedError);
+            return CommandExecutionResult.Failed(DefaultErrors.WeatherUnexpectedError);
         }
     }
 
-    public async Task<IResult> GetDailyWeather(string city, DateTime date)
+    public async Task<CommandExecutionResult> GetDailyWeather(string city, DateTime date)
     {
         try
         {
@@ -91,30 +85,27 @@ public class WeatherService : IWeatherService
                 _cache.Set(key, result, DailyWeatherExpireTime);
             }
 
-            return new SuccessfulResult
-            {
-                Message = result
-            };
+            return CommandExecutionResult.Success(result);
         }
         catch(HttpRequestException ex)
         {
             if(ex.StatusCode == HttpStatusCode.NotFound)
             {
                 var result = SetNotFoundCacheValue(city);
-                return new FailedResult(result);
+                return CommandExecutionResult.Failed(result);
             }
 
             _logger.LogError(ex, "Ошибка при получении погоды на текущий момент");
-            return new FailedResult(DefaultErrors.WeatherSiteIsUnavailable);
+            return CommandExecutionResult.Failed(DefaultErrors.WeatherSiteIsUnavailable);
         }
         catch(ArgumentException ex)
         {
-            return new FailedResult(ex.Message);
+            return CommandExecutionResult.Failed(ex.Message);
         }
         catch(Exception ex)
         {
             _logger.LogError(ex, "Ошибка при получении погоды на день");
-            return new FailedResult(DefaultErrors.WeatherUnexpectedError);
+            return CommandExecutionResult.Failed(DefaultErrors.WeatherUnexpectedError);
         }
     }
 

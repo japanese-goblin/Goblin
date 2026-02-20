@@ -1,28 +1,16 @@
-using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Core.Models;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
-using Goblin.Domain.Entities;
 
 namespace Goblin.Application.Core.Commands.Keyboard;
 
-public class MailingCommand : IKeyboardCommand
+public class MailingCommand(BotDbContext db) : IKeyboardCommand
 {
     private const string Success = "Успешно.";
 
     public string Trigger => "mailing";
 
-    private readonly BotDbContext _db;
-
-    public MailingCommand(BotDbContext db)
+    public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
-        _db = db;
-    }
-
-    public async Task<IResult> Execute(Message msg, BotUser user)
-    {
-        user = _db.Entry(user).Entity;
+        user = db.Entry(user).Entity;
         var choose = msg.ParsedPayload[Trigger];
         var isSchedule = user.HasScheduleSubscription;
         var isWeather = user.HasWeatherSubscription;
@@ -36,38 +24,30 @@ public class MailingCommand : IKeyboardCommand
             return await SetScheduleMailing(user, isSchedule);
         }
 
-        return new FailedResult("Действие не найдено");
+        return CommandExecutionResult.Failed("Действие не найдено");
     }
 
-    private async Task<IResult> SetScheduleMailing(BotUser user, bool isSchedule)
+    private async Task<CommandExecutionResult> SetScheduleMailing(BotUser user, bool isSchedule)
     {
         if(user.NarfuGroup == 0)
         {
-            return new FailedResult(DefaultErrors.GroupNotSet);
+            return CommandExecutionResult.Failed(DefaultErrors.GroupNotSet);
         }
 
         user.SetHasSchedule(!isSchedule);
-        await _db.SaveChangesAsync();
-        return new SuccessfulResult
-        {
-            Message = Success,
-            Keyboard = DefaultKeyboards.GetMailingKeyboard(user)
-        };
+        await db.SaveChangesAsync();
+        return CommandExecutionResult.Success(Success, DefaultKeyboards.GetMailingKeyboard(user));
     }
 
-    private async Task<IResult> SetWeatherMailing(BotUser user, bool isWeather)
+    private async Task<CommandExecutionResult> SetWeatherMailing(BotUser user, bool isWeather)
     {
         if(string.IsNullOrWhiteSpace(user.WeatherCity))
         {
-            return new FailedResult(DefaultErrors.CityNotSet);
+            return CommandExecutionResult.Failed(DefaultErrors.CityNotSet);
         }
 
         user.SetHasWeather(!isWeather);
-        await _db.SaveChangesAsync();
-        return new SuccessfulResult
-        {
-            Message = Success,
-            Keyboard = DefaultKeyboards.GetMailingKeyboard(user)
-        };
+        await db.SaveChangesAsync();
+        return CommandExecutionResult.Success(Success, DefaultKeyboards.GetMailingKeyboard(user));
     }
 }

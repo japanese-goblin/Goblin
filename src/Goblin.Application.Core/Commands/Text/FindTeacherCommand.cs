@@ -1,8 +1,3 @@
-using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Core.Models;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
-using Goblin.Domain.Entities;
 using Goblin.Narfu.Abstractions;
 using Microsoft.Extensions.Logging;
 
@@ -11,7 +6,7 @@ namespace Goblin.Application.Core.Commands.Text;
 public class FindTeacherCommand : ITextCommand
 {
     public bool IsAdminCommand => false;
-    public string[] Aliases => new[] { "препод" };
+    public string[] Aliases => ["препод"];
     private readonly INarfuApi _narfuApi;
     private readonly ILogger<FindTeacherCommand> _logger;
 
@@ -21,12 +16,12 @@ public class FindTeacherCommand : ITextCommand
         _logger = logger;
     }
 
-    public async Task<IResult> Execute(Message msg, BotUser user)
+    public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
         var teacherName = string.Join(' ', msg.CommandParameters);
         if(string.IsNullOrWhiteSpace(teacherName))
         {
-            return new FailedResult("Укажите имя и фамилию преподавателя.");
+            return CommandExecutionResult.Failed("Укажите имя и фамилию преподавателя.");
         }
 
         try
@@ -34,12 +29,12 @@ public class FindTeacherCommand : ITextCommand
             var findResult = await _narfuApi.Teachers.FindByName(teacherName);
             if(!findResult.Any())
             {
-                return new FailedResult("Преподаватель с такими данными не найден.");
+                return CommandExecutionResult.Failed("Преподаватель с такими данными не найден.");
             }
 
             if(findResult.Length > 9)
             {
-                return new FailedResult("Найдено слишком много преподавателей. Укажите более точные данные.");
+                return CommandExecutionResult.Failed("Найдено слишком много преподавателей. Укажите более точные данные.");
             }
 
             var keyboard = new CoreKeyboard
@@ -54,20 +49,16 @@ public class FindTeacherCommand : ITextCommand
             }
 
             keyboard.AddReturnToMenuButton(false);
-            return new SuccessfulResult
-            {
-                Message = "Выберите преподавателя из списка:",
-                Keyboard = keyboard
-            };
+            return CommandExecutionResult.Success("Выберите преподавателя из списка:", keyboard);
         }
         catch(Exception ex) when(ex is HttpRequestException or TaskCanceledException)
         {
-            return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
+            return CommandExecutionResult.Failed(DefaultErrors.NarfuSiteIsUnavailable);
         }
         catch(Exception ex)
         {
             _logger.LogError(ex, "Ошибка при поиске преподавателя");
-            return new FailedResult(DefaultErrors.NarfuUnexpectedError);
+            return CommandExecutionResult.Failed(DefaultErrors.NarfuUnexpectedError);
         }
     }
 }
