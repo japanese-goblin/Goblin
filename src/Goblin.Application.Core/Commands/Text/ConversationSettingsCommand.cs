@@ -80,7 +80,7 @@ public class ConversationSettingsCommand : ITextCommand
         var strBuilder = new StringBuilder($"Информация по беседе #{chatId}:");
         strBuilder.AppendLine();
 
-        if(job.NarfuGroup != 0)
+        if(job.NarfuGroup.HasValue)
         {
             strBuilder.AppendFormat("Группа САФУ: {0}", job.NarfuGroup);
         }

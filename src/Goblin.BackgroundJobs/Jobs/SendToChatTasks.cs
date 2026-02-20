@@ -30,16 +30,16 @@ public class SendToChatTasks
         _logger = logger;
     }
 
-    public async Task Execute(long chatId, ConsumerType consumerType, CronType cronType, string city, int group, string text)
+    public async Task Execute(long chatId, ConsumerType consumerType, CronType cronType, string? city, int? group, string? text)
     {
         var sender = _senders.First(x => x.ConsumerType == consumerType);
         await Send(responseText => sender.Send(chatId, responseText));
 
         async Task Send(Func<string, Task> func)
         {
-            if(cronType.HasFlag(CronType.Schedule) && group != 0)
+            if(cronType.HasFlag(CronType.Schedule) && group.HasValue)
             {
-                await SendSchedule(chatId, group, func);
+                await SendSchedule(chatId, group.Value, func);
             }
 
             if(cronType.HasFlag(CronType.Weather) && !string.IsNullOrWhiteSpace(city))

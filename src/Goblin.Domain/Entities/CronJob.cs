@@ -6,9 +6,9 @@ public class CronJob
     public string Name { get; private set; }
     public long ChatId { get; private set; }
 
-    public int NarfuGroup { get; private set; }
-    public string WeatherCity { get; private set; }
-    public string Text { get; set; }
+    public int? NarfuGroup { get; private set; }
+    public string? WeatherCity { get; private set; }
+    public string? Text { get; set; }
 
     public CronTime Time { get; private set; }
     public CronType CronType { get; set; }
