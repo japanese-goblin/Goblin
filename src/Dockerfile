@@ -31,8 +31,11 @@ RUN apk add --no-cache \
     krb5-libs \
     libgdiplus \
     zlib \
+    locales \
+    locales-all \
     && rm -rf /var/cache/apk/* \
 
+ENV TZ="Europe/Moscow"
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ENV LC_ALL=ru_RU.UTF-8
 ENV LANG=ru_RU.UTF-8
