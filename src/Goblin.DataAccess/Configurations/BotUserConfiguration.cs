@@ -13,10 +13,8 @@ public class BotUserConfiguration : IEntityTypeConfiguration<BotUser>
                .ValueGeneratedNever();
 
         builder.Property(x => x.WeatherCity)
-               .HasMaxLength(100)
-               .HasDefaultValue(string.Empty);
-        builder.Property(x => x.NarfuGroup)
-               .HasDefaultValue(0);
+               .HasMaxLength(100);
+        builder.Property(x => x.NarfuGroup);
 
         builder.Property(x => x.IsAdmin)
                .HasDefaultValue(false);
