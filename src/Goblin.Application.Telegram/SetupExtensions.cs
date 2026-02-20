@@ -7,7 +7,7 @@ using Telegram.Bot;
 
 namespace Goblin.Application.Telegram;
 
-public static class DependencyInjection
+public static class SetupExtensions
 {
     private const string TelegramSettingsPath = "Telegram";
 

@@ -9,7 +9,7 @@ using VkNet.Model;
 
 namespace Goblin.Application.Vk;
 
-public static class DependencyInjection
+public static class SetupExtensions
 {
     private const string VkSettingsPath = "Vk";
 

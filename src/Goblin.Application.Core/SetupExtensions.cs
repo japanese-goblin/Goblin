@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Goblin.Application.Core;
 
-public static class DependencyInjection
+public static class SetupExtensions
 {
     private const string MailingSettingsPath = "Mailing";
 
@@ -29,8 +29,8 @@ public static class DependencyInjection
 
     private static void AddBotFeatures(IServiceCollection services)
     {
-        services.RegisterAllTypes<ITextCommand>([typeof(DependencyInjection).Assembly], ServiceLifetime.Scoped);
-        services.RegisterAllTypes<IKeyboardCommand>([typeof(DependencyInjection).Assembly], ServiceLifetime.Scoped);
+        services.RegisterAllTypes<ITextCommand>([typeof(SetupExtensions).Assembly], ServiceLifetime.Scoped);
+        services.RegisterAllTypes<IKeyboardCommand>([typeof(SetupExtensions).Assembly], ServiceLifetime.Scoped);
 
         services.AddScoped<CommandsService>();
     }
