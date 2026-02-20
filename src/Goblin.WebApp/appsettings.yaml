@@ -25,14 +25,17 @@ Vk:
   SecretKey:
   ConfirmationCode:
 
-OWM:
-  AccessToken:
-
 Clients:
   Narfu:
     HostUrl: 'https://ruz.narfu.ru/'
     Timeout: '00:00:05'
     NarfuGroupsLink: 'https://gist.githubusercontent.com/equuskk/4ed7dd35907405dcab7519c663941e56/raw/89a35585a72b8a980ef87ccaa43bd6d2a9f263d3/narfu-groups.json'
+  OpenWeatherMap:
+    HostUrl: 'https://api.openweathermap.org/data/2.5/'
+    AccessToken:
+    Timeout: '00:00:05'
+    Language: 'ru'
+    Units: 'metric'
 
 Mailing:
   IsVacations: false

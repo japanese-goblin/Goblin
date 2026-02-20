@@ -1,6 +1,6 @@
-using System.IO;
-using System.Net.Http;
+using Goblin.OpenWeatherMap.Settings;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 
 namespace Goblin.OpenWeatherMap.Tests;
@@ -46,6 +46,11 @@ public class TestBase
         factory.CreateClient(Arg.Any<string>())
                .Returns(Substitute.For<HttpClient>());
 
-        Api = new OpenWeatherMap.OpenWeatherMapApi("test-token", factory, Substitute.For<ILogger<OpenWeatherMap.OpenWeatherMapApi>>());
+        var options = Options.Create(new OpenWeatherMapApiOptions()
+        {
+            AccessToken = "test-token"
+        });
+
+        Api = new OpenWeatherMap.OpenWeatherMapApi(factory, options, Substitute.For<ILogger<OpenWeatherMap.OpenWeatherMapApi>>());
     }
 }

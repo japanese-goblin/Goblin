@@ -6,29 +6,23 @@ using System.Threading.Tasks;
 using Goblin.OpenWeatherMap.Abstractions;
 using Goblin.OpenWeatherMap.Models.Daily;
 using Goblin.OpenWeatherMap.Models.Responses;
+using Goblin.OpenWeatherMap.Settings;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Goblin.OpenWeatherMap;
 
 public class OpenWeatherMapApi : IOpenWeatherMapApi
 {
     private readonly ILogger _logger;
-    private readonly string _token;
     private readonly HttpClient _client;
+    private readonly OpenWeatherMapApiOptions _options;
 
-    public OpenWeatherMapApi(string token, IHttpClientFactory factory, ILogger<OpenWeatherMapApi> logger)
+    public OpenWeatherMapApi(IHttpClientFactory httpClientFactory, IOptions<OpenWeatherMapApiOptions> optionsAccessor, ILogger<OpenWeatherMapApi> logger)
     {
+        _options = optionsAccessor.Value;
+        _client = httpClientFactory.CreateClient(Defaults.HttpClientName);
         _logger = logger;
-        
-        if(string.IsNullOrWhiteSpace(token))
-        {
-            throw new ArgumentException("Токен пуст");
-        }
-        _token = token;
-
-        _client = factory.CreateClient("open-weather-map-api");
-        _client.Timeout = TimeSpan.FromSeconds(5);
-        _client.BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/");
     }
 
     /// <inheritdoc />
@@ -53,7 +47,7 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
             var diff = (x.UnixTime.Date - date.Date).Days;
             return diff >= 0 && diff <= 1;
         });
-            
+
         if(weather is null)
         {
             throw new ArgumentException($"Погода на {date:dd.MM.yyyy} в городе {city} не найдена.");
@@ -74,10 +68,7 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
 
     private string GetWithDefaultQueryParams(string path)
     {
-        const string language = "ru";
-        const string units = "metric";
-
-        var queries = $"units={units}&lang={language}&appid={_token}";
+        var queries = $"units={_options.Units}&lang={_options.Language}&appid={_options.AccessToken}";
         return path.Contains('?') ? $"{path}&{queries}" : $"?{path}&{queries}";
     }
 }
