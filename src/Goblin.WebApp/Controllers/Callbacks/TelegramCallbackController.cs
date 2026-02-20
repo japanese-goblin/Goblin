@@ -2,7 +2,6 @@
 using Goblin.Application.Telegram.Options;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Telegram.Bot.Types;
 
 namespace Goblin.WebApp.Controllers.Callbacks;
@@ -13,19 +12,17 @@ public class TelegramCallbackController(IOptions<TelegramOptions> optionsAccesso
 {
     private readonly TelegramOptions _options = optionsAccessor.Value;
 
-    [HttpPost("{SecretKey}")]
-    public async Task<IActionResult> HandleCallback(string secretKey)
+    [HttpPost]
+    public async Task<IActionResult> HandleCallback([FromBody] Update requestModel)
     {
-        if(!_options.SecretKey.Equals(secretKey))
+        var passedSecretKey = Request.Headers["X-Telegram-Bot-Api-Secret-Token"];
+        if(!_options.SecretKey.Equals(passedSecretKey))
         {
             //TODO: logging
             return NotFound();
         }
 
-        var rawRequestBody = await new StreamReader(Request.Body).ReadToEndAsync();
-        var request = JsonConvert.DeserializeObject<Update>(rawRequestBody)!;
-
-        await dispatcher.Publish(request);
+        await dispatcher.Publish(requestModel);
         return Ok();
     }
 }
