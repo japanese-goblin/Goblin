@@ -4,8 +4,8 @@ public class BotUser
 {
     public long Id { get; private set; }
 
-    public string WeatherCity { get; private set; }
-    public int NarfuGroup { get; private set; }
+    public string? WeatherCity { get; private set; }
+    public int? NarfuGroup { get; private set; }
 
     public bool IsErrorsEnabled { get; private set; }
     public bool IsAdmin { get; private set; }
@@ -41,14 +41,14 @@ public class BotUser
         Id = id;
     }
 
-    public void SetCity(string city)
+    public void SetCity(string? city)
     {
         WeatherCity = city;
     }
 
-    public void SetNarfuGroup(int group)
+    public void SetNarfuGroup(int? group)
     {
-        if(group < 0)
+        if(group is < 0)
         {
             throw new ArgumentException("Параметр должен быть больше 0", nameof(group));
         }

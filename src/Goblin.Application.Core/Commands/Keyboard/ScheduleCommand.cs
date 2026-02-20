@@ -13,12 +13,12 @@ public class ScheduleCommand : IKeyboardCommand
 
     public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
-        if(user.NarfuGroup == 0)
+        if(!user.NarfuGroup.HasValue)
         {
             return CommandExecutionResult.Failed(DefaultErrors.GroupNotSet);
         }
 
         var date = msg.ParsedPayload[Trigger];
-        return await _api.GetSchedule(user.NarfuGroup, DateTime.Parse(date));
+        return await _api.GetSchedule(user.NarfuGroup.Value, DateTime.Parse(date));
     }
 }

@@ -26,7 +26,7 @@ public class ScheduleServiceTests : TestBase
     {
         var service = new ScheduleService(GetNarfuApi(), Substitute.For<ILogger<ScheduleService>>());
 
-        var result = await service.GetSchedule(DefaultUser.NarfuGroup, DateTime.Today);
+        var result = await service.GetSchedule(DefaultUser.NarfuGroup!.Value, DateTime.Today);
 
         result.IsSuccessful.Should().BeTrue();
         result.Message.Should().NotBeNullOrWhiteSpace();
@@ -39,7 +39,7 @@ public class ScheduleServiceTests : TestBase
         DefaultUser.SetNarfuGroup(0);
         var service = new ScheduleService(GetNarfuApi(false), Substitute.For<ILogger<ScheduleService>>());
 
-        var result = await service.GetSchedule(DefaultUser.NarfuGroup, DateTime.Today);
+        var result = await service.GetSchedule(DefaultUser.NarfuGroup!.Value, DateTime.Today);
 
         result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrWhiteSpace();

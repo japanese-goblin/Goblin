@@ -22,7 +22,7 @@ public class ScheduleCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_UserGroupIsZero()
     {
-        DefaultUser.SetNarfuGroup(0);
+        DefaultUser.SetNarfuGroup(null);
         var command = new ScheduleCommand(GetScheduleService());
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, _dateTime.ToString("d"));
 

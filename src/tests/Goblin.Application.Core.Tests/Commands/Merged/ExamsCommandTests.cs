@@ -50,7 +50,7 @@ public class ExamsCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_UserGroupIsZero()
     {
-        DefaultUser.SetNarfuGroup(0);
+        DefaultUser.SetNarfuGroup(null);
         var command = new ExamsCommand(GetNarfuApi(), Substitute.For<ILogger<ExamsCommand>>());
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 

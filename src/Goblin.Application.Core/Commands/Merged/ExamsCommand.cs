@@ -22,14 +22,14 @@ public class ExamsCommand : IKeyboardCommand, ITextCommand
 
     public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
-        if(user.NarfuGroup == 0)
+        if(!user.NarfuGroup.HasValue)
         {
             return CommandExecutionResult.Failed(DefaultErrors.GroupNotSet);
         }
 
         try
         {
-            var lessons = await _api.Students.GetExams(user.NarfuGroup);
+            var lessons = await _api.Students.GetExams(user.NarfuGroup.Value);
             var str = lessons.ToString();
             if(str.Length > 4096)
             {

@@ -37,7 +37,7 @@ public class ScheduleTask
         }
 
         var consumersGroup = _db.BotUsers.AsNoTracking()
-                                .Where(x => x.HasScheduleSubscription)
+                                .Where(x => x.HasScheduleSubscription && x.NarfuGroup.HasValue)
                                 .ToArray()
                                 .GroupBy(x => x.ConsumerType);
         foreach(var consumerGroup in consumersGroup)
@@ -46,7 +46,12 @@ public class ScheduleTask
             var groupedByGroup = consumerGroup.GroupBy(x => x.NarfuGroup);
             foreach(var group in groupedByGroup)
             {
-                var result = await _scheduleService.GetSchedule(group.Key, DateTime.Today);
+                if(!group.Key.HasValue)
+                {
+                    continue;
+                }
+
+                var result = await _scheduleService.GetSchedule(group.Key.Value, DateTime.Today);
 
                 foreach(var chunk in group.Chunk(Defaults.ChunkLimit))
                 {
