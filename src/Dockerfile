@@ -26,13 +26,10 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Goblin.WebApp.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
-RUN apk add --no-cache \
-    icu-libs \
-    krb5-libs \
-    libgdiplus \
-    zlib \
+RUN apt-get update && \
+    apt-get install \
     locales \
-    locales-all \
+    libgssapi-krb5-2 -y \
     && rm -rf /var/cache/apk/*
 
 ENV TZ="Europe/Moscow"
