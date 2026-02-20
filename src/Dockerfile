@@ -26,13 +26,17 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Goblin.WebApp.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS final
-# Добавляем нужные библиотеки
 RUN apk add --no-cache \
     icu-libs \
     krb5-libs \
     libgdiplus \
     zlib \
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/cache/apk/* \
+
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+ENV LC_ALL=ru_RU.UTF-8
+ENV LANG=ru_RU.UTF-8
+
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Goblin.WebApp.dll"]
