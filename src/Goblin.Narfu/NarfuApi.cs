@@ -1,8 +1,9 @@
-using System;
 using System.Net.Http;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Schedule;
+using Goblin.Narfu.Settings;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Goblin.Narfu;
 
@@ -11,16 +12,13 @@ public class NarfuApi : INarfuApi
     public ITeacherSchedule Teachers { get; }
     public IStudentsSchedule Students { get; }
 
-    public NarfuApi(string groupsLink, IHttpClientFactory clientFactory,
-                    ILogger<TeachersSchedule> teacherScheduleLogger, ILogger<StudentsSchedule> studentsScheduleLogger)
+    public NarfuApi(IHttpClientFactory httpClientFactory,
+                    IOptions<NarfuApiOptions> optionsAccessor,
+                    ILogger<TeachersSchedule> teacherScheduleLogger, 
+                    ILogger<StudentsSchedule> studentsScheduleLogger)
     {
-        var client = clientFactory.CreateClient("narfu-api");
-        client.BaseAddress = new Uri("https://ruz.narfu.ru/");
-        client.DefaultRequestHeaders.UserAgent.Clear();
-        client.DefaultRequestHeaders.Add("UserAgent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0");
-        client.Timeout = TimeSpan.FromSeconds(5);
-        
+        var client = httpClientFactory.CreateClient(Defaults.HttpClientName);
         Teachers = new TeachersSchedule(client, teacherScheduleLogger);
-        Students = new StudentsSchedule(groupsLink, client, studentsScheduleLogger);
+        Students = new StudentsSchedule(optionsAccessor.Value.NarfuGroupsLink, client, studentsScheduleLogger);
     }
 }

@@ -2,7 +2,9 @@ using System;
 using System.IO;
 using System.Net.Http;
 using Goblin.Narfu.Abstractions;
+using Goblin.Narfu.Settings;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 
 namespace Goblin.Narfu.Tests;
@@ -58,7 +60,16 @@ public class TestBase
         factory.CreateClient(Arg.Any<string>())
                .Returns(Substitute.For<HttpClient>());
 
-        Api = new NarfuApi("http://groups/", factory,
-                           Substitute.For<ILogger<Schedule.TeachersSchedule>>(), Substitute.For<ILogger<Schedule.StudentsSchedule>>());
+        var options = Options.Create(new NarfuApiOptions
+        {
+            HostUrl = "http://host-url",
+            Timeout = TimeSpan.FromSeconds(5),
+            NarfuGroupsLink = "http://groups/"
+        });
+
+        Api = new NarfuApi(factory, 
+                           options,
+                           Substitute.For<ILogger<Schedule.TeachersSchedule>>(),
+                           Substitute.For<ILogger<Schedule.StudentsSchedule>>());
     }
 }
