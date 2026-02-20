@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Goblin.DataAccess.Migrations.BotDb;
@@ -23,7 +22,10 @@ public partial class InitBotV3 : Migration
                                          Minutes = table.Column<int>(nullable: false),
                                          ConsumerType = table.Column<int>(nullable: false, defaultValue: 0)
                                      },
-                                     constraints: table => { table.PrimaryKey("PK_CronJobs", x => x.Id); });
+                                     constraints: table =>
+                                     {
+                                         table.PrimaryKey("PK_CronJobs", x => x.Id);
+                                     });
 
         migrationBuilder.CreateTable(
                                      "Reminds",
@@ -37,7 +39,10 @@ public partial class InitBotV3 : Migration
                                          Date = table.Column<DateTime>(nullable: false),
                                          ConsumerType = table.Column<int>(nullable: false, defaultValue: 0)
                                      },
-                                     constraints: table => { table.PrimaryKey("PK_Reminds", x => x.Id); });
+                                     constraints: table =>
+                                     {
+                                         table.PrimaryKey("PK_Reminds", x => x.Id);
+                                     });
 
         migrationBuilder.CreateTable(
                                      "TgBotUsers",
@@ -51,7 +56,10 @@ public partial class InitBotV3 : Migration
                                          HasWeatherSubscription = table.Column<bool>(nullable: false, defaultValue: false),
                                          HasScheduleSubscription = table.Column<bool>(nullable: false, defaultValue: false)
                                      },
-                                     constraints: table => { table.PrimaryKey("PK_TgBotUsers", x => x.Id); });
+                                     constraints: table =>
+                                     {
+                                         table.PrimaryKey("PK_TgBotUsers", x => x.Id);
+                                     });
 
         migrationBuilder.CreateTable(
                                      "VkBotUsers",
@@ -65,7 +73,10 @@ public partial class InitBotV3 : Migration
                                          HasWeatherSubscription = table.Column<bool>(nullable: false, defaultValue: false),
                                          HasScheduleSubscription = table.Column<bool>(nullable: false, defaultValue: false)
                                      },
-                                     constraints: table => { table.PrimaryKey("PK_VkBotUsers", x => x.Id); });
+                                     constraints: table =>
+                                     {
+                                         table.PrimaryKey("PK_VkBotUsers", x => x.Id);
+                                     });
     }
 
     protected override void Down(MigrationBuilder migrationBuilder)

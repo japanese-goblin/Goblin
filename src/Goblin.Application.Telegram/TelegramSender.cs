@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Goblin.Application.Core;
+﻿using Goblin.Application.Core;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Telegram.Converters;
 using Goblin.Domain;
@@ -60,7 +56,7 @@ public class TelegramSender : ISender
         {
             return text;
         }
-        
+
         const string separator = "...";
         var limit = TextLimit - separator.Length - 2;
         return $"{text[..limit]}...";

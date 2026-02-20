@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Goblin.Application.Core.Models;
+﻿using Goblin.Application.Core.Models;
 using Goblin.Domain;
 
 namespace Goblin.Application.Core;

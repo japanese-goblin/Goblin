@@ -1,13 +1,13 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Vk.HostedServices;
 
-internal class VkChannelReaderHostedService(VkEventsDispatcher dispatcher, IServiceProvider serviceProvider, ILogger<VkChannelReaderHostedService> logger) : BackgroundService
+internal class VkChannelReaderHostedService(
+        VkEventsDispatcher dispatcher,
+        IServiceProvider serviceProvider,
+        ILogger<VkChannelReaderHostedService> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

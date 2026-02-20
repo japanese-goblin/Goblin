@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
@@ -16,11 +13,11 @@ public class WeatherService : IWeatherService
     private const string DailyCacheKey = "Weather_Daily";
     private const string NowCacheKey = "Weather_Now";
     private const string NotFoundCacheKey = "Weather_NotFound";
-    
+
     private static readonly TimeSpan CurrentWeatherExpireTime = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan DailyWeatherExpireTime = TimeSpan.FromHours(3);
     private static readonly TimeSpan NotFoundExpireTime = TimeSpan.FromMinutes(15);
-    
+
     private readonly IMemoryCache _cache;
     private readonly ILogger<WeatherService> _logger;
     private readonly IOpenWeatherMapApi _weatherMapApi;

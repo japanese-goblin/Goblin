@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Goblin.Application.Core.Abstractions;
+﻿using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
 using Goblin.Narfu.Abstractions;
@@ -37,7 +34,7 @@ public class ScheduleService : IScheduleService
                 Keyboard = DefaultKeyboards.GetScheduleKeyboard()
             };
         }
-        catch(Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        catch(Exception ex) when(ex is HttpRequestException or TaskCanceledException)
         {
             return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
         }

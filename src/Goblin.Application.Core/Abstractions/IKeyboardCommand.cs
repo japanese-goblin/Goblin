@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Goblin.Application.Core.Models;
 using Goblin.Domain.Entities;
 

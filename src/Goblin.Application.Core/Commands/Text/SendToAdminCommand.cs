@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
@@ -37,8 +34,8 @@ public class SendToAdminCommand : ITextCommand
         var message = $"Сообщение от {msg.UserTag}:\n{text}";
         var adminUsers = await _db.BotUsers.Where(x => x.IsAdmin &&
                                                        x.ConsumerType == user.ConsumerType)
-                              .Select(x => x.Id)
-                              .ToArrayAsync();
+                                  .Select(x => x.Id)
+                                  .ToArrayAsync();
         var sender = _senders.First(x => x.ConsumerType == ConsumerType.Vkontakte);
 
         foreach(var admin in adminUsers)

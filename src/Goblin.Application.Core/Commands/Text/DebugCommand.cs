@@ -1,8 +1,5 @@
-using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Success;
@@ -52,12 +49,12 @@ public class DebugCommand : ITextCommand
         }
 
         var subscriptions = _db.BotUsers.AsEnumerable().GroupBy(x => x.ConsumerType)
-                         .Select(x => new GroupUsersResponse
-                         {
-                             ConsumerType = x.Key,
-                             ScheduleSubscriptions = x.Count(u => u.HasScheduleSubscription),
-                             WeatherSubscriptions = x.Count(u => u.HasWeatherSubscription)
-                         }).ToArray();
+                               .Select(x => new GroupUsersResponse
+                               {
+                                   ConsumerType = x.Key,
+                                   ScheduleSubscriptions = x.Count(u => u.HasScheduleSubscription),
+                                   WeatherSubscriptions = x.Count(u => u.HasWeatherSubscription)
+                               }).ToArray();
 
         strBuilder.AppendLine()
                   .AppendFormat("Подписки - {0} погода, {1} расписание. Из них:",

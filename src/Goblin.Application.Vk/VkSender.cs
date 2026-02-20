@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
+﻿using System.Security.Cryptography;
 using Goblin.Application.Core;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Vk.Converters;
@@ -88,7 +84,7 @@ public class VkSender : ISender
         {
             return text;
         }
-        
+
         const string separator = "...";
         var limit = TextLimit - separator.Length - 2;
         return $"{text[..limit]}...";

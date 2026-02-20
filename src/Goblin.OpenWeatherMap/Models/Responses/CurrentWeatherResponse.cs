@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json.Serialization;
 using Goblin.OpenWeatherMap.Models.Current;
 
@@ -64,8 +63,7 @@ public class CurrentWeatherResponse
     /// <summary>
     /// Время получения погоды со станции
     /// </summary>
-    [JsonPropertyName("dt")]
-    [JsonConverter(typeof(UnixTimeConverter))]
+    [JsonPropertyName("dt"), JsonConverter(typeof(UnixTimeConverter))]
     public DateTimeOffset UnixTime { get; set; }
 
     /// <summary>

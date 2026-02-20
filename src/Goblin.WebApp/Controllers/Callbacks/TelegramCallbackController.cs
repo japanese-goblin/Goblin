@@ -6,8 +6,7 @@ using Telegram.Bot.Types;
 
 namespace Goblin.WebApp.Controllers.Callbacks;
 
-[ApiController]
-[Route("/api/callback/tg")]
+[ApiController, Route("/api/callback/tg")]
 public class TelegramCallbackController(IOptions<TelegramOptions> optionsAccessor, TelegramEventsDispatcher dispatcher) : ControllerBase
 {
     private readonly TelegramOptions _options = optionsAccessor.Value;

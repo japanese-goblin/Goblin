@@ -15,6 +15,9 @@ public class CoreKeyboardButton
         PayloadKey = key;
         PayloadValue = value;
     }
-    
-    public string GetPayload() => Payload = $"{{\"{PayloadKey}\":\"{PayloadValue}\"}}";
+
+    public string GetPayload()
+    {
+        return Payload = $"{{\"{PayloadKey}\":\"{PayloadValue}\"}}";
+    }
 }

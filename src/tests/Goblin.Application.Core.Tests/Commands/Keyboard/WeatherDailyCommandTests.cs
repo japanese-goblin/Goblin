@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Commands.Keyboard;
 using Goblin.Application.Core.Results.Failed;

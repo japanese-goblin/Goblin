@@ -10,6 +10,9 @@ public static class DependencyInjection
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        services.AddDbContext<BotDbContext>(options => { options.UseNpgsql(connectionString); });
+        services.AddDbContext<BotDbContext>(options =>
+        {
+            options.UseNpgsql(connectionString);
+        });
     }
 }

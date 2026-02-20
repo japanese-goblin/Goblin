@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using Goblin.Domain;
 
@@ -11,12 +9,12 @@ public class Message
     public long ChatId { get; set; }
 
     public string UserTag { get; set; }
-        
+
     public string Text { get; set; }
     public string Payload { get; set; }
 
     public bool IsConversation => UserId != ChatId;
-    
+
     public ConsumerType ConsumerType { get; set; }
 
     public string[] CommandParameters

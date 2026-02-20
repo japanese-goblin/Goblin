@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Json;
 using Goblin.OpenWeatherMap.Abstractions;
 using Goblin.OpenWeatherMap.Models.Daily;
 using Goblin.OpenWeatherMap.Models.Responses;
@@ -18,7 +14,8 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
     private readonly HttpClient _client;
     private readonly OpenWeatherMapApiOptions _options;
 
-    public OpenWeatherMapApi(IHttpClientFactory httpClientFactory, IOptions<OpenWeatherMapApiOptions> optionsAccessor, ILogger<OpenWeatherMapApi> logger)
+    public OpenWeatherMapApi(IHttpClientFactory httpClientFactory, IOptions<OpenWeatherMapApiOptions> optionsAccessor,
+                             ILogger<OpenWeatherMapApi> logger)
     {
         _options = optionsAccessor.Value;
         _client = httpClientFactory.CreateClient(Defaults.HttpClientName);

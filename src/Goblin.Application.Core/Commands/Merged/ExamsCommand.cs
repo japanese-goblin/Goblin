@@ -1,6 +1,3 @@
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
@@ -42,12 +39,13 @@ public class ExamsCommand : IKeyboardCommand, ITextCommand
             {
                 str = $"{str[..4000]}...\n\nПолный список экзаменов можете посмотреть на сайте";
             }
+
             return new SuccessfulResult
             {
                 Message = str
             };
         }
-        catch(Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        catch(Exception ex) when(ex is HttpRequestException or TaskCanceledException)
         {
             return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
         }

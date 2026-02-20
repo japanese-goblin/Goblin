@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Goblin.Application.Core.Models;
+﻿namespace Goblin.Application.Core.Models;
 
 public class CoreKeyboard
 {

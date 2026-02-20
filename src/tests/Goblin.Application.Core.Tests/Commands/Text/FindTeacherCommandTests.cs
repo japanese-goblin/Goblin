@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Goblin.Application.Core.Commands.Text;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;

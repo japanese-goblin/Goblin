@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Goblin.Application.Core.Commands.Text;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
@@ -9,10 +8,7 @@ namespace Goblin.Application.Core.Tests.Commands.Text;
 
 public class AddRemindCommandTests : TestBase
 {
-    [Theory]
-    [InlineData("сегодня")]
-    [InlineData("завтра")]
-    [InlineData("21.01.2150")]
+    [Theory, InlineData("сегодня"), InlineData("завтра"), InlineData("21.01.2150")]
     public async Task ShouldReturnSuccessfulResult(string date)
     {
         var command = new AddRemindCommand(ApplicationContext);

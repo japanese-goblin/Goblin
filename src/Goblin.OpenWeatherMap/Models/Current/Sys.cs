@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Goblin.OpenWeatherMap.Models.Current;
 
@@ -17,11 +16,9 @@ public class Sys
     [JsonPropertyName("country")]
     public string Country { get; set; }
 
-    [JsonPropertyName("sunrise")]
-    [JsonConverter(typeof(UnixTimeConverter))]
+    [JsonPropertyName("sunrise"), JsonConverter(typeof(UnixTimeConverter))]
     public DateTimeOffset Sunrise { get; set; }
 
-    [JsonPropertyName("sunset")]
-    [JsonConverter(typeof(UnixTimeConverter))]
+    [JsonPropertyName("sunset"), JsonConverter(typeof(UnixTimeConverter))]
     public DateTimeOffset Sunset { get; set; }
 }

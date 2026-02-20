@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Goblin.OpenWeatherMap.Models.Daily;
+﻿using Goblin.OpenWeatherMap.Models.Daily;
 using Goblin.OpenWeatherMap.Models.Responses;
 
 namespace Goblin.OpenWeatherMap.Abstractions;

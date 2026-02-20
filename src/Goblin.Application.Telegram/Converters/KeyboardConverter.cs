@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Goblin.Application.Core.Models;
+﻿using Goblin.Application.Core.Models;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Goblin.Application.Telegram.Converters;
@@ -12,7 +11,7 @@ public static class KeyboardConverter
         {
             return null;
         }
-        
+
         coreKeyboard.RemoveReturnToMenuButton();
 
         return coreKeyboard.IsInline ? GenerateInlineKeyboard() : GenerateReplyKeyboard();
@@ -32,7 +31,7 @@ public static class KeyboardConverter
                 tgButtonsList.Add(currentLine);
                 currentLine = new List<KeyboardButton>();
             }
-                
+
             var keyboard = new ReplyKeyboardMarkup(tgButtonsList)
             {
                 OneTimeKeyboard = coreKeyboard.IsOneTime,

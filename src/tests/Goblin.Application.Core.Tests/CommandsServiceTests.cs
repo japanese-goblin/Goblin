@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Commands.Merged;
 using Goblin.Application.Core.Tests.Models;

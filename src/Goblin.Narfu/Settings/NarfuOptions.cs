@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Goblin.Narfu.Settings;
+﻿namespace Goblin.Narfu.Settings;
 
 public class NarfuApiOptions
 {

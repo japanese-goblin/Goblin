@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.ICalParser;
 using Goblin.Narfu.Models;
@@ -101,11 +96,11 @@ public class StudentsSchedule : IStudentsSchedule
             var description = ev.Description.Split("\\n");
             var address = ev.Location.Split('/');
 
-            if (!int.TryParse(description[0][0].ToString(), out var number))
+            if(!int.TryParse(description[0][0].ToString(), out var number))
             {
                 number = 1; //в расписании бывают пары, у которых нет номера: п (11:46-11:59)
             }
-                
+
             var lesson = new Lesson
             {
                 Id = ev.Uid,

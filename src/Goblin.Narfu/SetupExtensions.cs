@@ -1,5 +1,4 @@
-﻿using System;
-using Goblin.Narfu.Abstractions;
+﻿using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

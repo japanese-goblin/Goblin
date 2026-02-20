@@ -8,6 +8,6 @@ Serilog:
 Application:
   EnableSwagger: true
 
-ConnectionStrings: 
+ConnectionStrings:
   DefaultConnection: "Host=localhost;Port=51946;Database=goblin;User ID=postgres;Password=postgres;Pooling=true;"
 

@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Vk.Converters;
@@ -34,6 +30,7 @@ public class VkCallbackHandler
         _commandsService = commandsService;
         _db = db;
         _vkApi = vkApi;
+
         // TODO: keyed service
         _sender = senders.First(x => x.ConsumerType == ConsumerType.Vkontakte);
         _options = options.Value;
@@ -87,6 +84,7 @@ public class VkCallbackHandler
                 _logger.LogWarning("Не удалось преобразовать обновление {GroupUpdateType}", upd.Type.Value);
                 return;
             }
+
             await GroupLeave(groupLeaveEvent);
         }
         else if(upd.Type.Value == GroupUpdateType.GroupJoin)
@@ -96,6 +94,7 @@ public class VkCallbackHandler
                 _logger.LogWarning("Не удалось преобразовать обновление {GroupUpdateType}", upd.Type.Value);
                 return;
             }
+
             await GroupJoin(groupJoinEvent);
         }
         else
@@ -147,7 +146,7 @@ public class VkCallbackHandler
         {
             try
             {
-                await _vkApi.Messages.EditAsync(new MessageEditParams()
+                await _vkApi.Messages.EditAsync(new MessageEditParams
                 {
                     PeerId = messageEvent.PeerId.GetValueOrDefault(0),
                     ConversationMessageId = messageEvent.ConversationMessageId,
@@ -166,7 +165,7 @@ public class VkCallbackHandler
             await _vkApi.Messages.SendMessageEventAnswerAsync(messageEvent.EventId,
                                                               messageEvent.UserId.GetValueOrDefault(0),
                                                               messageEvent.PeerId.GetValueOrDefault(0),
-                                                              new EventData()
+                                                              new EventData
                                                               {
                                                                   Type = MessageEventType.ShowSnackbar,
                                                                   Text = res.Message

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
 using Goblin.DataAccess;
@@ -29,8 +25,8 @@ public class WeatherTask
     public async Task Execute()
     {
         var consumersGroup = _db.BotUsers.AsNoTracking().Where(x => x.HasWeatherSubscription)
-                         .ToArray()
-                         .GroupBy(x => x.ConsumerType);
+                                .ToArray()
+                                .GroupBy(x => x.ConsumerType);
         foreach(var consumerGroup in consumersGroup)
         {
             var sender = _senders.First(x => x.ConsumerType == consumerGroup.Key);

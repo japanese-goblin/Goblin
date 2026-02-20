@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Goblin.Application.Core.Commands.Text;
 using Goblin.Application.Core.Results.Failed;
 using Goblin.Application.Core.Results.Success;
@@ -13,10 +12,7 @@ namespace Goblin.Application.Core.Tests.Commands.Text;
 
 public class SetDataCommandTests : TestBase
 {
-    [Theory]
-    [InlineData("город Москва")]
-    [InlineData("группу 353535")]
-    [InlineData("группа 353535")]
+    [Theory, InlineData("город Москва"), InlineData("группу 353535"), InlineData("группа 353535")]
     public async Task ShouldReturnSuccessfulResult(string parameters)
     {
         var command = new SetDataCommand(ApplicationContext, GetWeatherApi(), GetNarfuApi());

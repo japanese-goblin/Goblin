@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Goblin.Application.Core;
+﻿using Goblin.Application.Core;
 using Goblin.DataAccess;
 using Goblin.Domain;
 
@@ -38,7 +35,7 @@ public class SendToUsersTasks
             await sender.SendToMany(users, text, keyboard, attachments);
         }
     }
-    
+
     public async Task SendToId(long chatId, string text, ICollection<string> attachments, ConsumerType type)
     {
         var sender = _senders.First(x => x.ConsumerType == type);

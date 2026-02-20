@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
@@ -12,7 +10,9 @@ namespace Goblin.Application.Core.Commands.Keyboard;
 public class MailingCommand : IKeyboardCommand
 {
     private const string Success = "Успешно.";
+
     public string Trigger => "mailing";
+
     private readonly BotDbContext _db;
 
     public MailingCommand(BotDbContext db)

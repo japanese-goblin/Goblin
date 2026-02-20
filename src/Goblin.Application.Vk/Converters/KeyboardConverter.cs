@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Goblin.Application.Core.Models;
+﻿using Goblin.Application.Core.Models;
 using VkNet.Enums.StringEnums;
 using VkNet.Model;
 
@@ -14,6 +12,7 @@ public static class KeyboardConverter
         {
             return null;
         }
+
         var kb = new KeyboardBuilder();
         var inlineKeyboardEnabled = coreKeyboard.IsInline && isInlineKeyboardAllowed;
         if(!isInlineKeyboardAllowed)
@@ -42,12 +41,13 @@ public static class KeyboardConverter
             foreach(var button in line)
             {
                 var color = FromCoreColorToVk(button.Color);
-                kb.AddButton(new MessageKeyboardButtonAction()
+                kb.AddButton(new MessageKeyboardButtonAction
                 {
                     Label = button.Title,
                     Payload = button.Payload,
                     Type = inlineKeyboardEnabled ? KeyboardButtonActionType.Callback : KeyboardButtonActionType.Text,
                 }, color);
+
                 // kb.AddButton(button.Title, button.PayloadValue, color, button.PayloadKey);
             }
 

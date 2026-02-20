@@ -1,5 +1,4 @@
-﻿using System;
-using Goblin.OpenWeatherMap.Abstractions;
+﻿using Goblin.OpenWeatherMap.Abstractions;
 using Goblin.OpenWeatherMap.Settings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

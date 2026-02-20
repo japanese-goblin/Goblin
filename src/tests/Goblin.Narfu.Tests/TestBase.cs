@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Net.Http;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Settings;
 using Microsoft.Extensions.Logging;
@@ -67,7 +64,7 @@ public class TestBase
             NarfuGroupsLink = "http://groups/"
         });
 
-        Api = new NarfuApi(factory, 
+        Api = new NarfuApi(factory,
                            options,
                            Substitute.For<ILogger<Schedule.TeachersSchedule>>(),
                            Substitute.For<ILogger<Schedule.StudentsSchedule>>());

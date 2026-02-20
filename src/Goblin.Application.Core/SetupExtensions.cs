@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Reflection;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Options;
@@ -46,7 +45,7 @@ public static class DependencyInjection
     }
 
     private static void RegisterAllTypes<T>(this IServiceCollection services, Assembly[] assemblies,
-                                           ServiceLifetime lifetime = ServiceLifetime.Transient)
+                                            ServiceLifetime lifetime = ServiceLifetime.Transient)
     {
         var typesFromAssemblies = assemblies.SelectMany(a => a.DefinedTypes
                                                               .Where(x => x.GetInterfaces()

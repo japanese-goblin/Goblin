@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Goblin.OpenWeatherMap.Models.Daily;
@@ -9,8 +8,7 @@ public class DailyWeatherListItem
     /// <summary>
     /// Дата погоды
     /// </summary>
-    [JsonPropertyName("dt")]
-    [JsonConverter(typeof(UnixTimeConverter))]
+    [JsonPropertyName("dt"), JsonConverter(typeof(UnixTimeConverter))]
     public DateTimeOffset UnixTime { get; set; }
 
     /// <summary>

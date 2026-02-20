@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Goblin.Application.Core.Commands.Text;
 using Goblin.Application.Core.Results.Success;
 using Xunit;

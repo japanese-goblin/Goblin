@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace Goblin.Application.Core.Abstractions;
+﻿namespace Goblin.Application.Core.Abstractions;
 
 public interface IWeatherService
 {

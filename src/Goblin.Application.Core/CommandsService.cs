@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
@@ -29,8 +25,8 @@ public class CommandsService
     }
 
     public async Task ExecuteCommand(Message msg,
-                                        Func<IResult, Task> onSuccess,
-                                        Func<IResult, Task> onFailed)
+                                     Func<IResult, Task> onSuccess,
+                                     Func<IResult, Task> onFailed)
     {
         IResult result;
         var user = await GetBotUser(msg.UserId, msg.ConsumerType);

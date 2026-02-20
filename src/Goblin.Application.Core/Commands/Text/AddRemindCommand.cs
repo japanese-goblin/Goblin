@@ -1,7 +1,4 @@
-using System;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
@@ -84,17 +81,17 @@ public class AddRemindCommand : ITextCommand
     private static bool ParseTime(string date, string time, out DateTimeOffset dateTime)
     {
         var isCorrect = DateTimeOffset.TryParseExact($"{date} {time}",
-                                               new[]
-                                               {
-                                                   "dd.MM.yyyy HH:mm", "d.MM.yyyy HH:mm",
-                                                   "dd.M.yyyy HH:mm", "d.M.yyyy HH:mm",
-                                                   "dd.MM.yyyy H:mm", "d.MM.yyyy H:mm",
-                                                   "dd.M.yyyy H:mm", "d.M.yyyy H:mm",
-                                                   "dd.MM.yyyy HH:m", "d.MM.yyyy HH:m",
-                                                   "dd.M.yyyy HH:m", "d.M.yyyy HH:m",
-                                                   "dd.MM.yyyy H:m", "d.MM.yyyy H:m",
-                                                   "dd.M.yyyy H:m", "d.M.yyyy H:m"
-                                               }, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out dateTime);
+                                                     new[]
+                                                     {
+                                                         "dd.MM.yyyy HH:mm", "d.MM.yyyy HH:mm",
+                                                         "dd.M.yyyy HH:mm", "d.M.yyyy HH:mm",
+                                                         "dd.MM.yyyy H:mm", "d.MM.yyyy H:mm",
+                                                         "dd.M.yyyy H:mm", "d.M.yyyy H:mm",
+                                                         "dd.MM.yyyy HH:m", "d.MM.yyyy HH:m",
+                                                         "dd.M.yyyy HH:m", "d.M.yyyy HH:m",
+                                                         "dd.MM.yyyy H:m", "d.MM.yyyy H:m",
+                                                         "dd.M.yyyy H:m", "d.M.yyyy H:m"
+                                                     }, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out dateTime);
 
         return isCorrect;
     }

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Goblin.OpenWeatherMap;
-sealed class UnixTimeConverter : JsonConverter<DateTimeOffset>
+
+internal sealed class UnixTimeConverter : JsonConverter<DateTimeOffset>
 {
     public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

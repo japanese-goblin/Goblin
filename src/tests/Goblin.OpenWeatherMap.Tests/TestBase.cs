@@ -46,7 +46,7 @@ public class TestBase
         factory.CreateClient(Arg.Any<string>())
                .Returns(Substitute.For<HttpClient>());
 
-        var options = Options.Create(new OpenWeatherMapApiOptions()
+        var options = Options.Create(new OpenWeatherMapApiOptions
         {
             AccessToken = "test-token"
         });

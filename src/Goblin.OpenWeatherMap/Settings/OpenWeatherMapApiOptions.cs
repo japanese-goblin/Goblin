@@ -1,5 +1,3 @@
-using System;
-
 namespace Goblin.OpenWeatherMap.Settings;
 
 public class OpenWeatherMapApiOptions

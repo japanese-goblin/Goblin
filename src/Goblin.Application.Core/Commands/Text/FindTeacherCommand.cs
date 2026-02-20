@@ -1,7 +1,3 @@
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Core.Results.Failed;
@@ -64,7 +60,7 @@ public class FindTeacherCommand : ITextCommand
                 Keyboard = keyboard
             };
         }
-        catch(Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        catch(Exception ex) when(ex is HttpRequestException or TaskCanceledException)
         {
             return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
         }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Xunit;
 
 namespace Goblin.Narfu.Tests.TeachersSchedule;
