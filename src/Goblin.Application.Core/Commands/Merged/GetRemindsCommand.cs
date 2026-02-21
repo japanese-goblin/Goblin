@@ -31,7 +31,7 @@ public class GetRemindsCommand : IKeyboardCommand, ITextCommand
         strBuilder.AppendLine("Список напоминаний:");
         foreach(var userRemind in reminds.OrderBy(x => x.Date))
         {
-            strBuilder.AppendFormat("{0:dd.MM.yyyy HH:mm} - {1}", userRemind.Date, userRemind.Text)
+            strBuilder.Append($"{userRemind.Date:dd.MM.yyyy HH:mm} - {userRemind.Text}")
                       .AppendLine();
         }
 

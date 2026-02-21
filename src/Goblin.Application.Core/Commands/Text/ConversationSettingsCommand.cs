@@ -82,7 +82,7 @@ public class ConversationSettingsCommand : ITextCommand
 
         if(job.NarfuGroup.HasValue)
         {
-            strBuilder.AppendFormat("Группа САФУ: {0}", job.NarfuGroup);
+            strBuilder.Append($"Группа САФУ: {job.NarfuGroup}");
         }
         else
         {
@@ -93,7 +93,7 @@ public class ConversationSettingsCommand : ITextCommand
 
         if(!string.IsNullOrWhiteSpace(job.WeatherCity))
         {
-            strBuilder.AppendFormat("Город: {0}", job.WeatherCity);
+            strBuilder.Append($"Город: {job.WeatherCity}");
         }
         else
         {
@@ -102,7 +102,7 @@ public class ConversationSettingsCommand : ITextCommand
 
         strBuilder.AppendLine();
 
-        strBuilder.AppendFormat("Время рассылки: {0}:{1}", job.Time.Hour, job.Time.Minute);
+        strBuilder.Append($"Время рассылки: {job.Time.Hour}:{job.Time.Minute}");
 
         return CommandExecutionResult.Success(strBuilder.ToString());
     }
