@@ -4,12 +4,15 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Goblin.DataAccess;
 
-public static class DependencyInjection
+public static class SetupExtensions
 {
     public static void AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        services.AddDbContext<BotDbContext>(options => { options.UseNpgsql(connectionString); });
+        services.AddDbContext<BotDbContext>(options =>
+        {
+            options.UseNpgsql(connectionString);
+        });
     }
 }

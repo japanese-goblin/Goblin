@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
+﻿using System.Security.Cryptography;
 using Goblin.Application.Core;
 using Goblin.Application.Core.Models;
 using Goblin.Application.Vk.Converters;
@@ -13,7 +9,7 @@ using VkNet.Model;
 
 namespace Goblin.Application.Vk;
 
-public class VkSender : ISender
+public class VkSender(IVkApi vkApi, ILogger<VkSender> logger) : ISender
 {
     private const int ChunkLimit = 100;
     public int TextLimit => 4096;
@@ -30,22 +26,14 @@ public class VkSender : ISender
         ["market"] = typeof(Market)
     };
 
-    private readonly IVkApi _vkApi;
-    private readonly ILogger _logger;
-    private readonly RandomNumberGenerator _randomGenerator;
+    private readonly ILogger _logger = logger;
+    private readonly RandomNumberGenerator _randomGenerator = RandomNumberGenerator.Create();
 
-    public VkSender(IVkApi vkApi, ILogger<VkSender> logger)
-    {
-        _vkApi = vkApi;
-        _logger = logger;
-        _randomGenerator = RandomNumberGenerator.Create();
-    }
-
-    public Task Send(long chatId, string message, CoreKeyboard keyboard = null, IEnumerable<string> attachments = null)
+    public Task Send(long chatId, string message, CoreKeyboard? keyboard = null, IReadOnlyCollection<string>? attachments = null)
     {
         message = TrimText(message);
 
-        return _vkApi.Messages.SendAsync(new MessagesSendParams
+        return vkApi.Messages.SendAsync(new MessagesSendParams
         {
             PeerId = chatId,
             Message = message,
@@ -55,8 +43,8 @@ public class VkSender : ISender
         });
     }
 
-    public async Task SendToMany(IEnumerable<long> chatIds, string message, CoreKeyboard keyboard = null,
-                                 IEnumerable<string> attachments = null)
+    public async Task SendToMany(IReadOnlyCollection<long> chatIds, string message, CoreKeyboard? keyboard = null,
+                                 IReadOnlyCollection<string>? attachments = null)
     {
         message = TrimText(message);
 
@@ -64,7 +52,7 @@ public class VkSender : ISender
         {
             try
             {
-                await _vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams
+                await vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams
                 {
                     UserIds = chunk,
                     Message = message,
@@ -88,13 +76,13 @@ public class VkSender : ISender
         {
             return text;
         }
-        
+
         const string separator = "...";
         var limit = TextLimit - separator.Length - 2;
         return $"{text[..limit]}...";
     }
 
-    private IEnumerable<MediaAttachment> ConvertAttachments(IEnumerable<string> attachments)
+    private List<MediaAttachment>? ConvertAttachments(IEnumerable<string>? attachments)
     {
         if(attachments is null)
         {
@@ -117,7 +105,7 @@ public class VkSender : ISender
                                attach.Id = long.Parse(data[1]);
                                return attach;
                            }).ToArray();
-            if(!selected.Any())
+            if(selected.Length == 0)
             {
                 continue;
             }
@@ -125,7 +113,7 @@ public class VkSender : ISender
             attachmentList.AddRange(selected);
         }
 
-        return attachmentList.Any() ? attachmentList : null;
+        return attachmentList.Count == 0 ? null : attachmentList;
     }
 
     private int GetRandomId()

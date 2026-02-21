@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
@@ -43,6 +38,6 @@ public class TeachersSchedule : ITeacherSchedule
         _logger.LogDebug("Поиск преподавателя {TeacherName}", name);
         var teachers = await _client.GetFromJsonAsync<Teacher[]>($"i/ac.php?term={name}");
         _logger.LogDebug("Поиск завершен");
-        return teachers;
+        return teachers ?? [];
     }
 }

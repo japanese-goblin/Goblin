@@ -1,21 +1,15 @@
-using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Core.Models;
-using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
 using Goblin.Domain;
-using Goblin.Domain.Entities;
 
 namespace Goblin.Application.Core.Commands.Text;
 
 public class DebugCommand : ITextCommand
 {
     public bool IsAdminCommand => true;
-    public string[] Aliases => new[] { "дебуг", "дебаг" };
+
+    public string[] Aliases => ["дебуг", "дебаг"];
 
     private readonly BotDbContext _db;
 
@@ -24,7 +18,7 @@ public class DebugCommand : ITextCommand
         _db = db;
     }
 
-    public Task<IResult> Execute(Message msg, BotUser user)
+    public Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
         var strBuilder = new StringBuilder();
 
@@ -38,44 +32,38 @@ public class DebugCommand : ITextCommand
                                     .GroupBy(x => x.ConsumerType)
                                     .ToDictionary(x => x.Key, x => x.Count());
 
-        strBuilder.AppendFormat("Время старта: {0:F}", startTime).AppendLine()
-                  .AppendFormat("Я работаю уже {0} часов {1} минут", uptime.Hours, uptime.Minutes)
+        strBuilder.Append($"Время старта: {startTime:F}").AppendLine()
+                  .Append($"Я работаю уже {uptime.Hours} часов {uptime.Minutes} минут")
                   .AppendLine()
-                  .AppendFormat("Мне уже {0} дней ({1:dd.MM.yyyy})", dis.Days, birthday)
+                  .Append($"Мне уже {dis.Days} дней ({birthday:dd.MM.yyyy})")
                   .AppendLine().AppendLine()
-                  .AppendFormat("Всего пользователей {0}, из них:", consumerTypeCounts.Sum(x => x.Value))
+                  .Append($"Всего пользователей {consumerTypeCounts.Sum(x => x.Value)}, из них:")
                   .AppendLine();
         foreach(var consumerTypeCount in consumerTypeCounts)
         {
-            strBuilder.AppendFormat("* {0} - {1}", consumerTypeCount.Key, consumerTypeCount.Value)
+            strBuilder.Append($"* {consumerTypeCount.Key} - {consumerTypeCount.Value}")
                       .AppendLine();
         }
 
         var subscriptions = _db.BotUsers.AsEnumerable().GroupBy(x => x.ConsumerType)
-                         .Select(x => new GroupUsersResponse
-                         {
-                             ConsumerType = x.Key,
-                             ScheduleSubscriptions = x.Count(u => u.HasScheduleSubscription),
-                             WeatherSubscriptions = x.Count(u => u.HasWeatherSubscription)
-                         }).ToArray();
+                               .Select(x => new GroupUsersResponse
+                               {
+                                   ConsumerType = x.Key,
+                                   ScheduleSubscriptions = x.Count(u => u.HasScheduleSubscription),
+                                   WeatherSubscriptions = x.Count(u => u.HasWeatherSubscription)
+                               }).ToArray();
 
         strBuilder.AppendLine()
-                  .AppendFormat("Подписки - {0} погода, {1} расписание. Из них:",
-                                subscriptions.Sum(x => x.WeatherSubscriptions),
-                                subscriptions.Sum(x => x.ScheduleSubscriptions))
+                  .Append($"Подписки - {subscriptions.Sum(x => x.WeatherSubscriptions)} погода, {subscriptions.Sum(x => x.ScheduleSubscriptions)} расписание. Из них:")
                   .AppendLine();
         foreach(var subscription in subscriptions)
         {
-            strBuilder.AppendFormat("* {0} - {1} погода, {2} расписание",
-                                    subscription.ConsumerType, subscription.WeatherSubscriptions,
-                                    subscription.ScheduleSubscriptions)
-                      .AppendLine();
+            strBuilder
+                    .Append($"* {subscription.ConsumerType} - {subscription.WeatherSubscriptions} погода, {subscription.ScheduleSubscriptions} расписание")
+                    .AppendLine();
         }
 
-        return Task.FromResult(new SuccessfulResult
-        {
-            Message = strBuilder.ToString()
-        } as IResult);
+        return Task.FromResult(CommandExecutionResult.Success(strBuilder.ToString()));
     }
 
     private class GroupUsersResponse

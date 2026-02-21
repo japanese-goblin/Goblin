@@ -1,5 +1,3 @@
-using System;
-
 namespace Goblin.Narfu.Models;
 
 public class Lesson : IEquatable<Lesson>
@@ -29,7 +27,7 @@ public class Lesson : IEquatable<Lesson>
         {
             return LessonType.Unknown;
         }
-        
+
         if(Type.Contains("экзамен", StringComparison.InvariantCultureIgnoreCase) ||
            Type.Contains("зачет", StringComparison.InvariantCultureIgnoreCase))
         {
@@ -45,12 +43,12 @@ public class Lesson : IEquatable<Lesson>
         {
             return LessonType.Laboratory;
         }
-        
+
         if(Type.Contains("лекции", StringComparison.InvariantCultureIgnoreCase))
         {
             return LessonType.Lecture;
         }
-        
+
         if(Type.Contains("консультация", StringComparison.InvariantCultureIgnoreCase))
         {
             return LessonType.Consultation;
@@ -59,7 +57,7 @@ public class Lesson : IEquatable<Lesson>
         return LessonType.Unknown;
     }
 
-    public bool Equals(Lesson other)
+    public bool Equals(Lesson? other)
     {
         if(ReferenceEquals(null, other))
         {
@@ -71,10 +69,11 @@ public class Lesson : IEquatable<Lesson>
             return true;
         }
 
-        return Type == other.Type && Name == other.Name && Number == other.Number && Auditory == other.Auditory && Teacher == other.Teacher && Groups == other.Groups;
+        return Type == other.Type && Name == other.Name && Number == other.Number && Auditory == other.Auditory &&
+               Teacher == other.Teacher && Groups == other.Groups;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if(ReferenceEquals(null, obj))
         {
@@ -86,7 +85,7 @@ public class Lesson : IEquatable<Lesson>
             return true;
         }
 
-        if(obj.GetType() != this.GetType())
+        if(obj.GetType() != GetType())
         {
             return false;
         }

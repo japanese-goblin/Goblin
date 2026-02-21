@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json.Serialization;
 
 namespace Goblin.OpenWeatherMap.Models.Daily;
@@ -9,8 +8,7 @@ public class DailyWeatherListItem
     /// <summary>
     /// Дата погоды
     /// </summary>
-    [JsonPropertyName("dt")]
-    [JsonConverter(typeof(UnixTimeConverter))]
+    [JsonPropertyName("dt"), JsonConverter(typeof(UnixTimeConverter))]
     public DateTimeOffset UnixTime { get; set; }
 
     /// <summary>
@@ -77,18 +75,17 @@ public class DailyWeatherListItem
     {
         var strBuilder = new StringBuilder();
 
-        strBuilder.AppendFormat("Температура: от {0:+#;-#;0}°С до {1:+#;-#;0}°С", Temperature.Min,
-                                Temperature.Max).AppendLine();
-        strBuilder.AppendFormat("Утром: {0:+#;-#;0}°С", Temperature.Morning).AppendLine();
-        strBuilder.AppendFormat("Днём: {0:+#;-#;0}°С", Temperature.Day).AppendLine();
-        strBuilder.AppendFormat("Вечером: {0:+#;-#;0}°С", Temperature.Evening).AppendLine();
-        strBuilder.AppendFormat("Ночью: {0:+#;-#;0}°С", Temperature.Night).AppendLine();
+        strBuilder.Append($"Температура: от {Temperature.Min:+#;-#;0}°С до {Temperature.Max:+#;-#;0}°С").AppendLine();
+        strBuilder.Append($"Утром: {Temperature.Morning:+#;-#;0}°С").AppendLine();
+        strBuilder.Append($"Днём: {Temperature.Day:+#;-#;0}°С").AppendLine();
+        strBuilder.Append($"Вечером: {Temperature.Evening:+#;-#;0}°С").AppendLine();
+        strBuilder.Append($"Ночью: {Temperature.Night:+#;-#;0}°С").AppendLine();
         strBuilder.AppendLine();
-        strBuilder.AppendFormat("Описание: {0}", Weather[0].Description).AppendLine();
-        strBuilder.AppendFormat("Влажность: {0}%", Humidity).AppendLine();
-        strBuilder.AppendFormat("Ветер: {0:N0} м/с", WindSpeed).AppendLine();
-        strBuilder.AppendFormat("Давление: {0:N0} мм.рт.ст", Pressure * Defaults.PressureConvert).AppendLine();
-        strBuilder.AppendFormat("Облачность: {0}%", Cloudiness).AppendLine();
+        strBuilder.Append($"Описание: {Weather[0].Description}").AppendLine();
+        strBuilder.Append($"Влажность: {Humidity}%").AppendLine();
+        strBuilder.Append($"Ветер: {WindSpeed:N0} м/с").AppendLine();
+        strBuilder.Append($"Давление: {Pressure * Defaults.PressureConvert:N0} мм.рт.ст").AppendLine();
+        strBuilder.Append($"Облачность: {Cloudiness}%").AppendLine();
 
         return strBuilder.ToString();
     }

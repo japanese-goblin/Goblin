@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Goblin.Narfu.ICalParser;
 
-public class Calendar
+public partial class Calendar(string source)
 {
-    public CalendarEvent[] Events { get; }
+    public CalendarEvent[] Events { get; } = GetEvents(source).ToArray();
 
-    public Calendar(string source)
+    private static Dictionary<string, string> ParseVEventFields(string source)
     {
-        Events = GetEvents(source).ToArray();
-    }
-
-    private static IDictionary<string, string> ParseVEventFields(string source)
-    {
-        var regex = new Regex(@"[^|\n][A-Z-]+:", RegexOptions.Singleline | RegexOptions.Compiled);
+        var regex = EventFieldsRegex();
 
         var eventDictionary = new Dictionary<string, string>();
         var lastAddedKey = "";
@@ -63,4 +55,7 @@ public class Calendar
                                            field["LOCATION"], field["SUMMARY"]);
         }
     }
+
+    [GeneratedRegex(@"[^|\n][A-Z-]+:", RegexOptions.Compiled | RegexOptions.Singleline)]
+    private static partial Regex EventFieldsRegex();
 }

@@ -1,50 +1,31 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
-using Goblin.Narfu.Abstractions;
+﻿using Goblin.Narfu.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core.Services;
 
-public class ScheduleService : IScheduleService
+public class ScheduleService(INarfuApi narfuApi, ILogger<ScheduleService> logger) : IScheduleService
 {
-    private readonly INarfuApi _narfuApi;
-    private readonly ILogger<ScheduleService> _logger;
-
-    public ScheduleService(INarfuApi narfuApi, ILogger<ScheduleService> logger)
+    public async Task<CommandExecutionResult> GetSchedule(int narfuGroup, DateTime date)
     {
-        _narfuApi = narfuApi;
-        _logger = logger;
-    }
-
-    public async Task<IResult> GetSchedule(int narfuGroup, DateTime date)
-    {
-        if(!_narfuApi.Students.IsCorrectGroup(narfuGroup))
+        var group = narfuApi.Students.GetGroupByRealId(narfuGroup);
+        if(group is null)
         {
-            return new FailedResult($"Группа {narfuGroup} не найдена");
+            return CommandExecutionResult.Failed($"Группа {narfuGroup} не найдена");
         }
 
         try
         {
-            var schedule = await _narfuApi.Students.GetScheduleAtDate(narfuGroup, date);
-
-            return new SuccessfulResult
-            {
-                Message = schedule.ToString(),
-                Keyboard = DefaultKeyboards.GetScheduleKeyboard()
-            };
+            var schedule = await narfuApi.Students.GetScheduleAtDate(narfuGroup, date);
+            return CommandExecutionResult.Success(schedule.ToString(), DefaultKeyboards.GetScheduleKeyboard());
         }
-        catch(Exception ex) when (ex is HttpRequestException or TaskCanceledException)
+        catch(Exception ex) when(ex is HttpRequestException or TaskCanceledException)
         {
-            return new FailedResult(DefaultErrors.NarfuSiteIsUnavailable);
+            return CommandExecutionResult.Failed(DefaultErrors.NarfuSiteIsUnavailable);
         }
         catch(Exception ex)
         {
-            _logger.LogError(ex, "Ошибка при получении расписания на день");
-            return new FailedResult(DefaultErrors.NarfuUnexpectedError);
+            logger.LogError(ex, "Ошибка при получении расписания на день");
+            return CommandExecutionResult.Failed(DefaultErrors.NarfuUnexpectedError);
         }
     }
 }

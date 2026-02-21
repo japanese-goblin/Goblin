@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Goblin.DataAccess.Migrations.BotDb
+namespace Goblin.DataAccess.Migrations
 {
     [DbContext(typeof(BotDbContext))]
     [Migration("20200804182653_ChangeCronTimeField")]

@@ -1,42 +1,28 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Json;
 using Goblin.OpenWeatherMap.Abstractions;
 using Goblin.OpenWeatherMap.Models.Daily;
 using Goblin.OpenWeatherMap.Models.Responses;
+using Goblin.OpenWeatherMap.Settings;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Goblin.OpenWeatherMap;
 
-public class OpenWeatherMapApi : IOpenWeatherMapApi
+public class OpenWeatherMapApi(
+        IHttpClientFactory httpClientFactory,
+        IOptions<OpenWeatherMapApiOptions> optionsAccessor,
+        ILogger<OpenWeatherMapApi> logger)
+        : IOpenWeatherMapApi
 {
-    private readonly ILogger _logger;
-    private readonly string _token;
-    private readonly HttpClient _client;
-
-    public OpenWeatherMapApi(string token, IHttpClientFactory factory, ILogger<OpenWeatherMapApi> logger)
-    {
-        _logger = logger;
-        
-        if(string.IsNullOrWhiteSpace(token))
-        {
-            throw new ArgumentException("Токен пуст");
-        }
-        _token = token;
-
-        _client = factory.CreateClient("open-weather-map-api");
-        _client.Timeout = TimeSpan.FromSeconds(5);
-        _client.BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/");
-    }
+    private readonly HttpClient _client = httpClientFactory.CreateClient(Defaults.HttpClientName);
+    private readonly OpenWeatherMapApiOptions _options = optionsAccessor.Value;
 
     /// <inheritdoc />
     public async Task<CurrentWeatherResponse> GetCurrentWeather(string city)
     {
-        _logger.LogDebug("Получение погоды на текущий момент в городе {City}", city);
+        logger.LogDebug("Получение погоды на текущий момент в городе {City}", city);
         var response = await _client.GetFromJsonAsync<CurrentWeatherResponse>(GetWithDefaultQueryParams($"weather?q={city}"));
-        _logger.LogDebug("Погода получена");
+        logger.LogDebug("Погода получена");
 
         return response;
     }
@@ -44,22 +30,22 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
     /// <inheritdoc />
     public async Task<DailyWeatherListItem> GetDailyWeatherAt(string city, DateTime date)
     {
-        _logger.LogDebug("Получение погоды на день в городе {City} на дату {WeatherDate:dd.MM.yyyy}", city, date);
+        logger.LogDebug("Получение погоды на день в городе {City} на дату {WeatherDate:dd.MM.yyyy}", city, date);
         var response = await _client.GetFromJsonAsync<DailyWeatherResponse>(GetWithDefaultQueryParams($"forecast/daily?q={city}&cnt=4"));
 
         // разница между указанной и полученной меньше одного дня
         var weather = response.List.FirstOrDefault(x =>
         {
             var diff = (x.UnixTime.Date - date.Date).Days;
-            return diff >= 0 && diff <= 1;
+            return diff is >= 0 and <= 1;
         });
-            
+
         if(weather is null)
         {
             throw new ArgumentException($"Погода на {date:dd.MM.yyyy} в городе {city} не найдена.");
         }
 
-        _logger.LogDebug("Погода получена");
+        logger.LogDebug("Погода получена");
 
         return weather;
     }
@@ -67,17 +53,14 @@ public class OpenWeatherMapApi : IOpenWeatherMapApi
     /// <inheritdoc />
     public async Task<bool> IsCityExists(string city)
     {
-        _logger.LogDebug("Проверка на существование города {City}", city);
+        logger.LogDebug("Проверка на существование города {City}", city);
         var response = await _client.SendAsync(new HttpRequestMessage(HttpMethod.Head, GetWithDefaultQueryParams($"weather/?q={city}")));
         return response.IsSuccessStatusCode;
     }
 
     private string GetWithDefaultQueryParams(string path)
     {
-        const string language = "ru";
-        const string units = "metric";
-
-        var queries = $"units={units}&lang={language}&appid={_token}";
+        var queries = $"units={_options.Units}&lang={_options.Language}&appid={_options.AccessToken}";
         return path.Contains('?') ? $"{path}&{queries}" : $"?{path}&{queries}";
     }
 }

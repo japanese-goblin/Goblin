@@ -1,5 +1,3 @@
-using System;
-
 namespace Goblin.Domain.Entities;
 
 public class Remind

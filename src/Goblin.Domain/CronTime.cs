@@ -1,5 +1,3 @@
-using System;
-
 namespace Goblin.Domain;
 
 public class CronTime
@@ -34,7 +32,7 @@ public class CronTime
                 throw new ArgumentException("Параметр не является числом", nameof(minute));
             }
 
-            if(intMinute < 0 || intMinute > 59)
+            if(intMinute is < 0 or > 59)
             {
                 throw new ArgumentOutOfRangeException(nameof(minute), minute,
                                                       "Параметр должен быть в пределах от 0 до 60");
@@ -53,7 +51,7 @@ public class CronTime
                 throw new ArgumentException("Параметр не является числом", nameof(hour));
             }
 
-            if(intHour < 0 || intHour > 23)
+            if(intHour is < 0 or > 23)
             {
                 throw new ArgumentOutOfRangeException(nameof(hour), hour,
                                                       "Параметр должен быть в пределах от 0 до 23");
@@ -65,7 +63,7 @@ public class CronTime
 
     public void SetDayOfMonth(int day)
     {
-        if(day < 1 || day > 31)
+        if(day is < 1 or > 31)
         {
             throw new ArgumentOutOfRangeException(nameof(day), day,
                                                   "Параметр должен быть в пределах от 1 до 31");
@@ -81,7 +79,7 @@ public class CronTime
 
     public void SetMonth(int month)
     {
-        if(month < 1 || month > 12)
+        if(month is < 1 or > 12)
         {
             throw new ArgumentOutOfRangeException(nameof(month), month,
                                                   "Параметр должен быть в пределах от 1 до 12");
@@ -97,7 +95,7 @@ public class CronTime
 
     public void SetDayOfWeek(int dayOfWeek)
     {
-        if(dayOfWeek < 0 || dayOfWeek > 6)
+        if(dayOfWeek is < 0 or > 6)
         {
             throw new ArgumentOutOfRangeException(nameof(dayOfWeek), dayOfWeek,
                                                   "Параметр должен быть в пределах от 1 до 6");

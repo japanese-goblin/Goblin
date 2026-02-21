@@ -1,7 +1,3 @@
-using System;
-using Goblin.Application.Core.Models;
-using Goblin.Domain.Entities;
-
 namespace Goblin.Application.Core;
 
 public static class DefaultKeyboards
@@ -28,19 +24,11 @@ public static class DefaultKeyboards
         var isSchedule = user.HasScheduleSubscription;
         var isWeather = user.HasWeatherSubscription;
 
-        var scheduleColor = isSchedule
-                                    ? CoreKeyboardButtonColor.Negative
-                                    : CoreKeyboardButtonColor.Positive;
-        var weatherColor = isWeather
-                                   ? CoreKeyboardButtonColor.Negative
-                                   : CoreKeyboardButtonColor.Positive;
+        var scheduleColor = isSchedule ? CoreKeyboardButtonColor.Negative : CoreKeyboardButtonColor.Positive;
+        var weatherColor = isWeather ? CoreKeyboardButtonColor.Negative : CoreKeyboardButtonColor.Positive;
 
-        var scheduleText = isSchedule
-                                   ? "❌Отписаться от рассылки расписания"
-                                   : "✔Подписаться на рассылку расписания";
-        var weatherText = isWeather
-                                  ? "❌Отписаться от рассылки погоды"
-                                  : "✔Подписаться на рассылку погоды";
+        var scheduleText = isSchedule ? "❌Отписаться от рассылки расписания" : "✔Подписаться на рассылку расписания";
+        var weatherText = isWeather ? "❌Отписаться от рассылки погоды" : "✔Подписаться на рассылку погоды";
 
         var kb = new CoreKeyboard
         {
@@ -82,7 +70,7 @@ public static class DefaultKeyboards
             {
                 continue;
             }
-            
+
             keyboard.AddButton($"На {date:dd.MM (dddd)}", CoreKeyboardButtonColor.Primary,
                                "schedule", date.ToString(defaultFormat));
             if(i % 2 == 0)

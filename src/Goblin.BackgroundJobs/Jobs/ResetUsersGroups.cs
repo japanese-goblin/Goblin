@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Goblin.DataAccess;
 using Goblin.Narfu.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -23,10 +22,16 @@ public class ResetUsersGroups
 
     public async Task CheckAndRemoveUserGroups()
     {
-        var users = await _context.BotUsers.ToArrayAsync();
+        var users = await _context.BotUsers.Where(p => p.NarfuGroup.HasValue).ToListAsync();
         foreach(var user in users)
         {
-            if(_narfuApi.Students.IsCorrectGroup(user.NarfuGroup))
+            if(!user.NarfuGroup.HasValue)
+            {
+                continue;
+            }
+
+            var group = _narfuApi.Students.GetGroupByRealId(user.NarfuGroup.Value);
+            if(group is null)
             {
                 continue;
             }

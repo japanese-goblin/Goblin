@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Goblin.OpenWeatherMap.Models.Daily;
+﻿using Goblin.OpenWeatherMap.Models.Daily;
 using Goblin.OpenWeatherMap.Models.Responses;
 
 namespace Goblin.OpenWeatherMap.Abstractions;
@@ -28,7 +26,7 @@ public interface IOpenWeatherMapApi
     /// <summary>
     /// Проверка на существование города
     /// </summary>
-    /// <param name="city">Горож</param>
+    /// <param name="city">Город</param>
     /// <returns>Найден ли указанный город</returns>
     public Task<bool> IsCityExists(string city);
 }

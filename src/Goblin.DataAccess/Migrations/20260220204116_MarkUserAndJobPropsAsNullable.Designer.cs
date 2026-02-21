@@ -9,20 +9,61 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Goblin.DataAccess.Migrations.BotDb
+namespace Goblin.DataAccess.Migrations
 {
     [DbContext(typeof(BotDbContext))]
-    [Migration("20220401155115_DatetimeType")]
-    partial class DatetimeType
+    [Migration("20260220204116_MarkUserAndJobPropsAsNullable")]
+    partial class MarkUserAndJobPropsAsNullable
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("ProductVersion", "10.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Goblin.Domain.Entities.BotUser", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ConsumerType")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("HasScheduleSubscription")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("HasWeatherSubscription")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsAdmin")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsErrorsEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<int?>("NarfuGroup")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("WeatherCity")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id", "ConsumerType");
+
+                    b.ToTable("BotUsers");
+                });
 
             modelBuilder.Entity("Goblin.Domain.Entities.CronJob", b =>
                 {
@@ -49,21 +90,15 @@ namespace Goblin.DataAccess.Migrations.BotDb
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("NarfuGroup")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                    b.Property<int?>("NarfuGroup")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Text")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasDefaultValue("");
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("WeatherCity")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -99,88 +134,6 @@ namespace Goblin.DataAccess.Migrations.BotDb
                     b.ToTable("Reminds");
                 });
 
-            modelBuilder.Entity("Goblin.Domain.Entities.TgBotUser", b =>
-                {
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("HasScheduleSubscription")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("HasWeatherSubscription")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("IsAdmin")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("IsErrorsEnabled")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
-
-                    b.Property<int>("NarfuGroup")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
-
-                    b.Property<string>("WeatherCity")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasDefaultValue("");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TgBotUsers");
-                });
-
-            modelBuilder.Entity("Goblin.Domain.Entities.VkBotUser", b =>
-                {
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("HasScheduleSubscription")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("HasWeatherSubscription")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("IsAdmin")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("IsErrorsEnabled")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
-
-                    b.Property<int>("NarfuGroup")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
-
-                    b.Property<string>("WeatherCity")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasDefaultValue("");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("VkBotUsers");
-                });
-
             modelBuilder.Entity("Goblin.Domain.Entities.CronJob", b =>
                 {
                     b.OwnsOne("Goblin.Domain.CronTime", "Time", b1 =>
@@ -189,18 +142,23 @@ namespace Goblin.DataAccess.Migrations.BotDb
                                 .HasColumnType("integer");
 
                             b1.Property<string>("DayOfMonth")
+                                .IsRequired()
                                 .HasColumnType("text");
 
                             b1.Property<string>("DayOfWeek")
+                                .IsRequired()
                                 .HasColumnType("text");
 
                             b1.Property<string>("Hour")
+                                .IsRequired()
                                 .HasColumnType("text");
 
                             b1.Property<string>("Minute")
+                                .IsRequired()
                                 .HasColumnType("text");
 
                             b1.Property<string>("Month")
+                                .IsRequired()
                                 .HasColumnType("text");
 
                             b1.HasKey("CronJobId");
@@ -211,7 +169,8 @@ namespace Goblin.DataAccess.Migrations.BotDb
                                 .HasForeignKey("CronJobId");
                         });
 
-                    b.Navigation("Time");
+                    b.Navigation("Time")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

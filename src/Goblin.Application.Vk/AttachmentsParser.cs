@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using VkNet.Model;
+﻿using VkNet.Model;
 
 namespace Goblin.Application.Vk;
 
@@ -35,7 +32,7 @@ public static class AttachmentsParser
                                attach.Id = long.Parse(data[1]);
                                return attach;
                            }).ToArray();
-            if(!selected.Any())
+            if(selected.Length == 0)
             {
                 continue;
             }

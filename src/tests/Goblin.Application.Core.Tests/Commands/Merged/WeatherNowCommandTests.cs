@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Commands.Merged;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using NSubstitute;
 using Xunit;
 
@@ -15,10 +12,7 @@ public class WeatherNowCommandTests : TestBase
     {
         var mock = Substitute.For<IWeatherService>();
         mock.GetCurrentWeather(Arg.Any<string>())
-            .Returns(new SuccessfulResult
-            {
-                Message = "weather"
-            });
+            .Returns(CommandExecutionResult.Success("weather"));
         return mock;
     }
 
@@ -29,7 +23,7 @@ public class WeatherNowCommandTests : TestBase
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<SuccessfulResult>();
+        result.IsSuccessful.Should().BeTrue();
         result.Message.Should().NotBeNullOrEmpty();
     }
 
@@ -41,7 +35,7 @@ public class WeatherNowCommandTests : TestBase
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrEmpty();
     }
 
@@ -53,7 +47,7 @@ public class WeatherNowCommandTests : TestBase
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<SuccessfulResult>();
+        result.IsSuccessful.Should().BeTrue();
         result.Message.Should().NotBeNullOrEmpty();
     }
 
@@ -64,7 +58,7 @@ public class WeatherNowCommandTests : TestBase
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, string.Empty);
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<SuccessfulResult>();
+        result.IsSuccessful.Should().BeTrue();
         result.Message.Should().NotBeNullOrEmpty();
     }
 
@@ -76,7 +70,7 @@ public class WeatherNowCommandTests : TestBase
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, string.Empty);
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrEmpty();
     }
 }

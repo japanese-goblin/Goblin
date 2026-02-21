@@ -1,11 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Goblin.Application.Core.Commands.Text;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Microsoft.Extensions.Logging;
@@ -57,7 +51,7 @@ public class FindTeacherCommandTests : TestBase
 
         var result = await command.Execute(message, DefaultUser);
 
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrEmpty();
         result.Keyboard.Should().BeNull();
     }
@@ -71,7 +65,7 @@ public class FindTeacherCommandTests : TestBase
 
         var result = await command.Execute(message, DefaultUser);
 
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrEmpty();
         result.Keyboard.Should().BeNull();
     }
@@ -85,7 +79,7 @@ public class FindTeacherCommandTests : TestBase
 
         var result = await command.Execute(message, DefaultUser);
 
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeEmpty();
         result.Keyboard.Should().BeNull();
     }
@@ -99,7 +93,7 @@ public class FindTeacherCommandTests : TestBase
 
         var result = await command.Execute(message, DefaultUser);
 
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrEmpty();
         result.Keyboard.Should().BeNull();
     }
@@ -113,7 +107,7 @@ public class FindTeacherCommandTests : TestBase
 
         var result = await command.Execute(message, DefaultUser);
 
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeEmpty();
         result.Keyboard.Should().BeNull();
     }
@@ -127,7 +121,7 @@ public class FindTeacherCommandTests : TestBase
 
         var result = await command.Execute(message, DefaultUser);
 
-        result.Should().BeOfType<SuccessfulResult>();
+        result.IsSuccessful.Should().BeTrue();
         result.Message.Should().NotBeNullOrEmpty();
         result.Keyboard.Should().NotBeNull();
         result.Keyboard.Buttons.Should().HaveCount(4);

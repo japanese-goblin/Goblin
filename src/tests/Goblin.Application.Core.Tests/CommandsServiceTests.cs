@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Commands.Merged;
 using Goblin.Application.Core.Tests.Models;
@@ -14,29 +12,23 @@ public class CommandsServiceTests : TestBase
 {
     private CommandsService GetService()
     {
-        var service = new CommandsService(GetTextCommands(), GetKeyboardCommands(), ApplicationContext,
+        var service = new CommandsService(GetTextCommands(), GetKeyboardCommands(), GetDbContext(),
                                           Substitute.For<ILogger<CommandsService>>());
 
         return service;
 
-        IEnumerable<IKeyboardCommand> GetKeyboardCommands()
-        {
-            return new IKeyboardCommand[] { new MailingKeyboardCommand(), new ScheduleKeyboardCommand() };
-        }
+        IEnumerable<IKeyboardCommand> GetKeyboardCommands() => [new MailingKeyboardCommand(), new ScheduleKeyboardCommand()];
 
-        IEnumerable<ITextCommand> GetTextCommands()
-        {
-            return new ITextCommand[] { new HelpCommand(), new StartCommand(), new FakeAdminCommand() };
-        }
+        IEnumerable<ITextCommand> GetTextCommands() => [new HelpCommand(), new StartCommand(), new FakeAdminCommand()];
     }
 
-    private Task OnSuccess(IResult res)
+    private static Task OnSuccess(CommandExecutionResult res)
     {
         res.IsSuccessful.Should().BeTrue();
         return Task.CompletedTask;
     }
 
-    private Task OnFailed(IResult res)
+    private static Task OnFailed(CommandExecutionResult res)
     {
         res.IsSuccessful.Should().BeFalse();
         return Task.CompletedTask;
@@ -48,7 +40,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "справка");
 
-        await service.ExecuteCommand(message, OnSuccess, res => null);
+        await service.ExecuteCommand(message, OnSuccess, _ => Task.CompletedTask);
     }
 
     [Fact]
@@ -57,7 +49,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "абв");
 
-        await service.ExecuteCommand(message, res => null, OnFailed);
+        await service.ExecuteCommand(message, _ => Task.CompletedTask, OnFailed);
     }
 
     [Fact]
@@ -66,7 +58,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "demo");
 
-        await service.ExecuteCommand(message, res => null, OnFailed);
+        await service.ExecuteCommand(message, _ => Task.CompletedTask, OnFailed);
     }
 
     [Fact]
@@ -76,7 +68,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "абв");
 
-        await service.ExecuteCommand(message, res => null, res => null);
+        await service.ExecuteCommand(message, _ => Task.CompletedTask, _ => Task.CompletedTask);
     }
 
     [Fact]
@@ -85,7 +77,7 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "mailingKeyboard", string.Empty);
 
-        await service.ExecuteCommand(message, OnSuccess, res => null);
+        await service.ExecuteCommand(message, OnSuccess, _ => Task.CompletedTask);
     }
 
     [Fact]
@@ -94,6 +86,6 @@ public class CommandsServiceTests : TestBase
         var service = GetService();
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "asd", string.Empty);
 
-        await service.ExecuteCommand(message, res => null, OnFailed);
+        await service.ExecuteCommand(message, _ => Task.CompletedTask, OnFailed);
     }
 }

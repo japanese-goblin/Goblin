@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Goblin.Application.Core.Options;
+﻿using Goblin.Application.Core.Options;
 using Goblin.DataAccess;
 using Goblin.Domain;
 using Hangfire;
@@ -57,7 +54,7 @@ public class StartupTasks
             var conversations = await _api.Messages.GetConversationsAsync(new GetConversationsParams
             {
                 Count = count,
-                Offset = (ulong) (count * offset),
+                Offset = (ulong)(count * offset),
                 Filter = GetConversationFilter.All
             });
 
@@ -76,8 +73,8 @@ public class StartupTasks
 
     private void ConfigureMailing()
     {
-        var scheduleSettings = _options.Schedule ?? new MailingSettings();
-        var weatherSettings = _options.Weather ?? new MailingSettings();
+        var scheduleSettings = _options.Schedule;
+        var weatherSettings = _options.Weather;
 
         if(scheduleSettings.IsEnabled)
         {

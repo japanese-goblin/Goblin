@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Goblin.DataAccess.Migrations.BotDb
+namespace Goblin.DataAccess.Migrations
 {
     [DbContext(typeof(BotDbContext))]
     partial class BotDbContextModelSnapshot : ModelSnapshot
@@ -17,7 +17,7 @@ namespace Goblin.DataAccess.Migrations.BotDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("ProductVersion", "10.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -50,16 +50,12 @@ namespace Goblin.DataAccess.Migrations.BotDb
                         .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
-                    b.Property<int>("NarfuGroup")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                    b.Property<int?>("NarfuGroup")
+                        .HasColumnType("integer");
 
                     b.Property<string>("WeatherCity")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasDefaultValue("");
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id", "ConsumerType");
 
@@ -91,21 +87,15 @@ namespace Goblin.DataAccess.Migrations.BotDb
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("NarfuGroup")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                    b.Property<int?>("NarfuGroup")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Text")
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasDefaultValue("");
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("WeatherCity")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -149,18 +139,23 @@ namespace Goblin.DataAccess.Migrations.BotDb
                                 .HasColumnType("integer");
 
                             b1.Property<string>("DayOfMonth")
+                                .IsRequired()
                                 .HasColumnType("text");
 
                             b1.Property<string>("DayOfWeek")
+                                .IsRequired()
                                 .HasColumnType("text");
 
                             b1.Property<string>("Hour")
+                                .IsRequired()
                                 .HasColumnType("text");
 
                             b1.Property<string>("Minute")
+                                .IsRequired()
                                 .HasColumnType("text");
 
                             b1.Property<string>("Month")
+                                .IsRequired()
                                 .HasColumnType("text");
 
                             b1.HasKey("CronJobId");
@@ -171,7 +166,8 @@ namespace Goblin.DataAccess.Migrations.BotDb
                                 .HasForeignKey("CronJobId");
                         });
 
-                    b.Navigation("Time");
+                    b.Navigation("Time")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

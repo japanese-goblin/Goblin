@@ -1,12 +1,5 @@
-using System;
 using System.Globalization;
-using System.Threading.Tasks;
-using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Core.Models;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using Goblin.DataAccess;
-using Goblin.Domain.Entities;
 using Goblin.Narfu.Abstractions;
 using Goblin.OpenWeatherMap.Abstractions;
 
@@ -16,7 +9,7 @@ public class SetDataCommand : ITextCommand
 {
     public bool IsAdminCommand => false;
 
-    public string[] Aliases => new[] { "установить" };
+    public string[] Aliases => ["установить"];
     private readonly BotDbContext _db;
     private readonly INarfuApi _narfu;
     private readonly IOpenWeatherMapApi _weather;
@@ -28,14 +21,14 @@ public class SetDataCommand : ITextCommand
         _narfu = narfu;
     }
 
-    public async Task<IResult> Execute(Message msg, BotUser user)
+    public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
         var parameters = msg.Text.Split(' ', 3)[1..];
         user = _db.Entry(user).Entity;
         if(parameters.Length < 2)
         {
-            return new FailedResult("Укажите 2 параметра команды." +
-                                    "Пример использования: установить город Москва / установить группу 123456");
+            return CommandExecutionResult.Failed("Укажите 2 параметра команды." +
+                                                 "Пример использования: установить город Москва / установить группу 123456");
         }
 
         var whatToSet = parameters[0];
@@ -51,47 +44,39 @@ public class SetDataCommand : ITextCommand
             return await SetGroup(dataToSet, user);
         }
 
-        return new FailedResult("Укажите что вы хотите установить: группу или город. \n" +
-                                "Пример использования: установить город Москва / установить группу 123456");
+        return CommandExecutionResult.Failed("Укажите что вы хотите установить: группу или город. \n" +
+                                             "Пример использования: установить город Москва / установить группу 123456");
     }
 
-    private async Task<IResult> SetGroup(string group, BotUser user)
+    private async Task<CommandExecutionResult> SetGroup(string groupId, BotUser user)
     {
-        if(!int.TryParse(group, out var intGroup))
+        if(!int.TryParse(groupId, out var intGroup))
         {
-            return new FailedResult("Укажите корректный номер группы.");
+            return CommandExecutionResult.Failed("Укажите корректный номер группы.");
         }
 
-        var isExists = _narfu.Students.IsCorrectGroup(intGroup);
-        if(!isExists)
+        var group = _narfu.Students.GetGroupByRealId(intGroup);
+        if(group is null)
         {
-            return new FailedResult($"Группа с номером {intGroup} не найдена.");
+            return CommandExecutionResult.Failed($"Группа с номером {intGroup} не найдена.");
         }
 
-        var groupName = _narfu.Students.GetGroupByRealId(intGroup).Name;
-
-        user.SetNarfuGroup(intGroup);
+        user.SetNarfuGroup(group.RealId);
         await _db.SaveChangesAsync();
-        return new SuccessfulResult
-        {
-            Message = $"Группа успешно установлена на {intGroup} ({groupName})"
-        };
+        return CommandExecutionResult.Success($"Группа успешно установлена на {group.RealId} ({group.Name})");
     }
 
-    private async Task<IResult> SetCity(string city, BotUser user)
+    private async Task<CommandExecutionResult> SetCity(string city, BotUser user)
     {
         city = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(city);
         var isExists = await _weather.IsCityExists(city);
         if(!isExists)
         {
-            return new FailedResult($"Город {city} не найден");
+            return CommandExecutionResult.Failed($"Город {city} не найден");
         }
 
         user.SetCity(city);
         await _db.SaveChangesAsync();
-        return new SuccessfulResult
-        {
-            Message = $"Город успешно установлен на {city}"
-        };
+        return CommandExecutionResult.Success($"Город успешно установлен на {city}");
     }
 }

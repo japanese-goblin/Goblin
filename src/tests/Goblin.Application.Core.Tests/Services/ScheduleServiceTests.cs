@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using FluentAssertions;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
+﻿using FluentAssertions;
 using Goblin.Application.Core.Services;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
@@ -19,8 +14,13 @@ public class ScheduleServiceTests : TestBase
     private static INarfuApi GetNarfuApi(bool response = true)
     {
         var mock = Substitute.For<INarfuApi>();
-        mock.Students.IsCorrectGroup(Arg.Any<int>())
-            .Returns(response);
+        mock.Students.GetGroupByRealId(Arg.Any<int>())
+            .Returns(response ? new Group
+            {
+                Name = "name",
+                RealId = 1,
+                SiteId = 1
+            } : null);
         mock.Students.GetScheduleAtDate(Arg.Any<int>(), Arg.Any<DateTime>())
             .Returns(new LessonsViewModel(new List<Lesson>(), DateTime.Today));
         return mock;
@@ -31,9 +31,9 @@ public class ScheduleServiceTests : TestBase
     {
         var service = new ScheduleService(GetNarfuApi(), Substitute.For<ILogger<ScheduleService>>());
 
-        var result = await service.GetSchedule(DefaultUser.NarfuGroup, DateTime.Today);
+        var result = await service.GetSchedule(DefaultUser.NarfuGroup!.Value, DateTime.Today);
 
-        result.Should().BeOfType<SuccessfulResult>();
+        result.IsSuccessful.Should().BeTrue();
         result.Message.Should().NotBeNullOrWhiteSpace();
         result.Keyboard.Should().NotBeNull();
     }
@@ -44,9 +44,9 @@ public class ScheduleServiceTests : TestBase
         DefaultUser.SetNarfuGroup(0);
         var service = new ScheduleService(GetNarfuApi(false), Substitute.For<ILogger<ScheduleService>>());
 
-        var result = await service.GetSchedule(DefaultUser.NarfuGroup, DateTime.Today);
+        var result = await service.GetSchedule(DefaultUser.NarfuGroup!.Value, DateTime.Today);
 
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrWhiteSpace();
     }
 }

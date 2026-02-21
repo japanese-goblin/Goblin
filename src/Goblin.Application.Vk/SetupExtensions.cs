@@ -1,7 +1,6 @@
 using Goblin.Application.Core;
 using Goblin.Application.Vk.HostedServices;
 using Goblin.Application.Vk.Options;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using VkNet;
@@ -10,11 +9,11 @@ using VkNet.Model;
 
 namespace Goblin.Application.Vk;
 
-public static class DependencyInjection
+public static class SetupExtensions
 {
     private const string VkSettingsPath = "Vk";
 
-    public static void AddVkLayer(this IServiceCollection services, IConfiguration configuration)
+    public static void AddVkLayer(this IServiceCollection services)
     {
         services.AddOptions<VkOptions>()
                 .BindConfiguration(VkSettingsPath)

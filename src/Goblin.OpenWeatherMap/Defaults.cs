@@ -1,11 +1,8 @@
 namespace Goblin.OpenWeatherMap;
 
-public static class Defaults
+internal static class Defaults
 {
-    public const string EndPoint = "https://api.openweathermap.org/data/2.5/";
-
-    public const string Language = "ru";
-    public const string Units = "metric";
+    public const string HttpClientName = "open-weather-map-api-client";
 
     internal const double PressureConvert = 0.75006375541921;
 }

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Core.Options;
@@ -34,16 +30,16 @@ public class SendToChatTasks
         _logger = logger;
     }
 
-    public async Task Execute(long chatId, ConsumerType consumerType, CronType cronType, string city, int group, string text)
+    public async Task Execute(long chatId, ConsumerType consumerType, CronType cronType, string? city, int? group, string? text)
     {
         var sender = _senders.First(x => x.ConsumerType == consumerType);
         await Send(responseText => sender.Send(chatId, responseText));
 
         async Task Send(Func<string, Task> func)
         {
-            if(cronType.HasFlag(CronType.Schedule) && group != 0)
+            if(cronType.HasFlag(CronType.Schedule) && group.HasValue)
             {
-                await SendSchedule(chatId, group, func);
+                await SendSchedule(chatId, group.Value, func);
             }
 
             if(cronType.HasFlag(CronType.Weather) && !string.IsNullOrWhiteSpace(city))
@@ -71,7 +67,7 @@ public class SendToChatTasks
 
     private async Task SendWeather(long id, string city, Func<string, Task> send)
     {
-        _logger.LogInformation("Отправка погоды в {0}", id);
+        _logger.LogInformation("Отправка погоды в {WeatherCity}", id);
         var result = await _weatherService.GetDailyWeather(city, DateTime.Today);
 
         await send(result.Message);
@@ -84,13 +80,13 @@ public class SendToChatTasks
             return;
         }
 
-        _logger.LogInformation("Отправка расписания в {0}", id);
+        _logger.LogInformation("Отправка расписания в {NarfuGroup}", id);
         var result = await _scheduleService.GetSchedule(group, DateTime.Now);
 
         await send(result.Message);
     }
 
-    private async Task SendText(string text, Func<string, Task> send)
+    private static async Task SendText(string text, Func<string, Task> send)
     {
         await send(text);
     }

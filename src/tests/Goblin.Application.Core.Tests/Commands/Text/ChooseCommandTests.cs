@@ -1,19 +1,12 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Goblin.Application.Core.Commands.Text;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using Xunit;
 
 namespace Goblin.Application.Core.Tests.Commands.Text;
 
 public class ChooseCommandTests : TestBase
 {
-    [Theory]
-    [InlineData("1 или 2")]
-    [InlineData("1,2")]
-    [InlineData("1, 2")]
-    [InlineData("1,2, 3 или 4")]
+    [Theory, InlineData("1 или 2"), InlineData("1,2"), InlineData("1, 2"), InlineData("1,2, 3 или 4")]
     public async Task ShouldReturnSuccessfulResult(string parameters)
     {
         var command = new ChooseCommand();
@@ -21,7 +14,7 @@ public class ChooseCommandTests : TestBase
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<SuccessfulResult>();
+        result.IsSuccessful.Should().BeTrue();
         result.Message.Should().NotBeNullOrEmpty();
     }
 
@@ -33,7 +26,7 @@ public class ChooseCommandTests : TestBase
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrEmpty();
     }
 }

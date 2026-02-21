@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json.Serialization;
 using Goblin.OpenWeatherMap.Models.Current;
 
@@ -64,8 +63,7 @@ public class CurrentWeatherResponse
     /// <summary>
     /// Время получения погоды со станции
     /// </summary>
-    [JsonPropertyName("dt")]
-    [JsonConverter(typeof(UnixTimeConverter))]
+    [JsonPropertyName("dt"), JsonConverter(typeof(UnixTimeConverter))]
     public DateTimeOffset UnixTime { get; set; }
 
     /// <summary>
@@ -102,26 +100,26 @@ public class CurrentWeatherResponse
     {
         var strBuilder = new StringBuilder();
 
-        strBuilder.AppendFormat("Погода в городе {0} на данный момент:", CityName).AppendLine()
-                  .AppendFormat("Описание: {0}", Info[0].Description).AppendLine()
-                  .AppendFormat("Температура: {0:+#;-#;0}°С", Weather.Temperature);
+        strBuilder.Append($"Погода в городе {CityName} на данный момент:").AppendLine()
+                  .Append($"Описание: {Info[0].Description}").AppendLine()
+                  .Append($"Температура: {Weather.Temperature:+#;-#;0}°С");
         if(Weather.FeelsLike.HasValue)
         {
-            strBuilder.AppendFormat(" (ощущается как {0:+#;-#;0}°С)", Weather.FeelsLike);
+            strBuilder.Append($" (ощущается как {Weather.FeelsLike:+#;-#;0}°С)");
         }
 
         strBuilder.AppendLine()
-                  .AppendFormat("Влажность: {0}%", Weather.Humidity).AppendLine()
-                  .AppendFormat("Ветер: {0:N0} м/с", Wind.Speed).AppendLine()
-                  .AppendFormat("Давление: {0:N0} мм.рт.ст", Weather.Pressure * Defaults.PressureConvert)
+                  .Append($"Влажность: {Weather.Humidity}%").AppendLine()
+                  .Append($"Ветер: {Wind.Speed:N0} м/с").AppendLine()
+                  .Append($"Давление: {Weather.Pressure * Defaults.PressureConvert:N0} мм.рт.ст")
                   .AppendLine()
-                  .AppendFormat("Облачность: {0}%", Clouds.Cloudiness).AppendLine()
-                  .AppendFormat("Видимость: {0} метров", Visibility).AppendLine()
+                  .Append($"Облачность: {Clouds.Cloudiness}%").AppendLine()
+                  .Append($"Видимость: {Visibility} метров").AppendLine()
                   .AppendLine()
-                  .AppendFormat("Восход: {0:HH:mm}", OtherInfo.Sunrise.AddSeconds(TimezoneDifference)).AppendLine()
-                  .AppendFormat("Закат: {0:HH:mm}", OtherInfo.Sunset.AddSeconds(TimezoneDifference)).AppendLine()
+                  .Append($"Восход: {OtherInfo.Sunrise.AddSeconds(TimezoneDifference):HH:mm}").AppendLine()
+                  .Append($"Закат: {OtherInfo.Sunset.AddSeconds(TimezoneDifference):HH:mm}").AppendLine()
                   .AppendLine()
-                  .AppendFormat("Данные обновлены {0:dd.MM.yyyy HH:mm}", UnixTime.AddSeconds(TimezoneDifference));
+                  .Append($"Данные обновлены {UnixTime.AddSeconds(TimezoneDifference):dd.MM.yyyy HH:mm}");
 
         return strBuilder.ToString();
     }

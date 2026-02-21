@@ -1,11 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace Goblin.Application.Core.Abstractions;
+﻿namespace Goblin.Application.Core.Abstractions;
 
 public interface IWeatherService
 {
-    public Task<IResult> GetCurrentWeather(string city);
+    public Task<CommandExecutionResult> GetCurrentWeather(string city);
 
-    public Task<IResult> GetDailyWeather(string city, DateTime date);
+    public Task<CommandExecutionResult> GetDailyWeather(string city, DateTime date);
 }

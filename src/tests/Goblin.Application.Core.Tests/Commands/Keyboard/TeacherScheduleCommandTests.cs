@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Goblin.Application.Core.Commands.Keyboard;
-using Goblin.Application.Core.Results.Failed;
-using Goblin.Application.Core.Results.Success;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
@@ -25,7 +19,7 @@ public class TeacherScheduleCommandTests : TestBase
         return mockApi;
     }
 
-    private INarfuApi GetNarfuApiWithException()
+    private static INarfuApi GetNarfuApiWithException()
     {
         var mockApi = Substitute.For<INarfuApi>();
         mockApi.Teachers.GetLimitedSchedule(Arg.Any<int>(), Arg.Any<int>())
@@ -48,7 +42,7 @@ public class TeacherScheduleCommandTests : TestBase
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "12345");
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<SuccessfulResult>();
+        result.IsSuccessful.Should().BeTrue();
         result.Message.Should().NotBeNullOrEmpty();
     }
 
@@ -59,7 +53,7 @@ public class TeacherScheduleCommandTests : TestBase
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "12345");
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrEmpty();
     }
 
@@ -70,7 +64,7 @@ public class TeacherScheduleCommandTests : TestBase
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "12345");
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrEmpty();
     }
 
@@ -81,7 +75,7 @@ public class TeacherScheduleCommandTests : TestBase
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "key", "12345");
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrEmpty();
     }
 
@@ -92,7 +86,7 @@ public class TeacherScheduleCommandTests : TestBase
         var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "asd");
 
         var result = await command.Execute(message, DefaultUser);
-        result.Should().BeOfType<FailedResult>();
+        result.IsSuccessful.Should().BeFalse();
         result.Message.Should().NotBeNullOrEmpty();
     }
 }

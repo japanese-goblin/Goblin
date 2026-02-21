@@ -1,6 +1,5 @@
 ﻿using Goblin.Application.Vk;
 using Goblin.Application.Vk.Options;
-using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -9,8 +8,7 @@ using VkNet.Model;
 
 namespace Goblin.WebApp.Controllers.Callbacks;
 
-[ApiController]
-[Route("/api/callback/vk")]
+[ApiController, Route("/api/callback/vk")]
 public class VkCallbackController(IOptions<VkOptions> optionsAccessor, VkEventsDispatcher vkEventsDispatcher) : ControllerBase
 {
     private readonly VkOptions _options = optionsAccessor.Value;

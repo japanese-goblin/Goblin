@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Goblin.Application.Core;
-using Goblin.Application.Core.Abstractions;
 using Goblin.Application.Vk.Converters;
 using Goblin.Application.Vk.Options;
 using Goblin.DataAccess;
 using Goblin.Domain;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VkNet.Abstractions;
@@ -34,6 +30,7 @@ public class VkCallbackHandler
         _commandsService = commandsService;
         _db = db;
         _vkApi = vkApi;
+
         // TODO: keyed service
         _sender = senders.First(x => x.ConsumerType == ConsumerType.Vkontakte);
         _options = options.Value;
@@ -87,6 +84,7 @@ public class VkCallbackHandler
                 _logger.LogWarning("Не удалось преобразовать обновление {GroupUpdateType}", upd.Type.Value);
                 return;
             }
+
             await GroupLeave(groupLeaveEvent);
         }
         else if(upd.Type.Value == GroupUpdateType.GroupJoin)
@@ -96,6 +94,7 @@ public class VkCallbackHandler
                 _logger.LogWarning("Не удалось преобразовать обновление {GroupUpdateType}", upd.Type.Value);
                 return;
             }
+
             await GroupJoin(groupJoinEvent);
         }
         else
@@ -126,13 +125,14 @@ public class VkCallbackHandler
         _logger.LogDebug("Обработка сообщения");
         await _commandsService.ExecuteCommand(message, OnSuccess, OnFailed);
         _logger.LogDebug("Обработка сообщения завершена");
+        return;
 
-        async Task OnSuccess(IResult res)
+        async Task OnSuccess(CommandExecutionResult res)
         {
             await _sender.Send(message.ChatId, res.Message, res.Keyboard);
         }
 
-        async Task OnFailed(IResult res)
+        async Task OnFailed(CommandExecutionResult res)
         {
             await _sender.Send(message.ChatId, res.Message, res.Keyboard);
         }
@@ -142,14 +142,16 @@ public class VkCallbackHandler
     {
         var mappedToMessage = messageEvent.MapToBotMessage();
         await _commandsService.ExecuteCommand(mappedToMessage, OnSuccess, OnFailed);
+        return;
 
-        async Task OnSuccess(IResult res)
+        async Task OnSuccess(CommandExecutionResult res)
         {
+            var peerId = messageEvent.PeerId.GetValueOrDefault(0);
             try
             {
-                await _vkApi.Messages.EditAsync(new MessageEditParams()
+                await _vkApi.Messages.EditAsync(new MessageEditParams
                 {
-                    PeerId = messageEvent.PeerId.GetValueOrDefault(0),
+                    PeerId = peerId,
                     ConversationMessageId = messageEvent.ConversationMessageId,
                     Keyboard = KeyboardConverter.FromCoreToVk(res.Keyboard, true),
                     Message = res.Message
@@ -157,16 +159,16 @@ public class VkCallbackHandler
             }
             catch
             {
-                await _sender.Send(messageEvent.PeerId.GetValueOrDefault(0), res.Message, res.Keyboard);
+                await _sender.Send(peerId, res.Message, res.Keyboard);
             }
         }
 
-        async Task OnFailed(IResult res)
+        async Task OnFailed(CommandExecutionResult res)
         {
             await _vkApi.Messages.SendMessageEventAnswerAsync(messageEvent.EventId,
                                                               messageEvent.UserId.GetValueOrDefault(0),
                                                               messageEvent.PeerId.GetValueOrDefault(0),
-                                                              new EventData()
+                                                              new EventData
                                                               {
                                                                   Type = MessageEventType.ShowSnackbar,
                                                                   Text = res.Message
@@ -177,8 +179,8 @@ public class VkCallbackHandler
     private async Task GroupLeave(GroupLeave leave)
     {
         const string groupLeaveMessage = "Очень жаль, что ты решил отписаться от группы 😢\n" +
-                                         "Если тебе что-то не понравилось или ты не разобрался с ботом, то всегда можешь написать " +
-                                         "администрации об этом через команду 'админ *сообщение*' (подробнее смотри в справке).";
+                                         "Если ты не разобрался с ботом, то всегда можешь написать " +
+                                         "об этом администраторам через команду 'админ *сообщение*' (подробнее смотри в справке).";
 
         _logger.LogInformation("Пользователь id{UserId} покинул группу", leave.UserId);
         await SendMessageToAdmins(leave.UserId.Value, "отписался :С");
@@ -222,10 +224,11 @@ public class VkCallbackHandler
 
     private async Task SendMessageToAdmins(long userId, string message)
     {
-        var admins = _db.BotUsers.Where(x => x.IsAdmin &&
+        var admins = await _db.BotUsers.Where(x => x.IsAdmin &&
                                              x.ConsumerType == ConsumerType.Vkontakte)
-                        .Select(x => x.Id);
-        var vkUser = (await _vkApi.Users.GetAsync(new[] { userId })).First();
+                        .Select(x => x.Id)
+                        .ToListAsync();
+        var vkUser = (await _vkApi.Users.GetAsync([userId])).First();
         var userName = $"{vkUser.FirstName} {vkUser.LastName}";
         await _sender.SendToMany(admins, $"@id{userId} ({userName}) {message}");
     }
