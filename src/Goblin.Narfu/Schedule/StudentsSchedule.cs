@@ -1,6 +1,5 @@
 using System.Net.Http.Json;
 using Goblin.Narfu.Abstractions;
-using Goblin.Narfu.ICalParser;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
 using Microsoft.Extensions.Logging;
@@ -22,7 +21,7 @@ public class StudentsSchedule : IStudentsSchedule
         _logger = logger;
     }
 
-    public async Task<IEnumerable<Lesson>> GetSchedule(int realGroupId, DateTime? date = null)
+    public async Task<IReadOnlyCollection<Lesson>> GetSchedule(int realGroupId, DateTime? date = null)
     {
         date ??= DateTime.Today;
         var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
@@ -32,7 +31,7 @@ public class StudentsSchedule : IStudentsSchedule
             _logger.LogDebug("Получение расписания для группы {GroupId}", realGroupId);
             var response = await _client.GetStringAsync($"/?icalendar&oid={siteGroupId}&cod={realGroupId}&from={date.Value:dd.MM.yyyy}");
             _logger.LogDebug("Расписание получено");
-            return GetCalendarLessons(response).ToList();
+            return GetCalendarLessons(response);
         }
         catch(HttpRequestException)
         {
@@ -78,18 +77,32 @@ public class StudentsSchedule : IStudentsSchedule
     //     return $"{protocol}://{url}&oid={siteGroupId}&cod={realGroupId}&from={todayDate}";
     // }
 
-    public static IEnumerable<Lesson> GetCalendarLessons(string response)
+    private static List<Lesson> GetCalendarLessons(string response)
     {
-        var calendar = new Calendar(response);
-
-        var events = calendar.Events
-                             .Distinct()
-                             .OrderBy(x => x.DtStart);
-
-        return events.Select(ev =>
+        var calendar = Ical.Net.Calendar.Load(response);
+        if(calendar is null)
         {
-            var description = ev.Description.Split("\\n");
-            var address = ev.Location.Split('/');
+            return [];
+        }
+
+        var result = new List<Lesson>(calendar.Events.Count);
+
+        var calendarEvents = calendar.Events
+                             .DistinctBy(p => p.Uid)
+                             .OrderBy(p => p.DtStart);
+        foreach(var calendarEvent in calendarEvents)
+        {
+            if(calendarEvent.DtStart is null ||
+               calendarEvent.DtEnd is null ||
+               calendarEvent.Uid is null ||
+               calendarEvent.Description is null ||
+               calendarEvent.Location is null ||
+               calendarEvent.Summary is null)
+            {
+                continue;
+            }
+            var description = calendarEvent.Description.Split('\n');
+            var address = calendarEvent.Location.Split('/');
 
             if(!int.TryParse(description[0][0].ToString(), out var number))
             {
@@ -98,22 +111,22 @@ public class StudentsSchedule : IStudentsSchedule
 
             var lesson = new Lesson
             {
-                Id = ev.Uid,
+                Id = calendarEvent.Uid,
                 Address = address[0],
                 Auditory = address[1],
                 Number = number,
                 Groups = description[1][3..],
-                Name = ev.Summary.Replace(".", ". "),
+                Name = calendarEvent.Summary.Replace(".", ". "),
                 Type = description[3],
                 Teacher = description[4],
-                StartTime = ev.DtStart,
-                EndTime = ev.DtEnd,
-                StartEndTime = $"{ev.DtStart:HH:mm} - {ev.DtEnd:HH:mm}"
+                StartTime = calendarEvent.DtStart.Value.ToLocalTime(),
+                EndTime = calendarEvent.DtEnd.Value.ToLocalTime()
             };
+            result.Add(lesson);
 
             if(description.Length <= 6)
             {
-                return lesson;
+                continue;
             }
 
             var possiblyLink = description[6];
@@ -121,8 +134,8 @@ public class StudentsSchedule : IStudentsSchedule
             {
                 lesson.Link = possiblyLink;
             }
+        }
 
-            return lesson;
-        }).Distinct();
+        return result;
     }
 }

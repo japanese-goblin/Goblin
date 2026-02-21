@@ -8,7 +8,7 @@ public class Lesson : IEquatable<Lesson>
     public string Name { get; set; }
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
-    public string StartEndTime { get; set; }
+    public string StartEndTime => $"{StartTime:HH:mm} - {EndTime:HH:mm}";
     public int Number { get; set; }
     public string Address { get; set; }
     public string Auditory { get; set; }
