@@ -9,5 +9,5 @@ Application:
   EnableSwagger: true
 
 ConnectionStrings:
-  DefaultConnection: "Host=localhost;Port=51946;Database=goblin;User ID=postgres;Password=postgres;Pooling=true;"
+  Database: "Host=localhost;Port=51946;Database=goblin;Username=postgres;Password=postgres;Pooling=true;GSS Encryption Mode=Disable"
 

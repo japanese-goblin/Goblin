@@ -8,7 +8,7 @@ public static class SetupExtensions
 {
     public static void AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        var connectionString = configuration.GetConnectionString("Database");
 
         services.AddDbContext<BotDbContext>(options =>
         {
