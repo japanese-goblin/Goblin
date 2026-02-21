@@ -51,9 +51,6 @@ public static class HtmlParser
             var teacher = lessonNode.SelectSingleNode(".//span[contains(@class,'discipline')]//nobr")
                                     ?.GetNormalizedInnerText();
 
-            var startEnd = lessonNode.SelectSingleNode(".//span[contains(@class,'time_para')]")
-                                     .GetNormalizedInnerText();
-
             var linkElement = lessonNode.SelectSingleNode(".//a");
 
             var lesson = new Lesson
@@ -67,7 +64,6 @@ public static class HtmlParser
                 Teacher = teacher,
                 StartTime = DateTime.ParseExact($"{date} {time[0]}", "dd.MM.yyyy HH:mm", null, DateTimeStyles.None),
                 EndTime = DateTime.ParseExact($"{date} {time[1]}", "dd.MM.yyyy HH:mm", null, DateTimeStyles.None),
-                StartEndTime = startEnd,
                 Link = linkElement?.GetAttributeValue("href", string.Empty)
             };
 
