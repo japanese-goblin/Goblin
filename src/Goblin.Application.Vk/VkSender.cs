@@ -9,7 +9,7 @@ using VkNet.Model;
 
 namespace Goblin.Application.Vk;
 
-public class VkSender : ISender
+public class VkSender(IVkApi vkApi, ILogger<VkSender> logger) : ISender
 {
     private const int ChunkLimit = 100;
     public int TextLimit => 4096;
@@ -26,22 +26,14 @@ public class VkSender : ISender
         ["market"] = typeof(Market)
     };
 
-    private readonly IVkApi _vkApi;
-    private readonly ILogger _logger;
-    private readonly RandomNumberGenerator _randomGenerator;
-
-    public VkSender(IVkApi vkApi, ILogger<VkSender> logger)
-    {
-        _vkApi = vkApi;
-        _logger = logger;
-        _randomGenerator = RandomNumberGenerator.Create();
-    }
+    private readonly ILogger _logger = logger;
+    private readonly RandomNumberGenerator _randomGenerator = RandomNumberGenerator.Create();
 
     public Task Send(long chatId, string message, CoreKeyboard? keyboard = null, IReadOnlyCollection<string>? attachments = null)
     {
         message = TrimText(message);
 
-        return _vkApi.Messages.SendAsync(new MessagesSendParams
+        return vkApi.Messages.SendAsync(new MessagesSendParams
         {
             PeerId = chatId,
             Message = message,
@@ -60,7 +52,7 @@ public class VkSender : ISender
         {
             try
             {
-                await _vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams
+                await vkApi.Messages.SendToUserIdsAsync(new MessagesSendParams
                 {
                     UserIds = chunk,
                     Message = message,

@@ -1,20 +1,14 @@
 ﻿namespace Goblin.Application.Core.Models;
 
-public class CoreKeyboard
+public class CoreKeyboard(bool isOneTime = true)
 {
     public const string ReturnToMainMenuText = "Вернуться в главное меню";
 
-    public bool IsOneTime { get; set; }
+    public bool IsOneTime { get; set; } = isOneTime;
     public bool IsInline { get; set; }
-    public List<List<CoreKeyboardButton>> Buttons { get; set; }
+    public List<List<CoreKeyboardButton>> Buttons { get; set; } = [[]];
 
     private List<CoreKeyboardButton> LastLine => Buttons.Last();
-
-    public CoreKeyboard(bool isOneTime = true)
-    {
-        Buttons = [[]];
-        IsOneTime = isOneTime;
-    }
 
     public CoreKeyboard AddButton(string text, CoreKeyboardButtonColor color, string payloadKey, string payloadValue)
     {

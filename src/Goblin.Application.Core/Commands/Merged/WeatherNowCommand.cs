@@ -1,19 +1,12 @@
 namespace Goblin.Application.Core.Commands.Merged;
 
-public class WeatherNowCommand : IKeyboardCommand, ITextCommand
+public class WeatherNowCommand(IWeatherService weatherService) : IKeyboardCommand, ITextCommand
 {
     public string Trigger => "weatherNow";
 
     public bool IsAdminCommand => false;
 
     public string[] Aliases => ["погода"];
-
-    private readonly IWeatherService _weatherService;
-
-    public WeatherNowCommand(IWeatherService weatherService)
-    {
-        _weatherService = weatherService;
-    }
 
     public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
@@ -36,10 +29,10 @@ public class WeatherNowCommand : IKeyboardCommand, ITextCommand
 
         if(!string.IsNullOrWhiteSpace(city))
         {
-            return await _weatherService.GetCurrentWeather(city);
+            return await weatherService.GetCurrentWeather(city);
         }
 
-        return await _weatherService.GetCurrentWeather(user.WeatherCity);
+        return await weatherService.GetCurrentWeather(user.WeatherCity);
     }
 
     private async Task<CommandExecutionResult> ExecutePayload(BotUser user)
@@ -49,6 +42,6 @@ public class WeatherNowCommand : IKeyboardCommand, ITextCommand
             return CommandExecutionResult.Failed(DefaultErrors.CityNotSet);
         }
 
-        return await _weatherService.GetCurrentWeather(user.WeatherCity);
+        return await weatherService.GetCurrentWeather(user.WeatherCity);
     }
 }

@@ -3,18 +3,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core.Commands.Text;
 
-public class FindTeacherCommand : ITextCommand
+public class FindTeacherCommand(INarfuApi narfuApi, ILogger<FindTeacherCommand> logger) : ITextCommand
 {
     public bool IsAdminCommand => false;
     public string[] Aliases => ["препод"];
-    private readonly INarfuApi _narfuApi;
-    private readonly ILogger<FindTeacherCommand> _logger;
-
-    public FindTeacherCommand(INarfuApi narfuApi, ILogger<FindTeacherCommand> logger)
-    {
-        _narfuApi = narfuApi;
-        _logger = logger;
-    }
 
     public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
@@ -26,7 +18,7 @@ public class FindTeacherCommand : ITextCommand
 
         try
         {
-            var findResult = await _narfuApi.Teachers.FindByName(teacherName);
+            var findResult = await narfuApi.Teachers.FindByName(teacherName);
             if(findResult.Length == 0)
             {
                 return CommandExecutionResult.Failed("Преподаватель с такими данными не найден.");
@@ -57,7 +49,7 @@ public class FindTeacherCommand : ITextCommand
         }
         catch(Exception ex)
         {
-            _logger.LogError(ex, "Ошибка при поиске преподавателя");
+            logger.LogError(ex, "Ошибка при поиске преподавателя");
             return CommandExecutionResult.Failed(DefaultErrors.NarfuUnexpectedError);
         }
     }
