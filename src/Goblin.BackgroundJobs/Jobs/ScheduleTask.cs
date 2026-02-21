@@ -8,26 +8,16 @@ using Microsoft.Extensions.Options;
 
 namespace Goblin.BackgroundJobs.Jobs;
 
-public class ScheduleTask
+public class ScheduleTask(
+        BotDbContext db,
+        IScheduleService scheduleService,
+        IEnumerable<ISender> senders,
+        IOptions<MailingOptions> mailingOptions,
+        ILogger<ScheduleTask> logger)
 {
-    private readonly BotDbContext _db;
-    private readonly IScheduleService _scheduleService;
-    private readonly IEnumerable<ISender> _senders;
-    private readonly ILogger<ScheduleTask> _logger;
-    private readonly MailingOptions _mailingOptions;
+    private readonly MailingOptions _mailingOptions = mailingOptions.Value;
 
     private static readonly TimeSpan DelayBetweenSends = TimeSpan.FromSeconds(1.5);
-
-    public ScheduleTask(BotDbContext db, IScheduleService scheduleService,
-                        IEnumerable<ISender> senders, IOptions<MailingOptions> mailingOptions,
-                        ILogger<ScheduleTask> logger)
-    {
-        _db = db;
-        _scheduleService = scheduleService;
-        _senders = senders;
-        _logger = logger;
-        _mailingOptions = mailingOptions.Value;
-    }
 
     public async Task Execute()
     {
@@ -36,13 +26,13 @@ public class ScheduleTask
             return;
         }
 
-        var consumersGroup = _db.BotUsers.AsNoTracking()
+        var consumersGroup = db.BotUsers.AsNoTracking()
                                 .Where(x => x.HasScheduleSubscription && x.NarfuGroup.HasValue)
                                 .ToArray()
                                 .GroupBy(x => x.ConsumerType);
         foreach(var consumerGroup in consumersGroup)
         {
-            var sender = _senders.First(x => x.ConsumerType == consumerGroup.Key);
+            var sender = senders.First(x => x.ConsumerType == consumerGroup.Key);
             var groupedByGroup = consumerGroup.GroupBy(x => x.NarfuGroup);
             foreach(var group in groupedByGroup)
             {
@@ -51,7 +41,7 @@ public class ScheduleTask
                     continue;
                 }
 
-                var result = await _scheduleService.GetSchedule(group.Key.Value, DateTime.Today);
+                var result = await scheduleService.GetSchedule(group.Key.Value, DateTime.Today);
 
                 foreach(var chunk in group.Chunk(Defaults.ChunkLimit))
                 {
@@ -62,7 +52,7 @@ public class ScheduleTask
                     }
                     catch(Exception ex)
                     {
-                        _logger.LogError(ex, "Ошибка при отправке ежедневной погоды");
+                        logger.LogError(ex, "Ошибка при отправке ежедневной погоды");
                     }
 
                     await Task.Delay(DelayBetweenSends);

@@ -13,7 +13,7 @@ public class SetDataCommandTests : TestBase
     [Theory, InlineData("город Москва"), InlineData("группу 353535"), InlineData("группа 353535")]
     public async Task ShouldReturnSuccessfulResult(string parameters)
     {
-        var command = new SetDataCommand(ApplicationContext, GetWeatherApi(), GetNarfuApi());
+        var command = new SetDataCommand(GetDbContext(), GetWeatherApi(), GetNarfuApi());
         var text = $"{command.Aliases[0]} {parameters}";
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
@@ -47,7 +47,7 @@ public class SetDataCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_CityIsNotExists()
     {
-        var command = new SetDataCommand(ApplicationContext, GetWeatherApi(false), GetNarfuApi());
+        var command = new SetDataCommand(GetDbContext(), GetWeatherApi(false), GetNarfuApi());
         var text = $"{command.Aliases[0]} город абв";
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
@@ -60,7 +60,7 @@ public class SetDataCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_GroupIdIsNotInteger()
     {
-        var command = new SetDataCommand(ApplicationContext, GetWeatherApi(), GetNarfuApi());
+        var command = new SetDataCommand(GetDbContext(), GetWeatherApi(), GetNarfuApi());
         var text = $"{command.Aliases[0]} группу абв";
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
@@ -73,7 +73,7 @@ public class SetDataCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_GroupIsNotExists()
     {
-        var command = new SetDataCommand(ApplicationContext, GetWeatherApi(), GetNarfuApi(false));
+        var command = new SetDataCommand(GetDbContext(), GetWeatherApi(), GetNarfuApi(false));
         var text = $"{command.Aliases[0]} группу 353535";
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
@@ -86,7 +86,7 @@ public class SetDataCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_IncorrectSetParameter()
     {
-        var command = new SetDataCommand(ApplicationContext, GetWeatherApi(false), GetNarfuApi());
+        var command = new SetDataCommand(GetDbContext(), GetWeatherApi(false), GetNarfuApi());
         var text = $"{command.Aliases[0]} абв абв";
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 
@@ -99,7 +99,7 @@ public class SetDataCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnFailedResult_Because_NotEnoughParameters()
     {
-        var command = new SetDataCommand(ApplicationContext, GetWeatherApi(), GetNarfuApi());
+        var command = new SetDataCommand(GetDbContext(), GetWeatherApi(), GetNarfuApi());
         var text = $"{command.Aliases[0]} город";
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 

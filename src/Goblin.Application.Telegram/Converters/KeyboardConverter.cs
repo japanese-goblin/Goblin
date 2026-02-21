@@ -23,13 +23,10 @@ public static class KeyboardConverter
 
             foreach(var line in coreKeyboard.Buttons)
             {
-                foreach(var button in line)
-                {
-                    currentLine.Add(new KeyboardButton(button.Title));
-                }
+                currentLine.AddRange(line.Select(button => new KeyboardButton(button.Title)));
 
                 tgButtonsList.Add(currentLine);
-                currentLine = new List<KeyboardButton>();
+                currentLine = [];
             }
 
             var keyboard = new ReplyKeyboardMarkup(tgButtonsList)
@@ -48,13 +45,10 @@ public static class KeyboardConverter
 
             foreach(var line in coreKeyboard.Buttons)
             {
-                foreach(var button in line)
-                {
-                    currentLine.Add(InlineKeyboardButton.WithCallbackData(button.Title, button.Payload));
-                }
+                currentLine.AddRange(line.Select(button => InlineKeyboardButton.WithCallbackData(button.Title, button.Payload)));
 
                 tgButtonsList.Add(currentLine);
-                currentLine = new List<InlineKeyboardButton>();
+                currentLine = [];
             }
 
             var keyboard = new InlineKeyboardMarkup(tgButtonsList);

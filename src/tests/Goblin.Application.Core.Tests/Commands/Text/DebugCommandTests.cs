@@ -9,7 +9,7 @@ public class DebugCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnSuccessfulResult()
     {
-        var command = new DebugCommand(ApplicationContext);
+        var command = new DebugCommand(GetDbContext());
         var text = command.Aliases[0];
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 

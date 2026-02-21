@@ -3,12 +3,8 @@ using Goblin.Narfu.Models;
 
 namespace Goblin.Narfu.ViewModels;
 
-public class TeacherLessonsViewModel : LessonsViewModel
+public class TeacherLessonsViewModel(IEnumerable<Lesson> lessons, DateTime date) : LessonsViewModel(lessons, date)
 {
-    public TeacherLessonsViewModel(IEnumerable<Lesson> lessons, DateTime date) : base(lessons, date)
-    {
-    }
-
     public override string ToString()
     {
         var selected = Lessons.ToArray();

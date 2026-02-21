@@ -5,7 +5,7 @@ namespace Goblin.Narfu.Abstractions;
 
 public interface IStudentsSchedule
 {
-    public Task<IEnumerable<Lesson>> GetSchedule(int realGroupId, DateTime? date = default);
+    public Task<IEnumerable<Lesson>> GetSchedule(int realGroupId, DateTime? date = null);
 
     public Task<LessonsViewModel> GetScheduleAtDate(int realGroupId, DateTime date);
 

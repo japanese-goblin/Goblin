@@ -12,7 +12,7 @@ public class CommandsServiceTests : TestBase
 {
     private CommandsService GetService()
     {
-        var service = new CommandsService(GetTextCommands(), GetKeyboardCommands(), ApplicationContext,
+        var service = new CommandsService(GetTextCommands(), GetKeyboardCommands(), GetDbContext(),
                                           Substitute.For<ILogger<CommandsService>>());
 
         return service;
@@ -22,13 +22,13 @@ public class CommandsServiceTests : TestBase
         IEnumerable<ITextCommand> GetTextCommands() => [new HelpCommand(), new StartCommand(), new FakeAdminCommand()];
     }
 
-    private Task OnSuccess(CommandExecutionResult res)
+    private static Task OnSuccess(CommandExecutionResult res)
     {
         res.IsSuccessful.Should().BeTrue();
         return Task.CompletedTask;
     }
 
-    private Task OnFailed(CommandExecutionResult res)
+    private static Task OnFailed(CommandExecutionResult res)
     {
         res.IsSuccessful.Should().BeFalse();
         return Task.CompletedTask;

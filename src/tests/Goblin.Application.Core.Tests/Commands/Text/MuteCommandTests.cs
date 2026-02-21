@@ -9,7 +9,7 @@ public class MuteCommandTests : TestBase
     [Fact]
     public async Task ShouldReturnSuccessfulResult()
     {
-        var command = new MuteCommand(ApplicationContext);
+        var command = new MuteCommand(GetDbContext());
         var text = command.Aliases[0];
         var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
 

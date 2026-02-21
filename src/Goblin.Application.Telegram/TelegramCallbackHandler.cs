@@ -37,8 +37,7 @@ public class TelegramCallbackHandler
         {
             await HandleCallback(update.CallbackQuery);
         }
-        else if(update.Type == UpdateType.MyChatMember &&
-                update.MyChatMember?.NewChatMember.Status == ChatMemberStatus.Kicked)
+        else if(update is { Type: UpdateType.MyChatMember, MyChatMember.NewChatMember.Status: ChatMemberStatus.Kicked })
         {
             await HandleBotKick(update.MyChatMember);
         }
@@ -47,6 +46,7 @@ public class TelegramCallbackHandler
     private async Task HandleMessageEvent(Message message)
     {
         await _commandsService.ExecuteCommand(message, OnSuccess, OnFailed);
+        return;
 
         async Task OnSuccess(CommandExecutionResult res)
         {
@@ -62,6 +62,7 @@ public class TelegramCallbackHandler
     private async Task HandleCallback(CallbackQuery query)
     {
         await _commandsService.ExecuteCommand(query.MapToBotMessage(), OnAnyResult, OnAnyResult);
+        return;
 
         async Task OnAnyResult(CommandExecutionResult res)
         {

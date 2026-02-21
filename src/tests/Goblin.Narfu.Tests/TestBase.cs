@@ -17,16 +17,16 @@ public class TestBase
 
     protected const string TeacherName = "Абрамова";
 
-    protected string StudentsSchedulePath => Path.Combine(DefaultPath, "StudentsSchedule.ics");
-    protected string TeachersSchedulePath => Path.Combine(DefaultPath, "TeachersSchedule.html");
-    protected string FindByNamePath => Path.Combine(DefaultPath, "FindTeacher.json");
+    protected static string StudentsSchedulePath => Path.Combine(DefaultPath, "StudentsSchedule.ics");
+    protected static string TeachersSchedulePath => Path.Combine(DefaultPath, "TeachersSchedule.html");
+    protected static string FindByNamePath => Path.Combine(DefaultPath, "FindTeacher.json");
 
     protected INarfuApi Api { get; }
 
     protected DateTime CorrectDate = new DateTime(2040, 01, 23, 16, 15, 0);
     protected DateTime IncorrectDate = new DateTime(2010, 01, 23, 16, 15, 0);
 
-    public TestBase()
+    protected TestBase()
     {
         // var mockHttp = Substitute.ForHttpMessageHandler();
         //

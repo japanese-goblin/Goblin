@@ -78,7 +78,7 @@ public class StudentsSchedule : IStudentsSchedule
     //     return $"{protocol}://{url}&oid={siteGroupId}&cod={realGroupId}&from={todayDate}";
     // }
 
-    public IEnumerable<Lesson> GetCalendarLessons(string response)
+    public static IEnumerable<Lesson> GetCalendarLessons(string response)
     {
         var calendar = new Calendar(response);
 

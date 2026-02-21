@@ -45,7 +45,7 @@ public static class KeyboardConverter
                 {
                     Label = button.Title,
                     Payload = button.Payload,
-                    Type = inlineKeyboardEnabled ? KeyboardButtonActionType.Callback : KeyboardButtonActionType.Text,
+                    Type = inlineKeyboardEnabled ? KeyboardButtonActionType.Callback : KeyboardButtonActionType.Text
                 }, color);
 
                 // kb.AddButton(button.Title, button.PayloadValue, color, button.PayloadKey);

@@ -67,7 +67,7 @@ public class SendToChatTasks
 
     private async Task SendWeather(long id, string city, Func<string, Task> send)
     {
-        _logger.LogInformation("Отправка погоды в {0}", id);
+        _logger.LogInformation("Отправка погоды в {WeatherCity}", id);
         var result = await _weatherService.GetDailyWeather(city, DateTime.Today);
 
         await send(result.Message);
@@ -80,13 +80,13 @@ public class SendToChatTasks
             return;
         }
 
-        _logger.LogInformation("Отправка расписания в {0}", id);
+        _logger.LogInformation("Отправка расписания в {NarfuGroup}", id);
         var result = await _scheduleService.GetSchedule(group, DateTime.Now);
 
         await send(result.Message);
     }
 
-    private async Task SendText(string text, Func<string, Task> send)
+    private static async Task SendText(string text, Func<string, Task> send)
     {
         await send(text);
     }

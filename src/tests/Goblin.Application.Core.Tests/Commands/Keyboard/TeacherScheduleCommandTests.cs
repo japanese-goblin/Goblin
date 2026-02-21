@@ -19,7 +19,7 @@ public class TeacherScheduleCommandTests : TestBase
         return mockApi;
     }
 
-    private INarfuApi GetNarfuApiWithException()
+    private static INarfuApi GetNarfuApiWithException()
     {
         var mockApi = Substitute.For<INarfuApi>();
         mockApi.Teachers.GetLimitedSchedule(Arg.Any<int>(), Arg.Any<int>())

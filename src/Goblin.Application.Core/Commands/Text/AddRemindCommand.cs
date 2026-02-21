@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Application.Core.Commands.Text;
 
-public class AddRemindCommand : ITextCommand
+public class AddRemindCommand(BotDbContext db) : ITextCommand
 {
     public const int MaxRemindsCount = 8;
 
@@ -13,19 +13,12 @@ public class AddRemindCommand : ITextCommand
 
     public string[] Aliases => ["напомни"];
 
-    private readonly BotDbContext _db;
-
-    public AddRemindCommand(BotDbContext db)
-    {
-        _db = db;
-    }
-
     public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
         var param = string.Join(' ', msg.CommandParameters);
         var all = param.Split(' ', 3);
 
-        var reminds = await _db.Reminds.Where(x => x.ChatId == user.Id && x.ConsumerType == user.ConsumerType)
+        var reminds = await db.Reminds.Where(x => x.ChatId == user.Id && x.ConsumerType == user.ConsumerType)
                                .ToArrayAsync();
 
         if(!user.IsAdmin && reminds.Length == MaxRemindsCount)
@@ -67,8 +60,8 @@ public class AddRemindCommand : ITextCommand
 
     private async Task AddRemind(long chatId, ConsumerType consumerType, string remindText, DateTimeOffset dateTime)
     {
-        await _db.Reminds.AddAsync(new Remind(chatId, remindText, dateTime, consumerType));
-        await _db.SaveChangesAsync();
+        await db.Reminds.AddAsync(new Remind(chatId, remindText, dateTime, consumerType));
+        await db.SaveChangesAsync();
     }
 
     private static bool ParseTime(string date, string time, out DateTimeOffset dateTime)

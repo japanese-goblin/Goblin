@@ -33,6 +33,11 @@ public class WeatherTask
             var groupedByCity = consumerGroup.GroupBy(x => x.WeatherCity);
             foreach(var group in groupedByCity)
             {
+                if(string.IsNullOrWhiteSpace(group.Key))
+                {
+                    continue;
+                }
+
                 var result = await _weatherService.GetDailyWeather(group.Key, DateTime.Today);
 
                 foreach(var chunk in group.Chunk(Defaults.ChunkLimit))

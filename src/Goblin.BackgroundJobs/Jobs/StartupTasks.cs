@@ -73,8 +73,8 @@ public class StartupTasks
 
     private void ConfigureMailing()
     {
-        var scheduleSettings = _options.Schedule ?? new MailingSettings();
-        var weatherSettings = _options.Weather ?? new MailingSettings();
+        var scheduleSettings = _options.Schedule;
+        var weatherSettings = _options.Weather;
 
         if(scheduleSettings.IsEnabled)
         {

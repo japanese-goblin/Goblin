@@ -3,16 +3,10 @@ using Goblin.Narfu.Models;
 
 namespace Goblin.Narfu.ViewModels;
 
-public class LessonsViewModel
+public class LessonsViewModel(IEnumerable<Lesson> lessons, DateTime date)
 {
-    public IEnumerable<Lesson> Lessons { get; }
-    protected readonly DateTime Date;
-
-    public LessonsViewModel(IEnumerable<Lesson> lessons, DateTime date)
-    {
-        Date = date;
-        Lessons = lessons;
-    }
+    public IEnumerable<Lesson> Lessons { get; } = lessons;
+    protected readonly DateTime Date = date;
 
     public override string ToString()
     {

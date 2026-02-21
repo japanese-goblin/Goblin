@@ -3,12 +3,8 @@ using Goblin.Narfu.Models;
 
 namespace Goblin.Narfu.ViewModels;
 
-public class ExamsViewModel : LessonsViewModel
+public class ExamsViewModel(IEnumerable<Lesson> lessons, DateTime date) : LessonsViewModel(lessons, date)
 {
-    public ExamsViewModel(IEnumerable<Lesson> lessons, DateTime date) : base(lessons, date)
-    {
-    }
-
     public override string ToString()
     {
         var exams = Lessons.Where(x => x.StartTime.Date > Date.Date).ToArray();

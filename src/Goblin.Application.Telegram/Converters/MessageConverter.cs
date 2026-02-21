@@ -15,7 +15,7 @@ public static class MessageConverter
             ConsumerType = ConsumerType.Telegram,
             Text = message.Text,
             ChatId = message.Chat.Id,
-            UserTag = $"@{message.Chat.Username} (`{message.From?.Id}`)",
+            UserTag = $"@{message.Chat.Username} (`{message.From?.Id}`)"
         };
     }
 
@@ -27,7 +27,7 @@ public static class MessageConverter
             Payload = callbackQuery.Data,
             UserId = callbackQuery.From.Id,
             ConsumerType = ConsumerType.Telegram,
-            ChatId = callbackQuery.From.Id,
+            ChatId = callbackQuery.From.Id
         };
     }
 }

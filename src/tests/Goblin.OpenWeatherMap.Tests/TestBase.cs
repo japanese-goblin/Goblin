@@ -17,7 +17,7 @@ public class TestBase
 
     protected OpenWeatherMap.OpenWeatherMapApi Api { get; init; }
 
-    public TestBase()
+    protected TestBase()
     {
         // var mockHttp = Substitute.For<HttpMessageHandler>();
         //

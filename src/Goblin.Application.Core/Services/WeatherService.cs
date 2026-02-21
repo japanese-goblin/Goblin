@@ -5,7 +5,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core.Services;
 
-public class WeatherService : IWeatherService
+public class WeatherService(IOpenWeatherMapApi weatherMapApi, IMemoryCache cache, ILogger<WeatherService> logger)
+        : IWeatherService
 {
     private const string DailyCacheKey = "Weather_Daily";
     private const string NowCacheKey = "Weather_Now";
@@ -15,27 +16,16 @@ public class WeatherService : IWeatherService
     private static readonly TimeSpan DailyWeatherExpireTime = TimeSpan.FromHours(3);
     private static readonly TimeSpan NotFoundExpireTime = TimeSpan.FromMinutes(15);
 
-    private readonly IMemoryCache _cache;
-    private readonly ILogger<WeatherService> _logger;
-    private readonly IOpenWeatherMapApi _weatherMapApi;
-
-    public WeatherService(IOpenWeatherMapApi weatherMapApi, IMemoryCache cache, ILogger<WeatherService> logger)
-    {
-        _weatherMapApi = weatherMapApi;
-        _cache = cache;
-        _logger = logger;
-    }
-
     public async Task<CommandExecutionResult> GetCurrentWeather(string city)
     {
         try
         {
             var key = GetCurrentCacheKey(city);
-            if(!_cache.TryGetValue<string>(key, out var result))
+            if(!cache.TryGetValue<string>(key, out var result))
             {
-                var weather = await _weatherMapApi.GetCurrentWeather(city);
+                var weather = await weatherMapApi.GetCurrentWeather(city);
                 result = weather.ToString();
-                _cache.Set(key, result, CurrentWeatherExpireTime);
+                cache.Set(key, result, CurrentWeatherExpireTime);
             }
 
             return CommandExecutionResult.Success(result);
@@ -47,12 +37,12 @@ public class WeatherService : IWeatherService
                 return CommandExecutionResult.Failed($"Город \"{city}\" не найден");
             }
 
-            _logger.LogError(ex, "Ошибка при получении погоды на текущий момент");
+            logger.LogError(ex, "Ошибка при получении погоды на текущий момент");
             return CommandExecutionResult.Failed(DefaultErrors.WeatherSiteIsUnavailable);
         }
         catch(Exception ex)
         {
-            _logger.LogError(ex, "Ошибка при получении погоды на текущий момент");
+            logger.LogError(ex, "Ошибка при получении погоды на текущий момент");
             return CommandExecutionResult.Failed(DefaultErrors.WeatherUnexpectedError);
         }
     }
@@ -62,9 +52,9 @@ public class WeatherService : IWeatherService
         try
         {
             var key = GetDailyCacheKey(city, date);
-            if(!_cache.TryGetValue<string>(key, out var result))
+            if(!cache.TryGetValue<string>(key, out var result))
             {
-                var weather = await _weatherMapApi.GetDailyWeatherAt(city, date);
+                var weather = await weatherMapApi.GetDailyWeatherAt(city, date);
 
                 string formattedDate;
                 if(date.Date == DateTime.Today)
@@ -82,7 +72,7 @@ public class WeatherService : IWeatherService
 
                 result = $"Погода в городе {city} на {formattedDate}:\n{weather}";
 
-                _cache.Set(key, result, DailyWeatherExpireTime);
+                cache.Set(key, result, DailyWeatherExpireTime);
             }
 
             return CommandExecutionResult.Success(result);
@@ -95,7 +85,7 @@ public class WeatherService : IWeatherService
                 return CommandExecutionResult.Failed(result);
             }
 
-            _logger.LogError(ex, "Ошибка при получении погоды на текущий момент");
+            logger.LogError(ex, "Ошибка при получении погоды на текущий момент");
             return CommandExecutionResult.Failed(DefaultErrors.WeatherSiteIsUnavailable);
         }
         catch(ArgumentException ex)
@@ -104,7 +94,7 @@ public class WeatherService : IWeatherService
         }
         catch(Exception ex)
         {
-            _logger.LogError(ex, "Ошибка при получении погоды на день");
+            logger.LogError(ex, "Ошибка при получении погоды на день");
             return CommandExecutionResult.Failed(DefaultErrors.WeatherUnexpectedError);
         }
     }
@@ -114,7 +104,7 @@ public class WeatherService : IWeatherService
         var key = GetNotFoundCacheKey(city);
         var result = $"Город \"{city}\" не найден";
 
-        _cache.Set(key, result, NotFoundExpireTime);
+        cache.Set(key, result, NotFoundExpireTime);
         return result;
     }
 

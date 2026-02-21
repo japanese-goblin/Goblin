@@ -11,12 +11,12 @@ namespace Goblin.Application.Core.Tests;
 
 public class TestBase
 {
-    public readonly BotUser AdminUser;
-    public readonly BotDbContext ApplicationContext;
-    public readonly BotUser DefaultUser;
-    public readonly BotUser DefaultUserWithMaxReminds;
+    protected readonly BotUser AdminUser;
+    private readonly BotDbContext? ApplicationContext;
+    protected readonly BotUser DefaultUser;
+    protected readonly BotUser DefaultUserWithMaxReminds;
 
-    public TestBase()
+    protected TestBase()
     {
         DefaultUser = new BotUser(1, "Архангельск", 351917, false, true, true, true);
         DefaultUserWithMaxReminds = new BotUser(2, "Архангельск", 351917, false, true, true, true);
@@ -63,7 +63,7 @@ public class TestBase
         context.SaveChanges();
     }
 
-    public Message GenerateMessage(long userId, long chatId, string text = "")
+    protected static Message GenerateMessage(long userId, long chatId, string text = "")
     {
         return new Message
         {
@@ -74,7 +74,7 @@ public class TestBase
         };
     }
 
-    public Message GenerateMessageWithPayload(long userId, long chatId, string key, string value)
+    protected static Message GenerateMessageWithPayload(long userId, long chatId, string key, string value)
     {
         var dict = new Dictionary<string, string>
         {

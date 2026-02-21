@@ -125,6 +125,7 @@ public class VkCallbackHandler
         _logger.LogDebug("Обработка сообщения");
         await _commandsService.ExecuteCommand(message, OnSuccess, OnFailed);
         _logger.LogDebug("Обработка сообщения завершена");
+        return;
 
         async Task OnSuccess(CommandExecutionResult res)
         {
@@ -141,14 +142,16 @@ public class VkCallbackHandler
     {
         var mappedToMessage = messageEvent.MapToBotMessage();
         await _commandsService.ExecuteCommand(mappedToMessage, OnSuccess, OnFailed);
+        return;
 
         async Task OnSuccess(CommandExecutionResult res)
         {
+            var peerId = messageEvent.PeerId.GetValueOrDefault(0);
             try
             {
                 await _vkApi.Messages.EditAsync(new MessageEditParams
                 {
-                    PeerId = messageEvent.PeerId.GetValueOrDefault(0),
+                    PeerId = peerId,
                     ConversationMessageId = messageEvent.ConversationMessageId,
                     Keyboard = KeyboardConverter.FromCoreToVk(res.Keyboard, true),
                     Message = res.Message
@@ -156,7 +159,7 @@ public class VkCallbackHandler
             }
             catch
             {
-                await _sender.Send(messageEvent.PeerId.GetValueOrDefault(0), res.Message, res.Keyboard);
+                await _sender.Send(peerId, res.Message, res.Keyboard);
             }
         }
 
@@ -176,8 +179,8 @@ public class VkCallbackHandler
     private async Task GroupLeave(GroupLeave leave)
     {
         const string groupLeaveMessage = "Очень жаль, что ты решил отписаться от группы 😢\n" +
-                                         "Если тебе что-то не понравилось или ты не разобрался с ботом, то всегда можешь написать " +
-                                         "администрации об этом через команду 'админ *сообщение*' (подробнее смотри в справке).";
+                                         "Если ты не разобрался с ботом, то всегда можешь написать " +
+                                         "об этом администраторам через команду 'админ *сообщение*' (подробнее смотри в справке).";
 
         _logger.LogInformation("Пользователь id{UserId} покинул группу", leave.UserId);
         await SendMessageToAdmins(leave.UserId.Value, "отписался :С");

@@ -7,22 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Application.Core.Commands.Text;
 
-public class ConversationSettingsCommand : ITextCommand
+public class ConversationSettingsCommand(IOpenWeatherMapApi openWeatherMapApi, INarfuApi narfuApi, BotDbContext context)
+        : ITextCommand
 {
     public bool IsAdminCommand => false;
 
     public string[] Aliases => ["настройки", "настройка", "настроить"];
-
-    private readonly IOpenWeatherMapApi _openWeatherMapApi;
-    private readonly INarfuApi _narfuApi;
-    private readonly BotDbContext _context;
-
-    public ConversationSettingsCommand(IOpenWeatherMapApi openWeatherMapApi, INarfuApi narfuApi, BotDbContext context)
-    {
-        _openWeatherMapApi = openWeatherMapApi;
-        _narfuApi = narfuApi;
-        _context = context;
-    }
 
     public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
@@ -70,7 +60,7 @@ public class ConversationSettingsCommand : ITextCommand
 
     private async Task<CommandExecutionResult> GenerateCronInfo(long chatId, ConsumerType consumerType)
     {
-        var job = await _context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId &&
+        var job = await context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId &&
                                                                    x.ConsumerType == consumerType);
         if(job is null)
         {
@@ -118,10 +108,10 @@ public class ConversationSettingsCommand : ITextCommand
         try
         {
             var cronTime = new CronTime(splittedTime[1], splittedTime[0]);
-            var job = await _context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId);
+            var job = await context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId);
             if(job is null)
             {
-                await _context.CronJobs.AddAsync(new CronJob(chatId.ToString(), chatId, 0, string.Empty,
+                await context.CronJobs.AddAsync(new CronJob(chatId.ToString(), chatId, 0, string.Empty,
                                                              cronTime, consumerType, CronType.Schedule));
             }
             else
@@ -129,7 +119,7 @@ public class ConversationSettingsCommand : ITextCommand
                 job.SetCronTime(cronTime);
             }
 
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
             return CommandExecutionResult.Success($"Время успешно установлено на {time}");
         }
         catch(Exception e)
@@ -140,17 +130,17 @@ public class ConversationSettingsCommand : ITextCommand
 
     private async Task<CommandExecutionResult> SetCity(long chatId, string city, ConsumerType consumerType)
     {
-        var isCityExist = await _openWeatherMapApi.IsCityExists(city);
+        var isCityExist = await openWeatherMapApi.IsCityExists(city);
         if(!isCityExist)
         {
             return CommandExecutionResult.Failed("Указанный город не найден");
         }
 
-        var job = await _context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId);
+        var job = await context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId);
         if(job is null)
         {
             var time = new CronTime("0", "6");
-            await _context.CronJobs.AddAsync(new CronJob(chatId.ToString(), chatId, 0, city, time, consumerType, CronType.Weather));
+            await context.CronJobs.AddAsync(new CronJob(chatId.ToString(), chatId, 0, city, time, consumerType, CronType.Weather));
         }
         else
         {
@@ -158,7 +148,7 @@ public class ConversationSettingsCommand : ITextCommand
             job.SetWeatherCity(city);
         }
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         return CommandExecutionResult.Success($"Город успешно установлен на {city}");
     }
@@ -170,17 +160,17 @@ public class ConversationSettingsCommand : ITextCommand
             return CommandExecutionResult.Failed("Укажите корректный номер группы.");
         }
 
-        var group = _narfuApi.Students.GetGroupByRealId(intGroup);
+        var group = narfuApi.Students.GetGroupByRealId(intGroup);
         if(group is null)
         {
             return CommandExecutionResult.Failed($"Группа с номером {intGroup} не найдена.");
         }
 
-        var job = await _context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId);
+        var job = await context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId);
         if(job is null)
         {
             var time = new CronTime("0", "6");
-            await _context.CronJobs.AddAsync(new CronJob(chatId.ToString(), chatId, intGroup, string.Empty, time,
+            await context.CronJobs.AddAsync(new CronJob(chatId.ToString(), chatId, intGroup, string.Empty, time,
                                                          consumerType, CronType.Weather));
         }
         else
@@ -189,7 +179,7 @@ public class ConversationSettingsCommand : ITextCommand
             job.SetNarfuGroup(intGroup);
         }
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         return CommandExecutionResult.Success($"Группа успешно установлена на {intGroup} ({group.Name})");
     }
@@ -198,22 +188,22 @@ public class ConversationSettingsCommand : ITextCommand
     {
         if(whatToRemove.Contains("расписани", StringComparison.InvariantCultureIgnoreCase))
         {
-            var job = await _context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId &&
+            var job = await context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId &&
                                                                        x.ConsumerType == consumerType);
             job.SetNarfuGroup(0);
             job.CronType &= ~CronType.Schedule;
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return CommandExecutionResult.Success("Рассылка расписания удалена. Установите группу для возобновления рассылки.");
         }
 
         if(whatToRemove.Contains("погод", StringComparison.InvariantCultureIgnoreCase))
         {
-            var job = await _context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId &&
+            var job = await context.CronJobs.FirstOrDefaultAsync(x => x.ChatId == chatId &&
                                                                        x.ConsumerType == consumerType);
             job.SetWeatherCity(string.Empty);
             job.CronType &= ~CronType.Weather;
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return CommandExecutionResult.Success("Рассылка погоды удалена. Установите город для возобновления рассылки.");
         }

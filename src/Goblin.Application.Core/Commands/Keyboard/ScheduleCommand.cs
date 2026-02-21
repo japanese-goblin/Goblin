@@ -1,15 +1,8 @@
 namespace Goblin.Application.Core.Commands.Keyboard;
 
-public class ScheduleCommand : IKeyboardCommand
+public class ScheduleCommand(IScheduleService api) : IKeyboardCommand
 {
     public string Trigger => "schedule";
-
-    private readonly IScheduleService _api;
-
-    public ScheduleCommand(IScheduleService api)
-    {
-        _api = api;
-    }
 
     public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
@@ -19,6 +12,6 @@ public class ScheduleCommand : IKeyboardCommand
         }
 
         var date = msg.ParsedPayload[Trigger];
-        return await _api.GetSchedule(user.NarfuGroup.Value, DateTime.Parse(date));
+        return await api.GetSchedule(user.NarfuGroup.Value, DateTime.Parse(date));
     }
 }

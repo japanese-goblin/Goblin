@@ -4,24 +4,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core;
 
-public class CommandsService
+public class CommandsService(
+        IEnumerable<ITextCommand> textCommands,
+        IEnumerable<IKeyboardCommand> keyboardCommands,
+        BotDbContext context,
+        ILogger<CommandsService> logger)
 {
     private const string CommandNotFoundMessage = "Команда не найдена. Проверьте правильность написания команды. " +
                                                   "Если вы хотите отключить подобные ошибки, то, пожалуйста, напишите команду 'мут'";
-
-    private readonly BotDbContext _context;
-    private readonly IEnumerable<IKeyboardCommand> _keyboardCommands;
-    private readonly ILogger _logger;
-    private readonly IEnumerable<ITextCommand> _textCommands;
-
-    public CommandsService(IEnumerable<ITextCommand> textCommands, IEnumerable<IKeyboardCommand> keyboardCommands,
-                           BotDbContext context, ILogger<CommandsService> logger)
-    {
-        _textCommands = textCommands;
-        _keyboardCommands = keyboardCommands;
-        _context = context;
-        _logger = logger;
-    }
 
     public async Task ExecuteCommand(Message msg,
                                      Func<CommandExecutionResult, Task> onSuccess,
@@ -59,10 +49,10 @@ public class CommandsService
 
     private async Task<CommandExecutionResult> ExecuteTextCommand(Message msg, BotUser user)
     {
-        _logger.LogDebug("Обработка текстовой команды");
+        logger.LogDebug("Обработка текстовой команды");
         var cmdName = msg.CommandName;
 
-        foreach(var command in _textCommands)
+        foreach(var command in textCommands)
         {
             if(!command.Aliases.Contains(cmdName))
             {
@@ -74,9 +64,9 @@ public class CommandsService
                 continue;
             }
 
-            _logger.LogDebug("Выполнение команды {CommandType}", command.GetType());
+            logger.LogDebug("Выполнение команды {CommandType}", command.GetType());
             var result = await command.Execute(msg, user);
-            _logger.LogDebug("Команда вернула результат: {IsExecutionSuccess}", result.IsSuccessful);
+            logger.LogDebug("Команда вернула результат: {IsExecutionSuccess}", result.IsSuccessful);
 
             return result;
         }
@@ -86,16 +76,16 @@ public class CommandsService
 
     private async Task<CommandExecutionResult> ExecuteKeyboardCommand(Message msg, BotUser user)
     {
-        _logger.LogDebug("Обработка команды с клавиатуры");
+        logger.LogDebug("Обработка команды с клавиатуры");
         var record = msg.ParsedPayload.First();
-        foreach(var command in _keyboardCommands)
+        foreach(var command in keyboardCommands)
         {
             if(!record.Key.Contains(command.Trigger))
             {
                 continue;
             }
 
-            _logger.LogDebug("Выполнение команды с клавиатуры {CommandType}", command.GetType());
+            logger.LogDebug("Выполнение команды с клавиатуры {CommandType}", command.GetType());
             return await command.Execute(msg, user);
         }
 
@@ -104,7 +94,7 @@ public class CommandsService
 
     private async Task<BotUser> GetBotUser(long userId, ConsumerType type)
     {
-        var user = await _context.BotUsers.FindAsync(userId, type);
+        var user = await context.BotUsers.FindAsync(userId, type);
         if(user is not null)
         {
             return user;
@@ -114,8 +104,8 @@ public class CommandsService
         {
             ConsumerType = type
         };
-        await _context.BotUsers.AddAsync(user);
-        await _context.SaveChangesAsync();
+        await context.BotUsers.AddAsync(user);
+        await context.SaveChangesAsync();
 
         return user;
     }
