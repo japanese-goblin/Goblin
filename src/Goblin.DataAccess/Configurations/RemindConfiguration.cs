@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Goblin.DataAccess.Configurations;
 
-public class RemindConfiguration : IEntityTypeConfiguration<Remind>
+internal class RemindConfiguration : IEntityTypeConfiguration<Remind>
 {
     public void Configure(EntityTypeBuilder<Remind> builder)
     {

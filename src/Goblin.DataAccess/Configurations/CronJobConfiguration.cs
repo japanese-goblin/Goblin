@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Goblin.DataAccess.Configurations;
 
-public class CronJobConfiguration : IEntityTypeConfiguration<CronJob>
+internal class CronJobConfiguration : IEntityTypeConfiguration<CronJob>
 {
     public void Configure(EntityTypeBuilder<CronJob> builder)
     {

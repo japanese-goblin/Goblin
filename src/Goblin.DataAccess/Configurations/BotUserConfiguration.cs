@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Goblin.DataAccess.Configurations;
 
-public class BotUserConfiguration : IEntityTypeConfiguration<BotUser>
+internal class BotUserConfiguration : IEntityTypeConfiguration<BotUser>
 {
     public void Configure(EntityTypeBuilder<BotUser> builder)
     {
