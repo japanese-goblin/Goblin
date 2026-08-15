@@ -17,7 +17,7 @@ public class StudentsSchedule : IStudentsSchedule
         _client = client;
         Groups = _client.GetFromJsonAsync<Group[]>(groupsLink)
                         .GetAwaiter()
-                        .GetResult();
+                        .GetResult(); // FIXME
         _logger = logger;
     }
 

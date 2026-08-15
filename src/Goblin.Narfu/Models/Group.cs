@@ -1,8 +1,9 @@
 namespace Goblin.Narfu.Models;
 
-public class Group
-{
-    public int RealId { get; set; }
-    public int SiteId { get; set; }
-    public string Name { get; set; }
-}
+/// <summary>
+///     Модель группы
+/// </summary>
+/// <param name="Name">Название</param>
+/// <param name="RealId">Номер группы</param>
+/// <param name="SiteId">Идентификатор на сайте</param>
+public record Group(string Name, int RealId, int SiteId);

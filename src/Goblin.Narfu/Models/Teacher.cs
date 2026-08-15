@@ -2,14 +2,16 @@ using System.Text.Json.Serialization;
 
 namespace Goblin.Narfu.Models;
 
-public class Teacher
-{
-    [JsonPropertyName("lecturerOid")]
-    public int Id { get; set; }
-
-    [JsonPropertyName("fio")]
-    public string Name { get; set; }
-
-    [JsonPropertyName("chair")]
-    public string Depart { get; set; }
-}
+/// <summary>
+///     Модель преподавателя
+/// </summary>
+/// <param name="Id">Идентификатор</param>
+/// <param name="Name">Имя</param>
+/// <param name="Depart">Кафедра</param>
+public record Teacher(
+    [property: JsonPropertyName("lecturerOid")]
+    int Id,
+    [property: JsonPropertyName("fio")]
+    string Name,
+    [property: JsonPropertyName("chair")]
+    string Depart);

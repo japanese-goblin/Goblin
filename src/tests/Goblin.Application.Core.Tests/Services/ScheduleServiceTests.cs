@@ -15,12 +15,7 @@ public class ScheduleServiceTests : TestBase
     {
         var mock = Substitute.For<INarfuApi>();
         mock.Students.GetGroupByRealId(Arg.Any<int>())
-            .Returns(response ? new Group
-            {
-                Name = "name",
-                RealId = 1,
-                SiteId = 1
-            } : null);
+            .Returns(response ? new Group("name", 1, 1) : null);
         mock.Students.GetScheduleAtDate(Arg.Any<int>(), Arg.Any<DateTime>())
             .Returns(new LessonsViewModel(new List<Lesson>(), DateTime.Today));
         return mock;

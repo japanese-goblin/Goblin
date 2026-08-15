@@ -27,12 +27,7 @@ public class SetDataCommandTests : TestBase
     {
         var mockApi = Substitute.For<INarfuApi>();
         mockApi.Students.GetGroupByRealId(Arg.Any<int>())
-               .Returns(response ? new Group
-               {
-                   Name = "name",
-                   RealId = 1,
-                   SiteId = 1
-               } : null);
+               .Returns(response ? new Group("name", 1, 1) : null);
         return mockApi;
     }
 

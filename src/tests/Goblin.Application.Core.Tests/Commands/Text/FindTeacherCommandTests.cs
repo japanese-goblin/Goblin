@@ -13,12 +13,9 @@ public class FindTeacherCommandTests : TestBase
 {
     private static INarfuApi GetNarfuApi(int max = 3)
     {
-        var teachers = Enumerable.Range(0, max).Select(x => new Teacher
-        {
-            Id = x,
-            Depart = "depart",
-            Name = $"Name #{x}"
-        }).ToArray();
+        var teachers = Enumerable.Range(0, max)
+            .Select(id => new Teacher(id, $"Name #{id}", "depart"))
+            .ToArray();
 
         var mockApi = Substitute.For<INarfuApi>();
         mockApi.Teachers.FindByName(Arg.Any<string>())

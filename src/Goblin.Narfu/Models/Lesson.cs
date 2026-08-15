@@ -1,55 +1,109 @@
 namespace Goblin.Narfu.Models;
 
+/// <summary>
+///     Модель занятия
+/// </summary>
 public class Lesson : IEquatable<Lesson>
 {
+    /// <summary>
+    ///     Идентификатор
+    /// </summary>
     public string Id { get; set; }
 
+    /// <summary>
+    ///     Тип
+    /// </summary>
     public string Type { get; set; }
+
+    /// <summary>
+    ///     Название
+    /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    ///     Дата начала
+    /// </summary>
     public DateTime StartTime { get; set; }
+
+    /// <summary>
+    ///     Дата окончания
+    /// </summary>
     public DateTime EndTime { get; set; }
-    public string StartEndTime => $"{StartTime:HH:mm} - {EndTime:HH:mm}";
+
+    /// <summary>
+    ///     Номер (внутри одного дня)
+    /// </summary>
     public int Number { get; set; }
+    
+    /// <summary>
+    ///     Адрес, где будет проходить занятие
+    /// </summary>
     public string Address { get; set; }
+    
+    /// <summary>
+    ///     Номер аудитории, где будет проходить занятие
+    /// </summary>
     public string Auditory { get; set; }
+    
+    /// <summary>
+    ///     Преподаватель
+    /// </summary>
     public string Teacher { get; set; }
+    
+    /// <summary>
+    ///     Список групп
+    /// </summary>
     public string Groups { get; set; }
 
-    public string Link { get; set; }
+    /// <summary>
+    ///     Ссылка на курс (если есть)
+    /// </summary>
+    public string? Link { get; set; }
 
-    public bool IsExam => LessonType == LessonType.Exam;
+    /// <summary>
+    ///     Форматированное время начала и окончания
+    /// </summary>
+    public string StartEndTime => $"{StartTime:HH:mm} - {EndTime:HH:mm}";
 
+    /// <summary>
+    ///     Тип занятия
+    /// </summary>
     public LessonType LessonType => GetLessonType();
+
+    /// <summary>
+    ///     Является ли занятие экзаменом
+    /// </summary>
+    public bool IsExam => LessonType == LessonType.Exam;
 
     private LessonType GetLessonType()
     {
-        if(string.IsNullOrWhiteSpace(Type))
+        if (string.IsNullOrWhiteSpace(Type))
         {
             return LessonType.Unknown;
         }
 
-        if(Type.Contains("экзамен", StringComparison.InvariantCultureIgnoreCase) ||
-           Type.Contains("зачет", StringComparison.InvariantCultureIgnoreCase))
+        if (Type.Contains("экзамен", StringComparison.InvariantCultureIgnoreCase) ||
+            Type.Contains("зачет", StringComparison.InvariantCultureIgnoreCase))
         {
             return LessonType.Exam;
         }
 
-        if(Type.Contains("практическ", StringComparison.InvariantCultureIgnoreCase))
+        if (Type.Contains("практическ", StringComparison.InvariantCultureIgnoreCase))
         {
             return LessonType.Practical;
         }
 
-        if(Type.Contains("лабораторн", StringComparison.InvariantCultureIgnoreCase))
+        if (Type.Contains("лабораторн", StringComparison.InvariantCultureIgnoreCase))
         {
             return LessonType.Laboratory;
         }
 
-        if(Type.Contains("лекции", StringComparison.InvariantCultureIgnoreCase))
+        if (Type.Contains("лекции", StringComparison.InvariantCultureIgnoreCase))
         {
             return LessonType.Lecture;
         }
 
-        if(Type.Contains("консультация", StringComparison.InvariantCultureIgnoreCase))
+        if (Type.Contains("консультация", StringComparison.InvariantCultureIgnoreCase))
         {
             return LessonType.Consultation;
         }
@@ -59,12 +113,12 @@ public class Lesson : IEquatable<Lesson>
 
     public bool Equals(Lesson? other)
     {
-        if(ReferenceEquals(null, other))
+        if (ReferenceEquals(null, other))
         {
             return false;
         }
 
-        if(ReferenceEquals(this, other))
+        if (ReferenceEquals(this, other))
         {
             return true;
         }
@@ -75,17 +129,17 @@ public class Lesson : IEquatable<Lesson>
 
     public override bool Equals(object? obj)
     {
-        if(ReferenceEquals(null, obj))
+        if (ReferenceEquals(null, obj))
         {
             return false;
         }
 
-        if(ReferenceEquals(this, obj))
+        if (ReferenceEquals(this, obj))
         {
             return true;
         }
 
-        if(obj.GetType() != GetType())
+        if (obj.GetType() != GetType())
         {
             return false;
         }
