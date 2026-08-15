@@ -24,7 +24,11 @@ namespace Goblin.DataAccess.Migrations
 
             modelBuilder.Entity("Goblin.Domain.Entities.BotUser", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("ConsumerId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("ConsumerType")
@@ -57,21 +61,21 @@ namespace Goblin.DataAccess.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.HasKey("Id", "ConsumerType");
+                    b.HasKey("Id");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
+                    b.HasIndex("ConsumerType", "ConsumerId");
 
                     b.ToTable("BotUsers");
                 });
 
             modelBuilder.Entity("Goblin.Domain.Entities.BotUserSession", b =>
                 {
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<long>("BotUserId")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("BotUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("FlowStepType")
                         .HasMaxLength(100)
@@ -82,29 +86,26 @@ namespace Goblin.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BotUserId")
+                        .IsUnique();
+
                     b.ToTable("BotUserSessions");
                 });
 
             modelBuilder.Entity("Goblin.Domain.Entities.CronJob", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<long>("ChatId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("ConsumerType")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                        .HasColumnType("integer");
 
                     b.Property<int>("CronType")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(4);
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -127,19 +128,12 @@ namespace Goblin.DataAccess.Migrations
 
             modelBuilder.Entity("Goblin.Domain.Entities.Remind", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<long>("ChatId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("ConsumerType")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                    b.Property<Guid>("BotUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("Date")
                         .HasColumnType("timestamp with time zone");
@@ -151,26 +145,28 @@ namespace Goblin.DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BotUserId");
+
                     b.ToTable("Reminds");
                 });
 
-            modelBuilder.Entity("Goblin.Domain.Entities.BotUser", b =>
+            modelBuilder.Entity("Goblin.Domain.Entities.BotUserSession", b =>
                 {
-                    b.HasOne("Goblin.Domain.Entities.BotUserSession", "Session")
-                        .WithOne("BotUser")
-                        .HasForeignKey("Goblin.Domain.Entities.BotUser", "Id")
+                    b.HasOne("Goblin.Domain.Entities.BotUser", "BotUser")
+                        .WithOne("Session")
+                        .HasForeignKey("Goblin.Domain.Entities.BotUserSession", "BotUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Session");
+                    b.Navigation("BotUser");
                 });
 
             modelBuilder.Entity("Goblin.Domain.Entities.CronJob", b =>
                 {
                     b.OwnsOne("Goblin.Domain.CronTime", "Time", b1 =>
                         {
-                            b1.Property<int>("CronJobId")
-                                .HasColumnType("integer");
+                            b1.Property<Guid>("CronJobId")
+                                .HasColumnType("uuid");
 
                             b1.Property<string>("DayOfMonth")
                                 .IsRequired()
@@ -204,9 +200,22 @@ namespace Goblin.DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Goblin.Domain.Entities.BotUserSession", b =>
+            modelBuilder.Entity("Goblin.Domain.Entities.Remind", b =>
                 {
-                    b.Navigation("BotUser")
+                    b.HasOne("Goblin.Domain.Entities.BotUser", "BotUser")
+                        .WithMany("Reminds")
+                        .HasForeignKey("BotUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BotUser");
+                });
+
+            modelBuilder.Entity("Goblin.Domain.Entities.BotUser", b =>
+                {
+                    b.Navigation("Reminds");
+
+                    b.Navigation("Session")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
