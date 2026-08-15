@@ -20,7 +20,7 @@ public class WeatherDailyCommandTests : TestBase
     public async Task ShouldReturnSuccessfulResult()
     {
         var command = new WeatherDailyCommand(GetWeatherService());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "11.11.2011");
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Trigger, "11.11.2011");
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeTrue();
@@ -31,7 +31,7 @@ public class WeatherDailyCommandTests : TestBase
     public async Task ShouldReturnFailedResult_Because_DictionaryKeyDoesNotExists()
     {
         var command = new WeatherDailyCommand(GetWeatherService());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "asd", "11.11.2011");
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, "asd", "11.11.2011");
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();
@@ -42,7 +42,7 @@ public class WeatherDailyCommandTests : TestBase
     public async Task ShouldReturnFailedResult_Because_DictionaryValueIsNotCorrectDate()
     {
         var command = new WeatherDailyCommand(GetWeatherService());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "20.20.2020");
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Trigger, "20.20.2020");
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();
@@ -54,7 +54,7 @@ public class WeatherDailyCommandTests : TestBase
     {
         DefaultUser.SetCity(string.Empty);
         var command = new WeatherDailyCommand(GetWeatherService());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "11.11.2011");
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Trigger, "11.11.2011");
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();

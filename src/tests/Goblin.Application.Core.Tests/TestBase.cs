@@ -56,8 +56,7 @@ public class TestBase
 
         for(var i = 0; i < AddRemindCommand.MaxRemindsCount; i++)
         {
-            context.Reminds.Add(new Remind(DefaultUserWithMaxReminds.Id, "text", new DateTime(2101, 1, 1, 1, 1, 1),
-                                           ConsumerType.Vkontakte));
+            context.Reminds.Add(new Remind(DefaultUserWithMaxReminds.Id, "text", new DateTime(2101, 1, 1, 1, 1, 1)));
         }
 
         context.SaveChanges();

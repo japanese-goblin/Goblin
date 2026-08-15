@@ -14,30 +14,31 @@ internal class SendRemindsJob(BotDbContext db, TimeProvider timeProvider, IEnume
     {
         var currentTime = timeProvider.GetUtcNow();
         var reminds = await db.Reminds
-                .Where(p => p.Date - currentTime <= TimeSpan.FromMinutes(1))
-                .ToListAsync();
+            .Include(p => p.BotUser)
+            .Where(p => p.Date - currentTime <= TimeSpan.FromMinutes(1))
+            .ToListAsync();
 
         await SendReminds(reminds, context.CancellationToken);
     }
 
     private async Task SendReminds(IReadOnlyCollection<Remind> reminds, CancellationToken cancellationToken)
     {
-        if(reminds.Count == 0)
+        if (reminds.Count == 0)
         {
             return;
         }
 
-        foreach(var remind in reminds)
+        foreach (var remind in reminds)
         {
             var message = $"Напоминаю:\n{remind.Text}";
-            var sender = senders.First(x => x.ConsumerType == remind.ConsumerType);
+            var sender = senders.First(x => x.ConsumerType == remind.BotUser.ConsumerType);
 
-            await sender.Send(remind.ChatId, message);
+            await sender.Send(remind.BotUser.ConsumerId, message);
 
             db.Reminds.Remove(remind);
         }
 
-        if(db.ChangeTracker.HasChanges())
+        if (db.ChangeTracker.HasChanges())
         {
             await db.SaveChangesAsync(cancellationToken);
         }

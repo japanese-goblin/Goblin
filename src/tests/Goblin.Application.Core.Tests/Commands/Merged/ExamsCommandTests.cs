@@ -40,7 +40,7 @@ public class ExamsCommandTests : TestBase
     public async Task ShouldReturnSuccessfulResult()
     {
         var command = new ExamsCommand(GetNarfuApi(), Substitute.For<ILogger<ExamsCommand>>());
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeTrue();
@@ -52,7 +52,7 @@ public class ExamsCommandTests : TestBase
     {
         DefaultUser.SetNarfuGroup(null);
         var command = new ExamsCommand(GetNarfuApi(), Substitute.For<ILogger<ExamsCommand>>());
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();
@@ -63,7 +63,7 @@ public class ExamsCommandTests : TestBase
     public async Task ShouldReturnFailedResult_Because_SiteIsUnavailable()
     {
         var command = new ExamsCommand(GetNarfuApiWithHttpException(), Substitute.For<ILogger<ExamsCommand>>());
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();
@@ -74,7 +74,7 @@ public class ExamsCommandTests : TestBase
     public async Task ShouldReturnFailedResult_Because_UnknownError()
     {
         var command = new ExamsCommand(GetNarfuApiWithException(), Substitute.For<ILogger<ExamsCommand>>());
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();

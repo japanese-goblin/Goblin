@@ -24,7 +24,7 @@ public class ScheduleCommandTests : TestBase
     {
         DefaultUser.SetNarfuGroup(null);
         var command = new ScheduleCommand(GetScheduleService());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, _dateTime.ToString("d"));
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Trigger, _dateTime.ToString("d"));
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();
@@ -35,7 +35,7 @@ public class ScheduleCommandTests : TestBase
     public async Task ShouldReturnSuccessfulResult()
     {
         var command = new ScheduleCommand(GetScheduleService());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, _dateTime.ToString("d"));
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Trigger, _dateTime.ToString("d"));
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeTrue();

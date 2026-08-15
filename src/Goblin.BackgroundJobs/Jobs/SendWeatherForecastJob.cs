@@ -40,7 +40,7 @@ public class SendWeatherForecastJob(
                 {
                     try
                     {
-                        var ids = chunk.Select(p => p.Id).ToList();
+                        var ids = chunk.Select(p => p.ConsumerId).ToList();
                         await sender.SendToMany(ids, result.Message);
                     }
                     catch (Exception ex)

@@ -10,7 +10,7 @@ public class ScheduleKeyboardCommandTests : TestBase
     public async Task ShouldReturnSuccessfulResult()
     {
         var command = new ScheduleKeyboardCommand();
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeTrue();
@@ -19,11 +19,11 @@ public class ScheduleKeyboardCommandTests : TestBase
     }
 
     [Fact]
-    public async Task ShouldReturnFailedResult_Because_UserGroupIsZero()
+    public async Task ShouldReturnFailedResult_Because_UserGroupIsNull()
     {
-        DefaultUser.SetNarfuGroup(0);
+        DefaultUser.SetNarfuGroup(null);
         var command = new ScheduleKeyboardCommand();
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();

@@ -10,7 +10,7 @@ public class GetRemindsCommandTests : TestBase
     public async Task ShouldReturnSuccessfulResult()
     {
         var command = new GetRemindsCommand(GetDbContext());
-        var message = GenerateMessage(DefaultUserWithMaxReminds.Id, DefaultUserWithMaxReminds.Id, command.Aliases[0]);
+        var message = GenerateMessage(DefaultUserWithMaxReminds.ConsumerId, DefaultUserWithMaxReminds.ConsumerId, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUserWithMaxReminds);
         result.IsSuccessful.Should().BeTrue();
@@ -21,7 +21,7 @@ public class GetRemindsCommandTests : TestBase
     public async Task ShouldReturnSuccessfulResult_Because_RemindsIsZero()
     {
         var command = new GetRemindsCommand(GetDbContext());
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeTrue();

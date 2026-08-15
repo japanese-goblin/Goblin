@@ -43,7 +43,7 @@ public class CommandsServiceTests : TestBase
     public async Task ShouldExecuteOnSuccess_On_Text()
     {
         var service = GetService();
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "справка");
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, "справка");
 
         await service.ExecuteCommand(message, OnSuccess, _ => Task.CompletedTask);
     }
@@ -52,7 +52,7 @@ public class CommandsServiceTests : TestBase
     public async Task ShouldExecuteOnFailed_On_Text()
     {
         var service = GetService();
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "абв");
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, "абв");
 
         await service.ExecuteCommand(message, _ => Task.CompletedTask, OnFailed);
     }
@@ -61,7 +61,7 @@ public class CommandsServiceTests : TestBase
     public async Task ShouldExecuteOnFailed_Because_UserIsNotAdmin_On_Text()
     {
         var service = GetService();
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "demo");
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, "demo");
 
         await service.ExecuteCommand(message, _ => Task.CompletedTask, OnFailed);
     }
@@ -71,7 +71,7 @@ public class CommandsServiceTests : TestBase
     {
         DefaultUser.SetErrorNotification(false);
         var service = GetService();
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, "абв");
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, "абв");
 
         await service.ExecuteCommand(message, _ => Task.CompletedTask, _ => Task.CompletedTask);
     }
@@ -80,7 +80,7 @@ public class CommandsServiceTests : TestBase
     public async Task ShouldExecuteOnSuccess_On_Payload()
     {
         var service = GetService();
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "mailingKeyboard",
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, "mailingKeyboard",
             string.Empty);
 
         await service.ExecuteCommand(message, OnSuccess, _ => Task.CompletedTask);
@@ -90,7 +90,7 @@ public class CommandsServiceTests : TestBase
     public async Task ShouldExecuteOnFailed_Because_CommandNotFound_On_Payload()
     {
         var service = GetService();
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "asd", string.Empty);
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, "asd", string.Empty);
 
         await service.ExecuteCommand(message, _ => Task.CompletedTask, OnFailed);
     }

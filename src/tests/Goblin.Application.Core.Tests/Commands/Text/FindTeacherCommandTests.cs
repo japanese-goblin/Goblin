@@ -44,7 +44,7 @@ public class FindTeacherCommandTests : TestBase
     {
         var command = new FindTeacherCommand(GetNarfuApi(10), Substitute.For<ILogger<FindTeacherCommand>>());
         var text = $"{command.Aliases[0]} Петров Пётр Петрович";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 
@@ -58,7 +58,7 @@ public class FindTeacherCommandTests : TestBase
     {
         var command = new FindTeacherCommand(GetNarfuApi(), Substitute.For<ILogger<FindTeacherCommand>>());
         var text = $"{command.Aliases[0]} ";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 
@@ -72,7 +72,7 @@ public class FindTeacherCommandTests : TestBase
     {
         var command = new FindTeacherCommand(GetNarfuApiWithHttpException(), Substitute.For<ILogger<FindTeacherCommand>>());
         var text = $"{command.Aliases[0]} Петров Пётр Петрович";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 
@@ -86,7 +86,7 @@ public class FindTeacherCommandTests : TestBase
     {
         var command = new FindTeacherCommand(GetNarfuApi(0), Substitute.For<ILogger<FindTeacherCommand>>());
         var text = $"{command.Aliases[0]} Петров Пётр Петрович";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 
@@ -100,7 +100,7 @@ public class FindTeacherCommandTests : TestBase
     {
         var command = new FindTeacherCommand(GetNarfuApiWithException(), Substitute.For<ILogger<FindTeacherCommand>>());
         var text = $"{command.Aliases[0]} Петров Пётр Петрович";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 
@@ -114,7 +114,7 @@ public class FindTeacherCommandTests : TestBase
     {
         var command = new FindTeacherCommand(GetNarfuApi(), Substitute.For<ILogger<FindTeacherCommand>>());
         var text = $"{command.Aliases[0]} Иванов Иван Иванович";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 

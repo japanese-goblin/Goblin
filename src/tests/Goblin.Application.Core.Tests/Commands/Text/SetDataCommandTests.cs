@@ -15,7 +15,7 @@ public class SetDataCommandTests : TestBase
     {
         var command = new SetDataCommand(GetDbContext(), GetWeatherApi(), GetNarfuApi());
         var text = $"{command.Aliases[0]} {parameters}";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 
@@ -44,7 +44,7 @@ public class SetDataCommandTests : TestBase
     {
         var command = new SetDataCommand(GetDbContext(), GetWeatherApi(false), GetNarfuApi());
         var text = $"{command.Aliases[0]} город абв";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 
@@ -57,7 +57,7 @@ public class SetDataCommandTests : TestBase
     {
         var command = new SetDataCommand(GetDbContext(), GetWeatherApi(), GetNarfuApi());
         var text = $"{command.Aliases[0]} группу абв";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 
@@ -70,7 +70,7 @@ public class SetDataCommandTests : TestBase
     {
         var command = new SetDataCommand(GetDbContext(), GetWeatherApi(), GetNarfuApi(false));
         var text = $"{command.Aliases[0]} группу 353535";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 
@@ -83,7 +83,7 @@ public class SetDataCommandTests : TestBase
     {
         var command = new SetDataCommand(GetDbContext(), GetWeatherApi(false), GetNarfuApi());
         var text = $"{command.Aliases[0]} абв абв";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 
@@ -96,7 +96,7 @@ public class SetDataCommandTests : TestBase
     {
         var command = new SetDataCommand(GetDbContext(), GetWeatherApi(), GetNarfuApi());
         var text = $"{command.Aliases[0]} город";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 

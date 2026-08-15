@@ -11,7 +11,7 @@ public class ChooseCommandTests : TestBase
     {
         var command = new ChooseCommand();
         var text = $"{command.Aliases[0]} {parameters}";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeTrue();
@@ -23,7 +23,7 @@ public class ChooseCommandTests : TestBase
     {
         var command = new ChooseCommand();
         var text = $"{command.Aliases[0]}";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();

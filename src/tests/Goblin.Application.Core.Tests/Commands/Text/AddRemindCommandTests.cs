@@ -11,7 +11,7 @@ public class AddRemindCommandTests : TestBase
     {
         var command = new AddRemindCommand(GetDbContext());
         var text = $"{command.Aliases[0]} {date} 23:59 тест";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 
@@ -24,7 +24,7 @@ public class AddRemindCommandTests : TestBase
     {
         var command = new AddRemindCommand(GetDbContext());
         var text = $"{command.Aliases[0]} 45.01.2010 23:59 тест";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 
@@ -37,7 +37,7 @@ public class AddRemindCommandTests : TestBase
     {
         var command = new AddRemindCommand(GetDbContext());
         var text = $"{command.Aliases[0]} 01.01.2010 23:59 тест";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 
@@ -50,7 +50,7 @@ public class AddRemindCommandTests : TestBase
     {
         var command = new AddRemindCommand(GetDbContext());
         var text = $"{command.Aliases[0]} сегодня 23:59";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 
@@ -63,7 +63,7 @@ public class AddRemindCommandTests : TestBase
     {
         var command = new AddRemindCommand(GetDbContext());
         var text = $"{command.Aliases[0]} 01.01.2101 23:59 тест";
-        var message = GenerateMessage(DefaultUserWithMaxReminds.Id, DefaultUserWithMaxReminds.Id, text);
+        var message = GenerateMessage(DefaultUserWithMaxReminds.ConsumerId, DefaultUserWithMaxReminds.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUserWithMaxReminds);
 

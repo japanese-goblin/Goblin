@@ -237,7 +237,7 @@ public class VkCallbackHandler
     {
         var admins = await _db.BotUsers.Where(x => x.IsAdmin &&
                                              x.ConsumerType == ConsumerType.Vkontakte)
-                        .Select(x => x.Id)
+                        .Select(x => x.ConsumerId)
                         .ToListAsync();
         var vkUser = (await _vkApi.Users.GetAsync([userId])).First();
         var userName = $"{vkUser.FirstName} {vkUser.LastName}";

@@ -1,31 +1,32 @@
 using Goblin.DataAccess;
 using Goblin.Domain;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core;
 
 public class CommandsService(
-        IEnumerable<ITextCommand> textCommands,
-        IEnumerable<IKeyboardCommand> keyboardCommands,
-        IEnumerable<IUserFlow> userFlows,
-        BotDbContext dbContext,
-        ILogger<CommandsService> logger)
+    IEnumerable<ITextCommand> textCommands,
+    IEnumerable<IKeyboardCommand> keyboardCommands,
+    IEnumerable<IUserFlow> userFlows,
+    BotDbContext dbContext,
+    ILogger<CommandsService> logger)
 {
     private const string CommandNotFoundMessage = "Команда не найдена. Проверьте правильность написания команды. " +
                                                   "Если вы хотите отключить подобные ошибки, то, пожалуйста, напишите команду 'мут'";
 
     public async Task<CommandExecutionResult> ExecuteAction(Message msg, CancellationToken ct)
     {
-        var user = await GetBotUserV2(msg.UserId, msg.ConsumerType);
+        var user = await GetBotUserV2(msg.ConsumerType, msg.UserId, ct);
         var userFlow = userFlows.FirstOrDefault(p => p.Type == user.Session.FlowType);
         if (userFlow is null)
         {
             return CommandExecutionResult.Failed(CommandNotFoundMessage);
         }
-        
+
         var context = new UserFlowContext(user, msg);
-        var executionResult = await userFlow.HandleAsync(context, CancellationToken.None);
-        
+        var executionResult = await userFlow.HandleAsync(context, ct);
+
         user.Session.FlowType = executionResult.FlowType;
         user.Session.FlowStepType = user.Session.FlowStepType;
         // TODO: session data?
@@ -33,14 +34,14 @@ public class CommandsService(
 
         return CommandExecutionResult.Success(executionResult.Message, executionResult.Keyboard);
     }
-    
+
     public async Task ExecuteCommand(Message msg,
-                                     Func<CommandExecutionResult, Task> onSuccess,
-                                     Func<CommandExecutionResult, Task> onFailed)
+        Func<CommandExecutionResult, Task> onSuccess,
+        Func<CommandExecutionResult, Task> onFailed)
     {
         CommandExecutionResult result;
         var user = await GetBotUser(msg.UserId, msg.ConsumerType);
-        if(!string.IsNullOrWhiteSpace(msg.Payload))
+        if (!string.IsNullOrWhiteSpace(msg.Payload))
         {
             result = await ExecuteKeyboardCommand(msg, user);
         }
@@ -51,10 +52,10 @@ public class CommandsService(
 
         result.Keyboard ??= DefaultKeyboards.GetDefaultKeyboard();
 
-        if(!result.IsSuccessful)
+        if (!result.IsSuccessful)
         {
             // если команда не найдена, и у пользователя отключены ошибки
-            if(result is { IsSuccessful: false } && !user.IsErrorsEnabled)
+            if (result is { IsSuccessful: false } && !user.IsErrorsEnabled)
             {
                 return;
             }
@@ -73,14 +74,14 @@ public class CommandsService(
         logger.LogDebug("Обработка текстовой команды");
         var cmdName = msg.CommandName;
 
-        foreach(var command in textCommands)
+        foreach (var command in textCommands)
         {
-            if(!command.Aliases.Contains(cmdName))
+            if (!command.Aliases.Contains(cmdName))
             {
                 continue;
             }
 
-            if(command.IsAdminCommand && !user.IsAdmin)
+            if (command.IsAdminCommand && !user.IsAdmin)
             {
                 continue;
             }
@@ -99,9 +100,9 @@ public class CommandsService(
     {
         logger.LogDebug("Обработка команды с клавиатуры");
         var record = msg.ParsedPayload.First();
-        foreach(var command in keyboardCommands)
+        foreach (var command in keyboardCommands)
         {
-            if(!record.Key.Contains(command.Trigger))
+            if (!record.Key.Contains(command.Trigger))
             {
                 continue;
             }
@@ -115,8 +116,9 @@ public class CommandsService(
 
     private async Task<BotUser> GetBotUser(long userId, ConsumerType type)
     {
-        var user = await dbContext.BotUsers.FindAsync(userId, type);
-        if(user is not null)
+        var user = await dbContext.BotUsers
+            .FirstOrDefaultAsync(p => p.ConsumerType == type && p.ConsumerId == userId);
+        if (user is not null)
         {
             return user;
         }
@@ -130,11 +132,12 @@ public class CommandsService(
 
         return user;
     }
-    
-    private async Task<BotUser> GetBotUserV2(long userId, ConsumerType type)
+
+    private async Task<BotUser> GetBotUserV2(ConsumerType type, long userId, CancellationToken ct)
     {
-        var user = await dbContext.BotUsers.FindAsync(userId, type);
-        if(user is not null)
+        var user = await dbContext.BotUsers
+            .FirstOrDefaultAsync(p => p.ConsumerType == type && p.ConsumerId == userId, ct);
+        if (user is not null)
         {
             return user;
         }
@@ -147,8 +150,8 @@ public class CommandsService(
                 FlowType = FlowType.Start
             }
         };
-        await dbContext.BotUsers.AddAsync(user);
-        await dbContext.SaveChangesAsync();
+        await dbContext.BotUsers.AddAsync(user, ct);
+        await dbContext.SaveChangesAsync(ct);
 
         return user;
     }

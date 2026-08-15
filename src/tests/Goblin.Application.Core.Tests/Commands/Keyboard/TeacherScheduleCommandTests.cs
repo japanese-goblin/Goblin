@@ -39,7 +39,7 @@ public class TeacherScheduleCommandTests : TestBase
     public async Task ShouldReturnSuccessfulResult()
     {
         var command = new TeacherScheduleCommand(GetNarfuApi());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "12345");
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Trigger, "12345");
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeTrue();
@@ -50,7 +50,7 @@ public class TeacherScheduleCommandTests : TestBase
     public async Task ShouldReturnFailedResult_Because_UnknownError()
     {
         var command = new TeacherScheduleCommand(GetNarfuApiWithException());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "12345");
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Trigger, "12345");
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();
@@ -61,7 +61,7 @@ public class TeacherScheduleCommandTests : TestBase
     public async Task ShouldReturnFailedResult_Because_SiteIsUnavailable()
     {
         var command = new TeacherScheduleCommand(GetNarfuApiWithHttpException());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "12345");
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Trigger, "12345");
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();
@@ -72,7 +72,7 @@ public class TeacherScheduleCommandTests : TestBase
     public async Task ShouldReturnFailedResult_Because_DictionaryKeyIsIncorrect()
     {
         var command = new TeacherScheduleCommand(GetNarfuApi());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "key", "12345");
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, "key", "12345");
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();
@@ -83,7 +83,7 @@ public class TeacherScheduleCommandTests : TestBase
     public async Task ShouldReturnFailedResult_Because_DictionaryValueIsNotInteger()
     {
         var command = new TeacherScheduleCommand(GetNarfuApi());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, "asd");
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Trigger, "asd");
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();

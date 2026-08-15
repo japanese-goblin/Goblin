@@ -20,7 +20,7 @@ public class SendToAdminCommand(BotDbContext db, IEnumerable<ISender> senders) :
         var message = $"Сообщение от {msg.UserTag}:\n{text}";
         var adminUsers = await db.BotUsers.Where(x => x.IsAdmin &&
                                                        x.ConsumerType == user.ConsumerType)
-                                  .Select(x => x.Id)
+                                  .Select(x => x.ConsumerId)
                                   .ToArrayAsync();
         var sender = senders.First(x => x.ConsumerType == ConsumerType.Vkontakte);
 
