@@ -2,6 +2,8 @@ namespace Goblin.Application.Core;
 
 public static class DefaultKeyboards
 {
+    private const string DefaultDateFormat = "yyyy-MM-dd";
+
     public static CoreKeyboard GetDefaultKeyboard()
     {
         var kb = new CoreKeyboard(false);
@@ -44,35 +46,34 @@ public static class DefaultKeyboards
 
     public static CoreKeyboard GetScheduleKeyboard()
     {
-        const string defaultFormat = "dd.MM.yyyy";
-        var today = DateTime.Now;
+        var date = DateTime.Now;
 
         var keyboard = new CoreKeyboard
         {
             IsInline = true
         };
-        keyboard.AddButton($"На сегодня ({today:dd.MM - dddd})", CoreKeyboardButtonColor.Primary,
-                           "schedule", today.ToString(defaultFormat));
+        keyboard.AddButton($"На сегодня ({date:dd.MM - dddd})", CoreKeyboardButtonColor.Primary,
+                           "schedule", date.ToString(DefaultDateFormat));
         keyboard.AddLine();
 
-        var tomorrow = today.AddDays(1);
-        if(tomorrow.DayOfWeek != DayOfWeek.Sunday)
+        date = date.AddDays(1);
+        if(date.DayOfWeek != DayOfWeek.Sunday)
         {
-            keyboard.AddButton($"На завтра ({tomorrow:dd.MM - dddd})", CoreKeyboardButtonColor.Primary,
-                               "schedule", tomorrow.ToString(defaultFormat));
+            keyboard.AddButton($"На завтра ({date:dd.MM - dddd})", CoreKeyboardButtonColor.Primary,
+                               "schedule", date.ToString(DefaultDateFormat));
             keyboard.AddLine();
         }
 
         for(var i = 1; i < 7; i++)
         {
-            var date = tomorrow.AddDays(i);
+            date = date.AddDays(i);
             if(date.DayOfWeek == DayOfWeek.Sunday)
             {
                 continue;
             }
 
             keyboard.AddButton($"На {date:dd.MM (dddd)}", CoreKeyboardButtonColor.Primary,
-                               "schedule", date.ToString(defaultFormat));
+                               "schedule", date.ToString(DefaultDateFormat));
             if(i % 2 == 0)
             {
                 keyboard.AddLine();
@@ -84,19 +85,18 @@ public static class DefaultKeyboards
 
     public static CoreKeyboard GetDailyWeatherKeyboard()
     {
-        const string defaultFormat = "dd.MM.yyyy";
-        var today = DateTime.Now;
-        var tomorrow = today.AddDays(1);
+        var date = DateTime.Now;
+        var tomorrow = date.AddDays(1);
 
         var kb = new CoreKeyboard
         {
             IsInline = true
         };
         kb.AddButton("На сегодня", CoreKeyboardButtonColor.Primary,
-                     "weatherDaily", today.ToString(defaultFormat))
+                     "weatherDaily", date.ToString(DefaultDateFormat))
           .AddLine()
           .AddButton("На завтра", CoreKeyboardButtonColor.Primary,
-                     "weatherDaily", tomorrow.ToString(defaultFormat))
+                     "weatherDaily", tomorrow.ToString(DefaultDateFormat))
           .AddReturnToMenuButton();
 
         return kb;
