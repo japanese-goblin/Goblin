@@ -1,7 +1,7 @@
-﻿using Goblin.WebApp.HostedServices;
-using Hangfire;
-using Hangfire.MemoryStorage;
+﻿using Goblin.BackgroundJobs;
 using Microsoft.AspNetCore.HttpLogging;
+using Quartz;
+using Quartz.AspNetCore;
 using Serilog;
 
 namespace Goblin.WebApp.Extensions;
@@ -12,9 +12,10 @@ internal static class WebApplicationBuilderExtensions
     {
         public WebApplicationBuilder RegisterLogging()
         {
-            builder.Configuration.AddYamlFile("appsettings.yaml", false)
+            builder.Configuration
+                .AddYamlFile("appsettings.yaml", false)
                    .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", true)
-                   .AddYamlFile("appsettings.secrets.yaml", true)
+                   .AddYamlFile("appsettings.Secrets.yaml", true)
                    .AddEnvironmentVariables();
 
             builder.Services.AddSerilog(p =>
@@ -22,26 +23,23 @@ internal static class WebApplicationBuilderExtensions
                 p.ReadFrom.Configuration(builder.Configuration);
             });
 
-            builder.Services.AddHttpLogging(x =>
+            builder.Services.AddHttpLogging(p =>
             {
-                x.LoggingFields = HttpLoggingFields.All;
+                p.LoggingFields = HttpLoggingFields.All;
             });
 
             return builder;
         }
 
-        public WebApplicationBuilder RegisterHangfire()
+        public WebApplicationBuilder RegisterQuartz()
         {
-            builder.Services.AddHangfire(config =>
+            builder.Services.AddBackgroundJobs();
+
+            builder.Services.AddQuartzServer(options =>
             {
-                config.UseMemoryStorage();
+                // when shutting down we want jobs to complete gracefully
+                options.WaitForJobsToComplete = true;
             });
-            builder.Services.AddHangfireServer(x =>
-            {
-                x.WorkerCount = 4;
-            });
-            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
-            builder.Services.AddHostedService<AddHangfireJobsHostedService>();
 
             return builder;
         }
