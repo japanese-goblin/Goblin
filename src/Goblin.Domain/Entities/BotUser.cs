@@ -15,6 +15,8 @@ public class BotUser
 
     public ConsumerType ConsumerType { get; set; }
 
+    public BotUserSession Session { get; set; } = null!;
+
     protected BotUser()
     {
     }
