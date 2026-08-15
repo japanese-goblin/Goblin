@@ -7,12 +7,33 @@ namespace Goblin.Application.Core;
 public class CommandsService(
         IEnumerable<ITextCommand> textCommands,
         IEnumerable<IKeyboardCommand> keyboardCommands,
-        BotDbContext context,
+        IEnumerable<IUserFlow> userFlows,
+        BotDbContext dbContext,
         ILogger<CommandsService> logger)
 {
     private const string CommandNotFoundMessage = "Команда не найдена. Проверьте правильность написания команды. " +
                                                   "Если вы хотите отключить подобные ошибки, то, пожалуйста, напишите команду 'мут'";
 
+    public async Task<CommandExecutionResult> ExecuteAction(Message msg, CancellationToken ct)
+    {
+        var user = await GetBotUserV2(msg.UserId, msg.ConsumerType);
+        var userFlow = userFlows.FirstOrDefault(p => p.Type == user.Session.FlowType);
+        if (userFlow is null)
+        {
+            return CommandExecutionResult.Failed(CommandNotFoundMessage);
+        }
+        
+        var context = new UserFlowContext(user, msg);
+        var executionResult = await userFlow.HandleAsync(context, CancellationToken.None);
+        
+        user.Session.FlowType = executionResult.FlowType;
+        user.Session.FlowStepType = user.Session.FlowStepType;
+        // TODO: session data?
+        await dbContext.SaveChangesAsync(ct);
+
+        return CommandExecutionResult.Success(executionResult.Message, executionResult.Keyboard);
+    }
+    
     public async Task ExecuteCommand(Message msg,
                                      Func<CommandExecutionResult, Task> onSuccess,
                                      Func<CommandExecutionResult, Task> onFailed)
@@ -94,7 +115,7 @@ public class CommandsService(
 
     private async Task<BotUser> GetBotUser(long userId, ConsumerType type)
     {
-        var user = await context.BotUsers.FindAsync(userId, type);
+        var user = await dbContext.BotUsers.FindAsync(userId, type);
         if(user is not null)
         {
             return user;
@@ -104,8 +125,30 @@ public class CommandsService(
         {
             ConsumerType = type
         };
-        await context.BotUsers.AddAsync(user);
-        await context.SaveChangesAsync();
+        await dbContext.BotUsers.AddAsync(user);
+        await dbContext.SaveChangesAsync();
+
+        return user;
+    }
+    
+    private async Task<BotUser> GetBotUserV2(long userId, ConsumerType type)
+    {
+        var user = await dbContext.BotUsers.FindAsync(userId, type);
+        if(user is not null)
+        {
+            return user;
+        }
+
+        user = new BotUser(userId)
+        {
+            ConsumerType = type,
+            Session = new BotUserSession
+            {
+                FlowType = FlowType.Start
+            }
+        };
+        await dbContext.BotUsers.AddAsync(user);
+        await dbContext.SaveChangesAsync();
 
         return user;
     }

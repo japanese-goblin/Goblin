@@ -19,7 +19,7 @@ internal class VkChannelReaderHostedService(
                 {
                     await using var scope = serviceProvider.CreateAsyncScope();
                     var callbackHandler = scope.ServiceProvider.GetRequiredService<VkCallbackHandler>();
-                    await callbackHandler.Handle(@event);
+                    await callbackHandler.Handle(@event, stoppingToken);
                 }
             }
             catch(Exception e) when(!stoppingToken.IsCancellationRequested)

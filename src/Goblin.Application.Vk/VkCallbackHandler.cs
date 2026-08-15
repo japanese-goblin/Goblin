@@ -24,6 +24,8 @@ public class VkCallbackHandler
     private readonly IVkApi _vkApi;
     private readonly ISender _sender;
 
+    private readonly bool IsNewLogic = true;
+
     public VkCallbackHandler(CommandsService commandsService, BotDbContext db, IVkApi vkApi,
                              IEnumerable<ISender> senders, IOptions<VkOptions> options, ILogger<VkCallbackHandler> logger)
     {
@@ -37,7 +39,7 @@ public class VkCallbackHandler
         _logger = logger;
     }
 
-    public async Task Handle(GroupUpdate upd)
+    public async Task Handle(GroupUpdate upd, CancellationToken ct)
     {
         if(upd.Secret.Value != _options.SecretKey)
         {
@@ -65,7 +67,7 @@ public class VkCallbackHandler
 
             var msg = messageNew.Message.MapToBotMessage();
             ExtractUserIdFromConversation(msg);
-            await MessageNew(msg);
+            await MessageNew(msg, ct);
         }
         else if(upd.Type.Value == GroupUpdateType.MessageEvent)
         {
@@ -120,8 +122,17 @@ public class VkCallbackHandler
         }
     }
 
-    private async Task MessageNew(Message message)
+    private async Task MessageNew(Message message, CancellationToken ct)
     {
+        if (IsNewLogic)
+        {
+            _logger.LogDebug("Обработка сообщения");
+            var executionResult = await _commandsService.ExecuteAction(message, ct);
+            await _sender.Send(message.ChatId, executionResult.Message, executionResult.Keyboard);
+            _logger.LogDebug("Обработка сообщения завершена");
+            return;
+        }
+
         _logger.LogDebug("Обработка сообщения");
         await _commandsService.ExecuteCommand(message, OnSuccess, OnFailed);
         _logger.LogDebug("Обработка сообщения завершена");

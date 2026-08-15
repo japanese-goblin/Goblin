@@ -12,12 +12,17 @@ public class CommandsServiceTests : TestBase
 {
     private CommandsService GetService()
     {
-        var service = new CommandsService(GetTextCommands(), GetKeyboardCommands(), GetDbContext(),
-                                          Substitute.For<ILogger<CommandsService>>());
+        var service = new CommandsService(
+            GetTextCommands(),
+            GetKeyboardCommands(),
+            [],
+            GetDbContext(),
+            Substitute.For<ILogger<CommandsService>>());
 
         return service;
 
-        IEnumerable<IKeyboardCommand> GetKeyboardCommands() => [new MailingKeyboardCommand(), new ScheduleKeyboardCommand()];
+        IEnumerable<IKeyboardCommand> GetKeyboardCommands() =>
+            [new MailingKeyboardCommand(), new ScheduleKeyboardCommand()];
 
         IEnumerable<ITextCommand> GetTextCommands() => [new HelpCommand(), new StartCommand(), new FakeAdminCommand()];
     }
@@ -75,7 +80,8 @@ public class CommandsServiceTests : TestBase
     public async Task ShouldExecuteOnSuccess_On_Payload()
     {
         var service = GetService();
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "mailingKeyboard", string.Empty);
+        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, "mailingKeyboard",
+            string.Empty);
 
         await service.ExecuteCommand(message, OnSuccess, _ => Task.CompletedTask);
     }

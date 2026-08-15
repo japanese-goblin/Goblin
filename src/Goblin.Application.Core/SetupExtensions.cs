@@ -30,6 +30,7 @@ public static class SetupExtensions
     {
         services.RegisterAllTypes<ITextCommand>([typeof(SetupExtensions).Assembly], ServiceLifetime.Scoped);
         services.RegisterAllTypes<IKeyboardCommand>([typeof(SetupExtensions).Assembly], ServiceLifetime.Scoped);
+        services.RegisterAllTypes<IUserFlow>([typeof(SetupExtensions).Assembly], ServiceLifetime.Scoped);
 
         services.AddScoped<CommandsService>();
     }
