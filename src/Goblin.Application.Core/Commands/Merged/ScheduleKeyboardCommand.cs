@@ -10,7 +10,7 @@ public class ScheduleKeyboardCommand : IKeyboardCommand, ITextCommand
 
     public Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
-        if(user.NarfuGroup == 0)
+        if(!user.NarfuGroup.HasValue)
         {
             return Task.FromResult(CommandExecutionResult.Failed(DefaultErrors.GroupNotSet));
         }
