@@ -1,4 +1,3 @@
-using Goblin.Domain;
 using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -9,19 +8,17 @@ internal class CronJobConfiguration : IEntityTypeConfiguration<CronJob>
 {
     public void Configure(EntityTypeBuilder<CronJob> builder)
     {
-        builder.HasKey(x => x.Id);
+        builder.HasKey(p => p.Id);
+        builder.Property(p => p.Id)
+            .HasValueGenerator<IdValueGenerator>();
 
-        builder.Property(x => x.Name)
+        builder.Property(p => p.Name)
                .IsRequired();
-        builder.Property(x => x.ChatId)
+        builder.Property(p => p.ChatId)
                .IsRequired();
-        builder.OwnsOne(x => x.Time);
-        builder.Property(x => x.ConsumerType)
-               .HasDefaultValue(ConsumerType.Vkontakte);
+        builder.OwnsOne(p => p.Time);
 
-        builder.Property(x => x.Text)
+        builder.Property(p => p.Text)
                .HasMaxLength(500);
-        builder.Property(x => x.CronType)
-               .HasDefaultValue(CronType.Text);
     }
 }

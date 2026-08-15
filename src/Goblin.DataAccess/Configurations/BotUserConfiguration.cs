@@ -8,21 +8,22 @@ internal class BotUserConfiguration : IEntityTypeConfiguration<BotUser>
 {
     public void Configure(EntityTypeBuilder<BotUser> builder)
     {
-        builder.HasKey(x => new { x.Id, x.ConsumerType });
-        builder.Property(x => x.Id)
-               .ValueGeneratedNever();
+        builder.HasKey(p => p.Id);
+        builder.Property(p => p.Id)
+            .HasValueGenerator<IdValueGenerator>();
 
-        builder.Property(x => x.WeatherCity)
-               .HasMaxLength(100);
-        builder.Property(x => x.NarfuGroup);
+        builder.Property(p => p.WeatherCity)
+            .HasMaxLength(100);
 
-        builder.Property(x => x.IsAdmin)
-               .HasDefaultValue(false);
-        builder.Property(x => x.IsErrorsEnabled)
-               .HasDefaultValue(true);
-        builder.Property(x => x.HasScheduleSubscription)
-               .HasDefaultValue(false);
-        builder.Property(x => x.HasWeatherSubscription)
-               .HasDefaultValue(false);
+        builder.Property(p => p.IsAdmin)
+            .HasDefaultValue(false);
+        builder.Property(p => p.IsErrorsEnabled)
+            .HasDefaultValue(true);
+        builder.Property(p => p.HasScheduleSubscription)
+            .HasDefaultValue(false);
+        builder.Property(p => p.HasWeatherSubscription)
+            .HasDefaultValue(false);
+
+        builder.HasIndex(p => new { p.ConsumerType, p.ConsumerId });
     }
 }

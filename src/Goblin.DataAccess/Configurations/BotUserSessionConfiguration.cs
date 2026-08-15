@@ -10,13 +10,14 @@ internal class BotUserSessionConfiguration : IEntityTypeConfiguration<BotUserSes
     {
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Id)
-            .ValueGeneratedNever();
-
-        builder.HasOne(p => p.BotUser)
-            .WithOne(p => p.Session)
-            .HasForeignKey<BotUser>(p => p.Id);
+            .HasValueGenerator<IdValueGenerator>();
 
         builder.Property(p => p.FlowStepType)
             .HasMaxLength(100);
+
+        builder.HasOne(p => p.BotUser)
+            .WithOne(p => p.Session)
+            .HasForeignKey<BotUserSession>(p => p.BotUserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
