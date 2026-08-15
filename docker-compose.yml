@@ -4,11 +4,25 @@
     hostname: postgres
     image: postgres:18
     ports:
-      - "51946:5432"
+      - "55432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: goblin
+    volumes:
+      - goblin-postgres-data:/var/lib/postgresql
+    networks:
+      - goblin_network
+
+  valkey:
+    container_name: goblin-valkey
+    hostname: valkey
+    image: valkey/valkey:9
+    ports:
+      - "56379:6379"
+    command: valkey-server --save 60 1 --loglevel warning
+    volumes:
+      - goblin-valkey-data:/data
     networks:
       - goblin_network
 
@@ -26,3 +40,7 @@
 
 networks:
   goblin_network:
+
+volumes:
+  goblin-postgres-data:
+  goblin-valkey-data:
