@@ -1,10 +1,8 @@
 using Goblin.Application.Core;
 using Goblin.Application.Core.Abstractions;
-using Goblin.Application.Core.Options;
 using Goblin.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Quartz;
 
 namespace Goblin.BackgroundJobs.Jobs;
@@ -13,20 +11,12 @@ public class SendSchedulesJob(
     BotDbContext db,
     IScheduleService scheduleService,
     IEnumerable<ISender> senders,
-    IOptions<MailingOptions> mailingOptions,
     ILogger<SendSchedulesJob> logger) : IJob
 {
     public static readonly JobKey JobKey = new("V1", "send-schedules");
 
-    private readonly MailingOptions _mailingOptions = mailingOptions.Value;
-
     public async Task Execute(IJobExecutionContext context)
     {
-        if (_mailingOptions.IsVacations)
-        {
-            return;
-        }
-
         var consumersGroup = db.BotUsers.AsNoTracking()
             .Where(p => p.HasScheduleSubscription && p.NarfuGroup.HasValue)
             .ToArray()

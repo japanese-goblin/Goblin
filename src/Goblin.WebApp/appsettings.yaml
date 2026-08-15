@@ -38,7 +38,6 @@ Clients:
     Units: 'metric'
 
 Mailing:
-  IsVacations: false
   Schedule:
     IsEnabled: true
     # запускается в 6:05 с понедельника по субботу весь год, кроме августа
