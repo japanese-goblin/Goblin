@@ -8,12 +8,12 @@ public class BotUserSession
     /// <summary>
     ///     ИД сессии
     /// </summary>
-    public long Id { get; set; }
+    public Guid Id { get; set; }
 
     /// <summary>
     ///     ИД пользователя
     /// </summary>
-    public long BotUserId { get; set; }
+    public Guid BotUserId { get; set; }
 
     /// <summary>
     ///     Тип состояния

@@ -2,7 +2,8 @@ namespace Goblin.Domain.Entities;
 
 public class CronJob
 {
-    public int Id { get; private set; }
+    public Guid Id { get; private set; }
+
     public string Name { get; private set; }
     public long ChatId { get; private set; }
 
