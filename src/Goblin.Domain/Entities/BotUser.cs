@@ -19,7 +19,7 @@ public class BotUser
     {
     }
 
-    public BotUser(long id, string city = "", int group = 0, bool isAdmin = false,
+    public BotUser(long id, string? city = null, int? group = null, bool isAdmin = false,
                    bool isErrorsEnabled = true, bool hasWeather = false, bool hasSchedule = false)
     {
         SetId(id);
