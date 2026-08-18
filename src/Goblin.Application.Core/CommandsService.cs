@@ -136,6 +136,7 @@ public class CommandsService(
     private async Task<BotUser> GetBotUserV2(ConsumerType type, long userId, CancellationToken ct)
     {
         var user = await dbContext.BotUsers
+            .Include(p => p.Session)
             .FirstOrDefaultAsync(p => p.ConsumerType == type && p.ConsumerId == userId, ct);
         if (user is not null)
         {
