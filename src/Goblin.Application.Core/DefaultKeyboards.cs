@@ -1,8 +1,36 @@
+using Goblin.Application.Core.Flows;
+
 namespace Goblin.Application.Core;
 
 public static class DefaultKeyboards
 {
     private const string DefaultDateFormat = "yyyy-MM-dd";
+
+    public static CoreKeyboard GetInitialKeyboard()
+    {
+        var payloadType = PayloadType.Init.GetEnumMemberValue();
+        var kb = new CoreKeyboard
+        {
+            IsInline = true
+        };
+        kb.AddButton("Настроить группу САФУ",
+            CoreKeyboardButtonColor.Default,
+            payloadType,
+            InitialFlowState.SettingNarfuGroup.GetEnumMemberValue());
+        kb.AddLine();
+        kb.AddButton("Настроить город",
+            CoreKeyboardButtonColor.Default,
+            payloadType,
+            InitialFlowState.SettingWeather.GetEnumMemberValue());
+        kb.AddLine();
+        kb.AddButton("Пропустить",
+            CoreKeyboardButtonColor.Primary,
+            payloadType,
+            InitialFlowState.Skip.GetEnumMemberValue());
+
+        return kb;
+    }
+    
 
     public static CoreKeyboard GetDefaultKeyboard()
     {

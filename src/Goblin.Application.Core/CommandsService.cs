@@ -28,7 +28,7 @@ public class CommandsService(
         var executionResult = await userFlow.HandleAsync(context, ct);
 
         user.Session.FlowType = executionResult.FlowType;
-        user.Session.FlowStepType = user.Session.FlowStepType;
+        user.Session.FlowStepType = executionResult.FlowState;
         // TODO: session data?
         await dbContext.SaveChangesAsync(ct);
 

@@ -6,6 +6,8 @@ public interface IUserFlow
 {
     string Name { get; }
     
+    string PayloadKey { get; }
+    
     FlowType Type { get; }
 
     Task<FlowExecutionResult> HandleAsync(
