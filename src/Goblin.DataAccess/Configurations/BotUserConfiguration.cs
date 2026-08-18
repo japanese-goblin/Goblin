@@ -1,3 +1,4 @@
+using Goblin.Domain;
 using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,6 +15,8 @@ internal class BotUserConfiguration : IEntityTypeConfiguration<BotUser>
 
         builder.Property(p => p.WeatherCity)
             .HasMaxLength(100);
+        builder.Property(p => p.ConsumerType)
+            .HasConversion(new EnumMemberConverter<ConsumerType>());
 
         builder.Property(p => p.IsAdmin)
             .HasDefaultValue(false);

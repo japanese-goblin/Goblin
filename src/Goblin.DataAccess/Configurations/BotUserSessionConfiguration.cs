@@ -1,3 +1,4 @@
+using Goblin.Domain;
 using Goblin.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,6 +15,8 @@ internal class BotUserSessionConfiguration : IEntityTypeConfiguration<BotUserSes
 
         builder.Property(p => p.FlowStepType)
             .HasMaxLength(100);
+        builder.Property(p => p.FlowType)
+            .HasConversion(new EnumMemberConverter<FlowType>());
 
         builder.HasOne(p => p.BotUser)
             .WithOne(p => p.Session)

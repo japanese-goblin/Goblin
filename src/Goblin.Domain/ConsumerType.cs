@@ -1,8 +1,23 @@
-﻿namespace Goblin.Domain;
+﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
+namespace Goblin.Domain;
+
+/// <summary>
+///     Тип потребителя
+/// </summary>
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ConsumerType
 {
+    /// <summary>
+    ///     ВК
+    /// </summary>
+    [EnumMember(Value = "vk")]
     Vkontakte,
-    Telegram,
-    AllInOne = 1001
+
+    /// <summary>
+    ///     Telegram
+    /// </summary>
+    [EnumMember(Value = "telegram")]
+    Telegram
 }
