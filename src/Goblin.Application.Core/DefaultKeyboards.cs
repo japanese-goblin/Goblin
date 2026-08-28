@@ -94,7 +94,7 @@ public static class DefaultKeyboards
 
         for(var i = 1; i < 7; i++)
         {
-            date = date.AddDays(i);
+            date = date.AddDays(1);
             if(date.DayOfWeek == DayOfWeek.Sunday)
             {
                 continue;

@@ -29,7 +29,7 @@ public class MailingCommand(BotDbContext db) : IKeyboardCommand
 
     private async Task<CommandExecutionResult> SetScheduleMailing(BotUser user, bool isSchedule)
     {
-        if(user.NarfuGroup == 0)
+        if(!user.NarfuGroup.HasValue)
         {
             return CommandExecutionResult.Failed(DefaultErrors.GroupNotSet);
         }

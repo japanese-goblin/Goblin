@@ -78,7 +78,8 @@ public class TelegramCallbackHandler
 
     private async Task HandleBotKick(ChatMemberUpdated updateMyChatMember)
     {
-        var user = await _context.BotUsers.FirstOrDefaultAsync(x => x.ConsumerId == updateMyChatMember.From.Id);
+        var user = await _context.BotUsers.FirstOrDefaultAsync(p => p.ConsumerType == ConsumerType.Telegram && 
+                                                                    p.ConsumerId == updateMyChatMember.From.Id);
         if(user is not null)
         {
             _context.BotUsers.Remove(user);
