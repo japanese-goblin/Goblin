@@ -57,8 +57,8 @@ public class InitialUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeatherM
                     FlowType.MainMenu,
                     null,
                     true,
-                    "Вы в главном меню, тут потом основная клавиатура будет",
-                    null);
+                    "Главное меню:",
+                    DefaultKeyboards.GetMainMenuKeyboard());
                 return response;
             }
         }

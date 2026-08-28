@@ -1,8 +1,116 @@
+using Goblin.Application.Core.Flows;
+
 namespace Goblin.Application.Core;
 
 public static class DefaultKeyboards
 {
     private const string DefaultDateFormat = "yyyy-MM-dd";
+
+    public static CoreKeyboard GetMainMenuKeyboard()
+    {
+        var payloadType = PayloadType.Menu.GetEnumMemberValue();
+        var kb = new CoreKeyboard
+        {
+            IsOneTime = false,
+            IsInline = false
+        };
+
+        kb.AddButton("Расписание",
+                     CoreKeyboardButtonColor.Primary,
+                     payloadType,
+                     MainMenuFlowState.Schedule.GetEnumMemberValue())
+          .AddButton("Экзамены",
+                     CoreKeyboardButtonColor.Primary,
+                     payloadType,
+                     MainMenuFlowState.Exams.GetEnumMemberValue())
+          .AddLine()
+          .AddButton("Погода сейчас",
+                     CoreKeyboardButtonColor.Primary,
+                     payloadType,
+                     MainMenuFlowState.CurrentWeather.GetEnumMemberValue())
+          .AddButton("Прогноз по дням",
+                     CoreKeyboardButtonColor.Primary,
+                     payloadType,
+                     MainMenuFlowState.ForecastWeather.GetEnumMemberValue())
+          .AddLine()
+          .AddButton("Настройки",
+                     CoreKeyboardButtonColor.Primary,
+                     payloadType,
+                     MainMenuFlowState.Settings.GetEnumMemberValue())
+          ;
+        return kb;
+    }
+    
+    
+    public static CoreKeyboard GetScheduleKeyboardV2()
+    {
+        var payloadType = PayloadType.Schedule.GetEnumMemberValue();
+        var keyboard = new CoreKeyboard
+        {
+            IsInline = true
+        };
+
+        var date = DateTime.Now;
+        keyboard.AddButton($"На сегодня ({date:dd.MM - dddd})",
+                           CoreKeyboardButtonColor.Primary,
+                           payloadType, 
+                           date.ToString(DefaultDateFormat));
+
+        date = date.AddDays(1);
+        if(date.DayOfWeek != DayOfWeek.Sunday)
+        {
+            keyboard.AddButton($"На завтра ({date:dd.MM - dddd})",
+                               CoreKeyboardButtonColor.Primary,
+                               payloadType,
+                               date.ToString(DefaultDateFormat));
+            keyboard.AddLine();
+        }
+
+        for(var i = 1; i < 7; i++)
+        {
+            date = date.AddDays(1);
+            if(date.DayOfWeek == DayOfWeek.Sunday)
+            {
+                continue;
+            }
+
+            keyboard.AddButton($"На {date:dd.MM (dddd)}",
+                               CoreKeyboardButtonColor.Primary,
+                               payloadType,
+                               date.ToString(DefaultDateFormat));
+            if(i % 2 == 0)
+            {
+                keyboard.AddLine();
+            }
+        }
+
+        return keyboard;
+    }
+    
+    public static CoreKeyboard GetWeatherForecastKeyboard()
+    {
+        var payloadType = PayloadType.ForecastWeather.GetEnumMemberValue();
+
+        var keyboard = new CoreKeyboard
+        {
+            IsInline = true
+        };
+
+        var date = DateTime.Now;
+        keyboard.AddButton($"На сегодня ({date:dd.MM - dddd})",
+                           CoreKeyboardButtonColor.Primary,
+                           payloadType, 
+                           date.ToString(DefaultDateFormat));
+
+        date = date.AddDays(1);
+        keyboard.AddButton($"На завтра ({date:dd.MM - dddd})",
+                           CoreKeyboardButtonColor.Primary,
+                           payloadType,
+                           date.ToString(DefaultDateFormat));
+
+        return keyboard;
+    }
+
 
     public static CoreKeyboard GetDefaultKeyboard()
     {
@@ -52,8 +160,10 @@ public static class DefaultKeyboards
         {
             IsInline = true
         };
-        keyboard.AddButton($"На сегодня ({date:dd.MM - dddd})", CoreKeyboardButtonColor.Primary,
-                           "schedule", date.ToString(DefaultDateFormat));
+        keyboard.AddButton($"На сегодня ({date:dd.MM - dddd})",
+                           CoreKeyboardButtonColor.Primary,
+                           "schedule", 
+                           date.ToString(DefaultDateFormat));
         keyboard.AddLine();
 
         date = date.AddDays(1);

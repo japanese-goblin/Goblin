@@ -1,29 +1,23 @@
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
-namespace Goblin.Domain;
+namespace Goblin.Application.Core.Flows;
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
-public enum FlowType
+public enum MainMenuFlowState
 {
-    [EnumMember(Value = "start")]
-    Start,
-
-    [EnumMember(Value = "main-menu")]
-    MainMenu,
-
     [EnumMember(Value = "schedule")]
     Schedule,
-
+    
     [EnumMember(Value = "exams")]
     Exams,
-
+    
     [EnumMember(Value = "current_weather")]
     CurrentWeather,
-
+    
     [EnumMember(Value = "forecast_weather")]
     ForecastWeather,
-
+    
     [EnumMember(Value = "settings")]
-    Settings
+    Settings,
 }
