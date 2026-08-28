@@ -7,7 +7,6 @@ public class BotUser
     public string? WeatherCity { get; private set; }
     public int? NarfuGroup { get; private set; }
 
-    public bool IsErrorsEnabled { get; private set; }
     public bool IsAdmin { get; private set; }
 
     public bool HasWeatherSubscription { get; private set; }
@@ -62,7 +61,6 @@ public class BotUser
 
     public void SetErrorNotification(bool enable = true)
     {
-        IsErrorsEnabled = enable;
     }
 
     public void SetAdmin(bool isAdmin = false)

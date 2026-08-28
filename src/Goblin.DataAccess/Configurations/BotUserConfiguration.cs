@@ -20,8 +20,6 @@ internal class BotUserConfiguration : IEntityTypeConfiguration<BotUser>
 
         builder.Property(p => p.IsAdmin)
             .HasDefaultValue(false);
-        builder.Property(p => p.IsErrorsEnabled)
-            .HasDefaultValue(true);
         builder.Property(p => p.HasScheduleSubscription)
             .HasDefaultValue(false);
         builder.Property(p => p.HasWeatherSubscription)
