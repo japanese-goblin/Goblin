@@ -36,7 +36,7 @@ public class ScheduleUserFlow(IScheduleService api) : IUserFlow
                                            null,
                                            false, 
                                            "Указана некорректная дата",
-                                           DefaultKeyboards.GetScheduleKeyboardV2());
+                                           DefaultKeyboards.GetScheduleKeyboard());
         }
 
         var getScheduleResponse = await api.GetSchedule(context.User.NarfuGroup.Value, scheduleDate);
@@ -44,6 +44,6 @@ public class ScheduleUserFlow(IScheduleService api) : IUserFlow
                                        null,
                                        getScheduleResponse.IsSuccessful,
                                        getScheduleResponse.Message,
-                                       DefaultKeyboards.GetScheduleKeyboardV2());
+                                       DefaultKeyboards.GetScheduleKeyboard());
     }
 }

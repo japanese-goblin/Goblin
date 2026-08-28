@@ -40,9 +40,36 @@ public static class DefaultKeyboards
           ;
         return kb;
     }
-    
-    
-    public static CoreKeyboard GetScheduleKeyboardV2()
+
+    public static CoreKeyboard GetInitializationKeyboard(BotUser user)
+    {
+        var payloadType = PayloadType.Init.GetEnumMemberValue();
+        var hasNarfuGroup = user.NarfuGroup.HasValue;
+        var hasWeatherCity = !string.IsNullOrWhiteSpace(user.WeatherCity);
+
+        var keyboard = new CoreKeyboard
+        {
+            IsInline = true
+        };
+        keyboard.AddButton(hasNarfuGroup ? "📅 Изменить группу САФУ" : "📅 Настроить группу САФУ",
+                           CoreKeyboardButtonColor.Primary,
+                           payloadType,
+                           InitialFlowState.SettingNarfuGroup.GetEnumMemberValue())
+                .AddLine()
+                .AddButton(hasWeatherCity ? "⛅ Изменить город" : "⛅ Настроить город",
+                           CoreKeyboardButtonColor.Primary,
+                           payloadType,
+                           InitialFlowState.SettingWeather.GetEnumMemberValue())
+                .AddLine()
+                .AddButton(hasNarfuGroup || hasWeatherCity ? "Далее ✅" : "Пропустить 👉",
+                           CoreKeyboardButtonColor.Default,
+                           payloadType,
+                           InitialFlowState.Continue.GetEnumMemberValue());
+
+        return keyboard;
+    }
+
+    public static CoreKeyboard GetScheduleKeyboard()
     {
         var payloadType = PayloadType.Schedule.GetEnumMemberValue();
         var keyboard = new CoreKeyboard
@@ -190,106 +217,5 @@ public static class DefaultKeyboards
                            PayloadType.Settings.GetEnumMemberValue(),
                            string.Empty);
         return keyboard;
-    }
-
-
-    public static CoreKeyboard GetDefaultKeyboard()
-    {
-        var kb = new CoreKeyboard(false);
-        kb.AddButton("Расписание", CoreKeyboardButtonColor.Primary, "scheduleKeyboard", string.Empty)
-          .AddButton("Экзамены", CoreKeyboardButtonColor.Primary, "exams", string.Empty)
-          .AddLine()
-          .AddButton("Погода", CoreKeyboardButtonColor.Primary, "weatherNow", string.Empty)
-          .AddButton("Ежедневная погода", CoreKeyboardButtonColor.Primary, "weatherDailyKeyboard", string.Empty)
-          .AddLine()
-          .AddButton("Рассылка", CoreKeyboardButtonColor.Primary, "mailingKeyboard", string.Empty)
-          .AddButton("Напоминания", CoreKeyboardButtonColor.Default, "reminds", string.Empty)
-          .AddButton("Справка", CoreKeyboardButtonColor.Primary, "help", string.Empty);
-
-        return kb;
-    }
-
-    public static CoreKeyboard GetMailingKeyboard(BotUser user)
-    {
-        const string mailingKey = "mailing";
-        var isSchedule = user.HasScheduleSubscription;
-        var isWeather = user.HasWeatherSubscription;
-
-        var scheduleColor = isSchedule ? CoreKeyboardButtonColor.Negative : CoreKeyboardButtonColor.Positive;
-        var weatherColor = isWeather ? CoreKeyboardButtonColor.Negative : CoreKeyboardButtonColor.Positive;
-
-        var scheduleText = isSchedule ? "❌Отписаться от рассылки расписания" : "✔Подписаться на рассылку расписания";
-        var weatherText = isWeather ? "❌Отписаться от рассылки погоды" : "✔Подписаться на рассылку погоды";
-
-        var kb = new CoreKeyboard
-        {
-            IsInline = true
-        };
-        kb.AddButton(scheduleText, scheduleColor, mailingKey, "schedule")
-          .AddLine()
-          .AddButton(weatherText, weatherColor, mailingKey, "weather")
-          .AddReturnToMenuButton();
-
-        return kb;
-    }
-
-    public static CoreKeyboard GetScheduleKeyboard()
-    {
-        var date = DateTime.Now;
-
-        var keyboard = new CoreKeyboard
-        {
-            IsInline = true
-        };
-        keyboard.AddButton($"На сегодня ({date:dd.MM - dddd})",
-                           CoreKeyboardButtonColor.Primary,
-                           "schedule", 
-                           date.ToString(DefaultDateFormat));
-        keyboard.AddLine();
-
-        date = date.AddDays(1);
-        if(date.DayOfWeek != DayOfWeek.Sunday)
-        {
-            keyboard.AddButton($"На завтра ({date:dd.MM - dddd})", CoreKeyboardButtonColor.Primary,
-                               "schedule", date.ToString(DefaultDateFormat));
-            keyboard.AddLine();
-        }
-
-        for(var i = 1; i < 7; i++)
-        {
-            date = date.AddDays(1);
-            if(date.DayOfWeek == DayOfWeek.Sunday)
-            {
-                continue;
-            }
-
-            keyboard.AddButton($"На {date:dd.MM (dddd)}", CoreKeyboardButtonColor.Primary,
-                               "schedule", date.ToString(DefaultDateFormat));
-            if(i % 2 == 0)
-            {
-                keyboard.AddLine();
-            }
-        }
-
-        return keyboard.AddReturnToMenuButton(false);
-    }
-
-    public static CoreKeyboard GetDailyWeatherKeyboard()
-    {
-        var date = DateTime.Now;
-        var tomorrow = date.AddDays(1);
-
-        var kb = new CoreKeyboard
-        {
-            IsInline = true
-        };
-        kb.AddButton("На сегодня", CoreKeyboardButtonColor.Primary,
-                     "weatherDaily", date.ToString(DefaultDateFormat))
-          .AddLine()
-          .AddButton("На завтра", CoreKeyboardButtonColor.Primary,
-                     "weatherDaily", tomorrow.ToString(DefaultDateFormat))
-          .AddReturnToMenuButton();
-
-        return kb;
     }
 }

@@ -5,18 +5,11 @@ using Goblin.Domain;
 
 namespace Goblin.Application.Core.Commands.Text;
 
-public class DebugCommand : ITextCommand
+public class DebugCommand(BotDbContext db) : ITextCommand
 {
     public bool IsAdminCommand => true;
 
     public string[] Aliases => ["дебуг", "дебаг"];
-
-    private readonly BotDbContext _db;
-
-    public DebugCommand(BotDbContext db)
-    {
-        _db = db;
-    }
 
     public Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
@@ -28,7 +21,7 @@ public class DebugCommand : ITextCommand
         var startTime = Process.GetCurrentProcess().StartTime;
         var uptime = DateTime.Now - startTime;
 
-        var consumerTypeCounts = _db.BotUsers.AsEnumerable()
+        var consumerTypeCounts = db.BotUsers.AsEnumerable()
                                     .GroupBy(x => x.ConsumerType)
                                     .ToDictionary(x => x.Key, x => x.Count());
 
@@ -45,7 +38,7 @@ public class DebugCommand : ITextCommand
                       .AppendLine();
         }
 
-        var subscriptions = _db.BotUsers.AsEnumerable().GroupBy(x => x.ConsumerType)
+        var subscriptions = db.BotUsers.AsEnumerable().GroupBy(x => x.ConsumerType)
                                .Select(x => new GroupUsersResponse
                                {
                                    ConsumerType = x.Key,

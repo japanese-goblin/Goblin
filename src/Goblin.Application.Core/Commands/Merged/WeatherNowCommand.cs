@@ -1,6 +1,6 @@
 namespace Goblin.Application.Core.Commands.Merged;
 
-public class WeatherNowCommand(IWeatherService weatherService) : IKeyboardCommand, ITextCommand
+public class WeatherNowCommand(IWeatherService weatherService) : ITextCommand
 {
     public string Trigger => "weatherNow";
 

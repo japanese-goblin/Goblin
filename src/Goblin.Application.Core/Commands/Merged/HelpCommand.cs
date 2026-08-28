@@ -1,6 +1,6 @@
 namespace Goblin.Application.Core.Commands.Merged;
 
-public class HelpCommand : IKeyboardCommand, ITextCommand
+public class HelpCommand : ITextCommand
 {
     public bool IsAdminCommand => false;
 

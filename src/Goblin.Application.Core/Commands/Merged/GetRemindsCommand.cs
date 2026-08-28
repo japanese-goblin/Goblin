@@ -3,7 +3,7 @@ using Goblin.DataAccess;
 
 namespace Goblin.Application.Core.Commands.Merged;
 
-public class GetRemindsCommand(BotDbContext context) : IKeyboardCommand, ITextCommand
+public class GetRemindsCommand(BotDbContext context) : ITextCommand
 {
     public string Trigger => "reminds";
 

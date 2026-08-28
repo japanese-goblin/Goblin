@@ -46,7 +46,7 @@ public class InitialUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeatherM
                                                        null,
                                                        true,
                                                        "🐸",
-                                                       GetInitialKeyboard(context.User));
+                                                       DefaultKeyboards.GetInitializationKeyboard(context.User));
                 return response;
             }
 
@@ -99,7 +99,7 @@ public class InitialUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeatherM
                     null,
                     false,
                     "Группа успешно установлена!",
-                    GetInitialKeyboard(context.User));
+                    DefaultKeyboards.GetInitializationKeyboard(context.User));
             }
 
             // если состояние - установка города
@@ -122,7 +122,7 @@ public class InitialUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeatherM
                     null,
                     true,
                     "Город успешно установлен!",
-                    GetInitialKeyboard(context.User));
+                    DefaultKeyboards.GetInitializationKeyboard(context.User));
             }
         }
 
@@ -138,7 +138,7 @@ public class InitialUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeatherM
                 Перед началом работы Вы можете сохранить номер группы для получения расписания САФУ, а также город для получения прогноза погоды.
                 Для продолжения воспользуйтесь кнопками ниже:
                 """,
-                GetInitialKeyboard(context.User)
+                DefaultKeyboards.GetInitializationKeyboard(context.User)
             );
             return response;
         }
@@ -151,32 +151,6 @@ public class InitialUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeatherM
             null);
     }
     
-    private CoreKeyboard GetInitialKeyboard(BotUser user)
-    {
-        var hasNarfuGroup = user.NarfuGroup.HasValue;
-        var hasWeatherCity = !string.IsNullOrWhiteSpace(user.WeatherCity);
-
-        var kb = new CoreKeyboard
-        {
-            IsInline = true
-        };
-        kb.AddButton(hasNarfuGroup ? "📅 Изменить группу САФУ" : "📅 Настроить группу САФУ",
-                     CoreKeyboardButtonColor.Primary,
-                     PayloadKey,
-                     InitialFlowState.SettingNarfuGroup.GetEnumMemberValue());
-        kb.AddLine();
-        kb.AddButton(hasWeatherCity ? "⛅ Изменить город" : "⛅ Настроить город",
-                     CoreKeyboardButtonColor.Primary,
-                     PayloadKey,
-                     InitialFlowState.SettingWeather.GetEnumMemberValue());
-        kb.AddLine();
-        kb.AddButton(hasNarfuGroup || hasWeatherCity ? "Далее ✅" : "Пропустить 👉",
-                     CoreKeyboardButtonColor.Default,
-                     PayloadKey,
-                     InitialFlowState.Continue.GetEnumMemberValue());
-
-        return kb;
-    }
     private CoreKeyboard GetSkipKeyboard()
     {
         var kb = new CoreKeyboard

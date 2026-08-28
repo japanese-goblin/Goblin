@@ -29,7 +29,7 @@ public class MainMenuUserFlow(IWeatherService weatherService, INarfuApi narfuApi
                                                null,
                                                true,
                                                "Выберите день для получения расписания",
-                                               DefaultKeyboards.GetScheduleKeyboardV2());
+                                               DefaultKeyboards.GetScheduleKeyboard());
             }
 
             if(commandParam.Equals(MainMenuFlowState.Exams.GetEnumMemberValue()))

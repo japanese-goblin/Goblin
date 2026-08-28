@@ -1,6 +1,7 @@
 using System.Reflection;
 using Goblin.Application.Core.Options;
 using Goblin.Application.Core.Services;
+using Goblin.Application.Core.Commands.Text;
 using Goblin.Narfu;
 using Goblin.OpenWeatherMap;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,8 +29,7 @@ public static class SetupExtensions
 
     private static void AddBotFeatures(IServiceCollection services)
     {
-        services.RegisterAllTypes<ITextCommand>([typeof(SetupExtensions).Assembly], ServiceLifetime.Scoped);
-        services.RegisterAllTypes<IKeyboardCommand>([typeof(SetupExtensions).Assembly], ServiceLifetime.Scoped);
+        services.AddScoped<ITextCommand, DebugCommand>();
         services.RegisterAllTypes<IUserFlow>([typeof(SetupExtensions).Assembly], ServiceLifetime.Scoped);
 
         services.AddScoped<CommandsService>();
