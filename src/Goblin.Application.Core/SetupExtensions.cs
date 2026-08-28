@@ -1,8 +1,6 @@
 using System.Reflection;
-using Goblin.Application.Core.Commands.Merged;
 using Goblin.Application.Core.Options;
 using Goblin.Application.Core.Services;
-using Goblin.Application.Core.Commands.Text;
 using Goblin.Narfu;
 using Goblin.OpenWeatherMap;
 using Microsoft.Extensions.DependencyInjection;

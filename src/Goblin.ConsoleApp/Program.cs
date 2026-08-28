@@ -1,12 +1,10 @@
 using Goblin.Application.Core;
 using Goblin.Application.Vk;
-using Goblin.Application.Vk.Options;
 using Goblin.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Serilog;
 
 var builder = Host.CreateApplicationBuilder(args);

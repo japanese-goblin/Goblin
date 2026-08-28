@@ -1,7 +1,6 @@
 using Goblin.DataAccess;
 using Goblin.Domain;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core;
 

@@ -1,6 +1,5 @@
 using System.Globalization;
 using Goblin.DataAccess;
-using Goblin.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Application.Core.Commands.Text;

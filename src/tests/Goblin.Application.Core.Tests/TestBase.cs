@@ -2,7 +2,6 @@ using System.Text.Json;
 using Goblin.Application.Core.Commands.Text;
 using Goblin.Application.Core.Models;
 using Goblin.DataAccess;
-using Goblin.Domain;
 using Goblin.Domain.Entities;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
