@@ -20,7 +20,7 @@ internal class ResetUsersGroupsJob(BotDbContext context, INarfuApi narfuApi) : I
             }
 
             var group = narfuApi.Students.GetGroupByRealId(user.NarfuGroup.Value);
-            if (group is null)
+            if (group is not null)
             {
                 continue;
             }
