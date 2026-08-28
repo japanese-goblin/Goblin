@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Goblin.DataAccess.Migrations
 {
     [DbContext(typeof(BotDbContext))]
-    [Migration("20260815180703_InitBotV4")]
+    [Migration("20260828185542_InitBotV4")]
     partial class InitBotV4
     {
         /// <inheritdoc />
@@ -34,8 +34,9 @@ namespace Goblin.DataAccess.Migrations
                     b.Property<long>("ConsumerId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("ConsumerType")
-                        .HasColumnType("integer");
+                    b.Property<string>("ConsumerType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<bool>("HasScheduleSubscription")
                         .ValueGeneratedOnAdd()
@@ -52,11 +53,6 @@ namespace Goblin.DataAccess.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<bool>("IsErrorsEnabled")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
-
                     b.Property<int?>("NarfuGroup")
                         .HasColumnType("integer");
 
@@ -66,7 +62,8 @@ namespace Goblin.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ConsumerType", "ConsumerId");
+                    b.HasIndex("ConsumerType", "ConsumerId")
+                        .IsUnique();
 
                     b.ToTable("BotUsers");
                 });
@@ -84,8 +81,9 @@ namespace Goblin.DataAccess.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int>("FlowType")
-                        .HasColumnType("integer");
+                    b.Property<string>("FlowType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -104,11 +102,13 @@ namespace Goblin.DataAccess.Migrations
                     b.Property<long>("ChatId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("ConsumerType")
-                        .HasColumnType("integer");
+                    b.Property<string>("ConsumerType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<int>("CronType")
-                        .HasColumnType("integer");
+                    b.Property<string>("CronType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()

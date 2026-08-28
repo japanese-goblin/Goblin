@@ -18,12 +18,11 @@ namespace Goblin.DataAccess.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     WeatherCity = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     NarfuGroup = table.Column<int>(type: "integer", nullable: true),
-                    IsErrorsEnabled = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
                     IsAdmin = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     HasWeatherSubscription = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     HasScheduleSubscription = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     ConsumerId = table.Column<long>(type: "bigint", nullable: false),
-                    ConsumerType = table.Column<int>(type: "integer", nullable: false)
+                    ConsumerType = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,8 +44,8 @@ namespace Goblin.DataAccess.Migrations
                     Time_DayOfMonth = table.Column<string>(type: "text", nullable: false),
                     Time_Month = table.Column<string>(type: "text", nullable: false),
                     Time_DayOfWeek = table.Column<string>(type: "text", nullable: false),
-                    CronType = table.Column<int>(type: "integer", nullable: false),
-                    ConsumerType = table.Column<int>(type: "integer", nullable: false)
+                    CronType = table.Column<string>(type: "text", nullable: false),
+                    ConsumerType = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -59,7 +58,7 @@ namespace Goblin.DataAccess.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     BotUserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    FlowType = table.Column<int>(type: "integer", nullable: false),
+                    FlowType = table.Column<string>(type: "text", nullable: false),
                     FlowStepType = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
@@ -96,7 +95,8 @@ namespace Goblin.DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_BotUsers_ConsumerType_ConsumerId",
                 table: "BotUsers",
-                columns: new[] { "ConsumerType", "ConsumerId" });
+                columns: new[] { "ConsumerType", "ConsumerId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_BotUserSessions_BotUserId",

@@ -50,11 +50,6 @@ namespace Goblin.DataAccess.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<bool>("IsErrorsEnabled")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
-
                     b.Property<int?>("NarfuGroup")
                         .HasColumnType("integer");
 
@@ -64,7 +59,8 @@ namespace Goblin.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ConsumerType", "ConsumerId");
+                    b.HasIndex("ConsumerType", "ConsumerId")
+                        .IsUnique();
 
                     b.ToTable("BotUsers");
                 });
