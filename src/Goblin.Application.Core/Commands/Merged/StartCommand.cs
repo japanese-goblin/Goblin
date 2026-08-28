@@ -1,3 +1,5 @@
+using Goblin.Domain;
+
 namespace Goblin.Application.Core.Commands.Merged;
 
 public class StartCommand : ITextCommand
@@ -5,10 +7,17 @@ public class StartCommand : ITextCommand
     public bool IsAdminCommand => false;
     public string[] Aliases => ["старт", "начать", "/start"];
 
-    public string Trigger => "command";
-
     public Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
-        return Task.FromResult(CommandExecutionResult.Success("Выберите действие:", DefaultKeyboards.GetMainMenuKeyboard()));
+        user.Session.FlowStepType = null;
+        if(user.Session.FlowType == FlowType.Start)
+        {
+            return Task.FromResult(CommandExecutionResult.Success(
+                "Добро пожаловать! 👺\nПеред началом работы настройте группу САФУ и город для прогноза погоды.",
+                DefaultKeyboards.GetInitializationKeyboard(user)));
+        }
+
+        user.Session.FlowType = FlowType.MainMenu;
+        return Task.FromResult(CommandExecutionResult.Success("Главное меню:", DefaultKeyboards.GetMainMenuKeyboard()));
     }
 }

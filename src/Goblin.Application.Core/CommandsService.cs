@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace Goblin.Application.Core;
 
 public class CommandsService(
-    IEnumerable<ITextCommand> textCommands,
+    TextCommandHandler textCommandHandler,
     IEnumerable<IUserFlow> userFlows,
     BotDbContext dbContext)
 {
@@ -15,36 +15,11 @@ public class CommandsService(
     public async Task<CommandExecutionResult> ExecuteAction(Message msg, CancellationToken ct)
     {
         var user = await GetBotUserV2(msg.ConsumerType, msg.UserId, ct);
-        if(string.IsNullOrWhiteSpace(msg.Payload) && msg.CommandName == "/start")
+        var commandResult = await textCommandHandler.TryHandle(msg, user);
+        if(commandResult is not null)
         {
-            user.Session.FlowStepType = null;
-            var startResult = user.Session.FlowType == FlowType.Start
-                ? CommandExecutionResult.Success(
-                    "Добро пожаловать! 👺\nПеред началом работы настройте группу САФУ и город для прогноза погоды.",
-                    DefaultKeyboards.GetInitializationKeyboard(user))
-                : CommandExecutionResult.Success("Главное меню:", DefaultKeyboards.GetMainMenuKeyboard());
-
-            if(user.Session.FlowType != FlowType.Start)
-            {
-                user.Session.FlowType = FlowType.MainMenu;
-            }
-
             await dbContext.SaveChangesAsync(ct);
-            return startResult;
-        }
-
-        if(string.IsNullOrWhiteSpace(msg.Payload))
-        {
-            var textCommand = textCommands.FirstOrDefault(command => command.Aliases.Contains(msg.CommandName));
-            if(textCommand is not null)
-            {
-                if(textCommand.IsAdminCommand && !user.IsAdmin)
-                {
-                    return CommandExecutionResult.Failed(CommandNotFoundMessage);
-                }
-
-                return await textCommand.Execute(msg, user);
-            }
+            return commandResult;
         }
 
         var parsedPayload = msg.ParsedPayload;

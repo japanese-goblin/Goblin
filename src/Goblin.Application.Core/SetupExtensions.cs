@@ -1,4 +1,5 @@
 using System.Reflection;
+using Goblin.Application.Core.Commands.Merged;
 using Goblin.Application.Core.Options;
 using Goblin.Application.Core.Services;
 using Goblin.Application.Core.Commands.Text;
@@ -29,9 +30,10 @@ public static class SetupExtensions
 
     private static void AddBotFeatures(IServiceCollection services)
     {
-        services.AddScoped<ITextCommand, DebugCommand>();
+        services.RegisterAllTypes<ITextCommand>([typeof(SetupExtensions).Assembly], ServiceLifetime.Scoped);
         services.RegisterAllTypes<IUserFlow>([typeof(SetupExtensions).Assembly], ServiceLifetime.Scoped);
 
+        services.AddScoped<TextCommandHandler>();
         services.AddScoped<CommandsService>();
     }
 

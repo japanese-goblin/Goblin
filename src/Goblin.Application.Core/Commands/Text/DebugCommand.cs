@@ -22,8 +22,8 @@ public class DebugCommand(BotDbContext db) : ITextCommand
         var uptime = DateTime.Now - startTime;
 
         var consumerTypeCounts = db.BotUsers.AsEnumerable()
-                                    .GroupBy(x => x.ConsumerType)
-                                    .ToDictionary(x => x.Key, x => x.Count());
+                                    .GroupBy(p => p.ConsumerType)
+                                    .ToDictionary(p => p.Key, x => x.Count());
 
         strBuilder.Append($"Время старта: {startTime:F}").AppendLine()
                   .Append($"Я работаю уже {uptime.Hours} часов {uptime.Minutes} минут")
@@ -34,12 +34,12 @@ public class DebugCommand(BotDbContext db) : ITextCommand
                   .AppendLine();
         foreach(var consumerTypeCount in consumerTypeCounts)
         {
-            strBuilder.Append($"* {consumerTypeCount.Key} - {consumerTypeCount.Value}")
+            strBuilder.Append($"* {consumerTypeCount.Key.GetEnumMemberValue()} - {consumerTypeCount.Value}")
                       .AppendLine();
         }
 
         var subscriptions = db.BotUsers.AsEnumerable().GroupBy(x => x.ConsumerType)
-                               .Select(x => new GroupUsersResponse
+                               .Select(x => new GroupUsersData
                                {
                                    ConsumerType = x.Key,
                                    ScheduleSubscriptions = x.Count(u => u.HasScheduleSubscription),
@@ -52,14 +52,14 @@ public class DebugCommand(BotDbContext db) : ITextCommand
         foreach(var subscription in subscriptions)
         {
             strBuilder
-                    .Append($"* {subscription.ConsumerType} - {subscription.WeatherSubscriptions} погода, {subscription.ScheduleSubscriptions} расписание")
+                    .Append($"* {subscription.ConsumerType.GetEnumMemberValue()} - {subscription.WeatherSubscriptions} погода, {subscription.ScheduleSubscriptions} расписание")
                     .AppendLine();
         }
 
         return Task.FromResult(CommandExecutionResult.Success(strBuilder.ToString()));
     }
 
-    private class GroupUsersResponse
+    private class GroupUsersData
     {
         public ConsumerType ConsumerType { get; set; }
         public int WeatherSubscriptions { get; set; }
