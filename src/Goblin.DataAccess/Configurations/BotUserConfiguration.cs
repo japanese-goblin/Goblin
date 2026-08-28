@@ -27,6 +27,6 @@ internal class BotUserConfiguration : IEntityTypeConfiguration<BotUser>
         builder.Property(p => p.HasWeatherSubscription)
             .HasDefaultValue(false);
 
-        builder.HasIndex(p => new { p.ConsumerType, p.ConsumerId });
+        builder.HasIndex(p => new { p.ConsumerType, p.ConsumerId }).IsUnique();
     }
 }
