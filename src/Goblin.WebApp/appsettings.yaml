@@ -24,6 +24,10 @@ Vk:
   AccessToken:
   SecretKey:
   ConfirmationCode:
+  LongPolling:
+    GroupId: 146048760
+    WaitTimeout: 25
+    DelayBetweenUpdates: '00:00:00.250'
 
 Clients:
   Narfu:

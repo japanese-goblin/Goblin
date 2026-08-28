@@ -1,12 +1,10 @@
 using System.Text.RegularExpressions;
 using Goblin.Application.Core;
 using Goblin.Application.Vk.Converters;
-using Goblin.Application.Vk.Options;
 using Goblin.DataAccess;
 using Goblin.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using VkNet.Abstractions;
 using VkNet.Enums;
 using VkNet.Enums.StringEnums;
@@ -20,14 +18,13 @@ public class VkCallbackHandler
     private readonly CommandsService _commandsService;
     private readonly BotDbContext _db;
     private readonly ILogger _logger;
-    private readonly VkOptions _options;
     private readonly IVkApi _vkApi;
     private readonly ISender _sender;
 
     private readonly bool IsNewLogic = true;
 
     public VkCallbackHandler(CommandsService commandsService, BotDbContext db, IVkApi vkApi,
-                             IEnumerable<ISender> senders, IOptions<VkOptions> options, ILogger<VkCallbackHandler> logger)
+                             IEnumerable<ISender> senders, ILogger<VkCallbackHandler> logger)
     {
         _commandsService = commandsService;
         _db = db;
@@ -35,18 +32,11 @@ public class VkCallbackHandler
 
         // TODO: keyed service
         _sender = senders.First(x => x.ConsumerType == ConsumerType.Vkontakte);
-        _options = options.Value;
         _logger = logger;
     }
 
     public async Task Handle(GroupUpdate upd, CancellationToken ct)
     {
-        if(upd.Secret.Value != _options.SecretKey)
-        {
-            _logger.LogWarning("Пришло событие с неправильным секретным ключом ({SecretKey})", upd.Secret);
-            return;
-        }
-
         _logger.LogDebug("Обработка события с типом {UpdateType}", upd.Type.Value);
 
         if(upd.Type.Value == GroupUpdateType.MessageNew)
@@ -77,7 +67,7 @@ public class VkCallbackHandler
                 return;
             }
 
-            await MessageEvent(messageEvent);
+            await MessageEvent(messageEvent, ct);
         }
         else if(upd.Type.Value == GroupUpdateType.GroupLeave)
         {
@@ -149,9 +139,17 @@ public class VkCallbackHandler
         }
     }
 
-    private async Task MessageEvent(MessageEvent messageEvent)
+    private async Task MessageEvent(MessageEvent messageEvent, CancellationToken ct)
     {
         var mappedToMessage = messageEvent.MapToBotMessage();
+        if (IsNewLogic)
+        {
+            _logger.LogDebug("Обработка сообщения");
+            var executionResult = await _commandsService.ExecuteAction(mappedToMessage, ct);
+            await _sender.Send(mappedToMessage.ChatId, executionResult.Message, executionResult.Keyboard);
+            _logger.LogDebug("Обработка сообщения завершена");
+            return;
+        }
         await _commandsService.ExecuteCommand(mappedToMessage, OnSuccess, OnFailed);
         return;
 
