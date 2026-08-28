@@ -25,7 +25,7 @@ public class ScheduleUserFlow(IScheduleService api) : IUserFlow
             return new FlowExecutionResult(FlowType.MainMenu,
                                            null,
                                            false, 
-                                           "Главное меню:",
+                                           "Воспользуйтесь клавиатурой для управления ботом:",
                                            DefaultKeyboards.GetMainMenuKeyboard());
         }
 

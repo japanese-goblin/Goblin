@@ -57,7 +57,7 @@ public class InitialUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeatherM
                     FlowType.MainMenu,
                     null,
                     true,
-                    "Главное меню:",
+                    "Настройки успешно сохранены! Теперь Вы можете пользоваться ботом при помощи кнопок меню:",
                     DefaultKeyboards.GetMainMenuKeyboard());
                 return response;
             }

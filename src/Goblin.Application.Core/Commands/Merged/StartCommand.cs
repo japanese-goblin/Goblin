@@ -18,6 +18,6 @@ public class StartCommand : ITextCommand
         }
 
         user.Session.FlowType = FlowType.MainMenu;
-        return Task.FromResult(CommandExecutionResult.Success("Главное меню:", DefaultKeyboards.GetMainMenuKeyboard()));
+        return Task.FromResult(CommandExecutionResult.Success("Воспользуйтесь клавиатурой для управления ботом:", DefaultKeyboards.GetMainMenuKeyboard()));
     }
 }

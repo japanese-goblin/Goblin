@@ -19,7 +19,7 @@ public class MainMenuUserFlow(IWeatherService weatherService, INarfuApi narfuApi
                 return new FlowExecutionResult(FlowType.MainMenu,
                                                null,
                                                true,
-                                               "Главное меню:",
+                                               "Воспользуйтесь клавиатурой для управления ботом:",
                                                DefaultKeyboards.GetMainMenuKeyboard());
             }
 
@@ -88,6 +88,10 @@ public class MainMenuUserFlow(IWeatherService weatherService, INarfuApi narfuApi
             }
         }
 
-        return new FlowExecutionResult(FlowType.MainMenu, null, false, "TBD", null);
+        return new FlowExecutionResult(FlowType.MainMenu,
+                                       null,
+                                       false, 
+                                       "Воспользуйтесь клавиатурой для управления ботом:",
+                                       DefaultKeyboards.GetMainMenuKeyboard());
     }
 }
