@@ -18,14 +18,17 @@ public class TestBase
 
     protected TestBase()
     {
-        DefaultUser = new BotUser(1, "Архангельск", 351917, false, true, true, true);
-        DefaultUserWithMaxReminds = new BotUser(2, "Архангельск", 351917, false, true, true, true);
-        AdminUser = new BotUser(101010, "Архангельск", 351917, true, true, true, true);
+        DefaultUser = new BotUser(1, "Архангельск", 351617, false, true, true, true)
+        {
+            Session = new BotUserSession()
+        };
+        DefaultUserWithMaxReminds = new BotUser(2, "Архангельск", 351617, false, true, true, true);
+        AdminUser = new BotUser(101010, "Архангельск", 351617, true, true, true, true);
 
         ApplicationContext = GetDbContext();
     }
 
-    public BotDbContext GetDbContext()
+    protected BotDbContext GetDbContext()
     {
         if(ApplicationContext != null)
         {
