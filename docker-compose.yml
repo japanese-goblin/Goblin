@@ -32,7 +32,7 @@
     build:
       context: src/
     ports:
-      - "5177:80"
+      - "5177:8080"
     networks:
       - goblin_network
     env_file:

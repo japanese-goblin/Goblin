@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="10.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.11" />
+    <PackageReference Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="10.0.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Goblin.Application.Core\Goblin.Application.Core.csproj" />
+    <ProjectReference Include="..\Goblin.Application.Vk\Goblin.Application.Vk.csproj" />
+    <ProjectReference Include="..\Goblin.DataAccess\Goblin.DataAccess.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Goblin.WebApp\appsettings*.yaml"
+          Link="%(Filename)%(Extension)"
+          CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+</Project>

@@ -1,111 +1,69 @@
 using Goblin.DataAccess;
 using Goblin.Domain;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Application.Core;
 
 public class CommandsService(
-        IEnumerable<ITextCommand> textCommands,
-        IEnumerable<IKeyboardCommand> keyboardCommands,
-        BotDbContext context,
-        ILogger<CommandsService> logger)
+    TextCommandHandler textCommandHandler,
+    IEnumerable<IUserFlow> userFlows,
+    BotDbContext dbContext)
 {
-    private const string CommandNotFoundMessage = "Команда не найдена. Проверьте правильность написания команды. " +
-                                                  "Если вы хотите отключить подобные ошибки, то, пожалуйста, напишите команду 'мут'";
+    private const string CommandNotFoundMessage = "Команда не найдена. Проверьте правильность написания команды.";
 
-    public async Task ExecuteCommand(Message msg,
-                                     Func<CommandExecutionResult, Task> onSuccess,
-                                     Func<CommandExecutionResult, Task> onFailed)
+    public async Task<CommandExecutionResult> ExecuteAction(Message msg, CancellationToken ct)
     {
-        CommandExecutionResult result;
-        var user = await GetBotUser(msg.UserId, msg.ConsumerType);
-        if(!string.IsNullOrWhiteSpace(msg.Payload))
+        var user = await GetBotUserV2(msg.ConsumerType, msg.UserId, ct);
+        var commandResult = await textCommandHandler.TryHandle(msg, user);
+        if(commandResult is not null)
         {
-            result = await ExecuteKeyboardCommand(msg, user);
-        }
-        else
-        {
-            result = await ExecuteTextCommand(msg, user);
+            await dbContext.SaveChangesAsync(ct);
+            return commandResult;
         }
 
-        result.Keyboard ??= DefaultKeyboards.GetDefaultKeyboard();
+        var parsedPayload = msg.ParsedPayload;
+        var userFlow = parsedPayload is null
+            ? null
+            : userFlows.FirstOrDefault(flow => parsedPayload.ContainsKey(flow.PayloadKey));
 
-        if(!result.IsSuccessful)
+        userFlow ??= userFlows.FirstOrDefault(flow => flow.Type == user.Session.FlowType);
+        if (userFlow is null)
         {
-            // если команда не найдена, и у пользователя отключены ошибки
-            if(result is { IsSuccessful: false } && !user.IsErrorsEnabled)
-            {
-                return;
-            }
+            return CommandExecutionResult.Failed(CommandNotFoundMessage);
+        }
 
-            result.Message = $"❌ Ошибка: {result.Message}";
-            await onFailed(result);
-        }
-        else
-        {
-            await onSuccess(result);
-        }
+        var context = new UserFlowContext(user, msg);
+        var executionResult = await userFlow.HandleAsync(context, ct);
+
+        user.Session.FlowType = executionResult.FlowType;
+        user.Session.FlowStepType = executionResult.FlowState;
+        await dbContext.SaveChangesAsync(ct);
+
+        return executionResult.IsSuccessful
+            ? CommandExecutionResult.Success(executionResult.Message, executionResult.Keyboard)
+            : CommandExecutionResult.Failed(executionResult.Message, executionResult.Keyboard);
     }
 
-    private async Task<CommandExecutionResult> ExecuteTextCommand(Message msg, BotUser user)
+    private async Task<BotUser> GetBotUserV2(ConsumerType type, long userId, CancellationToken ct)
     {
-        logger.LogDebug("Обработка текстовой команды");
-        var cmdName = msg.CommandName;
-
-        foreach(var command in textCommands)
-        {
-            if(!command.Aliases.Contains(cmdName))
-            {
-                continue;
-            }
-
-            if(command.IsAdminCommand && !user.IsAdmin)
-            {
-                continue;
-            }
-
-            logger.LogDebug("Выполнение команды {CommandType}", command.GetType());
-            var result = await command.Execute(msg, user);
-            logger.LogDebug("Команда вернула результат: {IsExecutionSuccess}", result.IsSuccessful);
-
-            return result;
-        }
-
-        return CommandExecutionResult.Failed(CommandNotFoundMessage);
-    }
-
-    private async Task<CommandExecutionResult> ExecuteKeyboardCommand(Message msg, BotUser user)
-    {
-        logger.LogDebug("Обработка команды с клавиатуры");
-        var record = msg.ParsedPayload.First();
-        foreach(var command in keyboardCommands)
-        {
-            if(!record.Key.Contains(command.Trigger))
-            {
-                continue;
-            }
-
-            logger.LogDebug("Выполнение команды с клавиатуры {CommandType}", command.GetType());
-            return await command.Execute(msg, user);
-        }
-
-        return CommandExecutionResult.Failed(CommandNotFoundMessage);
-    }
-
-    private async Task<BotUser> GetBotUser(long userId, ConsumerType type)
-    {
-        var user = await context.BotUsers.FindAsync(userId, type);
-        if(user is not null)
+        var user = await dbContext.BotUsers
+            .Include(p => p.Session)
+            .FirstOrDefaultAsync(p => p.ConsumerType == type && p.ConsumerId == userId, ct);
+        if (user is not null)
         {
             return user;
         }
 
         user = new BotUser(userId)
         {
-            ConsumerType = type
+            ConsumerType = type,
+            Session = new BotUserSession
+            {
+                FlowType = FlowType.Start
+            }
         };
-        await context.BotUsers.AddAsync(user);
-        await context.SaveChangesAsync();
+        await dbContext.BotUsers.AddAsync(user, ct);
+        await dbContext.SaveChangesAsync(ct);
 
         return user;
     }

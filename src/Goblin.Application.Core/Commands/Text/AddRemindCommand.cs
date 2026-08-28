@@ -1,6 +1,5 @@
 using System.Globalization;
 using Goblin.DataAccess;
-using Goblin.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Goblin.Application.Core.Commands.Text;
@@ -18,8 +17,9 @@ public class AddRemindCommand(BotDbContext db) : ITextCommand
         var param = string.Join(' ', msg.CommandParameters);
         var all = param.Split(' ', 3);
 
-        var reminds = await db.Reminds.Where(x => x.ChatId == user.Id && x.ConsumerType == user.ConsumerType)
-                               .ToArrayAsync();
+        var reminds = await db.Reminds
+            .Where(x => x.BotUserId == user.Id)
+            .ToArrayAsync();
 
         if(!user.IsAdmin && reminds.Length == MaxRemindsCount)
         {
@@ -53,14 +53,14 @@ public class AddRemindCommand(BotDbContext db) : ITextCommand
             return CommandExecutionResult.Failed("Дата напоминания меньше текущей");
         }
 
-        await AddRemind(user.Id, user.ConsumerType, all[2], dateTime);
+        await AddRemind(user.Id, all[2], dateTime);
 
         return CommandExecutionResult.Success($"Окей. {dateTime:f} напомню следующее:\n{all[2]}");
     }
 
-    private async Task AddRemind(long chatId, ConsumerType consumerType, string remindText, DateTimeOffset dateTime)
+    private async Task AddRemind(Guid botUserId, string remindText, DateTimeOffset dateTime)
     {
-        await db.Reminds.AddAsync(new Remind(chatId, remindText, dateTime, consumerType));
+        await db.Reminds.AddAsync(new Remind(botUserId, remindText, dateTime));
         await db.SaveChangesAsync();
     }
 

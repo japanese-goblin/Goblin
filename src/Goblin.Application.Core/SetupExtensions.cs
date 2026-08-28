@@ -29,8 +29,9 @@ public static class SetupExtensions
     private static void AddBotFeatures(IServiceCollection services)
     {
         services.RegisterAllTypes<ITextCommand>([typeof(SetupExtensions).Assembly], ServiceLifetime.Scoped);
-        services.RegisterAllTypes<IKeyboardCommand>([typeof(SetupExtensions).Assembly], ServiceLifetime.Scoped);
+        services.RegisterAllTypes<IUserFlow>([typeof(SetupExtensions).Assembly], ServiceLifetime.Scoped);
 
+        services.AddScoped<TextCommandHandler>();
         services.AddScoped<CommandsService>();
     }
 

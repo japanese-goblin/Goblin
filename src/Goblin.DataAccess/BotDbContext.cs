@@ -12,10 +12,13 @@ public class BotDbContext(DbContextOptions<BotDbContext> options) : DbContext(op
 
     public DbSet<CronJob> CronJobs { get; set; }
 
+    public DbSet<BotUserSession> BotUserSessions { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfiguration(new BotUserConfiguration());
+        modelBuilder.ApplyConfiguration(new BotUserSessionConfiguration());
         modelBuilder.ApplyConfiguration(new RemindConfiguration());
         modelBuilder.ApplyConfiguration(new CronJobConfiguration());
     }

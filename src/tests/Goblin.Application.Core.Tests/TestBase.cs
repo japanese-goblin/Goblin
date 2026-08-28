@@ -2,7 +2,6 @@ using System.Text.Json;
 using Goblin.Application.Core.Commands.Text;
 using Goblin.Application.Core.Models;
 using Goblin.DataAccess;
-using Goblin.Domain;
 using Goblin.Domain.Entities;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -18,14 +17,17 @@ public class TestBase
 
     protected TestBase()
     {
-        DefaultUser = new BotUser(1, "Архангельск", 351917, false, true, true, true);
-        DefaultUserWithMaxReminds = new BotUser(2, "Архангельск", 351917, false, true, true, true);
-        AdminUser = new BotUser(101010, "Архангельск", 351917, true, true, true, true);
+        DefaultUser = new BotUser(1, "Архангельск", 351617, false, true, true, true)
+        {
+            Session = new BotUserSession()
+        };
+        DefaultUserWithMaxReminds = new BotUser(2, "Архангельск", 351617, false, true, true, true);
+        AdminUser = new BotUser(101010, "Архангельск", 351617, true, true, true, true);
 
         ApplicationContext = GetDbContext();
     }
 
-    public BotDbContext GetDbContext()
+    protected BotDbContext GetDbContext()
     {
         if(ApplicationContext != null)
         {
@@ -56,8 +58,7 @@ public class TestBase
 
         for(var i = 0; i < AddRemindCommand.MaxRemindsCount; i++)
         {
-            context.Reminds.Add(new Remind(DefaultUserWithMaxReminds.Id, "text", new DateTime(2101, 1, 1, 1, 1, 1),
-                                           ConsumerType.Vkontakte));
+            context.Reminds.Add(new Remind(DefaultUserWithMaxReminds.Id, "text", new DateTime(2101, 1, 1, 1, 1, 1)));
         }
 
         context.SaveChanges();

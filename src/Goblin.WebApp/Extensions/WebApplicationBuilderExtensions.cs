@@ -1,6 +1,5 @@
 ﻿using Goblin.BackgroundJobs;
 using Microsoft.AspNetCore.HttpLogging;
-using Quartz;
 using Quartz.AspNetCore;
 using Serilog;
 

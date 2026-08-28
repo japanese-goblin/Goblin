@@ -11,7 +11,7 @@ public class RemoveKeyboardCommandTests : TestBase
     {
         var command = new RemoveKeyboardCommand();
         var text = command.Aliases[0];
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
 

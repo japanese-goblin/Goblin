@@ -5,23 +5,26 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Goblin.DataAccess.Configurations;
 
-public class CronJobConfiguration : IEntityTypeConfiguration<CronJob>
+internal class CronJobConfiguration : IEntityTypeConfiguration<CronJob>
 {
     public void Configure(EntityTypeBuilder<CronJob> builder)
     {
-        builder.HasKey(x => x.Id);
+        builder.HasKey(p => p.Id);
+        builder.Property(p => p.Id)
+            .HasValueGenerator<IdValueGenerator>();
 
-        builder.Property(x => x.Name)
-               .IsRequired();
-        builder.Property(x => x.ChatId)
-               .IsRequired();
-        builder.OwnsOne(x => x.Time);
-        builder.Property(x => x.ConsumerType)
-               .HasDefaultValue(ConsumerType.Vkontakte);
+        builder.Property(p => p.ConsumerType)
+            .HasConversion(new EnumMemberConverter<ConsumerType>());
+        builder.Property(p => p.CronType)
+            .HasConversion(new EnumMemberConverter<CronType>());
 
-        builder.Property(x => x.Text)
+        builder.Property(p => p.Name)
+               .IsRequired();
+        builder.Property(p => p.ChatId)
+               .IsRequired();
+        builder.OwnsOne(p => p.Time);
+
+        builder.Property(p => p.Text)
                .HasMaxLength(500);
-        builder.Property(x => x.CronType)
-               .HasDefaultValue(CronType.Text);
     }
 }

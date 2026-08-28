@@ -16,7 +16,7 @@ public class ScheduleService(INarfuApi narfuApi, ILogger<ScheduleService> logger
         try
         {
             var schedule = await narfuApi.Students.GetScheduleAtDate(narfuGroup, date);
-            return CommandExecutionResult.Success(schedule.ToString(), DefaultKeyboards.GetScheduleKeyboard());
+            return CommandExecutionResult.Success(schedule.ToString());
         }
         catch(Exception ex) when(ex is HttpRequestException or TaskCanceledException)
         {

@@ -30,7 +30,6 @@ public class ScheduleServiceTests : TestBase
 
         result.IsSuccessful.Should().BeTrue();
         result.Message.Should().NotBeNullOrWhiteSpace();
-        result.Keyboard.Should().NotBeNull();
     }
 
     [Fact]

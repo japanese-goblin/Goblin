@@ -3,22 +3,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core.Commands.Merged;
 
-public class ExamsCommand : IKeyboardCommand, ITextCommand
+public class ExamsCommand(INarfuApi api, ILogger<ExamsCommand> logger) : ITextCommand
 {
     public string Trigger => "exams";
 
     public bool IsAdminCommand => false;
 
     public string[] Aliases => ["экзамены", "экзы"];
-
-    private readonly INarfuApi _api;
-    private readonly ILogger<ExamsCommand> _logger;
-
-    public ExamsCommand(INarfuApi api, ILogger<ExamsCommand> logger)
-    {
-        _api = api;
-        _logger = logger;
-    }
 
     public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
@@ -29,7 +20,7 @@ public class ExamsCommand : IKeyboardCommand, ITextCommand
 
         try
         {
-            var lessons = await _api.Students.GetExams(user.NarfuGroup.Value);
+            var lessons = await api.Students.GetExams(user.NarfuGroup.Value);
             var str = lessons.ToString();
             if(str.Length > 4096)
             {
@@ -44,7 +35,7 @@ public class ExamsCommand : IKeyboardCommand, ITextCommand
         }
         catch(Exception ex)
         {
-            _logger.LogError(ex, "Ошибка при получении расписания на день");
+            logger.LogError(ex, "Ошибка при получении расписания на день");
             return CommandExecutionResult.Failed(DefaultErrors.NarfuUnexpectedError);
         }
     }

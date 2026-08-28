@@ -5,18 +5,11 @@ using Goblin.Domain;
 
 namespace Goblin.Application.Core.Commands.Text;
 
-public class DebugCommand : ITextCommand
+public class DebugCommand(BotDbContext db) : ITextCommand
 {
     public bool IsAdminCommand => true;
 
     public string[] Aliases => ["дебуг", "дебаг"];
-
-    private readonly BotDbContext _db;
-
-    public DebugCommand(BotDbContext db)
-    {
-        _db = db;
-    }
 
     public Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
@@ -28,9 +21,9 @@ public class DebugCommand : ITextCommand
         var startTime = Process.GetCurrentProcess().StartTime;
         var uptime = DateTime.Now - startTime;
 
-        var consumerTypeCounts = _db.BotUsers.AsEnumerable()
-                                    .GroupBy(x => x.ConsumerType)
-                                    .ToDictionary(x => x.Key, x => x.Count());
+        var consumerTypeCounts = db.BotUsers.AsEnumerable()
+                                    .GroupBy(p => p.ConsumerType)
+                                    .ToDictionary(p => p.Key, x => x.Count());
 
         strBuilder.Append($"Время старта: {startTime:F}").AppendLine()
                   .Append($"Я работаю уже {uptime.Hours} часов {uptime.Minutes} минут")
@@ -41,12 +34,12 @@ public class DebugCommand : ITextCommand
                   .AppendLine();
         foreach(var consumerTypeCount in consumerTypeCounts)
         {
-            strBuilder.Append($"* {consumerTypeCount.Key} - {consumerTypeCount.Value}")
+            strBuilder.Append($"* {consumerTypeCount.Key.GetEnumMemberValue()} - {consumerTypeCount.Value}")
                       .AppendLine();
         }
 
-        var subscriptions = _db.BotUsers.AsEnumerable().GroupBy(x => x.ConsumerType)
-                               .Select(x => new GroupUsersResponse
+        var subscriptions = db.BotUsers.AsEnumerable().GroupBy(x => x.ConsumerType)
+                               .Select(x => new GroupUsersData
                                {
                                    ConsumerType = x.Key,
                                    ScheduleSubscriptions = x.Count(u => u.HasScheduleSubscription),
@@ -59,14 +52,14 @@ public class DebugCommand : ITextCommand
         foreach(var subscription in subscriptions)
         {
             strBuilder
-                    .Append($"* {subscription.ConsumerType} - {subscription.WeatherSubscriptions} погода, {subscription.ScheduleSubscriptions} расписание")
+                    .Append($"* {subscription.ConsumerType.GetEnumMemberValue()} - {subscription.WeatherSubscriptions} погода, {subscription.ScheduleSubscriptions} расписание")
                     .AppendLine();
         }
 
         return Task.FromResult(CommandExecutionResult.Success(strBuilder.ToString()));
     }
 
-    private class GroupUsersResponse
+    private class GroupUsersData
     {
         public ConsumerType ConsumerType { get; set; }
         public int WeatherSubscriptions { get; set; }

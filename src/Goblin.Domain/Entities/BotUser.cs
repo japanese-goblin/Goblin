@@ -2,25 +2,28 @@ namespace Goblin.Domain.Entities;
 
 public class BotUser
 {
-    public long Id { get; private set; }
+    public Guid Id { get; set; }
 
     public string? WeatherCity { get; private set; }
     public int? NarfuGroup { get; private set; }
 
-    public bool IsErrorsEnabled { get; private set; }
     public bool IsAdmin { get; private set; }
 
     public bool HasWeatherSubscription { get; private set; }
     public bool HasScheduleSubscription { get; private set; }
 
+    public long ConsumerId { get; private set; }
     public ConsumerType ConsumerType { get; set; }
+
+    public BotUserSession Session { get; set; } = null!;
+    public ICollection<Remind> Reminds { get; set; } = null!;
 
     protected BotUser()
     {
     }
 
     public BotUser(long id, string? city = null, int? group = null, bool isAdmin = false,
-                   bool isErrorsEnabled = true, bool hasWeather = false, bool hasSchedule = false)
+        bool isErrorsEnabled = true, bool hasWeather = false, bool hasSchedule = false)
     {
         SetId(id);
         SetCity(city);
@@ -33,12 +36,12 @@ public class BotUser
 
     private void SetId(long id)
     {
-        if(id <= 0)
+        if (id <= 0)
         {
             throw new ArgumentException("Параметр должен быть больше 0", nameof(id));
         }
 
-        Id = id;
+        ConsumerId = id;
     }
 
     public void SetCity(string? city)
@@ -48,7 +51,7 @@ public class BotUser
 
     public void SetNarfuGroup(int? group)
     {
-        if(group is < 0)
+        if (group is < 0)
         {
             throw new ArgumentException("Параметр должен быть больше 0", nameof(group));
         }
@@ -58,7 +61,6 @@ public class BotUser
 
     public void SetErrorNotification(bool enable = true)
     {
-        IsErrorsEnabled = enable;
     }
 
     public void SetAdmin(bool isAdmin = false)

@@ -3,7 +3,7 @@ using Goblin.DataAccess;
 
 namespace Goblin.Application.Core.Commands.Merged;
 
-public class GetRemindsCommand(BotDbContext context) : IKeyboardCommand, ITextCommand
+public class GetRemindsCommand(BotDbContext context) : ITextCommand
 {
     public string Trigger => "reminds";
 
@@ -13,8 +13,9 @@ public class GetRemindsCommand(BotDbContext context) : IKeyboardCommand, ITextCo
 
     public Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
-        var reminds = context.Reminds.Where(x => x.ChatId == user.Id && x.ConsumerType == user.ConsumerType)
-                              .ToArray();
+        var reminds = context.Reminds
+            .Where(x => x.BotUserId == user.Id)
+            .ToArray();
         if(reminds.Length == 0)
         {
             return Task.FromResult(CommandExecutionResult.Success("У Вас нет ни одного добавленного напоминания."));

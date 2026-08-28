@@ -20,7 +20,7 @@ public class WeatherNowCommandTests : TestBase
     public async Task ShouldReturnSuccessfulResultWithText_Because_UserHasSetCity()
     {
         var command = new WeatherNowCommand(GetWeatherService());
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeTrue();
@@ -32,7 +32,7 @@ public class WeatherNowCommandTests : TestBase
     {
         DefaultUser.SetCity(string.Empty);
         var command = new WeatherNowCommand(GetWeatherService());
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, command.Aliases[0]);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Aliases[0]);
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();
@@ -44,7 +44,7 @@ public class WeatherNowCommandTests : TestBase
     {
         var command = new WeatherNowCommand(GetWeatherService());
         var text = $"{command.Aliases[0]} Москва";
-        var message = GenerateMessage(DefaultUser.Id, DefaultUser.Id, text);
+        var message = GenerateMessage(DefaultUser.ConsumerId, DefaultUser.ConsumerId, text);
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeTrue();
@@ -55,7 +55,7 @@ public class WeatherNowCommandTests : TestBase
     public async Task ShouldReturnSuccessfulResultWithPayload_Because_UserHasSetCity()
     {
         var command = new WeatherNowCommand(GetWeatherService());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, string.Empty);
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Trigger, string.Empty);
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeTrue();
@@ -67,7 +67,7 @@ public class WeatherNowCommandTests : TestBase
     {
         DefaultUser.SetCity(string.Empty);
         var command = new WeatherNowCommand(GetWeatherService());
-        var message = GenerateMessageWithPayload(DefaultUser.Id, DefaultUser.Id, command.Trigger, string.Empty);
+        var message = GenerateMessageWithPayload(DefaultUser.ConsumerId, DefaultUser.ConsumerId, command.Trigger, string.Empty);
 
         var result = await command.Execute(message, DefaultUser);
         result.IsSuccessful.Should().BeFalse();
