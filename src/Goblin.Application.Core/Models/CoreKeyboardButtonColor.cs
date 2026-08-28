@@ -5,5 +5,6 @@ public enum CoreKeyboardButtonColor
     Default,
     Primary,
     Negative,
-    Positive
+    Positive,
+    Secondary
 }

@@ -59,19 +59,14 @@ public static class KeyboardConverter
 
     private static KeyboardButtonColor FromCoreColorToVk(CoreKeyboardButtonColor coreColor)
     {
-        var dict = new Dictionary<CoreKeyboardButtonColor, KeyboardButtonColor>
+        return coreColor switch
         {
-            [CoreKeyboardButtonColor.Default] = KeyboardButtonColor.Default,
-            [CoreKeyboardButtonColor.Negative] = KeyboardButtonColor.Negative,
-            [CoreKeyboardButtonColor.Positive] = KeyboardButtonColor.Positive,
-            [CoreKeyboardButtonColor.Primary] = KeyboardButtonColor.Primary
+            CoreKeyboardButtonColor.Default => KeyboardButtonColor.Default,
+            CoreKeyboardButtonColor.Primary => KeyboardButtonColor.Primary,
+            CoreKeyboardButtonColor.Negative => KeyboardButtonColor.Negative,
+            CoreKeyboardButtonColor.Positive => KeyboardButtonColor.Positive,
+            CoreKeyboardButtonColor.Secondary => KeyboardButtonColor.Secondary,
+            _ => throw new ArgumentOutOfRangeException(nameof(coreColor), coreColor, "Необработанное значение цвета кнопки")
         };
-
-        if(dict.TryGetValue(coreColor, out var result))
-        {
-            return result;
-        }
-
-        throw new ArgumentException(nameof(coreColor));
     }
 }
