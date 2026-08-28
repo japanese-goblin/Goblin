@@ -77,6 +77,15 @@ public class MainMenuUserFlow(IWeatherService weatherService, INarfuApi narfuApi
                                                "Выберите день для получения погоды",
                                                DefaultKeyboards.GetWeatherForecastKeyboard());
             }
+
+            if(commandParam.Equals(MainMenuFlowState.Settings.GetEnumMemberValue()))
+            {
+                return new FlowExecutionResult(FlowType.Settings,
+                                               null,
+                                               true,
+                                               "Настройки:",
+                                               DefaultKeyboards.GetSettingsKeyboard(context.User));
+            }
         }
 
         return new FlowExecutionResult(FlowType.MainMenu, null, false, "TBD", null);

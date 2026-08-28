@@ -111,6 +111,87 @@ public static class DefaultKeyboards
         return keyboard;
     }
 
+    public static CoreKeyboard GetSettingsKeyboard(BotUser user)
+    {
+        var payloadType = PayloadType.Settings.GetEnumMemberValue();
+        var groupText = user.NarfuGroup.HasValue
+            ? $"📅 Группа САФУ: {user.NarfuGroup}"
+            : "📅 Настроить группу САФУ";
+        var cityText = string.IsNullOrWhiteSpace(user.WeatherCity)
+            ? "⛅ Настроить город для погоды"
+            : $"⛅ Город: {user.WeatherCity}";
+
+        var keyboard = new CoreKeyboard
+        {
+            IsInline = true
+        };
+        keyboard.AddButton(groupText,
+                           CoreKeyboardButtonColor.Primary,
+                           payloadType,
+                           SettingsFlowState.NarfuGroup.GetEnumMemberValue())
+                .AddLine()
+                .AddButton(cityText,
+                           CoreKeyboardButtonColor.Primary,
+                           payloadType,
+                           SettingsFlowState.WeatherCity.GetEnumMemberValue())
+                .AddLine()
+                .AddButton("🔔 Рассылка",
+                           CoreKeyboardButtonColor.Primary,
+                           payloadType,
+                           SettingsFlowState.Mailing.GetEnumMemberValue());
+
+        return keyboard;
+    }
+
+    public static CoreKeyboard GetMailingSettingsKeyboard(BotUser user)
+    {
+        var payloadType = PayloadType.Settings.GetEnumMemberValue();
+        var scheduleText = user.HasScheduleSubscription
+            ? "❌ Отключить рассылку расписания"
+            : "✅ Включить рассылку расписания";
+        var weatherText = user.HasWeatherSubscription
+            ? "❌ Отключить рассылку погоды"
+            : "✅ Включить рассылку погоды";
+
+        var keyboard = new CoreKeyboard
+        {
+            IsInline = true
+        };
+        keyboard.AddButton(scheduleText,
+                           user.HasScheduleSubscription
+                               ? CoreKeyboardButtonColor.Negative
+                               : CoreKeyboardButtonColor.Positive,
+                           payloadType,
+                           SettingsFlowState.MailingSchedule.GetEnumMemberValue())
+                .AddLine()
+                .AddButton(weatherText,
+                           user.HasWeatherSubscription
+                               ? CoreKeyboardButtonColor.Negative
+                               : CoreKeyboardButtonColor.Positive,
+                           payloadType,
+                           SettingsFlowState.MailingWeather.GetEnumMemberValue())
+                .AddLine()
+                .AddButton("Вернуться в настройки",
+                           CoreKeyboardButtonColor.Default,
+                           payloadType,
+                           string.Empty);
+
+        return keyboard;
+    }
+
+    public static CoreKeyboard GetBackToSettingsKeyboard()
+    {
+        var keyboard = new CoreKeyboard
+        {
+            IsInline = true
+        };
+        keyboard.AddButton("Вернуться в настройки",
+                           CoreKeyboardButtonColor.Default,
+                           PayloadType.Settings.GetEnumMemberValue(),
+                           string.Empty);
+        return keyboard;
+    }
+
 
     public static CoreKeyboard GetDefaultKeyboard()
     {
