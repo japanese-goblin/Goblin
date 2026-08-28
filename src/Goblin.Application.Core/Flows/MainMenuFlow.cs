@@ -14,6 +14,15 @@ public class MainMenuUserFlow(IWeatherService weatherService, INarfuApi narfuApi
         if(context.Message.ParsedPayload is not null &&
            context.Message.ParsedPayload.TryGetValue(PayloadKey, out var commandParam))
         {
+            if(string.IsNullOrWhiteSpace(commandParam))
+            {
+                return new FlowExecutionResult(FlowType.MainMenu,
+                                               null,
+                                               true,
+                                               "Главное меню:",
+                                               DefaultKeyboards.GetMainMenuKeyboard());
+            }
+
             if(commandParam.Equals(MainMenuFlowState.Schedule.GetEnumMemberValue()))
             {
                 return new FlowExecutionResult(FlowType.Schedule,

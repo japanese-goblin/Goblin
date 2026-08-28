@@ -18,7 +18,12 @@ public class CommandsService(
     public async Task<CommandExecutionResult> ExecuteAction(Message msg, CancellationToken ct)
     {
         var user = await GetBotUserV2(msg.ConsumerType, msg.UserId, ct);
-        var userFlow = userFlows.FirstOrDefault(p => p.Type == user.Session.FlowType);
+        var parsedPayload = msg.ParsedPayload;
+        var userFlow = parsedPayload is null
+            ? null
+            : userFlows.FirstOrDefault(flow => parsedPayload.ContainsKey(flow.PayloadKey));
+
+        userFlow ??= userFlows.FirstOrDefault(flow => flow.Type == user.Session.FlowType);
         if (userFlow is null)
         {
             return CommandExecutionResult.Failed(CommandNotFoundMessage);
@@ -29,10 +34,11 @@ public class CommandsService(
 
         user.Session.FlowType = executionResult.FlowType;
         user.Session.FlowStepType = executionResult.FlowState;
-        // TODO: session data?
         await dbContext.SaveChangesAsync(ct);
 
-        return CommandExecutionResult.Success(executionResult.Message, executionResult.Keyboard);
+        return executionResult.IsSuccessful
+            ? CommandExecutionResult.Success(executionResult.Message, executionResult.Keyboard)
+            : CommandExecutionResult.Failed(executionResult.Message, executionResult.Keyboard);
     }
 
     public async Task ExecuteCommand(Message msg,
