@@ -10,8 +10,8 @@ public class Message
 
     public string UserTag { get; set; }
 
-    public string Text { get; set; }
-    public string Payload { get; set; }
+    public string? Text { get; set; }
+    public string? Payload { get; set; }
 
     public bool IsConversation => UserId != ChatId;
 
@@ -26,7 +26,8 @@ public class Message
         }
     }
 
-    public string CommandName => Text.ToLower().Split(' ').FirstOrDefault();
+    public string? CommandName => Text?.ToLower().Split(' ').FirstOrDefault();
 
-    public Dictionary<string, string> ParsedPayload => JsonSerializer.Deserialize<Dictionary<string, string>>(Payload);
+    public Dictionary<string, string>? ParsedPayload =>
+            Payload is null ? null : JsonSerializer.Deserialize<Dictionary<string, string>>(Payload);
 }

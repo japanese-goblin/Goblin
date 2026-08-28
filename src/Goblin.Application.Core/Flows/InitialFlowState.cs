@@ -12,6 +12,9 @@ public enum InitialFlowState
     [EnumMember(Value = "city_weather")]
     SettingWeather,
 
+    [EnumMember(Value = "continue")]
+    Continue,
+
     [EnumMember(Value = "skip")]
     Skip
 }

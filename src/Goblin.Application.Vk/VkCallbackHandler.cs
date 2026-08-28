@@ -146,7 +146,23 @@ public class VkCallbackHandler
         {
             _logger.LogDebug("Обработка сообщения");
             var executionResult = await _commandsService.ExecuteAction(mappedToMessage, ct);
-            await _sender.Send(mappedToMessage.ChatId, executionResult.Message, executionResult.Keyboard);
+            
+            var peerId = messageEvent.PeerId.GetValueOrDefault(0);
+            try
+            {
+                await _vkApi.Messages.EditAsync(new MessageEditParams
+                {
+                    PeerId = peerId,
+                    ConversationMessageId = messageEvent.ConversationMessageId,
+                    Keyboard = KeyboardConverter.FromCoreToVk(executionResult.Keyboard, true),
+                    Message = executionResult.Message
+                }, ct);
+            }
+            catch
+            {
+                await _sender.Send(peerId, executionResult.Message, executionResult.Keyboard);
+            }
+
             _logger.LogDebug("Обработка сообщения завершена");
             return;
         }
