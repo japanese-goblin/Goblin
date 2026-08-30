@@ -1,44 +1,43 @@
 ﻿using System.Net;
 using Goblin.OpenWeatherMap.Abstractions;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core.Services;
 
-public class WeatherService(IOpenWeatherMapApi weatherMapApi, IMemoryCache cache, ILogger<WeatherService> logger)
+internal class WeatherService(IOpenWeatherMapApi weatherMapApi,
+                              IDistributedCache distributedCache,
+                              ILogger<WeatherService> logger)
         : IWeatherService
 {
-    private const string DailyCacheKey = "Weather_Daily";
-    private const string NowCacheKey = "Weather_Now";
-    private const string NotFoundCacheKey = "Weather_NotFound";
+    private const string CachePrefix = "weather_data";
 
     private static readonly TimeSpan CurrentWeatherExpireTime = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan DailyWeatherExpireTime = TimeSpan.FromHours(3);
     private static readonly TimeSpan NotFoundExpireTime = TimeSpan.FromMinutes(15);
 
-    public async Task<CommandExecutionResult> GetCurrentWeather(string city)
+    public async Task<CommandExecutionResult> GetCurrentWeather(string city, CancellationToken ct = default)
     {
         try
         {
             var key = GetCurrentCacheKey(city);
-            if(!cache.TryGetValue<string>(key, out var result))
+            var result = await distributedCache.GetStringAsync(key, ct);
+            if(result is null)
             {
                 var weather = await weatherMapApi.GetCurrentWeather(city);
                 result = weather.ToString();
-                cache.Set(key, result, CurrentWeatherExpireTime);
+                await distributedCache.SetStringAsync(key, result, new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = CurrentWeatherExpireTime
+                }, ct);
             }
 
             return CommandExecutionResult.Success(result);
         }
-        catch(HttpRequestException ex)
+        catch(HttpRequestException ex) when(ex.StatusCode == HttpStatusCode.NotFound)
         {
-            if(ex.StatusCode == HttpStatusCode.NotFound)
-            {
-                return CommandExecutionResult.Failed($"Город \"{city}\" не найден");
-            }
-
-            logger.LogError(ex, "Ошибка при получении погоды на текущий момент");
-            return CommandExecutionResult.Failed(DefaultErrors.WeatherSiteIsUnavailable);
+            var result = await SetNotFoundCacheValue(city, ct);
+            return CommandExecutionResult.Failed(result);
         }
         catch(Exception ex)
         {
@@ -47,12 +46,13 @@ public class WeatherService(IOpenWeatherMapApi weatherMapApi, IMemoryCache cache
         }
     }
 
-    public async Task<CommandExecutionResult> GetDailyWeather(string city, DateTime date)
+    public async Task<CommandExecutionResult> GetDailyWeather(string city, DateTime date, CancellationToken ct = default)
     {
         try
         {
             var key = GetDailyCacheKey(city, date);
-            if(!cache.TryGetValue<string>(key, out var result))
+            var result = await distributedCache.GetStringAsync(key, ct);
+            if(result is null)
             {
                 var weather = await weatherMapApi.GetDailyWeatherAt(city, date);
 
@@ -72,21 +72,18 @@ public class WeatherService(IOpenWeatherMapApi weatherMapApi, IMemoryCache cache
 
                 result = $"Погода в городе {city} на {formattedDate}:\n{weather}";
 
-                cache.Set(key, result, DailyWeatherExpireTime);
+                await distributedCache.SetStringAsync(key, result, new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = DailyWeatherExpireTime
+                }, ct);
             }
 
             return CommandExecutionResult.Success(result);
         }
-        catch(HttpRequestException ex)
+        catch(HttpRequestException ex) when(ex.StatusCode == HttpStatusCode.NotFound)
         {
-            if(ex.StatusCode == HttpStatusCode.NotFound)
-            {
-                var result = SetNotFoundCacheValue(city);
-                return CommandExecutionResult.Failed(result);
-            }
-
-            logger.LogError(ex, "Ошибка при получении погоды на текущий момент");
-            return CommandExecutionResult.Failed(DefaultErrors.WeatherSiteIsUnavailable);
+            var result = await SetNotFoundCacheValue(city, ct);
+            return CommandExecutionResult.Failed(result);
         }
         catch(ArgumentException ex)
         {
@@ -99,27 +96,30 @@ public class WeatherService(IOpenWeatherMapApi weatherMapApi, IMemoryCache cache
         }
     }
 
-    private string SetNotFoundCacheValue(string city)
+    private async Task<string> SetNotFoundCacheValue(string city, CancellationToken ct)
     {
         var key = GetNotFoundCacheKey(city);
         var result = $"Город \"{city}\" не найден";
 
-        cache.Set(key, result, NotFoundExpireTime);
+        await distributedCache.SetStringAsync(key, result, new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = NotFoundExpireTime
+        }, ct);
         return result;
     }
 
     private static string GetCurrentCacheKey(string city)
     {
-        return $"{NowCacheKey}_{city}";
+        return $"{CachePrefix}:{city}:current";
     }
 
     private static string GetDailyCacheKey(string city, DateTime date)
     {
-        return $"{DailyCacheKey}_{city}_{date:dd.MM.yyyy}";
+        return $"{CachePrefix}:{city}:forecast:{date:dd_MM_yyyy}";
     }
 
     private static string GetNotFoundCacheKey(string city)
     {
-        return $"{NotFoundCacheKey}_{city}";
+        return $"{CachePrefix}:{city}:not_found";
     }
 }

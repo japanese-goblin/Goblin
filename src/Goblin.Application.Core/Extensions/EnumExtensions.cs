@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace Goblin.Application.Core;
+namespace Goblin.Application.Core.Extensions;
 
 internal static class EnumExtensions
 {

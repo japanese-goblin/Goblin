@@ -1,3 +1,4 @@
+using Goblin.Application.Core.Extensions;
 using Goblin.Domain;
 using Goblin.Narfu.Abstractions;
 using Goblin.OpenWeatherMap.Abstractions;

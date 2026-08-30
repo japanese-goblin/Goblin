@@ -2,7 +2,7 @@
 
 public interface IWeatherService
 {
-    public Task<CommandExecutionResult> GetCurrentWeather(string city);
+    public Task<CommandExecutionResult> GetCurrentWeather(string city, CancellationToken ct = default);
 
-    public Task<CommandExecutionResult> GetDailyWeather(string city, DateTime date);
+    public Task<CommandExecutionResult> GetDailyWeather(string city, DateTime date, CancellationToken ct = default);
 }
