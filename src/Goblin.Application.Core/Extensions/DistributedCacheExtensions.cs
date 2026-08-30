@@ -7,10 +7,10 @@ public static class DistributedCacheExtensions
 {
     public static async Task<T?> GetAsync<T>(this IDistributedCache distributedCache, 
                                              string key,
-                                             CancellationToken token = default)
-            where T : notnull, new()
+                                             CancellationToken ct = default)
+            where T : notnull
     {
-        var cachedData = await distributedCache.GetAsync(key, token);
+        var cachedData = await distributedCache.GetAsync(key, ct);
         if(cachedData is null)
         {
             return default;
@@ -23,10 +23,11 @@ public static class DistributedCacheExtensions
     public static async Task SetAsync<T>(this IDistributedCache distributedCache,
                                          string key, 
                                          T? value,
-                                         DistributedCacheEntryOptions options)
-            where T : notnull, new()
+                                         DistributedCacheEntryOptions options,
+                                         CancellationToken ct = default)
+            where T : notnull
     {
         var data = JsonSerializer.SerializeToUtf8Bytes(value);
-        await distributedCache.SetAsync(key, data, options);
+        await distributedCache.SetAsync(key, data, options, ct);
     }
 }

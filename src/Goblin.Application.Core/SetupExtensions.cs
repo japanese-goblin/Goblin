@@ -20,6 +20,8 @@ public static class SetupExtensions
         AddAdditions(services);
         services.AddNarfuApi()
                 .AddOpenWeatherMapApi();
+
+        services.AddSingleton(TimeProvider.System);
     }
 
     private static void AddDistributedCache(IServiceCollection services, IConfiguration configuration)

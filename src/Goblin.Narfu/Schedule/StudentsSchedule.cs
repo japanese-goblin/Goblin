@@ -35,17 +35,18 @@ public class StudentsSchedule(INarfuGroupsCache groupsCache, HttpClient client, 
     {
         logger.LogDebug("Получение списка экзаменов для группы {GroupId}", realGroupId);
         var schedule = await GetSchedule(realGroupId);
-        var exams = schedule.Where(x => x.IsExam);
+        var exams = schedule.Where(p => p.IsExam).ToList();
         logger.LogDebug("Список экзаменов получен");
 
-        return new ExamsViewModel(exams, DateTime.Today);
+        return new ExamsViewModel(exams);
     }
 
     public async Task<LessonsViewModel> GetScheduleAtDate(int realGroupId, DateTime date)
     {
         logger.LogDebug("Получение расписания для группы {GroupId} на {ScheduleDate:dd.MM.yyyy}", realGroupId, date);
-        var lessons = await GetSchedule(realGroupId);
-        return new LessonsViewModel(lessons.Where(x => x.StartTime.Date == date.Date), date);
+        var schedule = await GetSchedule(realGroupId);
+        var lessons = schedule.Where(x => x.StartTime.Date == date.Date).ToList();
+        return new LessonsViewModel(lessons, date);
     }
 
     public Group? GetGroupByRealId(int realGroupId)

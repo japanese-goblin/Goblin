@@ -3,6 +3,7 @@ using Goblin.Application.Core.Services;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using Xunit;
@@ -11,6 +12,18 @@ namespace Goblin.Application.Core.Tests.Services;
 
 public class ScheduleServiceTests : TestBase
 {
+    private static ScheduleService GetService(INarfuApi narfuApi)
+    {
+        var distributedCache = Substitute.For<IDistributedCache>();
+        distributedCache.GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+                        .Returns(Task.FromResult<byte[]?>(null));
+
+        return new ScheduleService(narfuApi,
+                                   distributedCache,
+                                   TimeProvider.System,
+                                   NullLogger<ScheduleService>.Instance);
+    }
+
     private static INarfuApi GetNarfuApi(bool response = true)
     {
         var mock = Substitute.For<INarfuApi>();
@@ -24,7 +37,7 @@ public class ScheduleServiceTests : TestBase
     [Fact]
     public async Task ShouldReturnSuccessfulResult()
     {
-        var service = new ScheduleService(GetNarfuApi(), NullLogger<ScheduleService>.Instance);
+        var service = GetService(GetNarfuApi());
 
         var result = await service.GetSchedule(DefaultUser.NarfuGroup!.Value, DateTime.Today);
 
@@ -36,7 +49,7 @@ public class ScheduleServiceTests : TestBase
     public async Task ShouldReturnFailedResult_Because_UserGroupIsZero()
     {
         DefaultUser.SetNarfuGroup(0);
-        var service = new ScheduleService(GetNarfuApi(false), NullLogger<ScheduleService>.Instance);
+        var service = GetService(GetNarfuApi(false));
 
         var result = await service.GetSchedule(DefaultUser.NarfuGroup!.Value, DateTime.Today);
 

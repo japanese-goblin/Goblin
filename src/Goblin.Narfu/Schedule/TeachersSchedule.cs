@@ -19,9 +19,10 @@ public class TeachersSchedule(HttpClient client, ILogger<TeachersSchedule> logge
     public async Task<TeacherLessonsViewModel> GetLimitedSchedule(int teacherId, int limit = 10)
     {
         var lessons = await GetSchedule(teacherId);
-        var selected = lessons.ToArray()
-                              .Where(x => x.StartTime.Date >= DateTime.Today).Take(limit);
-        return new TeacherLessonsViewModel(selected, DateTime.Now);
+        var selected = lessons.Where(x => x.StartTime.Date >= DateTime.Today)
+                              .Take(limit)
+                              .ToList();
+        return new TeacherLessonsViewModel(selected);
     }
 
     public async Task<Teacher[]> FindByName(string name)

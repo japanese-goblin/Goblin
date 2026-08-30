@@ -3,7 +3,7 @@ using Goblin.Narfu.Models;
 
 namespace Goblin.Narfu.ViewModels;
 
-public class TeacherLessonsViewModel(IEnumerable<Lesson> lessons, DateTime date) : LessonsViewModel(lessons, date)
+public record TeacherLessonsViewModel(IReadOnlyCollection<Lesson> Lessons) : LessonsViewModel(Lessons, DateTime.Now)
 {
     public override string ToString()
     {

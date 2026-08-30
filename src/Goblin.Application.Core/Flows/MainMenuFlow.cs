@@ -4,7 +4,7 @@ using Goblin.Narfu.Abstractions;
 
 namespace Goblin.Application.Core.Flows;
 
-public class MainMenuUserFlow(IWeatherService weatherService, INarfuApi narfuApi) : IUserFlow
+public class MainMenuUserFlow(IWeatherService weatherService, IScheduleService scheduleService) : IUserFlow
 {
     public string Name => "Погода сейчас";
     public string PayloadKey => PayloadType.Menu.GetEnumMemberValue();
@@ -44,14 +44,8 @@ public class MainMenuUserFlow(IWeatherService weatherService, INarfuApi narfuApi
                                                    null);
                 }
 
-                var lessons = await narfuApi.Students.GetExams(context.User.NarfuGroup.Value);
-                var str = lessons.ToString();
-                if(str.Length > 4096)
-                {
-                    str = $"{str[..4000]}...\n\nПолный список экзаменов можете посмотреть на сайте";
-                }
-                
-                return new FlowExecutionResult(FlowType.MainMenu, null, true, str, null);
+                var exams = await scheduleService.GetExams(context.User.NarfuGroup.Value, cancellationToken);
+                return new FlowExecutionResult(FlowType.MainMenu, null, true, exams.Message, null);
             }
 
             // получение погоды
@@ -66,7 +60,7 @@ public class MainMenuUserFlow(IWeatherService weatherService, INarfuApi narfuApi
                                                    null);
                 }
 
-                var getWeatherResult = await weatherService.GetCurrentWeather(context.User.WeatherCity);
+                var getWeatherResult = await weatherService.GetCurrentWeather(context.User.WeatherCity, cancellationToken);
                 return new FlowExecutionResult(FlowType.MainMenu, null, true, getWeatherResult.Message, null);
             }
             

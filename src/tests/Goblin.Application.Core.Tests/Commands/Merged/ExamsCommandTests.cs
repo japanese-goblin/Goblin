@@ -16,7 +16,7 @@ public class ExamsCommandTests : TestBase
     {
         var mock = Substitute.For<INarfuApi>();
         mock.Students.GetExams(Arg.Any<int>())
-            .Returns(new ExamsViewModel(new List<Lesson>(), DateTime.Today));
+            .Returns(new ExamsViewModel(new List<Lesson>()));
         return mock;
     }
 
