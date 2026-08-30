@@ -14,7 +14,7 @@ builder.RegisterLogging()
        .RegisterQuartz();
 
 builder.Services.AddDataAccessLayer(builder.Configuration);
-builder.Services.AddApplication();
+builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddVkLayer();
 builder.Services.AddTelegramLayer();
 builder.Services.AddMemoryCache();

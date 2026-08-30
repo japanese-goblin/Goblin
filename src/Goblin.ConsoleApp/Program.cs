@@ -18,7 +18,7 @@ builder.Configuration
 
 builder.Services.AddSerilog(p => p.ReadFrom.Configuration(builder.Configuration));
 builder.Services.AddDataAccessLayer(builder.Configuration);
-builder.Services.AddApplication();
+builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddMemoryCache();
 builder.Services.AddVkLongPollingLayer();
 

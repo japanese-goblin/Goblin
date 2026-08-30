@@ -1,4 +1,3 @@
-using System.Net.Http.Json;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
@@ -6,37 +5,27 @@ using Microsoft.Extensions.Logging;
 
 namespace Goblin.Narfu.Schedule;
 
-public class StudentsSchedule : IStudentsSchedule
+public class StudentsSchedule(INarfuGroupsCache groupsCache, HttpClient client, ILogger<StudentsSchedule> logger)
+        : IStudentsSchedule
 {
-    private readonly HttpClient _client;
-    private Group[] Groups { get; }
-    private readonly ILogger _logger;
-
-    public StudentsSchedule(string groupsLink, HttpClient client, ILogger<StudentsSchedule> logger)
-    {
-        _client = client;
-        Groups = _client.GetFromJsonAsync<Group[]>(groupsLink)
-                        .GetAwaiter()
-                        .GetResult(); // FIXME
-        _logger = logger;
-    }
-
     public async Task<IReadOnlyCollection<Lesson>> GetSchedule(int realGroupId, DateTime? date = null)
     {
         date ??= DateTime.Today;
-        var siteGroupId = GetGroupByRealId(realGroupId).SiteId;
+        var group = GetGroupByRealId(realGroupId)
+                    ?? throw new ArgumentException($"Группа {realGroupId} не найдена", nameof(realGroupId));
+        var siteGroupId = group.SiteId;
 
         try
         {
-            _logger.LogDebug("Получение расписания для группы {GroupId}", realGroupId);
-            var response = await _client.GetStringAsync($"/?icalendar&oid={siteGroupId}&cod={realGroupId}&from={date.Value:dd.MM.yyyy}");
-            _logger.LogDebug("Расписание получено");
+            logger.LogDebug("Получение расписания для группы {GroupId}", realGroupId);
+            var response = await client.GetStringAsync($"/?icalendar&oid={siteGroupId}&cod={realGroupId}&from={date.Value:dd.MM.yyyy}");
+            logger.LogDebug("Расписание получено");
             return GetCalendarLessons(response);
         }
         catch(HttpRequestException)
         {
-            var response = await _client.GetStreamAsync($"/?timetable&group={siteGroupId}");
-            _logger.LogDebug("Расписание получено");
+            var response = await client.GetStreamAsync($"/?timetable&group={siteGroupId}");
+            logger.LogDebug("Расписание получено");
             var allLessonsFromHtml = HtmlParser.GetAllLessonsFromHtml(response);
             return allLessonsFromHtml.Where(x => x.StartTime.Date >= date.Value.Date).ToList();
         }
@@ -44,24 +33,24 @@ public class StudentsSchedule : IStudentsSchedule
 
     public async Task<ExamsViewModel> GetExams(int realGroupId)
     {
-        _logger.LogDebug("Получение списка экзаменов для группы {GroupId}", realGroupId);
+        logger.LogDebug("Получение списка экзаменов для группы {GroupId}", realGroupId);
         var schedule = await GetSchedule(realGroupId);
         var exams = schedule.Where(x => x.IsExam);
-        _logger.LogDebug("Список экзаменов получен");
+        logger.LogDebug("Список экзаменов получен");
 
         return new ExamsViewModel(exams, DateTime.Today);
     }
 
     public async Task<LessonsViewModel> GetScheduleAtDate(int realGroupId, DateTime date)
     {
-        _logger.LogDebug("Получение расписания для группы {GroupId} на {ScheduleDate:dd.MM.yyyy}", realGroupId, date);
+        logger.LogDebug("Получение расписания для группы {GroupId} на {ScheduleDate:dd.MM.yyyy}", realGroupId, date);
         var lessons = await GetSchedule(realGroupId);
         return new LessonsViewModel(lessons.Where(x => x.StartTime.Date == date.Date), date);
     }
 
     public Group? GetGroupByRealId(int realGroupId)
     {
-        return Groups.FirstOrDefault(x => x.RealId == realGroupId);
+        return groupsCache.GetByRealId(realGroupId);
     }
 
     // public string GenerateScheduleLink(int realGroupId, bool isWebCal = false)
@@ -88,8 +77,8 @@ public class StudentsSchedule : IStudentsSchedule
         var result = new List<Lesson>(calendar.Events.Count);
 
         var calendarEvents = calendar.Events
-                             .DistinctBy(p => p.Uid)
-                             .OrderBy(p => p.DtStart);
+                                     .DistinctBy(p => p.Uid)
+                                     .OrderBy(p => p.DtStart);
         foreach(var calendarEvent in calendarEvents)
         {
             if(calendarEvent.DtStart is null ||
@@ -101,6 +90,7 @@ public class StudentsSchedule : IStudentsSchedule
             {
                 continue;
             }
+
             var description = calendarEvent.Description.Split('\n');
             var address = calendarEvent.Location.Split('/');
 

@@ -98,7 +98,7 @@ public class Lesson : IEquatable<Lesson>
             return LessonType.Laboratory;
         }
 
-        if (Type.Contains("лекции", StringComparison.InvariantCultureIgnoreCase))
+        if (Type.Contains("лекция", StringComparison.InvariantCultureIgnoreCase))
         {
             return LessonType.Lecture;
         }

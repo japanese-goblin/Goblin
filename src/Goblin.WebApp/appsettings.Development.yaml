@@ -10,4 +10,5 @@ Application:
 
 ConnectionStrings:
   Database: "Host=localhost;Port=55432;Database=goblin;Username=postgres;Password=postgres;Pooling=true;GSS Encryption Mode=Disable"
+  Redis: "localhost:56379"
 

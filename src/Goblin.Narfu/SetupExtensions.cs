@@ -1,5 +1,6 @@
 ﻿using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Settings;
+using Goblin.Narfu.Groups;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -11,6 +12,10 @@ public static class SetupExtensions
 
     public static IServiceCollection AddNarfuApi(this IServiceCollection services)
     {
+        services.AddSingleton<INarfuGroupsCache, RedisNarfuGroupsCache>();
+        services.AddSingleton<INarfuGroupsParser, NarfuGroupsParser>();
+        services.AddHostedService<NarfuGroupsRefreshService>();
+
         services.AddSingleton<INarfuApi, NarfuApi>();
 
         services.AddSingleton<IValidateOptions<NarfuApiOptions>, NarfuOptionsValidate>();
@@ -26,7 +31,7 @@ public static class SetupExtensions
             client.Timeout = optionsAccessor.Value.Timeout;
 
             client.DefaultRequestHeaders.UserAgent.Clear();
-            client.DefaultRequestHeaders.Add("UserAgent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0");
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0");
         });
 
         return services;

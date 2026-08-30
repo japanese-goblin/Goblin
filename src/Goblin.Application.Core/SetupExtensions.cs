@@ -3,6 +3,7 @@ using Goblin.Application.Core.Options;
 using Goblin.Application.Core.Services;
 using Goblin.Narfu;
 using Goblin.OpenWeatherMap;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Goblin.Application.Core;
@@ -11,13 +12,29 @@ public static class SetupExtensions
 {
     private const string MailingSettingsPath = "Mailing";
 
-    public static void AddApplication(this IServiceCollection services)
+    public static void AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
+        AddDistributedCache(services, configuration);
         AddBotFeatures(services);
         AddOptions(services);
         AddAdditions(services);
         services.AddNarfuApi()
                 .AddOpenWeatherMapApi();
+    }
+
+    private static void AddDistributedCache(IServiceCollection services, IConfiguration configuration)
+    {
+        var redisConnectionString = configuration.GetConnectionString("Redis");
+        if(string.IsNullOrWhiteSpace(redisConnectionString))
+        {
+            throw new InvalidOperationException("Не задана строка подключения к Redis");
+        }
+
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = redisConnectionString;
+            options.InstanceName = "goblin:";
+        });
     }
 
     private static void AddAdditions(IServiceCollection services)
