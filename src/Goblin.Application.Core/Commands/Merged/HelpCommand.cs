@@ -6,8 +6,6 @@ public class HelpCommand : ITextCommand
 
     public string[] Aliases => ["помоги", "справка", "помощь", "команды"];
 
-    public string Trigger => "help";
-
     public Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
         // TODO: move to settings

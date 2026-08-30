@@ -5,8 +5,6 @@ namespace Goblin.Application.Core.Commands.Merged;
 
 public class ExamsCommand(INarfuApi api, ILogger<ExamsCommand> logger) : ITextCommand
 {
-    public string Trigger => "exams";
-
     public bool IsAdminCommand => false;
 
     public string[] Aliases => ["экзамены", "экзы"];

@@ -2,8 +2,6 @@ namespace Goblin.Application.Core.Commands.Merged;
 
 public class WeatherNowCommand(IWeatherService weatherService) : ITextCommand
 {
-    public string Trigger => "weatherNow";
-
     public bool IsAdminCommand => false;
 
     public string[] Aliases => ["погода"];

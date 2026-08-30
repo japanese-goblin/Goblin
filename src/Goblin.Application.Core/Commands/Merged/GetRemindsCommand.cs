@@ -5,8 +5,6 @@ namespace Goblin.Application.Core.Commands.Merged;
 
 public class GetRemindsCommand(BotDbContext context) : ITextCommand
 {
-    public string Trigger => "reminds";
-
     public bool IsAdminCommand => false;
 
     public string[] Aliases => ["напоминания"];
