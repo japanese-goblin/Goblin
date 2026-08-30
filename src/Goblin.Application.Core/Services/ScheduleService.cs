@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core.Services;
 
-public class ScheduleService(INarfuApi narfuApi, ILogger<ScheduleService> logger) : IScheduleService
+internal class ScheduleService(INarfuApi narfuApi, ILogger<ScheduleService> logger) : IScheduleService
 {
     public async Task<CommandExecutionResult> GetSchedule(int narfuGroup, DateTime date)
     {

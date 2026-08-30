@@ -6,22 +6,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Goblin.Narfu.Schedule;
 
-public class TeachersSchedule : ITeacherSchedule
+public class TeachersSchedule(HttpClient client, ILogger<TeachersSchedule> logger) : ITeacherSchedule
 {
-    private readonly HttpClient _client;
-    private readonly ILogger _logger;
-
-    public TeachersSchedule(HttpClient client, ILogger<TeachersSchedule> logger)
-    {
-        _client = client;
-        _logger = logger;
-    }
-
     public async Task<IEnumerable<Lesson>> GetSchedule(int teacherId)
     {
-        _logger.LogDebug("Получение списка пар у преподавателя {TeacherId}", teacherId);
-        var response = await _client.GetStreamAsync($"?timetable&lecturer={teacherId}");
-        _logger.LogDebug("Список получен");
+        logger.LogDebug("Получение списка пар у преподавателя {TeacherId}", teacherId);
+        var response = await client.GetStreamAsync($"?timetable&lecturer={teacherId}");
+        logger.LogDebug("Список получен");
         return HtmlParser.GetAllLessonsFromHtml(response);
     }
 
@@ -35,9 +26,9 @@ public class TeachersSchedule : ITeacherSchedule
 
     public async Task<Teacher[]> FindByName(string name)
     {
-        _logger.LogDebug("Поиск преподавателя {TeacherName}", name);
-        var teachers = await _client.GetFromJsonAsync<Teacher[]>($"i/ac.php?term={name}");
-        _logger.LogDebug("Поиск завершен");
+        logger.LogDebug("Поиск преподавателя {TeacherName}", name);
+        var teachers = await client.GetFromJsonAsync<Teacher[]>($"i/ac.php?term={name}");
+        logger.LogDebug("Поиск завершен");
         return teachers ?? [];
     }
 }

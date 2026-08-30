@@ -1,4 +1,5 @@
-﻿using Goblin.Domain;
+﻿using Goblin.Application.Core.Extensions;
+using Goblin.Domain;
 using Goblin.Narfu.Abstractions;
 
 namespace Goblin.Application.Core.Flows;

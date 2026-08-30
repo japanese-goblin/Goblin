@@ -1,7 +1,6 @@
 using Goblin.Narfu.Abstractions;
-using Goblin.Narfu.Settings;
+using Goblin.Narfu.Models;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using NSubstitute;
 
 namespace Goblin.Narfu.Tests;
@@ -57,15 +56,12 @@ public class TestBase
         factory.CreateClient(Arg.Any<string>())
                .Returns(Substitute.For<HttpClient>());
 
-        var options = Options.Create(new NarfuApiOptions
-        {
-            HostUrl = "http://host-url",
-            Timeout = TimeSpan.FromSeconds(5),
-            NarfuGroupsLink = "http://groups/"
-        });
+        var groupsCache = Substitute.For<INarfuGroupsCache>();
+        groupsCache.GetByRealId(CorrectGroup)
+                   .Returns(new Group("Строительство", CorrectGroup, 14068));
 
         Api = new NarfuApi(factory,
-                           options,
+                           groupsCache,
                            Substitute.For<ILogger<Schedule.TeachersSchedule>>(),
                            Substitute.For<ILogger<Schedule.StudentsSchedule>>());
     }

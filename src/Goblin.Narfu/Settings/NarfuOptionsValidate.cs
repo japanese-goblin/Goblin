@@ -5,6 +5,7 @@ namespace Goblin.Narfu.Settings;
 internal class NarfuOptionsValidate : IValidateOptions<NarfuApiOptions>
 {
     private static readonly TimeSpan MinimalTimeout = TimeSpan.FromSeconds(1);
+    private static readonly TimeSpan MinimalGroupsRefreshInterval = TimeSpan.FromMinutes(5);
 
     public ValidateOptionsResult Validate(string? name, NarfuApiOptions options)
     {
@@ -29,20 +30,16 @@ internal class NarfuOptionsValidate : IValidateOptions<NarfuApiOptions>
             yield return $"Задан некорректный хост расписания САФУ ({nameof(NarfuApiOptions.HostUrl)})";
         }
 
-        if(string.IsNullOrEmpty(options.NarfuGroupsLink))
-        {
-            yield return $"Не задана ссылка на скачивание списка групп САФУ ({nameof(NarfuApiOptions.NarfuGroupsLink)})";
-        }
-
-        if(!Uri.TryCreate(options.NarfuGroupsLink, UriKind.Absolute, out _))
-        {
-            yield return $"Задана некорректная ссылка на скачивание списка групп САФУ ({nameof(NarfuApiOptions.NarfuGroupsLink)})";
-        }
-
         if(options.Timeout < MinimalTimeout)
         {
             yield return
                     $"Задан слишком маленький таймаут получения расписания ({nameof(NarfuApiOptions.Timeout)}). Значение должно быть больше {MinimalTimeout}";
+        }
+
+        if(options.GroupsRefreshInterval < MinimalGroupsRefreshInterval)
+        {
+            yield return
+                    $"Задан слишком маленький интервал обновления групп ({nameof(NarfuApiOptions.GroupsRefreshInterval)}). Значение должно быть не меньше {MinimalGroupsRefreshInterval}";
         }
     }
 }

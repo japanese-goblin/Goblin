@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text;
+using Goblin.Application.Core.Extensions;
 using Goblin.DataAccess;
 using Goblin.Domain;
 
