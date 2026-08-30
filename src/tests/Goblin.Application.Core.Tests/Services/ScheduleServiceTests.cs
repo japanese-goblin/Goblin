@@ -3,7 +3,7 @@ using Goblin.Application.Core.Services;
 using Goblin.Narfu.Abstractions;
 using Goblin.Narfu.Models;
 using Goblin.Narfu.ViewModels;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using Xunit;
 
@@ -24,7 +24,7 @@ public class ScheduleServiceTests : TestBase
     [Fact]
     public async Task ShouldReturnSuccessfulResult()
     {
-        var service = new ScheduleService(GetNarfuApi(), Substitute.For<ILogger<ScheduleService>>());
+        var service = new ScheduleService(GetNarfuApi(), NullLogger<ScheduleService>.Instance);
 
         var result = await service.GetSchedule(DefaultUser.NarfuGroup!.Value, DateTime.Today);
 
@@ -36,7 +36,7 @@ public class ScheduleServiceTests : TestBase
     public async Task ShouldReturnFailedResult_Because_UserGroupIsZero()
     {
         DefaultUser.SetNarfuGroup(0);
-        var service = new ScheduleService(GetNarfuApi(false), Substitute.For<ILogger<ScheduleService>>());
+        var service = new ScheduleService(GetNarfuApi(false), NullLogger<ScheduleService>.Instance);
 
         var result = await service.GetSchedule(DefaultUser.NarfuGroup!.Value, DateTime.Today);
 
