@@ -91,7 +91,7 @@ public class VkCallbackHandler
             throw new ArgumentOutOfRangeException(nameof(upd.Type), "Отсутствует обработчик события");
         }
 
-        _logger.LogInformation("Обработка события {UpdateType} завершена", upd.Type.Value);
+        _logger.LogDebug("Обработка события {UpdateType} завершена", upd.Type.Value);
 
         void ExtractUserIdFromConversation(Message msg)
         {
