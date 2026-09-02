@@ -3,6 +3,7 @@ using Goblin.Application.Core;
 using Goblin.Application.Telegram;
 using Goblin.Application.Vk;
 using Goblin.DataAccess;
+using Goblin.WebApp;
 using Goblin.WebApp.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 app.MigrateDatabase<BotDbContext>();
+app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseExceptionHandler(exceptionHandlerApp =>
 {
     exceptionHandlerApp.Run(async context =>
