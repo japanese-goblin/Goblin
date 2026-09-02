@@ -19,7 +19,7 @@ public class FindTeacherCommandTests : TestBase
 
         var mockApi = Substitute.For<INarfuApi>();
         mockApi.Teachers.FindByName(Arg.Any<string>())
-               .Returns(teachers);
+            .Returns(teachers);
         return mockApi;
     }
 
@@ -27,7 +27,7 @@ public class FindTeacherCommandTests : TestBase
     {
         var mockApi = Substitute.For<INarfuApi>();
         mockApi.Teachers.FindByName(Arg.Any<string>())
-               .ThrowsAsync(new Exception());
+            .ThrowsAsync(new Exception());
         return mockApi;
     }
 
@@ -35,7 +35,7 @@ public class FindTeacherCommandTests : TestBase
     {
         var mockApi = Substitute.For<INarfuApi>();
         mockApi.Teachers.FindByName(Arg.Any<string>())
-               .ThrowsAsync(new HttpRequestException());
+            .ThrowsAsync(new HttpRequestException());
         return mockApi;
     }
 

@@ -18,21 +18,22 @@ public static class AttachmentsParser
         };
         var attachmentList = new List<MediaAttachment>();
 
-        foreach(var attachType in attachTypes)
+        foreach (var attachType in attachTypes)
         {
             var selected = attachmentsNames
-                           .Where(x => x.StartsWith(attachType.Key))
-                           .Select(x =>
-                           {
-                               var attach = Activator.CreateInstance(attachType.Value) as MediaAttachment;
-                               var data = x.Replace(attachType.Key, string.Empty)
-                                           .Split('_');
+                .Where(x => x.StartsWith(attachType.Key))
+                .Select(x =>
+                {
+                    var attach = Activator.CreateInstance(attachType.Value) as MediaAttachment;
+                    var data = x.Replace(attachType.Key, string.Empty)
+                        .Split('_');
 
-                               attach.OwnerId = long.Parse(data[0]);
-                               attach.Id = long.Parse(data[1]);
-                               return attach;
-                           }).ToArray();
-            if(selected.Length == 0)
+                    attach.OwnerId = long.Parse(data[0]);
+                    attach.Id = long.Parse(data[1]);
+                    return attach;
+                })
+                .ToArray();
+            if (selected.Length == 0)
             {
                 continue;
             }

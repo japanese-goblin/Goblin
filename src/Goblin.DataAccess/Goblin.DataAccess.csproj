@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Goblin.Domain\Goblin.Domain.csproj"/>
+    <ProjectReference Include="..\Goblin.Domain\Goblin.Domain.csproj" />
   </ItemGroup>
 
 </Project>

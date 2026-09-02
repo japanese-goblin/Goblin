@@ -37,7 +37,7 @@ internal class ConfigureQuartzOptions(IOptions<MailingOptions> mailingOptions) :
                 p.ForJob(SendWeatherForecastJob.JobKey)
                     .WithCronSchedule(mailingOptions.Value.Weather.CronExpression));
         }
-        
+
         // TODO: добавить триггеры для джобов из db.CronJobs
     }
 }

@@ -19,17 +19,17 @@ public enum LessonType
     ///     Практическое занятие
     /// </summary>
     Practical,
-    
+
     /// <summary>
     ///     Лабораторная работа
     /// </summary>
     Laboratory,
-    
+
     /// <summary>
     ///     Лекция
     /// </summary>
     Lecture,
-    
+
     /// <summary>
     ///     Консультация
     /// </summary>

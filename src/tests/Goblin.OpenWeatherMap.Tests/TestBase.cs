@@ -13,6 +13,7 @@ public class TestBase
     protected const string IncorrectCity = "City17";
 
     private static string CurrentWeatherPath => Path.Combine(DefaultPath, "current_weather.json");
+
     private static string DailyWeatherPath => Path.Combine(DefaultPath, "daily_weather.json");
 
     protected OpenWeatherMap.OpenWeatherMapApi Api { get; init; }
@@ -44,12 +45,9 @@ public class TestBase
 
         var factory = Substitute.For<IHttpClientFactory>();
         factory.CreateClient(Arg.Any<string>())
-               .Returns(Substitute.For<HttpClient>());
+            .Returns(Substitute.For<HttpClient>());
 
-        var options = Options.Create(new OpenWeatherMapApiOptions
-        {
-            AccessToken = "test-token"
-        });
+        var options = Options.Create(new OpenWeatherMapApiOptions { AccessToken = "test-token" });
 
         Api = new OpenWeatherMap.OpenWeatherMapApi(factory, options, Substitute.For<ILogger<OpenWeatherMap.OpenWeatherMapApi>>());
     }

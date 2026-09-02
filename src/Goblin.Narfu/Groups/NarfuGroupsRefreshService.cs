@@ -41,8 +41,8 @@ internal sealed class NarfuGroupsRefreshService(
         catch(Exception exception)
         {
             logger.LogError(exception,
-                            "Не удалось обновить список групп САФУ. Повтор через {RetryInterval}",
-                            RetryInterval);
+                "Не удалось обновить список групп САФУ. Повтор через {RetryInterval}",
+                RetryInterval);
             return false;
         }
     }

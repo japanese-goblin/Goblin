@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.RegisterLogging()
-       .RegisterSwagger()
-       .RegisterQuartz();
+    .RegisterSwagger()
+    .RegisterQuartz();
 
 builder.Services.AddDataAccessLayer(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
@@ -29,12 +29,9 @@ app.UseExceptionHandler(exceptionHandlerApp =>
         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
         context.Response.ContentType = MediaTypeNames.Application.Json;
 
-        var problemDetails = new ProblemDetails
-        {
-            Status = StatusCodes.Status500InternalServerError
-        };
+        var problemDetails = new ProblemDetails { Status = StatusCodes.Status500InternalServerError };
 
-        if(builder.Environment.IsProduction())
+        if (builder.Environment.IsProduction())
         {
             problemDetails.Title = "Внутренняя ошибка сервера";
             problemDetails.Detail = "Возникла непредвиденная ошибка. Пожалуйста, попробуйте позже.";
@@ -50,7 +47,7 @@ app.UseExceptionHandler(exceptionHandlerApp =>
     });
 });
 
-if(app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwaggerUI(options =>

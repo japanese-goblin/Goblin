@@ -10,7 +10,7 @@ internal class NarfuOptionsValidate : IValidateOptions<NarfuApiOptions>
     public ValidateOptionsResult Validate(string? name, NarfuApiOptions options)
     {
         var errors = ValidateInternal(options).ToList();
-        if(errors.Count > 0)
+        if (errors.Count > 0)
         {
             return ValidateOptionsResult.Fail(errors);
         }
@@ -20,26 +20,26 @@ internal class NarfuOptionsValidate : IValidateOptions<NarfuApiOptions>
 
     private static IEnumerable<string> ValidateInternal(NarfuApiOptions options)
     {
-        if(string.IsNullOrEmpty(options.HostUrl))
+        if (string.IsNullOrEmpty(options.HostUrl))
         {
             yield return $"Не задан хост расписания САФУ ({nameof(NarfuApiOptions.HostUrl)})";
         }
 
-        if(!Uri.TryCreate(options.HostUrl, UriKind.Absolute, out _))
+        if (!Uri.TryCreate(options.HostUrl, UriKind.Absolute, out _))
         {
             yield return $"Задан некорректный хост расписания САФУ ({nameof(NarfuApiOptions.HostUrl)})";
         }
 
-        if(options.Timeout < MinimalTimeout)
+        if (options.Timeout < MinimalTimeout)
         {
             yield return
-                    $"Задан слишком маленький таймаут получения расписания ({nameof(NarfuApiOptions.Timeout)}). Значение должно быть больше {MinimalTimeout}";
+                $"Задан слишком маленький таймаут получения расписания ({nameof(NarfuApiOptions.Timeout)}). Значение должно быть больше {MinimalTimeout}";
         }
 
-        if(options.GroupsRefreshInterval < MinimalGroupsRefreshInterval)
+        if (options.GroupsRefreshInterval < MinimalGroupsRefreshInterval)
         {
             yield return
-                    $"Задан слишком маленький интервал обновления групп ({nameof(NarfuApiOptions.GroupsRefreshInterval)}). Значение должно быть не меньше {MinimalGroupsRefreshInterval}";
+                $"Задан слишком маленький интервал обновления групп ({nameof(NarfuApiOptions.GroupsRefreshInterval)}). Значение должно быть не меньше {MinimalGroupsRefreshInterval}";
         }
     }
 }

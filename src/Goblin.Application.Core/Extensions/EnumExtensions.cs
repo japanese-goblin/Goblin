@@ -12,7 +12,6 @@ internal static class EnumExtensions
             .GetMember(value.ToString())
             .FirstOrDefault();
 
-        return member?.GetCustomAttribute<EnumMemberAttribute>()?.Value
-               ?? value.ToString();
+        return member?.GetCustomAttribute<EnumMemberAttribute>()?.Value ?? value.ToString();
     }
 }

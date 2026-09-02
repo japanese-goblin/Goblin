@@ -5,23 +5,25 @@ public class CronJob
     public Guid Id { get; private set; }
 
     public string Name { get; private set; }
+
     public long ChatId { get; private set; }
 
     public int? NarfuGroup { get; private set; }
+
     public string? WeatherCity { get; private set; }
+
     public string? Text { get; set; }
 
     public CronTime Time { get; private set; }
+
     public CronType CronType { get; set; }
 
     public ConsumerType ConsumerType { get; private set; }
 
-    protected CronJob()
-    {
-    }
+    protected CronJob() { }
 
     public CronJob(string name, long chatId, int narfuGroup, string weatherCity, CronTime time, ConsumerType consumerType,
-                   CronType cronType, string text = "")
+        CronType cronType, string text = "")
     {
         SetName(name);
         SetChatId(chatId);
@@ -35,7 +37,7 @@ public class CronJob
 
     public void SetName(string name)
     {
-        if(string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
             throw new ArgumentException("Параметр должен быть непустым", nameof(name));
         }
@@ -45,7 +47,7 @@ public class CronJob
 
     public void SetChatId(long chatId)
     {
-        if(chatId <= 0)
+        if (chatId <= 0)
         {
             throw new ArgumentException("Параметр должен быть больше 0", nameof(chatId));
         }
@@ -55,7 +57,7 @@ public class CronJob
 
     public void SetNarfuGroup(int group)
     {
-        if(group < 0)
+        if (group < 0)
         {
             throw new ArgumentException("Параметр должен быть больше 0", nameof(group));
         }

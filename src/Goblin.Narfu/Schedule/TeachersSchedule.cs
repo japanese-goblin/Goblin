@@ -20,8 +20,8 @@ public class TeachersSchedule(HttpClient client, ILogger<TeachersSchedule> logge
     {
         var lessons = await GetSchedule(teacherId);
         var selected = lessons.Where(x => x.StartTime.Date >= DateTime.Today)
-                              .Take(limit)
-                              .ToList();
+            .Take(limit)
+            .ToList();
         return new TeacherLessonsViewModel(selected);
     }
 

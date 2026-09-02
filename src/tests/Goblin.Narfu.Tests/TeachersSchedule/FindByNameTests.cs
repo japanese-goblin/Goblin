@@ -12,8 +12,9 @@ public class FindByNameTests : TestBase
         var first = teachers.First();
 
         teachers.Should()
-                .NotBeNullOrEmpty().And
-                .HaveCount(1);
+            .NotBeNullOrEmpty()
+            .And
+            .HaveCount(1);
         first.Depart.Should().Be("Кафедра информационных систем и технологий");
         first.Id.Should().Be(31261);
         first.Name.Should().Be("Абрамова Любовь Валерьевна");

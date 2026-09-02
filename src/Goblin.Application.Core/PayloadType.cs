@@ -14,16 +14,10 @@ public enum PayloadType
 
     [EnumMember(Value = "schedule")]
     Schedule,
-    
-    [EnumMember(Value = "exams")]
-    Exams,
-    
-    [EnumMember(Value = "current_weather")]
-    CurrentWeather,
-    
+
     [EnumMember(Value = "forecast_weather")]
     ForecastWeather,
-    
+
     [EnumMember(Value = "settings")]
     Settings
 }

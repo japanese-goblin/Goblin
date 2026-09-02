@@ -21,34 +21,34 @@ public class AddRemindCommand(BotDbContext db) : ITextCommand
             .Where(x => x.BotUserId == user.Id)
             .ToArrayAsync();
 
-        if(!user.IsAdmin && reminds.Length == MaxRemindsCount)
+        if (!user.IsAdmin && reminds.Length == MaxRemindsCount)
         {
             return CommandExecutionResult.Failed($"Вы уже достигли максимального количества напоминаний ({MaxRemindsCount})");
         }
 
-        if(all.Length != 3)
+        if (all.Length != 3)
         {
             return CommandExecutionResult.Failed("Укажите дату, время и текст напоминания (11.11.2011 11:11 текст)");
         }
 
-        if(all[0].Equals("завтра", StringComparison.OrdinalIgnoreCase))
+        if (all[0].Equals("завтра", StringComparison.OrdinalIgnoreCase))
         {
             var d = DateTimeOffset.Now.AddDays(1);
             all[0] = $"{d.Day}.{d.Month}.{d.Year}";
         }
-        else if(all[0].Equals("сегодня", StringComparison.OrdinalIgnoreCase))
+        else if (all[0].Equals("сегодня", StringComparison.OrdinalIgnoreCase))
         {
             var d = DateTimeOffset.Now;
             all[0] = $"{d.Day}.{d.Month}.{d.Year}";
         }
 
         var isCorrectTime = ParseTime(all[0], all[1], out var dateTime);
-        if(!isCorrectTime)
+        if (!isCorrectTime)
         {
             return CommandExecutionResult.Failed("Некорректная дата или время");
         }
 
-        if(dateTime.ToUniversalTime() <= DateTimeOffset.UtcNow)
+        if (dateTime.ToUniversalTime() <= DateTimeOffset.UtcNow)
         {
             return CommandExecutionResult.Failed("Дата напоминания меньше текущей");
         }

@@ -13,8 +13,9 @@ public class GetScheduleAtDateTests : TestBase
 
         lessons.Should().NotBeNull();
         lessons.Lessons.Should()
-               .NotBeNull().And
-               .HaveCount(1);
+            .NotBeNull()
+            .And
+            .HaveCount(1);
         str.Should().NotBeEmpty();
         str.Should().Contain("Инженерная графика");
     }

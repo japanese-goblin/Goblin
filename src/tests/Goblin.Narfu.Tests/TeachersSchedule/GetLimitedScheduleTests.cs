@@ -13,8 +13,9 @@ public class GetLimitedScheduleTests : TestBase
 
         lessons.Should().NotBeNull();
         lessons.Lessons.Should()
-               .NotBeNullOrEmpty().And
-               .HaveCount(12);
+            .NotBeNullOrEmpty()
+            .And
+            .HaveCount(12);
         str.Should().NotBeEmpty();
     }
 }

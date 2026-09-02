@@ -6,11 +6,13 @@ namespace Goblin.Application.Core.Models;
 public class Message
 {
     public long UserId { get; set; }
+
     public long ChatId { get; set; }
 
     public string UserTag { get; set; }
 
     public string? Text { get; set; }
+
     public string? Payload { get; set; }
 
     public bool IsConversation => UserId != ChatId;
@@ -29,5 +31,5 @@ public class Message
     public string? CommandName => Text?.ToLower().Split(' ').FirstOrDefault();
 
     public Dictionary<string, string>? ParsedPayload =>
-            Payload is null ? null : JsonSerializer.Deserialize<Dictionary<string, string>>(Payload);
+        Payload is null ? null : JsonSerializer.Deserialize<Dictionary<string, string>>(Payload);
 }

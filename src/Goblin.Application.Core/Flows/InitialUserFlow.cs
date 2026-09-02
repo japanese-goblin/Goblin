@@ -7,8 +7,8 @@ namespace Goblin.Application.Core.Flows;
 
 public class InitialUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeatherMapApi) : IUserFlow
 {
-    public string Name => "Первый запуск";
     public string PayloadKey => PayloadType.Init.GetEnumMemberValue();
+
     public FlowType Type => FlowType.Start;
 
     public async Task<FlowExecutionResult> HandleAsync(UserFlowContext context, CancellationToken cancellationToken)
@@ -44,10 +44,10 @@ public class InitialUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeatherM
             if (commandParam.Equals(InitialFlowState.Skip.GetEnumMemberValue()))
             {
                 var response = new FlowExecutionResult(FlowType.Start,
-                                                       null,
-                                                       true,
-                                                       "🐸",
-                                                       DefaultKeyboards.GetInitializationKeyboard(context.User));
+                    null,
+                    true,
+                    "🐸",
+                    DefaultKeyboards.GetInitializationKeyboard(context.User));
                 return response;
             }
 
@@ -151,17 +151,14 @@ public class InitialUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeatherM
             "👺 что-то пошло не так...",
             null);
     }
-    
+
     private CoreKeyboard GetSkipKeyboard()
     {
-        var kb = new CoreKeyboard
-        {
-            IsInline = true
-        };
+        var kb = new CoreKeyboard { IsInline = true };
         kb.AddButton("Пропустить",
-                     CoreKeyboardButtonColor.Default,
-                     PayloadKey,
-                     InitialFlowState.Skip.GetEnumMemberValue());
+            CoreKeyboardButtonColor.Default,
+            PayloadKey,
+            InitialFlowState.Skip.GetEnumMemberValue());
         return kb;
     }
 }

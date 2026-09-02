@@ -9,10 +9,10 @@ using Microsoft.Extensions.Options;
 namespace Goblin.OpenWeatherMap;
 
 public class OpenWeatherMapApi(
-        IHttpClientFactory httpClientFactory,
-        IOptions<OpenWeatherMapApiOptions> optionsAccessor,
-        ILogger<OpenWeatherMapApi> logger)
-        : IOpenWeatherMapApi
+    IHttpClientFactory httpClientFactory,
+    IOptions<OpenWeatherMapApiOptions> optionsAccessor,
+    ILogger<OpenWeatherMapApi> logger)
+    : IOpenWeatherMapApi
 {
     private readonly HttpClient _client = httpClientFactory.CreateClient(Defaults.HttpClientName);
     private readonly OpenWeatherMapApiOptions _options = optionsAccessor.Value;
@@ -40,7 +40,7 @@ public class OpenWeatherMapApi(
             return diff is >= 0 and <= 1;
         });
 
-        if(weather is null)
+        if (weather is null)
         {
             throw new ArgumentException($"Погода на {date:dd.MM.yyyy} в городе {city} не найдена.");
         }

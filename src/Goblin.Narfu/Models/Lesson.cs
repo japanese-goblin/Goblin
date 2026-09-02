@@ -34,22 +34,22 @@ public class Lesson : IEquatable<Lesson>
     ///     Номер (внутри одного дня)
     /// </summary>
     public int Number { get; set; }
-    
+
     /// <summary>
     ///     Адрес, где будет проходить занятие
     /// </summary>
     public string Address { get; set; }
-    
+
     /// <summary>
     ///     Номер аудитории, где будет проходить занятие
     /// </summary>
     public string Auditory { get; set; }
-    
+
     /// <summary>
     ///     Преподаватель
     /// </summary>
     public string Teacher { get; set; }
-    
+
     /// <summary>
     ///     Список групп
     /// </summary>
@@ -123,8 +123,12 @@ public class Lesson : IEquatable<Lesson>
             return true;
         }
 
-        return Type == other.Type && Name == other.Name && Number == other.Number && Auditory == other.Auditory &&
-               Teacher == other.Teacher && Groups == other.Groups;
+        return Type == other.Type &&
+               Name == other.Name &&
+               Number == other.Number &&
+               Auditory == other.Auditory &&
+               Teacher == other.Teacher &&
+               Groups == other.Groups;
     }
 
     public override bool Equals(object? obj)

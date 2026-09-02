@@ -16,12 +16,12 @@ public class ScheduleServiceTests : TestBase
     {
         var distributedCache = Substitute.For<IDistributedCache>();
         distributedCache.GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
-                        .Returns(Task.FromResult<byte[]?>(null));
+            .Returns(Task.FromResult<byte[]?>(null));
 
         return new ScheduleService(narfuApi,
-                                   distributedCache,
-                                   TimeProvider.System,
-                                   NullLogger<ScheduleService>.Instance);
+            distributedCache,
+            TimeProvider.System,
+            NullLogger<ScheduleService>.Instance);
     }
 
     private static INarfuApi GetNarfuApi(bool response = true)

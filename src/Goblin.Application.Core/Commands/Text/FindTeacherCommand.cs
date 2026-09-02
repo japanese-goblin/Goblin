@@ -6,12 +6,13 @@ namespace Goblin.Application.Core.Commands.Text;
 public class FindTeacherCommand(INarfuApi narfuApi, ILogger<FindTeacherCommand> logger) : ITextCommand
 {
     public bool IsAdminCommand => false;
+
     public string[] Aliases => ["препод"];
 
     public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
         var teacherName = string.Join(' ', msg.CommandParameters);
-        if(string.IsNullOrWhiteSpace(teacherName))
+        if (string.IsNullOrWhiteSpace(teacherName))
         {
             return CommandExecutionResult.Failed("Укажите имя и фамилию преподавателя.");
         }
@@ -19,24 +20,21 @@ public class FindTeacherCommand(INarfuApi narfuApi, ILogger<FindTeacherCommand> 
         try
         {
             var findResult = await narfuApi.Teachers.FindByName(teacherName);
-            if(findResult.Length == 0)
+            if (findResult.Length == 0)
             {
                 return CommandExecutionResult.Failed("Преподаватель с такими данными не найден.");
             }
 
-            if(findResult.Length > 9)
+            if (findResult.Length > 9)
             {
                 return CommandExecutionResult.Failed("Найдено слишком много преподавателей. Укажите более точные данные.");
             }
 
-            var keyboard = new CoreKeyboard
-            {
-                IsInline = true
-            };
-            foreach(var teacher in findResult)
+            var keyboard = new CoreKeyboard { IsInline = true };
+            foreach (var teacher in findResult)
             {
                 keyboard.AddButton(teacher.Name, CoreKeyboardButtonColor.Primary,
-                                   "teacherSchedule", teacher.Id.ToString());
+                    "teacherSchedule", teacher.Id.ToString());
                 keyboard.AddLine();
             }
 

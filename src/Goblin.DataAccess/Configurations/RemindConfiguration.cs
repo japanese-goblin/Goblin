@@ -13,10 +13,10 @@ internal class RemindConfiguration : IEntityTypeConfiguration<Remind>
             .HasValueGenerator<IdValueGenerator>();
 
         builder.Property(p => p.Text)
-               .HasMaxLength(100)
-               .IsRequired();
+            .HasMaxLength(100)
+            .IsRequired();
         builder.Property(p => p.Date)
-               .IsRequired();
+            .IsRequired();
 
         builder.HasOne(p => p.BotUser)
             .WithMany(p => p.Reminds)

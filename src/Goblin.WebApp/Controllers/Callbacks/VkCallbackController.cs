@@ -8,7 +8,8 @@ using VkNet.Model;
 
 namespace Goblin.WebApp.Controllers.Callbacks;
 
-[ApiController, Route("/api/callback/vk")]
+[ApiController]
+[Route("/api/callback/vk")]
 public class VkCallbackController(IOptions<VkCallbackOptions> optionsAccessor, VkEventsDispatcher vkEventsDispatcher) : ControllerBase
 {
     private readonly VkCallbackOptions _options = optionsAccessor.Value;
@@ -19,12 +20,12 @@ public class VkCallbackController(IOptions<VkCallbackOptions> optionsAccessor, V
         var rawRequestBody = await new StreamReader(Request.Body).ReadToEndAsync();
         var requestModel = JsonConvert.DeserializeObject<GroupUpdate>(rawRequestBody)!;
 
-        if(requestModel.Secret?.Value != _options.SecretKey)
+        if (requestModel.Secret?.Value != _options.SecretKey)
         {
             return NotFound();
         }
 
-        if(requestModel.Type.Value == GroupUpdateType.Confirmation)
+        if (requestModel.Type.Value == GroupUpdateType.Confirmation)
         {
             return Ok(_options.ConfirmationCode);
         }

@@ -20,8 +20,8 @@ public static class SetupExtensions
 
         services.AddSingleton<IValidateOptions<NarfuApiOptions>, NarfuOptionsValidate>();
         services.AddOptions<NarfuApiOptions>()
-                .BindConfiguration(NarfuSettingsPath)
-                .ValidateOnStart();
+            .BindConfiguration(NarfuSettingsPath)
+            .ValidateOnStart();
 
         services.AddHttpClient(Defaults.HttpClientName, (sp, client) =>
         {
@@ -31,7 +31,8 @@ public static class SetupExtensions
             client.Timeout = optionsAccessor.Value.Timeout;
 
             client.DefaultRequestHeaders.UserAgent.Clear();
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0");
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:154.0) Gecko/20100101 Firefox/154.0");
         });
 
         return services;

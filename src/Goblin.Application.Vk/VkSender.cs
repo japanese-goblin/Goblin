@@ -12,7 +12,9 @@ namespace Goblin.Application.Vk;
 public class VkSender(IVkApi vkApi, ILogger<VkSender> logger) : ISender
 {
     private const int ChunkLimit = 100;
+
     public int TextLimit => 4096;
+
     public ConsumerType ConsumerType => ConsumerType.Vkontakte;
 
     private readonly Dictionary<string, Type> _attachmentTypes = new Dictionary<string, Type>
@@ -44,11 +46,11 @@ public class VkSender(IVkApi vkApi, ILogger<VkSender> logger) : ISender
     }
 
     public async Task SendToMany(IReadOnlyCollection<long> chatIds, string message, CoreKeyboard? keyboard = null,
-                                 IReadOnlyCollection<string>? attachments = null)
+        IReadOnlyCollection<string>? attachments = null)
     {
         message = TrimText(message);
 
-        foreach(var chunk in chatIds.Chunk(ChunkLimit))
+        foreach (var chunk in chatIds.Chunk(ChunkLimit))
         {
             try
             {
@@ -72,7 +74,7 @@ public class VkSender(IVkApi vkApi, ILogger<VkSender> logger) : ISender
 
     private string TrimText(string text)
     {
-        if(text.Length < TextLimit)
+        if (text.Length < TextLimit)
         {
             return text;
         }
@@ -84,28 +86,29 @@ public class VkSender(IVkApi vkApi, ILogger<VkSender> logger) : ISender
 
     private List<MediaAttachment>? ConvertAttachments(IEnumerable<string>? attachments)
     {
-        if(attachments is null)
+        if (attachments is null)
         {
             return null;
         }
 
         var attachmentList = new List<MediaAttachment>();
 
-        foreach(var attachType in _attachmentTypes)
+        foreach (var attachType in _attachmentTypes)
         {
             var selected = attachments
-                           .Where(x => x.StartsWith(attachType.Key))
-                           .Select(x =>
-                           {
-                               var attach = Activator.CreateInstance(attachType.Value) as MediaAttachment;
-                               var data = x.Replace(attachType.Key, string.Empty)
-                                           .Split('_');
+                .Where(x => x.StartsWith(attachType.Key))
+                .Select(x =>
+                {
+                    var attach = Activator.CreateInstance(attachType.Value) as MediaAttachment;
+                    var data = x.Replace(attachType.Key, string.Empty)
+                        .Split('_');
 
-                               attach.OwnerId = long.Parse(data[0]);
-                               attach.Id = long.Parse(data[1]);
-                               return attach;
-                           }).ToArray();
-            if(selected.Length == 0)
+                    attach.OwnerId = long.Parse(data[0]);
+                    attach.Id = long.Parse(data[1]);
+                    return attach;
+                })
+                .ToArray();
+            if (selected.Length == 0)
             {
                 continue;
             }

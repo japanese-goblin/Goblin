@@ -3,6 +3,7 @@ namespace Goblin.Application.Core.Commands.Text;
 public class RemoveKeyboardCommand : ITextCommand
 {
     public bool IsAdminCommand => false;
+
     public string[] Aliases => ["куб"];
 
     public Task<CommandExecutionResult> Execute(Message msg, BotUser user)

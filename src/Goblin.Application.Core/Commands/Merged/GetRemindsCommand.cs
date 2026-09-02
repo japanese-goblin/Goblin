@@ -14,17 +14,17 @@ public class GetRemindsCommand(BotDbContext context) : ITextCommand
         var reminds = context.Reminds
             .Where(x => x.BotUserId == user.Id)
             .ToArray();
-        if(reminds.Length == 0)
+        if (reminds.Length == 0)
         {
             return Task.FromResult(CommandExecutionResult.Success("У Вас нет ни одного добавленного напоминания."));
         }
 
         var strBuilder = new StringBuilder();
         strBuilder.AppendLine("Список напоминаний:");
-        foreach(var userRemind in reminds.OrderBy(x => x.Date))
+        foreach (var userRemind in reminds.OrderBy(x => x.Date))
         {
             strBuilder.Append($"{userRemind.Date:dd.MM.yyyy HH:mm} - {userRemind.Text}")
-                      .AppendLine();
+                .AppendLine();
         }
 
         return Task.FromResult(CommandExecutionResult.Success(strBuilder.ToString()));

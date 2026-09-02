@@ -7,7 +7,7 @@ public static class KeyboardConverter
 {
     public static ReplyMarkup? FromCoreToTg(CoreKeyboard? coreKeyboard)
     {
-        if(coreKeyboard is null)
+        if (coreKeyboard is null)
         {
             return null;
         }
@@ -21,7 +21,7 @@ public static class KeyboardConverter
             var tgButtonsList = new List<List<KeyboardButton>>();
             var currentLine = new List<KeyboardButton>();
 
-            foreach(var line in coreKeyboard.Buttons)
+            foreach (var line in coreKeyboard.Buttons)
             {
                 currentLine.AddRange(line.Select(button => new KeyboardButton(button.Title)));
 
@@ -43,7 +43,7 @@ public static class KeyboardConverter
             var tgButtonsList = new List<List<InlineKeyboardButton>>();
             var currentLine = new List<InlineKeyboardButton>();
 
-            foreach(var line in coreKeyboard.Buttons)
+            foreach (var line in coreKeyboard.Buttons)
             {
                 currentLine.AddRange(line.Select(button => InlineKeyboardButton.WithCallbackData(button.Title, button.Payload)));
 

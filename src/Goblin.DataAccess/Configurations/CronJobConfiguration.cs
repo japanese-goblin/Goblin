@@ -19,12 +19,12 @@ internal class CronJobConfiguration : IEntityTypeConfiguration<CronJob>
             .HasConversion(new EnumMemberConverter<CronType>());
 
         builder.Property(p => p.Name)
-               .IsRequired();
+            .IsRequired();
         builder.Property(p => p.ChatId)
-               .IsRequired();
+            .IsRequired();
         builder.OwnsOne(p => p.Time);
 
         builder.Property(p => p.Text)
-               .HasMaxLength(500);
+            .HasMaxLength(500);
     }
 }

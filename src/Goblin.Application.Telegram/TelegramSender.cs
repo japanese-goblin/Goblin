@@ -7,37 +7,33 @@ using Telegram.Bot;
 
 namespace Goblin.Application.Telegram;
 
-public class TelegramSender : ISender
+public class TelegramSender(TelegramBotClient botClient, ILogger<TelegramSender> logger) : ISender
 {
     public int TextLimit => 4096;
 
     public ConsumerType ConsumerType => ConsumerType.Telegram;
 
-    private readonly TelegramBotClient _botClient;
-    private readonly ILogger _logger;
-
-    public TelegramSender(TelegramBotClient botClient, ILogger<TelegramSender> logger)
-    {
-        _botClient = botClient;
-        _logger = logger;
-    }
-
-    public Task Send(long chatId, string message, CoreKeyboard? keyboard = null, IReadOnlyCollection<string>? attachments = null)
+    public Task Send(
+        long chatId,
+        string message, 
+        CoreKeyboard? keyboard = null, 
+        IReadOnlyCollection<string>? attachments = null)
     {
         message = TrimText(message);
         var replyMarkup = KeyboardConverter.FromCoreToTg(keyboard);
-        return _botClient.SendMessage(chatId, message, replyMarkup: replyMarkup);
+        return botClient.SendMessage(chatId, message, replyMarkup: replyMarkup);
     }
 
-    public async Task SendToMany(IReadOnlyCollection<long> chatIds,
-                                 string message,
-                                 CoreKeyboard? keyboard = null,
-                                 IReadOnlyCollection<string>? attachments = null)
+    public async Task SendToMany(
+        IReadOnlyCollection<long> chatIds,
+        string message,
+        CoreKeyboard? keyboard = null,
+        IReadOnlyCollection<string>? attachments = null)
     {
         message = TrimText(message);
-        foreach(var chunk in chatIds.Chunk(25))
+        foreach (var chunk in chatIds.Chunk(25))
         {
-            foreach(var id in chunk)
+            foreach (var id in chunk)
             {
                 try
                 {
@@ -45,7 +41,7 @@ public class TelegramSender : ISender
                 }
                 catch(Exception e)
                 {
-                    _logger.LogError(e, "Ошибка при отправке сообщения {UserId}", id);
+                    logger.LogError(e, "Ошибка при отправке сообщения {UserId}", id);
                 }
             }
 
@@ -55,7 +51,7 @@ public class TelegramSender : ISender
 
     private string TrimText(string text)
     {
-        if(text.Length < TextLimit)
+        if (text.Length < TextLimit)
         {
             return text;
         }

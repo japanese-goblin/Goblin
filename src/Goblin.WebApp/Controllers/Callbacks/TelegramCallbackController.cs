@@ -6,7 +6,8 @@ using Telegram.Bot.Types;
 
 namespace Goblin.WebApp.Controllers.Callbacks;
 
-[ApiController, Route("/api/callback/tg")]
+[ApiController]
+[Route("/api/callback/tg")]
 public class TelegramCallbackController(IOptions<TelegramOptions> optionsAccessor, TelegramEventsDispatcher dispatcher) : ControllerBase
 {
     private readonly TelegramOptions _options = optionsAccessor.Value;
@@ -15,7 +16,7 @@ public class TelegramCallbackController(IOptions<TelegramOptions> optionsAccesso
     public async Task<IActionResult> HandleCallback([FromBody] Update requestModel)
     {
         var passedSecretKey = Request.Headers["X-Telegram-Bot-Api-Secret-Token"];
-        if(!_options.SecretKey.Equals(passedSecretKey))
+        if (!_options.SecretKey.Equals(passedSecretKey))
         {
             //TODO: logging
             return NotFound();

@@ -5,7 +5,9 @@ public class CoreKeyboard(bool isOneTime = true)
     public const string ReturnToMainMenuText = "Вернуться в главное меню";
 
     public bool IsOneTime { get; set; } = isOneTime;
+
     public bool IsInline { get; set; }
+
     public List<List<CoreKeyboardButton>> Buttons { get; set; } = [[]];
 
     private List<CoreKeyboardButton> LastLine => Buttons.Last();
@@ -32,7 +34,7 @@ public class CoreKeyboard(bool isOneTime = true)
 
     public CoreKeyboard AddReturnToMenuButton(bool addNewLine = true)
     {
-        if(addNewLine)
+        if (addNewLine)
         {
             AddLine();
         }
@@ -50,12 +52,10 @@ public class CoreKeyboard(bool isOneTime = true)
 
     public CoreKeyboard RemoveReturnToMenuButton()
     {
-        var lineWithReturnButton = Buttons
-                .SingleOrDefault(x =>
-                                         x.Any(z => z.Title == ReturnToMainMenuText));
+        var lineWithReturnButton = Buttons.SingleOrDefault(p => p.Any(b => b.Title == ReturnToMainMenuText));
 
-        var returnButton = lineWithReturnButton?.SingleOrDefault(x => x.Title == ReturnToMainMenuText);
-        if(returnButton != null)
+        var returnButton = lineWithReturnButton?.SingleOrDefault(p => p.Title == ReturnToMainMenuText);
+        if (returnButton != null)
         {
             lineWithReturnButton.Remove(returnButton);
         }

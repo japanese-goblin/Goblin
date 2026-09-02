@@ -11,7 +11,7 @@ public class ExamsCommand(INarfuApi api, ILogger<ExamsCommand> logger) : ITextCo
 
     public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
-        if(!user.NarfuGroup.HasValue)
+        if (!user.NarfuGroup.HasValue)
         {
             return CommandExecutionResult.Failed(DefaultErrors.GroupNotSet);
         }
@@ -20,7 +20,7 @@ public class ExamsCommand(INarfuApi api, ILogger<ExamsCommand> logger) : ITextCo
         {
             var lessons = await api.Students.GetExams(user.NarfuGroup.Value);
             var str = lessons.ToString();
-            if(str.Length > 4096)
+            if (str.Length > 4096)
             {
                 str = $"{str[..4000]}...\n\nПолный список экзаменов можете посмотреть на сайте";
             }

@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 namespace Goblin.Application.Vk.HostedServices;
 
 internal class VkChannelReaderHostedService(
-        VkEventsDispatcher dispatcher,
-        IServiceProvider serviceProvider,
-        ILogger<VkChannelReaderHostedService> logger) : BackgroundService
+    VkEventsDispatcher dispatcher,
+    IServiceProvider serviceProvider,
+    ILogger<VkChannelReaderHostedService> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -15,7 +15,7 @@ internal class VkChannelReaderHostedService(
         {
             try
             {
-                await foreach(var @event in dispatcher.ReadAllAsync(stoppingToken))
+                await foreach (var @event in dispatcher.ReadAllAsync(stoppingToken))
                 {
                     await using var scope = serviceProvider.CreateAsyncScope();
                     var callbackHandler = scope.ServiceProvider.GetRequiredService<VkCallbackHandler>();

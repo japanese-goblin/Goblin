@@ -6,13 +6,12 @@ using Microsoft.Extensions.Logging;
 namespace Goblin.Narfu.Schedule;
 
 public class StudentsSchedule(INarfuGroupsCache groupsCache, HttpClient client, ILogger<StudentsSchedule> logger)
-        : IStudentsSchedule
+    : IStudentsSchedule
 {
     public async Task<IReadOnlyCollection<Lesson>> GetSchedule(int realGroupId, DateTime? date = null)
     {
         date ??= DateTime.Today;
-        var group = GetGroupByRealId(realGroupId)
-                    ?? throw new ArgumentException($"Группа {realGroupId} не найдена", nameof(realGroupId));
+        var group = GetGroupByRealId(realGroupId) ?? throw new ArgumentException($"Группа {realGroupId} не найдена", nameof(realGroupId));
         var siteGroupId = group.SiteId;
 
         try
@@ -70,7 +69,7 @@ public class StudentsSchedule(INarfuGroupsCache groupsCache, HttpClient client, 
     private static List<Lesson> GetCalendarLessons(string response)
     {
         var calendar = Ical.Net.Calendar.Load(response);
-        if(calendar is null)
+        if (calendar is null)
         {
             return [];
         }
@@ -78,16 +77,16 @@ public class StudentsSchedule(INarfuGroupsCache groupsCache, HttpClient client, 
         var result = new List<Lesson>(calendar.Events.Count);
 
         var calendarEvents = calendar.Events
-                                     .DistinctBy(p => p.Uid)
-                                     .OrderBy(p => p.DtStart);
-        foreach(var calendarEvent in calendarEvents)
+            .DistinctBy(p => p.Uid)
+            .OrderBy(p => p.DtStart);
+        foreach (var calendarEvent in calendarEvents)
         {
-            if(calendarEvent.DtStart is null ||
-               calendarEvent.DtEnd is null ||
-               calendarEvent.Uid is null ||
-               calendarEvent.Description is null ||
-               calendarEvent.Location is null ||
-               calendarEvent.Summary is null)
+            if (calendarEvent.DtStart is null ||
+                calendarEvent.DtEnd is null ||
+                calendarEvent.Uid is null ||
+                calendarEvent.Description is null ||
+                calendarEvent.Location is null ||
+                calendarEvent.Summary is null)
             {
                 continue;
             }
@@ -95,7 +94,7 @@ public class StudentsSchedule(INarfuGroupsCache groupsCache, HttpClient client, 
             var description = calendarEvent.Description.Split('\n');
             var address = calendarEvent.Location.Split('/');
 
-            if(!int.TryParse(description[0][0].ToString(), out var number))
+            if (!int.TryParse(description[0][0].ToString(), out var number))
             {
                 number = 1; //в расписании бывают пары, у которых нет номера: п (11:46-11:59)
             }
@@ -115,13 +114,13 @@ public class StudentsSchedule(INarfuGroupsCache groupsCache, HttpClient client, 
             };
             result.Add(lesson);
 
-            if(description.Length <= 6)
+            if (description.Length <= 6)
             {
                 continue;
             }
 
             var possiblyLink = description[6];
-            if(Uri.TryCreate(possiblyLink, UriKind.Absolute, out _))
+            if (Uri.TryCreate(possiblyLink, UriKind.Absolute, out _))
             {
                 lesson.Link = possiblyLink;
             }

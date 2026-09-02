@@ -1,7 +1,6 @@
 using System.Text.RegularExpressions;
 using Goblin.Application.Core;
 using Goblin.Application.Vk.Converters;
-using Goblin.DataAccess;
 using Goblin.Domain;
 using Microsoft.Extensions.Logging;
 using VkNet.Abstractions;
@@ -14,20 +13,21 @@ namespace Goblin.Application.Vk;
 public class VkCallbackHandler
 {
     private readonly CommandsService _commandsService;
-    private readonly BotDbContext _db;
     private readonly ILogger _logger;
     private readonly IVkApi _vkApi;
     private readonly ISender _sender;
 
-    public VkCallbackHandler(CommandsService commandsService, BotDbContext db, IVkApi vkApi,
-                             IEnumerable<ISender> senders, ILogger<VkCallbackHandler> logger)
+    public VkCallbackHandler(
+        CommandsService commandsService, 
+        IVkApi vkApi,
+        IEnumerable<ISender> senders,
+        ILogger<VkCallbackHandler> logger)
     {
         _commandsService = commandsService;
-        _db = db;
         _vkApi = vkApi;
 
         // TODO: keyed service
-        _sender = senders.First(x => x.ConsumerType == ConsumerType.Vkontakte);
+        _sender = senders.First(p => p.ConsumerType == ConsumerType.Vkontakte);
         _logger = logger;
     }
 
@@ -35,19 +35,19 @@ public class VkCallbackHandler
     {
         _logger.LogDebug("Обработка события с типом {UpdateType}", upd.Type.Value);
 
-        if(upd.Type.Value == GroupUpdateType.MessageNew)
+        if (upd.Type.Value == GroupUpdateType.MessageNew)
         {
-            if(upd.Instance is not MessageNew messageNew)
+            if (upd.Instance is not MessageNew messageNew)
             {
                 _logger.LogWarning("Не удалось преобразовать обновление {GroupUpdateType}", upd.Type.Value);
                 return;
             }
 
-            if(messageNew.Message.Action?.Type == MessageAction.ChatInviteUser)
+            if (messageNew.Message.Action?.Type == MessageAction.ChatInviteUser)
             {
                 await _sender.Send(messageNew.Message.PeerId.Value,
-                                   "Здравствуйте!\n" +
-                                   "Подробности по настройке бота для бесед здесь: vk.com/@japanese.goblin-conversations");
+                    "Здравствуйте!\n" +
+                    "Подробности по настройке бота для бесед здесь: vk.com/@japanese.goblin-conversations");
                 return;
             }
 
@@ -55,9 +55,9 @@ public class VkCallbackHandler
             ExtractUserIdFromConversation(msg);
             await MessageNew(msg, ct);
         }
-        else if(upd.Type.Value == GroupUpdateType.MessageEvent)
+        else if (upd.Type.Value == GroupUpdateType.MessageEvent)
         {
-            if(upd.Instance is not MessageEvent messageEvent)
+            if (upd.Instance is not MessageEvent messageEvent)
             {
                 _logger.LogWarning("Не удалось преобразовать обновление {GroupUpdateType}", upd.Type.Value);
                 return;
@@ -95,13 +95,13 @@ public class VkCallbackHandler
 
         void ExtractUserIdFromConversation(Message msg)
         {
-            if(msg.ChatId == msg.UserId)
+            if (msg.ChatId == msg.UserId)
             {
                 return;
             }
 
             var regEx = Regex.Match(msg.Text, @"\[club\d+\|.*\] (.*)");
-            if(regEx.Groups.Count > 1)
+            if (regEx.Groups.Count > 1)
             {
                 msg.Text = regEx.Groups[1].Value.Trim();
             }
@@ -121,7 +121,7 @@ public class VkCallbackHandler
         _logger.LogDebug("Обработка сообщения");
         var mappedToMessage = messageEvent.MapToBotMessage();
         var executionResult = await _commandsService.ExecuteAction(mappedToMessage, ct);
-            
+
         var peerId = messageEvent.PeerId.GetValueOrDefault(0);
         try
         {

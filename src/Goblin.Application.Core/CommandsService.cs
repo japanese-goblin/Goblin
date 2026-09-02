@@ -15,7 +15,7 @@ public class CommandsService(
     {
         var user = await GetBotUserV2(msg.ConsumerType, msg.UserId, ct);
         var commandResult = await textCommandHandler.TryHandle(msg, user);
-        if(commandResult is not null)
+        if (commandResult is not null)
         {
             await dbContext.SaveChangesAsync(ct);
             return commandResult;
@@ -57,10 +57,7 @@ public class CommandsService(
         user = new BotUser(userId)
         {
             ConsumerType = type,
-            Session = new BotUserSession
-            {
-                FlowType = FlowType.Start
-            }
+            Session = new BotUserSession { FlowType = FlowType.Start }
         };
         await dbContext.BotUsers.AddAsync(user, ct);
         await dbContext.SaveChangesAsync(ct);

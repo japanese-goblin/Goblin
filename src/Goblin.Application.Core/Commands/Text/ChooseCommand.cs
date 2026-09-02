@@ -11,7 +11,7 @@ public class ChooseCommand : ITextCommand
         var param = string.Join(' ', msg.CommandParameters);
         var split = Split(param);
 
-        if(split.Length < 2)
+        if (split.Length < 2)
         {
             const string text = "Введите два или более предложений, разделенных следующими символами: ',' и 'или'";
             return Task.FromResult(CommandExecutionResult.Failed(text));

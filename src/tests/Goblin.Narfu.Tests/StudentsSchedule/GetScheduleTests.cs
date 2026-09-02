@@ -15,8 +15,9 @@ public class GetScheduleTests : TestBase
         var first = lessons.First();
 
         lessons.Should()
-               .NotBeNullOrEmpty().And
-               .HaveCount(5);
+            .NotBeNullOrEmpty()
+            .And
+            .HaveCount(5);
         first.Address.Should().Be("А-НСД22");
         first.Auditory.Should().Be("2212 ЦДЗ");
         first.Groups.Should().Be("271901, 271902, 271903, 271905, 271909");

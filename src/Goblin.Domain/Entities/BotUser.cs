@@ -5,22 +5,24 @@ public class BotUser
     public Guid Id { get; set; }
 
     public string? WeatherCity { get; private set; }
+
     public int? NarfuGroup { get; private set; }
 
     public bool IsAdmin { get; private set; }
 
     public bool HasWeatherSubscription { get; private set; }
+
     public bool HasScheduleSubscription { get; private set; }
 
     public long ConsumerId { get; private set; }
+
     public ConsumerType ConsumerType { get; set; }
 
     public BotUserSession Session { get; set; } = null!;
+
     public ICollection<Remind> Reminds { get; set; } = null!;
 
-    protected BotUser()
-    {
-    }
+    protected BotUser() { }
 
     public BotUser(long id, string? city = null, int? group = null, bool isAdmin = false,
         bool isErrorsEnabled = true, bool hasWeather = false, bool hasSchedule = false)
@@ -59,9 +61,7 @@ public class BotUser
         NarfuGroup = group;
     }
 
-    public void SetErrorNotification(bool enable = true)
-    {
-    }
+    public void SetErrorNotification(bool enable = true) { }
 
     public void SetAdmin(bool isAdmin = false)
     {

@@ -17,7 +17,9 @@ public class TestBase
     protected const string TeacherName = "Абрамова";
 
     protected static string StudentsSchedulePath => Path.Combine(DefaultPath, "StudentsSchedule.ics");
+
     protected static string TeachersSchedulePath => Path.Combine(DefaultPath, "TeachersSchedule.html");
+
     protected static string FindByNamePath => Path.Combine(DefaultPath, "FindTeacher.json");
 
     protected INarfuApi Api { get; }
@@ -54,15 +56,15 @@ public class TestBase
 
         var factory = Substitute.For<IHttpClientFactory>();
         factory.CreateClient(Arg.Any<string>())
-               .Returns(Substitute.For<HttpClient>());
+            .Returns(Substitute.For<HttpClient>());
 
         var groupsCache = Substitute.For<INarfuGroupsCache>();
         groupsCache.GetByRealId(CorrectGroup)
-                   .Returns(new Group("Строительство", CorrectGroup, 14068));
+            .Returns(new Group("Строительство", CorrectGroup, 14068));
 
         Api = new NarfuApi(factory,
-                           groupsCache,
-                           Substitute.For<ILogger<Schedule.TeachersSchedule>>(),
-                           Substitute.For<ILogger<Schedule.StudentsSchedule>>());
+            groupsCache,
+            Substitute.For<ILogger<Schedule.TeachersSchedule>>(),
+            Substitute.For<ILogger<Schedule.StudentsSchedule>>());
     }
 }

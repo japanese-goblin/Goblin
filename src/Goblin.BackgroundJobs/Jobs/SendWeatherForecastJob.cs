@@ -43,7 +43,7 @@ public class SendWeatherForecastJob(
                         var ids = chunk.Select(p => p.ConsumerId).ToList();
                         await sender.SendToMany(ids, result.Message);
                     }
-                    catch (Exception ex)
+                    catch(Exception ex)
                     {
                         logger.LogError(ex, "Ошибка при отправке ежедневной погоды");
                     }

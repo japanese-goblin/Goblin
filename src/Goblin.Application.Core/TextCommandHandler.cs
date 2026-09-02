@@ -6,18 +6,18 @@ public class TextCommandHandler(IEnumerable<ITextCommand> commands)
 
     public async Task<CommandExecutionResult?> TryHandle(Message message, BotUser user)
     {
-        if(!string.IsNullOrWhiteSpace(message.Payload) || message.CommandName is not { } commandName)
+        if (!string.IsNullOrWhiteSpace(message.Payload) || message.CommandName is not { } commandName)
         {
             return null;
         }
 
         var command = commands.FirstOrDefault(p => p.Aliases.Contains(commandName));
-        if(command is null)
+        if (command is null)
         {
             return null;
         }
 
-        if(command.IsAdminCommand && !user.IsAdmin)
+        if (command.IsAdminCommand && !user.IsAdmin)
         {
             return CommandExecutionResult.Failed(CommandNotFoundMessage);
         }

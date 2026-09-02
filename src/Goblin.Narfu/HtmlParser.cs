@@ -14,42 +14,42 @@ public static class HtmlParser
 
         var lessonItems = doc.DocumentNode.SelectNodes("//div[contains(@class, 'timetable_sheet hidden-xs hidden-sm')]");
 
-        if(lessonItems is null)
+        if (lessonItems is null)
         {
             yield break;
         }
 
-        foreach(var lessonNode in lessonItems.Where(x => x.ChildNodes.Count > 3))
+        foreach (var lessonNode in lessonItems.Where(x => x.ChildNodes.Count > 3))
         {
             var date = lessonNode.ParentNode.SelectSingleNode(".//div[contains(@class,'dayofweek')]")
-                                 .GetNormalizedInnerText()
-                                 .Split(',', 2)[1]
-                                 .Trim();
+                .GetNormalizedInnerText()
+                .Split(',', 2)[1]
+                .Trim();
 
             var adr = lessonNode.SelectSingleNode(".//span[contains(@class,'auditorium')]")
-                                .GetNormalizedInnerText()
-                                .Split(',', 2)
-                                .Select(x => x.Trim())
-                                .ToArray();
+                .GetNormalizedInnerText()
+                .Split(',', 2)
+                .Select(x => x.Trim())
+                .ToArray();
 
             var time = lessonNode.SelectSingleNode(".//span[contains(@class,'time_para')]")
-                                 .GetNormalizedInnerText()
-                                 .Split('–', 2);
+                .GetNormalizedInnerText()
+                .Split('–', 2);
 
             var number = int.Parse(lessonNode.SelectSingleNode(".//span[contains(@class,'num_para')]")
-                                             .GetNormalizedInnerText());
+                .GetNormalizedInnerText());
 
             var groups = lessonNode.SelectSingleNode(".//span[contains(@class,'group')]")
-                                   ?.GetNormalizedInnerText();
+                ?.GetNormalizedInnerText();
 
             var name = lessonNode.SelectSingleNode(".//span[contains(@class,'discipline')]//text()")
-                                 .GetNormalizedInnerText()[..^2];
+                .GetNormalizedInnerText()[..^2];
 
             var type = lessonNode.SelectSingleNode(".//span[contains(@class,'kindOfWork')]")
-                                 .GetNormalizedInnerText();
+                .GetNormalizedInnerText();
 
             var teacher = lessonNode.SelectSingleNode(".//span[contains(@class,'discipline')]//nobr")
-                                    ?.GetNormalizedInnerText();
+                ?.GetNormalizedInnerText();
 
             var linkElement = lessonNode.SelectSingleNode(".//a");
 

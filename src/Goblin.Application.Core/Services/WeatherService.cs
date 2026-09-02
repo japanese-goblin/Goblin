@@ -5,10 +5,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core.Services;
 
-internal class WeatherService(IOpenWeatherMapApi weatherMapApi,
-                              IDistributedCache distributedCache,
-                              ILogger<WeatherService> logger)
-        : IWeatherService
+internal class WeatherService(
+    IOpenWeatherMapApi weatherMapApi,
+    IDistributedCache distributedCache,
+    ILogger<WeatherService> logger)
+    : IWeatherService
 {
     private const string CachePrefix = "weather_data";
 
@@ -22,14 +23,15 @@ internal class WeatherService(IOpenWeatherMapApi weatherMapApi,
         {
             var key = GetCurrentCacheKey(city);
             var result = await distributedCache.GetStringAsync(key, ct);
-            if(result is null)
+            if (result is null)
             {
                 var weather = await weatherMapApi.GetCurrentWeather(city);
                 result = weather.ToString();
-                await distributedCache.SetStringAsync(key, result, new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = CurrentWeatherExpireTime
-                }, ct);
+                await distributedCache.SetStringAsync(
+                    key,
+                    result,
+                    new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = CurrentWeatherExpireTime },
+                    ct);
             }
 
             return CommandExecutionResult.Success(result);
@@ -52,16 +54,16 @@ internal class WeatherService(IOpenWeatherMapApi weatherMapApi,
         {
             var key = GetDailyCacheKey(city, date);
             var result = await distributedCache.GetStringAsync(key, ct);
-            if(result is null)
+            if (result is null)
             {
                 var weather = await weatherMapApi.GetDailyWeatherAt(city, date);
 
                 string formattedDate;
-                if(date.Date == DateTime.Today)
+                if (date.Date == DateTime.Today)
                 {
                     formattedDate = $"сегодня ({date:dd.MM, dddd})";
                 }
-                else if(date.Date == DateTime.Today.AddDays(1))
+                else if (date.Date == DateTime.Today.AddDays(1))
                 {
                     formattedDate = $"завтра ({date:dd.MM, dddd})";
                 }
@@ -72,10 +74,11 @@ internal class WeatherService(IOpenWeatherMapApi weatherMapApi,
 
                 result = $"Погода в городе {city} на {formattedDate}:\n{weather}";
 
-                await distributedCache.SetStringAsync(key, result, new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = DailyWeatherExpireTime
-                }, ct);
+                await distributedCache.SetStringAsync(
+                    key,
+                    result,
+                    new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = DailyWeatherExpireTime },
+                    ct);
             }
 
             return CommandExecutionResult.Success(result);
@@ -101,10 +104,8 @@ internal class WeatherService(IOpenWeatherMapApi weatherMapApi,
         var key = GetNotFoundCacheKey(city);
         var result = $"Город \"{city}\" не найден";
 
-        await distributedCache.SetStringAsync(key, result, new DistributedCacheEntryOptions
-        {
-            AbsoluteExpirationRelativeToNow = NotFoundExpireTime
-        }, ct);
+        await distributedCache.SetStringAsync(key, result,
+            new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = NotFoundExpireTime }, ct);
         return result;
     }
 

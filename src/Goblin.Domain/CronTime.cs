@@ -3,18 +3,21 @@ namespace Goblin.Domain;
 public class CronTime
 {
     private const string AnyChar = "*";
+
     public string Minute { get; private set; }
+
     public string Hour { get; private set; }
+
     public string DayOfMonth { get; private set; }
+
     public string Month { get; private set; }
+
     public string DayOfWeek { get; private set; }
 
-    protected CronTime()
-    {
-    }
+    protected CronTime() { }
 
     public CronTime(string minute = AnyChar, string hour = AnyChar, string dayOfMonth = AnyChar, string month = AnyChar,
-                    string dayOfWeek = AnyChar)
+        string dayOfWeek = AnyChar)
     {
         SetMinute(minute);
         SetHour(hour);
@@ -25,17 +28,17 @@ public class CronTime
 
     public void SetMinute(string minute)
     {
-        if(!minute.Equals(AnyChar))
+        if (!minute.Equals(AnyChar))
         {
-            if(!int.TryParse(minute, out var intMinute))
+            if (!int.TryParse(minute, out var intMinute))
             {
                 throw new ArgumentException("Параметр не является числом", nameof(minute));
             }
 
-            if(intMinute is < 0 or > 59)
+            if (intMinute is < 0 or > 59)
             {
                 throw new ArgumentOutOfRangeException(nameof(minute), minute,
-                                                      "Параметр должен быть в пределах от 0 до 60");
+                    "Параметр должен быть в пределах от 0 до 60");
             }
         }
 
@@ -44,17 +47,17 @@ public class CronTime
 
     public void SetHour(string hour)
     {
-        if(!hour.Equals(AnyChar))
+        if (!hour.Equals(AnyChar))
         {
-            if(!int.TryParse(hour, out var intHour))
+            if (!int.TryParse(hour, out var intHour))
             {
                 throw new ArgumentException("Параметр не является числом", nameof(hour));
             }
 
-            if(intHour is < 0 or > 23)
+            if (intHour is < 0 or > 23)
             {
                 throw new ArgumentOutOfRangeException(nameof(hour), hour,
-                                                      "Параметр должен быть в пределах от 0 до 23");
+                    "Параметр должен быть в пределах от 0 до 23");
             }
         }
 
@@ -63,10 +66,10 @@ public class CronTime
 
     public void SetDayOfMonth(int day)
     {
-        if(day is < 1 or > 31)
+        if (day is < 1 or > 31)
         {
             throw new ArgumentOutOfRangeException(nameof(day), day,
-                                                  "Параметр должен быть в пределах от 1 до 31");
+                "Параметр должен быть в пределах от 1 до 31");
         }
 
         SetDayOfMonth(day.ToString());
@@ -79,10 +82,10 @@ public class CronTime
 
     public void SetMonth(int month)
     {
-        if(month is < 1 or > 12)
+        if (month is < 1 or > 12)
         {
             throw new ArgumentOutOfRangeException(nameof(month), month,
-                                                  "Параметр должен быть в пределах от 1 до 12");
+                "Параметр должен быть в пределах от 1 до 12");
         }
 
         SetMonth(month.ToString());
@@ -95,10 +98,10 @@ public class CronTime
 
     public void SetDayOfWeek(int dayOfWeek)
     {
-        if(dayOfWeek is < 0 or > 6)
+        if (dayOfWeek is < 0 or > 6)
         {
             throw new ArgumentOutOfRangeException(nameof(dayOfWeek), dayOfWeek,
-                                                  "Параметр должен быть в пределах от 1 до 6");
+                "Параметр должен быть в пределах от 1 до 6");
         }
 
         SetDayOfWeek(dayOfWeek.ToString());

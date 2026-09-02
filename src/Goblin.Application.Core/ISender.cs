@@ -10,6 +10,9 @@ public interface ISender
 
     Task Send(long chatId, string message, CoreKeyboard? keyboard = null, IReadOnlyCollection<string>? attachments = null);
 
-    Task SendToMany(IReadOnlyCollection<long> chatIds, string message, CoreKeyboard? keyboard = null,
-                    IReadOnlyCollection<string>? attachments = null);
+    Task SendToMany(
+        IReadOnlyCollection<long> chatIds, 
+        string message, 
+        CoreKeyboard? keyboard = null,
+        IReadOnlyCollection<string>? attachments = null);
 }

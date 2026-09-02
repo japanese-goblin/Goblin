@@ -18,26 +18,29 @@ public class TelegramCallbackHandler
     private readonly BotDbContext _context;
     private readonly ISender _sender;
 
-    public TelegramCallbackHandler(TelegramBotClient botClient, CommandsService commandsService,
-                                   IEnumerable<ISender> senders, BotDbContext context)
+    public TelegramCallbackHandler(
+        TelegramBotClient botClient, 
+        CommandsService commandsService,
+        IEnumerable<ISender> senders, 
+        BotDbContext context)
     {
         _botClient = botClient;
         _commandsService = commandsService;
         _context = context;
-        _sender = senders.First(x => x.ConsumerType == ConsumerType.Telegram);
+        _sender = senders.First(p => p.ConsumerType == ConsumerType.Telegram);
     }
 
     public async Task Handle(Update update)
     {
-        if(update.Type == UpdateType.Message)
+        if (update.Type == UpdateType.Message)
         {
             await HandleMessageEvent(update.Message.MapToBotMessage());
         }
-        else if(update.Type == UpdateType.CallbackQuery)
+        else if (update.Type == UpdateType.CallbackQuery)
         {
             await HandleCallback(update.CallbackQuery);
         }
-        else if(update is { Type: UpdateType.MyChatMember, MyChatMember.NewChatMember.Status: ChatMemberStatus.Kicked })
+        else if (update is { Type: UpdateType.MyChatMember, MyChatMember.NewChatMember.Status: ChatMemberStatus.Kicked })
         {
             await HandleBotKick(update.MyChatMember);
         }
@@ -54,19 +57,19 @@ public class TelegramCallbackHandler
         var result = await _commandsService.ExecuteAction(query.MapToBotMessage(), CancellationToken.None);
         await _botClient.AnswerCallbackQuery(query.Id);
         await _botClient.EditMessageText(new ChatId(query.From.Id), query.Message.MessageId, result.Message);
-        if(result.Keyboard?.IsInline == true)
+        if (result.Keyboard?.IsInline == true)
         {
-            await _botClient.EditMessageReplyMarkup(new ChatId(query.From.Id), 
-                                                    query.Message.MessageId,
-                                                    KeyboardConverter.FromCoreToTg(result.Keyboard) as InlineKeyboardMarkup);
+            await _botClient.EditMessageReplyMarkup(new ChatId(query.From.Id),
+                query.Message.MessageId,
+                KeyboardConverter.FromCoreToTg(result.Keyboard) as InlineKeyboardMarkup);
         }
     }
 
     private async Task HandleBotKick(ChatMemberUpdated updateMyChatMember)
     {
-        var user = await _context.BotUsers.FirstOrDefaultAsync(p => p.ConsumerType == ConsumerType.Telegram && 
+        var user = await _context.BotUsers.FirstOrDefaultAsync(p => p.ConsumerType == ConsumerType.Telegram &&
                                                                     p.ConsumerId == updateMyChatMember.From.Id);
-        if(user is not null)
+        if (user is not null)
         {
             _context.BotUsers.Remove(user);
             await _context.SaveChangesAsync();

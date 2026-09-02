@@ -23,7 +23,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddVkLongPollingLayer();
 
 var host = builder.Build();
-await using (var scope = host.Services.CreateAsyncScope())
+await using(var scope = host.Services.CreateAsyncScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<BotDbContext>();
     await dbContext.Database.MigrateAsync();

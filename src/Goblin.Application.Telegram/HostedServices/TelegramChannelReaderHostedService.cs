@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 namespace Goblin.Application.Telegram.HostedServices;
 
 internal class TelegramChannelReaderHostedService(
-        TelegramEventsDispatcher dispatcher,
-        IServiceProvider serviceProvider,
-        ILogger<TelegramChannelReaderHostedService> logger) : BackgroundService
+    TelegramEventsDispatcher dispatcher,
+    IServiceProvider serviceProvider,
+    ILogger<TelegramChannelReaderHostedService> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -15,7 +15,7 @@ internal class TelegramChannelReaderHostedService(
         {
             try
             {
-                await foreach(var @event in dispatcher.ReadAllAsync(stoppingToken))
+                await foreach (var @event in dispatcher.ReadAllAsync(stoppingToken))
                 {
                     await using var scope = serviceProvider.CreateAsyncScope();
                     var callbackHandler = scope.ServiceProvider.GetRequiredService<TelegramCallbackHandler>();

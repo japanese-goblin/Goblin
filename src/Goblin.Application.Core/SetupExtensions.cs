@@ -19,7 +19,7 @@ public static class SetupExtensions
         AddOptions(services);
         AddAdditions(services);
         services.AddNarfuApi()
-                .AddOpenWeatherMapApi();
+            .AddOpenWeatherMapApi();
 
         services.AddSingleton(TimeProvider.System);
     }
@@ -27,7 +27,7 @@ public static class SetupExtensions
     private static void AddDistributedCache(IServiceCollection services, IConfiguration configuration)
     {
         var redisConnectionString = configuration.GetConnectionString("Redis");
-        if(string.IsNullOrWhiteSpace(redisConnectionString))
+        if (string.IsNullOrWhiteSpace(redisConnectionString))
         {
             throw new InvalidOperationException("Не задана строка подключения к Redis");
         }
@@ -57,18 +57,17 @@ public static class SetupExtensions
     private static void AddOptions(IServiceCollection services)
     {
         services.AddOptions<MailingOptions>()
-                .BindConfiguration(MailingSettingsPath)
-                .ValidateDataAnnotations()
-                .ValidateOnStart();
+            .BindConfiguration(MailingSettingsPath)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
     }
 
     private static void RegisterAllTypes<T>(this IServiceCollection services, Assembly[] assemblies,
-                                            ServiceLifetime lifetime = ServiceLifetime.Transient)
+        ServiceLifetime lifetime = ServiceLifetime.Transient)
     {
-        var typesFromAssemblies = assemblies.SelectMany(a => a.DefinedTypes
-                                                              .Where(x => x.GetInterfaces()
-                                                                           .Contains(typeof(T))));
-        foreach(var type in typesFromAssemblies)
+        var typesFromAssemblies = assemblies.SelectMany(
+            a => a.DefinedTypes.Where(p => p.GetInterfaces().Contains(typeof(T))));
+        foreach (var type in typesFromAssemblies)
         {
             services.Add(new ServiceDescriptor(typeof(T), type, lifetime));
         }

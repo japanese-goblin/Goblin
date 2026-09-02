@@ -14,9 +14,9 @@ public static class SetupExtensions
     public static void AddTelegramLayer(this IServiceCollection services)
     {
         services.AddOptions<TelegramOptions>()
-                .BindConfiguration(TelegramSettingsPath)
-                .ValidateDataAnnotations()
-                .ValidateOnStart();
+            .BindConfiguration(TelegramSettingsPath)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
 
         services.AddSingleton(sp =>
         {

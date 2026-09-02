@@ -13,9 +13,9 @@ internal static class WebApplicationBuilderExtensions
         {
             builder.Configuration
                 .AddYamlFile("appsettings.yaml", false)
-                   .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", true)
-                   .AddYamlFile("appsettings.Secrets.yaml", true)
-                   .AddEnvironmentVariables();
+                .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", true)
+                .AddYamlFile("appsettings.Secrets.yaml", true)
+                .AddEnvironmentVariables();
 
             builder.Services.AddSerilog(p =>
             {

@@ -17,10 +17,7 @@ public class TestBase
 
     protected TestBase()
     {
-        DefaultUser = new BotUser(1, "Архангельск", 351617, false, true, true, true)
-        {
-            Session = new BotUserSession()
-        };
+        DefaultUser = new BotUser(1, "Архангельск", 351617, false, true, true, true) { Session = new BotUserSession() };
         DefaultUserWithMaxReminds = new BotUser(2, "Архангельск", 351617, false, true, true, true);
         AdminUser = new BotUser(101010, "Архангельск", 351617, true, true, true, true);
 
@@ -29,7 +26,7 @@ public class TestBase
 
     protected BotDbContext GetDbContext()
     {
-        if(ApplicationContext != null)
+        if (ApplicationContext != null)
         {
             return ApplicationContext;
         }
@@ -38,8 +35,8 @@ public class TestBase
         connection.Open();
 
         var options = new DbContextOptionsBuilder<BotDbContext>()
-                      .UseSqlite(connection)
-                      .Options;
+            .UseSqlite(connection)
+            .Options;
 
         var context = new BotDbContext(options);
 
@@ -56,7 +53,7 @@ public class TestBase
         context.BotUsers.Add(AdminUser);
         context.BotUsers.Add(DefaultUserWithMaxReminds);
 
-        for(var i = 0; i < AddRemindCommand.MaxRemindsCount; i++)
+        for (var i = 0; i < AddRemindCommand.MaxRemindsCount; i++)
         {
             context.Reminds.Add(new Remind(DefaultUserWithMaxReminds.Id, "text", new DateTime(2101, 1, 1, 1, 1, 1)));
         }
@@ -77,10 +74,7 @@ public class TestBase
 
     protected static Message GenerateMessageWithPayload(long userId, long chatId, string key, string value)
     {
-        var dict = new Dictionary<string, string>
-        {
-            [key] = value
-        };
+        var dict = new Dictionary<string, string> { [key] = value };
         return new Message
         {
             UserId = userId,

@@ -13,10 +13,12 @@ public class GetExamsTests : TestBase
 
         exams.Should().NotBeNull();
         exams.Lessons.Should()
-             .NotBeNullOrEmpty().And
-             .HaveCount(3);
+            .NotBeNullOrEmpty()
+            .And
+            .HaveCount(3);
         str.Should()
-           .NotBeEmpty().And
-           .Contain("В аудитории");
+            .NotBeEmpty()
+            .And
+            .Contain("В аудитории");
     }
 }

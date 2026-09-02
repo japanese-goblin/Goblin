@@ -26,7 +26,7 @@ internal sealed class RedisNarfuGroupsCache(
     public async Task ReplaceAsync(IReadOnlyCollection<Group> groups, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(groups);
-        if(groups.Count == 0)
+        if (groups.Count == 0)
         {
             throw new ArgumentException("Список групп не может быть пустым", nameof(groups));
         }
@@ -45,7 +45,7 @@ internal sealed class RedisNarfuGroupsCache(
     {
         lock(_snapshotLock)
         {
-            if(_snapshot is not null && DateTimeOffset.UtcNow - _snapshotLoadedAt < LocalSnapshotLifetime)
+            if (_snapshot is not null && DateTimeOffset.UtcNow - _snapshotLoadedAt < LocalSnapshotLifetime)
             {
                 return _snapshot;
             }
@@ -53,14 +53,14 @@ internal sealed class RedisNarfuGroupsCache(
             try
             {
                 var serializedGroups = cache.Get(CacheKey);
-                if(serializedGroups is null)
+                if (serializedGroups is null)
                 {
                     TouchSnapshot();
                     return _snapshot!;
                 }
 
                 var groups = JsonSerializer.Deserialize<Group[]>(serializedGroups) ?? [];
-                if(groups.Length == 0)
+                if (groups.Length == 0)
                 {
                     logger.LogWarning("В Redis найден пустой список групп САФУ; используется предыдущий локальный снимок");
                     TouchSnapshot();

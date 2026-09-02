@@ -8,7 +8,7 @@ public class WeatherNowCommand(IWeatherService weatherService) : ITextCommand
 
     public async Task<CommandExecutionResult> Execute(Message msg, BotUser user)
     {
-        if(!string.IsNullOrWhiteSpace(msg.Payload))
+        if (!string.IsNullOrWhiteSpace(msg.Payload))
         {
             return await ExecutePayload(user);
         }
@@ -20,12 +20,12 @@ public class WeatherNowCommand(IWeatherService weatherService) : ITextCommand
     {
         var city = msg.CommandParameters.FirstOrDefault();
 
-        if(string.IsNullOrWhiteSpace(user.WeatherCity) && string.IsNullOrWhiteSpace(city))
+        if (string.IsNullOrWhiteSpace(user.WeatherCity) && string.IsNullOrWhiteSpace(city))
         {
             return CommandExecutionResult.Failed(DefaultErrors.CityNotSet);
         }
 
-        if(!string.IsNullOrWhiteSpace(city))
+        if (!string.IsNullOrWhiteSpace(city))
         {
             return await weatherService.GetCurrentWeather(city);
         }
@@ -35,7 +35,7 @@ public class WeatherNowCommand(IWeatherService weatherService) : ITextCommand
 
     private async Task<CommandExecutionResult> ExecutePayload(BotUser user)
     {
-        if(string.IsNullOrWhiteSpace(user.WeatherCity))
+        if (string.IsNullOrWhiteSpace(user.WeatherCity))
         {
             return CommandExecutionResult.Failed(DefaultErrors.CityNotSet);
         }

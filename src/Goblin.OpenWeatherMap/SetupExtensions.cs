@@ -15,8 +15,8 @@ public static class SetupExtensions
 
         services.AddSingleton<IValidateOptions<OpenWeatherMapApiOptions>, OpenWeatherMapApiOptionsValidate>();
         services.AddOptions<OpenWeatherMapApiOptions>()
-                .BindConfiguration(OwmSettingsPath)
-                .ValidateOnStart();
+            .BindConfiguration(OwmSettingsPath)
+            .ValidateOnStart();
 
         services.AddHttpClient(Defaults.HttpClientName, (sp, client) =>
         {

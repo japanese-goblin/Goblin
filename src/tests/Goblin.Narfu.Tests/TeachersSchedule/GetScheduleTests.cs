@@ -10,9 +10,11 @@ public class GetScheduleTests : TestBase
     {
         var lessons = await Api.Teachers.GetSchedule(CorrectTeacherId);
 
-        lessons.ToArray().Should()
-               .NotBeNullOrEmpty().And
-               .HaveCount(27);
+        lessons.ToArray()
+            .Should()
+            .NotBeNullOrEmpty()
+            .And
+            .HaveCount(27);
     }
 
     [Fact(Skip = "Доработать с NSubstitute")]

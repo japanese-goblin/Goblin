@@ -7,14 +7,14 @@ namespace Goblin.Application.Core.Flows;
 
 public class SettingsUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeatherMapApi) : IUserFlow
 {
-    public string Name => "Настройки";
     public string PayloadKey => PayloadType.Settings.GetEnumMemberValue();
+
     public FlowType Type => FlowType.Settings;
 
     public async Task<FlowExecutionResult> HandleAsync(UserFlowContext context, CancellationToken cancellationToken)
     {
-        if(context.Message.ParsedPayload is not null &&
-           context.Message.ParsedPayload.TryGetValue(PayloadKey, out var commandParam))
+        if (context.Message.ParsedPayload is not null &&
+            context.Message.ParsedPayload.TryGetValue(PayloadKey, out var commandParam))
         {
             return HandleButton(context, commandParam);
         }
@@ -24,43 +24,43 @@ public class SettingsUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeather
 
     private static FlowExecutionResult HandleButton(UserFlowContext context, string commandParam)
     {
-        if(string.IsNullOrWhiteSpace(commandParam))
+        if (string.IsNullOrWhiteSpace(commandParam))
         {
             return SettingsResult(context.User);
         }
 
-        if(commandParam.Equals(SettingsFlowState.NarfuGroup.GetEnumMemberValue()))
+        if (commandParam.Equals(SettingsFlowState.NarfuGroup.GetEnumMemberValue()))
         {
             return new FlowExecutionResult(
-                                           FlowType.Settings,
-                                           SettingsFlowState.NarfuGroup.GetEnumMemberValue(),
-                                           true,
-                                           "Отправьте номер группы САФУ. Номер должен содержать только цифры.",
-                                           DefaultKeyboards.GetBackToSettingsKeyboard());
+                FlowType.Settings,
+                SettingsFlowState.NarfuGroup.GetEnumMemberValue(),
+                true,
+                "Отправьте номер группы САФУ. Номер должен содержать только цифры.",
+                DefaultKeyboards.GetBackToSettingsKeyboard());
         }
 
-        if(commandParam.Equals(SettingsFlowState.WeatherCity.GetEnumMemberValue()))
+        if (commandParam.Equals(SettingsFlowState.WeatherCity.GetEnumMemberValue()))
         {
             return new FlowExecutionResult(
-                                           FlowType.Settings,
-                                           SettingsFlowState.WeatherCity.GetEnumMemberValue(),
-                                           true,
-                                           "Отправьте название города для получения прогноза погоды.",
-                                           DefaultKeyboards.GetBackToSettingsKeyboard());
+                FlowType.Settings,
+                SettingsFlowState.WeatherCity.GetEnumMemberValue(),
+                true,
+                "Отправьте название города для получения прогноза погоды.",
+                DefaultKeyboards.GetBackToSettingsKeyboard());
         }
 
-        if(commandParam.Equals(SettingsFlowState.Mailing.GetEnumMemberValue()))
+        if (commandParam.Equals(SettingsFlowState.Mailing.GetEnumMemberValue()))
         {
             return MailingResult(context.User, "Настройки рассылки:");
         }
 
-        if(commandParam.Equals(SettingsFlowState.MailingSchedule.GetEnumMemberValue()))
+        if (commandParam.Equals(SettingsFlowState.MailingSchedule.GetEnumMemberValue()))
         {
-            if(context.User is { HasScheduleSubscription: false, NarfuGroup: null })
+            if (context.User is { HasScheduleSubscription: false, NarfuGroup: null })
             {
                 return MailingResult(context.User,
-                                     "Чтобы подписаться на ежедневную рассылку расписания, сначала настройте группу САФУ.",
-                                     false);
+                    "Чтобы подписаться на ежедневную рассылку расписания, сначала настройте группу САФУ.",
+                    false);
             }
 
             context.User.SetHasSchedule(!context.User.HasScheduleSubscription);
@@ -68,13 +68,13 @@ public class SettingsUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeather
             return MailingResult(context.User, message);
         }
 
-        if(commandParam.Equals(SettingsFlowState.MailingWeather.GetEnumMemberValue()))
+        if (commandParam.Equals(SettingsFlowState.MailingWeather.GetEnumMemberValue()))
         {
-            if(!context.User.HasWeatherSubscription && string.IsNullOrWhiteSpace(context.User.WeatherCity))
+            if (!context.User.HasWeatherSubscription && string.IsNullOrWhiteSpace(context.User.WeatherCity))
             {
                 return MailingResult(context.User,
-                                     "Чтобы подписаться на ежедневную рассылку погоду, сначала настройте город.",
-                                     false);
+                    "Чтобы подписаться на ежедневную рассылку погоду, сначала настройте город.",
+                    false);
             }
 
             context.User.SetHasWeather(!context.User.HasWeatherSubscription);
@@ -88,44 +88,44 @@ public class SettingsUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeather
     private async Task<FlowExecutionResult> HandleInput(UserFlowContext context)
     {
         var flowStep = context.User.Session.FlowStepType;
-        if(flowStep == SettingsFlowState.NarfuGroup.GetEnumMemberValue())
+        if (flowStep == SettingsFlowState.NarfuGroup.GetEnumMemberValue())
         {
-            if(!int.TryParse(context.Message.Text, out var realGroupNumber))
+            if (!int.TryParse(context.Message.Text, out var realGroupNumber))
             {
                 return new FlowExecutionResult(
-                                               FlowType.Settings,
-                                               SettingsFlowState.NarfuGroup.GetEnumMemberValue(),
-                                               false,
-                                               "Номер группы должен состоять только из цифр. Например, 351617.",
-                                               DefaultKeyboards.GetBackToSettingsKeyboard());
+                    FlowType.Settings,
+                    SettingsFlowState.NarfuGroup.GetEnumMemberValue(),
+                    false,
+                    "Номер группы должен состоять только из цифр. Например, 351617.",
+                    DefaultKeyboards.GetBackToSettingsKeyboard());
             }
 
             var group = narfuApi.Students.GetGroupByRealId(realGroupNumber);
-            if(group is null)
+            if (group is null)
             {
                 return new FlowExecutionResult(
-                                               FlowType.Settings,
-                                               SettingsFlowState.NarfuGroup.GetEnumMemberValue(),
-                                               false,
-                                               "Группа с таким номером не найдена. Укажите другой номер.",
-                                               DefaultKeyboards.GetBackToSettingsKeyboard());
+                    FlowType.Settings,
+                    SettingsFlowState.NarfuGroup.GetEnumMemberValue(),
+                    false,
+                    "Группа с таким номером не найдена. Укажите другой номер.",
+                    DefaultKeyboards.GetBackToSettingsKeyboard());
             }
 
             context.User.SetNarfuGroup(group.RealId);
             return SettingsResult(context.User, $"Группа {group.RealId} сохранена.");
         }
 
-        if(flowStep == SettingsFlowState.WeatherCity.GetEnumMemberValue())
+        if (flowStep == SettingsFlowState.WeatherCity.GetEnumMemberValue())
         {
             var city = context.Message.Text?.Trim();
-            if(string.IsNullOrWhiteSpace(city) || !await openWeatherMapApi.IsCityExists(city))
+            if (string.IsNullOrWhiteSpace(city) || !await openWeatherMapApi.IsCityExists(city))
             {
                 return new FlowExecutionResult(
-                                               FlowType.Settings,
-                                               SettingsFlowState.WeatherCity.GetEnumMemberValue(),
-                                               false,
-                                               "Город не найден. Укажите другое название.",
-                                               DefaultKeyboards.GetBackToSettingsKeyboard());
+                    FlowType.Settings,
+                    SettingsFlowState.WeatherCity.GetEnumMemberValue(),
+                    false,
+                    "Город не найден. Укажите другое название.",
+                    DefaultKeyboards.GetBackToSettingsKeyboard());
             }
 
             context.User.SetCity(city);
@@ -135,27 +135,29 @@ public class SettingsUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeather
         return SettingsResult(context.User);
     }
 
-    private static FlowExecutionResult SettingsResult(BotUser user,
-                                                      string message = "Настройки:",
-                                                      bool isSuccessful = true)
+    private static FlowExecutionResult SettingsResult(
+        BotUser user,
+        string message = "Настройки:",
+        bool isSuccessful = true)
     {
         return new FlowExecutionResult(
-                                       FlowType.Settings,
-                                       null,
-                                       isSuccessful,
-                                       message,
-                                       DefaultKeyboards.GetSettingsKeyboard(user));
+            FlowType.Settings,
+            null,
+            isSuccessful,
+            message,
+            DefaultKeyboards.GetSettingsKeyboard(user));
     }
 
-    private static FlowExecutionResult MailingResult(BotUser user,
-                                                     string message,
-                                                     bool isSuccessful = true)
+    private static FlowExecutionResult MailingResult(
+        BotUser user,
+        string message,
+        bool isSuccessful = true)
     {
         return new FlowExecutionResult(
-                                       FlowType.Settings,
-                                       null,
-                                       isSuccessful,
-                                       message,
-                                       DefaultKeyboards.GetMailingSettingsKeyboard(user));
+            FlowType.Settings,
+            null,
+            isSuccessful,
+            message,
+            DefaultKeyboards.GetMailingSettingsKeyboard(user));
     }
 }

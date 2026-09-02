@@ -100,26 +100,34 @@ public class CurrentWeatherResponse
     {
         var strBuilder = new StringBuilder();
 
-        strBuilder.Append($"Погода в городе {CityName} на данный момент:").AppendLine()
-                  .Append($"Описание: {Info[0].Description}").AppendLine()
-                  .Append($"Температура: {Weather.Temperature:+#;-#;0}°С");
-        if(Weather.FeelsLike.HasValue)
+        strBuilder.Append($"Погода в городе {CityName} на данный момент:")
+            .AppendLine()
+            .Append($"Описание: {Info[0].Description}")
+            .AppendLine()
+            .Append($"Температура: {Weather.Temperature:+#;-#;0}°С");
+        if (Weather.FeelsLike.HasValue)
         {
             strBuilder.Append($" (ощущается как {Weather.FeelsLike:+#;-#;0}°С)");
         }
 
         strBuilder.AppendLine()
-                  .Append($"Влажность: {Weather.Humidity}%").AppendLine()
-                  .Append($"Ветер: {Wind.Speed:N0} м/с").AppendLine()
-                  .Append($"Давление: {Weather.Pressure * Defaults.PressureConvert:N0} мм.рт.ст")
-                  .AppendLine()
-                  .Append($"Облачность: {Clouds.Cloudiness}%").AppendLine()
-                  .Append($"Видимость: {Visibility} метров").AppendLine()
-                  .AppendLine()
-                  .Append($"Восход: {OtherInfo.Sunrise.AddSeconds(TimezoneDifference):HH:mm}").AppendLine()
-                  .Append($"Закат: {OtherInfo.Sunset.AddSeconds(TimezoneDifference):HH:mm}").AppendLine()
-                  .AppendLine()
-                  .Append($"Данные обновлены {UnixTime.AddSeconds(TimezoneDifference):dd.MM.yyyy HH:mm}");
+            .Append($"Влажность: {Weather.Humidity}%")
+            .AppendLine()
+            .Append($"Ветер: {Wind.Speed:N0} м/с")
+            .AppendLine()
+            .Append($"Давление: {Weather.Pressure * Defaults.PressureConvert:N0} мм.рт.ст")
+            .AppendLine()
+            .Append($"Облачность: {Clouds.Cloudiness}%")
+            .AppendLine()
+            .Append($"Видимость: {Visibility} метров")
+            .AppendLine()
+            .AppendLine()
+            .Append($"Восход: {OtherInfo.Sunrise.AddSeconds(TimezoneDifference):HH:mm}")
+            .AppendLine()
+            .Append($"Закат: {OtherInfo.Sunset.AddSeconds(TimezoneDifference):HH:mm}")
+            .AppendLine()
+            .AppendLine()
+            .Append($"Данные обновлены {UnixTime.AddSeconds(TimezoneDifference):dd.MM.yyyy HH:mm}");
 
         return strBuilder.ToString();
     }

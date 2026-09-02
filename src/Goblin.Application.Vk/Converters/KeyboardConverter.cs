@@ -8,16 +8,16 @@ public static class KeyboardConverter
 {
     public static MessageKeyboard? FromCoreToVk(CoreKeyboard? coreKeyboard, bool isInlineKeyboardAllowed = false)
     {
-        if(coreKeyboard is null)
+        if (coreKeyboard is null)
         {
             return null;
         }
 
         var kb = new KeyboardBuilder();
         var inlineKeyboardEnabled = coreKeyboard.IsInline && isInlineKeyboardAllowed;
-        if(!isInlineKeyboardAllowed)
+        if (!isInlineKeyboardAllowed)
         {
-            if(coreKeyboard.IsOneTime)
+            if (coreKeyboard.IsOneTime)
             {
                 kb.SetOneTime();
             }
@@ -31,14 +31,14 @@ public static class KeyboardConverter
 
         var isFirst = true;
 
-        foreach(var line in coreKeyboard.Buttons)
+        foreach (var line in coreKeyboard.Buttons)
         {
-            if(!isFirst)
+            if (!isFirst)
             {
                 kb.AddLine();
             }
 
-            foreach(var button in line)
+            foreach (var button in line)
             {
                 var color = FromCoreColorToVk(button.Color);
                 kb.AddButton(new MessageKeyboardButtonAction

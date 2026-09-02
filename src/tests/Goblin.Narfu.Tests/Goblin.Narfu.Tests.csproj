@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Goblin.Narfu\Goblin.Narfu.csproj"/>
+    <ProjectReference Include="..\..\Goblin.Narfu\Goblin.Narfu.csproj" />
   </ItemGroup>
 
 </Project>

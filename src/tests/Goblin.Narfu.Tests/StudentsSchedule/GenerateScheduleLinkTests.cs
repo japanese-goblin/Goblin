@@ -26,3 +26,5 @@
 //         link.Should().Be($"webcal://ruz.narfu.ru/?icalendar&oid={group.SiteId}&cod={CorrectGroup}&from={todayDate}");
 //     }
 // }
+
+
