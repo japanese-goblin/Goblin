@@ -3,7 +3,7 @@ AllowedHosts: '*'
 Serilog:
   Enrich: [ 'FromLogContext' ]
   MinimumLevel:
-    Default: 'Warning'
+    Default: 'Information'
     Override:
       Microsoft.AspNetCore: 'Warning'
       Microsoft.EntityFrameworkCore: 'Warning'
