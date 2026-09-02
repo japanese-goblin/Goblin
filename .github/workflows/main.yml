@@ -1,0 +1,92 @@
+name: Build, test & publish
+
+on:
+  push:
+    branches:
+      - dev
+      - 'feature/**'
+      - 'fix/**'
+      - 'release/**'
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: '10.0'
+
+jobs:
+  build:
+    runs-on: 'ubuntu-24.04'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore nuget packages
+        run: dotnet restore src/Goblin.sln
+      - name: Build
+        run: dotnet build src/Goblin.sln --configuration Release --no-restore
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-build
+          path: src/**/bin/Release/**
+          if-no-files-found: error
+          retention-days: 1
+
+  test:
+    needs: build
+    runs-on: 'ubuntu-24.04'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore nuget packages
+        run: dotnet restore src/Goblin.sln
+      - name: Download build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: dotnet-build
+          path: src
+      - name: Run tests
+        run: dotnet test src/Goblin.sln --configuration Release --no-restore --no-build
+
+  publish:
+    needs: test
+    if: startsWith(github.ref_name, 'release/')
+    runs-on: 'ubuntu-24.04'
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Extract version from branch name
+        id: version
+        shell: bash
+        run: echo "version=${GITHUB_REF_NAME#release/}" >> "$GITHUB_OUTPUT"
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=${{ steps.version.outputs.version }}
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v7
+        with:
+          context: ./src
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
