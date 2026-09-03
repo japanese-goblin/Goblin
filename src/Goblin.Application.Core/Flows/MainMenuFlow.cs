@@ -27,6 +27,15 @@ public class MainMenuUserFlow(IWeatherService weatherService, IScheduleService s
 
             if (commandParam.Equals(MainMenuFlowState.Schedule.GetEnumMemberValue()))
             {
+                if (!context.User.NarfuGroup.HasValue)
+                {
+                    return new FlowExecutionResult(FlowType.MainMenu,
+                        null,
+                        false,
+                        "Отсутствует группа САФУ - укажите её в настройках",
+                        null);
+                }
+
                 return new FlowExecutionResult(
                     FlowType.Schedule,
                     null,

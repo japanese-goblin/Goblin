@@ -13,7 +13,8 @@ public class ScheduleUserFlow(IScheduleService api) : IUserFlow
     {
         if (!context.User.NarfuGroup.HasValue)
         {
-            return new FlowExecutionResult(FlowType.MainMenu,
+            return new FlowExecutionResult(
+                FlowType.MainMenu,
                 null,
                 false,
                 "Отсутствует группа САФУ - укажите её в настройках",
@@ -22,7 +23,8 @@ public class ScheduleUserFlow(IScheduleService api) : IUserFlow
 
         if (context.Message.ParsedPayload is null || !context.Message.ParsedPayload.TryGetValue(PayloadKey, out var scheduleDateInput))
         {
-            return new FlowExecutionResult(FlowType.MainMenu,
+            return new FlowExecutionResult(
+                FlowType.MainMenu,
                 null,
                 false,
                 "Воспользуйтесь клавиатурой для управления ботом:",
@@ -31,7 +33,8 @@ public class ScheduleUserFlow(IScheduleService api) : IUserFlow
 
         if (!DateTime.TryParse(scheduleDateInput, out var scheduleDate))
         {
-            return new FlowExecutionResult(FlowType.Schedule,
+            return new FlowExecutionResult(
+                FlowType.Schedule,
                 null,
                 false,
                 "Указана некорректная дата",
@@ -39,7 +42,8 @@ public class ScheduleUserFlow(IScheduleService api) : IUserFlow
         }
 
         var getScheduleResponse = await api.GetSchedule(context.User.NarfuGroup.Value, scheduleDate, cancellationToken);
-        return new FlowExecutionResult(FlowType.Schedule,
+        return new FlowExecutionResult(
+            FlowType.Schedule,
             null,
             getScheduleResponse.IsSuccessful,
             getScheduleResponse.Message,
