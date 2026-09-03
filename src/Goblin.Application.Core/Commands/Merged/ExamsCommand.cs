@@ -1,9 +1,8 @@
-using Goblin.Narfu.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace Goblin.Application.Core.Commands.Merged;
 
-public class ExamsCommand(INarfuApi api, ILogger<ExamsCommand> logger) : ITextCommand
+public class ExamsCommand(IScheduleService scheduleService, ILogger<ExamsCommand> logger) : ITextCommand
 {
     public bool IsAdminCommand => false;
 
@@ -18,14 +17,8 @@ public class ExamsCommand(INarfuApi api, ILogger<ExamsCommand> logger) : ITextCo
 
         try
         {
-            var lessons = await api.Students.GetExams(user.NarfuGroup.Value);
-            var str = lessons.ToString();
-            if (str.Length > 4096)
-            {
-                str = $"{str[..4000]}...\n\nПолный список экзаменов можете посмотреть на сайте";
-            }
-
-            return CommandExecutionResult.Success(str);
+            var result = await scheduleService.GetExams(user.NarfuGroup.Value);
+            return CommandExecutionResult.Success(result.Message);
         }
         catch(Exception ex) when(ex is HttpRequestException or TaskCanceledException)
         {
