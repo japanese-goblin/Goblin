@@ -126,10 +126,9 @@ public class InitialUserFlow(INarfuApi narfuApi, IOpenWeatherMapApi openWeatherM
                     DefaultKeyboards.GetInitializationKeyboard(context.User));
             }
         }
-
-        // начальное состояние - человек впервые воспользовался ботом
-        if (string.IsNullOrEmpty(context.Message.Payload))
+        else
         {
+            // если у него пустой шаг действия
             var response = new FlowExecutionResult(
                 FlowType.Start,
                 null,
